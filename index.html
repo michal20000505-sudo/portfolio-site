@@ -20,99 +20,29 @@
             --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
-        /* --- RESET I BAZA --- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            cursor: none;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: var(--font-main);
-            overflow-x: hidden;
-            line-height: 1.5;
-            position: relative;
-        }
-
+        /* --- RESET --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        body { background-color: var(--bg-color); color: var(--text-color); font-family: var(--font-main); overflow-x: hidden; line-height: 1.5; position: relative; }
         a { text-decoration: none; color: inherit; }
         ul { list-style: none; }
         img { display: block; width: 100%; }
 
-        /* --- CANVAS TŁA I EFEKTU ZDJĘCIA --- */
-        #particle-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1; /* Tło */
-            pointer-events: none;
-        }
-
-        /* --- CUSTOM CURSOR --- */
-        .cursor {
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--text-color);
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9999;
-            transform: translate(-50%, -50%);
-            transition: transform 0.1s ease, background-color 0.2s;
-            mix-blend-mode: difference;
-        }
-
-        .cursor.hovered {
-            transform: translate(-50%, -50%) scale(2.5);
-            background-color: var(--text-color);
-            border-color: transparent;
-        }
-
-        /* --- PRELOADER --- */
-        #preloader {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-color);
-            z-index: 10000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: opacity 0.5s ease;
-        }
+        /* --- UI ELEMENTS --- */
+        #starfield { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
         
-        .loader-text {
-            font-size: 2rem;
-            font-weight: 700;
-            animation: pulseCMYK 1s infinite alternate;
-        }
+        .cursor { width: 20px; height: 20px; border: 2px solid var(--text-color); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); transition: transform 0.1s ease, background-color 0.2s; mix-blend-mode: difference; }
+        .cursor.hovered { transform: translate(-50%, -50%) scale(2.5); background-color: var(--text-color); border-color: transparent; }
 
-        @keyframes pulseCMYK {
-            0% { text-shadow: 2px 2px 0 var(--cyan); }
-            50% { text-shadow: -2px 2px 0 var(--magenta); }
-            100% { text-shadow: -2px -2px 0 var(--yellow); }
-        }
+        #preloader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 10000; display: flex; justify-content: center; align-items: center; transition: opacity 0.5s ease; }
+        .loader-text { font-size: 2rem; font-weight: 700; animation: pulseCMYK 1s infinite alternate; }
+        @keyframes pulseCMYK { 0% { text-shadow: 2px 2px 0 var(--cyan); } 50% { text-shadow: -2px 2px 0 var(--magenta); } 100% { text-shadow: -2px -2px 0 var(--yellow); } }
 
-        /* --- LAYOUT --- */
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 40px;
-        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
 
         /* --- HEADER --- */
-        header {
-            position: fixed;
-            top: 0; width: 100%; padding: 30px 0;
-            z-index: 100;
-            mix-blend-mode: difference;
-        }
-
+        header { position: fixed; top: 0; width: 100%; padding: 30px 0; z-index: 100; mix-blend-mode: difference; }
         nav { display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-weight: 700; font-size: 1.5rem; letter-spacing: -1px; }
+        .logo { font-weight: 700; font-size: 1.5rem; letter-spacing: -1px; } 
         .logo span { color: var(--cyan); }
         .nav-links { display: flex; gap: 50px; }
         .nav-links a { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; position: relative; }
@@ -130,47 +60,79 @@
         @keyframes glitch-anim-2 { 0% { transform: translate(2px, 2px); } 100% { transform: translate(-1px, -1px); } }
         .hero-subtitle { margin-top: 30px; font-size: 1.2rem; color: #888; letter-spacing: 3px; text-transform: uppercase; }
 
-        /* --- SECTIONS --- */
+        /* --- SEKCJE --- */
         section { padding: 150px 0; position: relative; }
         .reveal { opacity: 0; transform: translateY(100px); transition: all 1s ease-out; }
         .reveal.active { opacity: 1; transform: translateY(0); }
         h2.section-title { font-size: 4rem; margin-bottom: 80px; border-bottom: 1px solid #333; padding-bottom: 20px; display: inline-block; }
         h2.section-title span { color: var(--yellow); }
 
-        /* --- O MNIE (SPECJALNA STREFA DLA CANVAS) --- */
-        .about-grid {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 80px;
-            align-items: start;
-        }
+        /* --- O MNIE (ULEPSZONA SEKCJA Z HAŁASEM) --- */
+        .about-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 80px; align-items: start; }
+        .about-image-wrapper { position: relative; width: 100%; max-width: 350px; }
 
-        .canvas-trigger-area {
-            width: 300px;
-            height: 300px;
-            border: 1px dashed rgba(255,255,255,0.2);
+        .noise-container {
             position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .trigger-hint {
-            color: var(--cyan);
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            pointer-events: none; /* Żeby nie blokowało hovera */
-            transition: opacity 0.3s;
+            width: 100%;
+            aspect-ratio: 1/1;
+            overflow: hidden;
+            border: 2px solid #222;
+            cursor: none; /* Kursor obsługiwany globalnie */
         }
 
-        .canvas-trigger-area:hover .trigger-hint {
-            opacity: 0; /* Ukryj napis gdy obraz się formuje */
+        .my-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* Stan domyślny - mocno zniekształcony */
+            filter: grayscale(100%) contrast(3) blur(8px) brightness(0.6); 
+            transform: scale(1.2);
+            transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1); /* Płynne przejście */
         }
 
+        /* Warstwa szumu - gęstsza i ciemniejsza */
+        .noise-overlay {
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background-image: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 1px,
+                #000 1px, /* Czarne linie dla zaciemnienia */
+                var(--cyan) 2px,
+                var(--magenta) 3px
+            );
+            background-size: 100% 3px; /* Gęstszy szum */
+            mix-blend-mode: hard-light;
+            opacity: 0.9; /* Bardziej widoczny szum */
+            z-index: 10;
+            animation: static-noise 0.1s infinite steps(2);
+            transition: opacity 0.8s ease;
+        }
+
+        @keyframes static-noise {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(-10px, 10px); } /* Większe skoki szumu */
+            50% { transform: translate(10px, -10px); }
+            75% { transform: translate(-5px, -5px); }
+            100% { transform: translate(5px, 5px); }
+        }
+
+        /* Klasa dodawana przez JS po najechaniu */
+        .noise-container.revealed .noise-overlay {
+            opacity: 0;
+        }
+
+        .noise-container.revealed .my-photo {
+            filter: grayscale(0%) contrast(1) blur(0) brightness(1);
+            transform: scale(1);
+        }
+
+        .photo-caption { margin-top: 15px; font-size: 0.8rem; color: var(--cyan); text-transform: uppercase; letter-spacing: 1px; text-align: center; }
         .about-text { font-size: 1.1rem; color: #ccc; line-height: 1.8; }
 
-        /* --- PORTFOLIO & SERVICES & CONTACT (Reszta styli bez zmian) --- */
+        /* --- POZOSTAŁE STYLE (BEZ ZMIAN) --- */
         .project-item { display: grid; grid-template-columns: 1.5fr 1fr; gap: 50px; margin-bottom: 150px; align-items: center; }
         .project-item:nth-child(even) { direction: rtl; }
         .project-item:nth-child(even) .project-info { direction: ltr; }
@@ -178,6 +140,7 @@
         .project-img-wrapper::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--cyan); opacity: 0; mix-blend-mode: multiply; transition: var(--transition); }
         .project-img-wrapper:hover::after { opacity: 0.6; }
         .project-img-wrapper:hover img { transform: scale(1.1); filter: grayscale(100%); }
+        .project-img-wrapper img { width: 100%; height: auto; transition: var(--transition); }
         .project-info h3 { font-size: 2.5rem; margin-bottom: 20px; color: var(--text-color); }
         .project-info p { color: #aaa; margin-bottom: 30px; font-size: 1.1rem; }
         .tags span { display: inline-block; border: 1px solid var(--text-color); padding: 8px 15px; margin-right: 10px; font-size: 0.8rem; text-transform: uppercase; border-radius: 50px; }
@@ -205,18 +168,10 @@
 </head>
 <body>
 
-    <!-- GŁÓWNY CANVAS (TŁO + EFEKT ZDJĘCIA) -->
-    <canvas id="particle-canvas"></canvas>
-
-    <!-- CUSTOM CURSOR -->
+    <canvas id="starfield"></canvas>
     <div class="cursor"></div>
+    <div id="preloader"><div class="loader-text">LOADING...</div></div>
 
-    <!-- PRELOADER -->
-    <div id="preloader">
-        <div class="loader-text">LOADING...</div>
-    </div>
-
-    <!-- NAWIGACJA -->
     <header>
         <div class="container">
             <nav>
@@ -230,7 +185,6 @@
         </div>
     </header>
 
-    <!-- HERO -->
     <section id="hero">
         <div class="container hero-content">
             <div class="glitch-wrapper">
@@ -240,35 +194,32 @@
         </div>
     </section>
 
-    <!-- O MNIE (TU DZIEJE SIĘ MAGIA) -->
+    <!-- O MNIE -->
     <section id="about">
         <div class="container">
             <h2 class="section-title reveal">O <span>Mnie</span></h2>
             
             <div class="about-grid reveal">
-                <!-- Puste miejsce, które aktywuje formowanie zdjęcia -->
-                <div class="canvas-trigger-area" id="photo-trigger">
-                    <span class="trigger-hint">NAJEDŹ ABY ZOBACZYĆ</span>
+                <div class="about-image-wrapper">
+                    <!-- Dodano ID 'interactive-photo' do obsługi JS -->
+                    <div class="noise-container link-hover" id="interactive-photo">
+                        <div class="noise-overlay"></div>
+                        <img src="JAzdj.jpg" alt="Michał Jar" class="my-photo">
+                    </div>
+                    <p class="photo-caption">↘ najedź myszą i odkryj lemura</p>
                 </div>
 
                 <div class="about-text">
-                    <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin nibh augue, suscipit a, scelerisque sed, lacinia in, mi. Cras vel lorem. Etiam pellentesque aliquet tellus. Phasellus pharetra nulla ac diam. Quisque semper justo at risus.
-                    </p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin nibh augue, suscipit a, scelerisque sed, lacinia in, mi. Cras vel lorem. Etiam pellentesque aliquet tellus. Phasellus pharetra nulla ac diam. Quisque semper justo at risus.</p>
                     <br>
-                    <p>
-                        Donec venenatis vulputate lorem. Maecenas vestibulum mollis diam. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla facilisi. Sed lacus. Donec lectus. Nullam pretium nibh ut turpis. Nam bibendum.
-                    </p>
+                    <p>Donec venenatis vulputate lorem. Maecenas vestibulum mollis diam. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla facilisi. Sed lacus. Donec lectus. Nullam pretium nibh ut turpis. Nam bibendum.</p>
                     <br>
-                    <p style="color: var(--yellow);">
-                        <strong>In hac habitasse platea dictumst. Suspendisse potenti.</strong>
-                    </p>
+                    <p style="color: var(--yellow);"><strong>In hac habitasse platea dictumst. Suspendisse potenti.</strong></p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- PORTFOLIO -->
     <section id="work">
         <div class="container">
             <h2 class="section-title reveal">Wybrane <span>Prace</span></h2>
@@ -295,7 +246,6 @@
         </div>
     </section>
 
-    <!-- USŁUGI -->
     <section id="services">
         <div class="container">
             <h2 class="section-title reveal">Moje <span>Usługi</span></h2>
@@ -307,7 +257,6 @@
         </div>
     </section>
 
-    <!-- KONTAKT -->
     <section id="contact">
         <div class="container" style="text-align: center;">
             <p class="reveal" style="color: #888; text-transform: uppercase; letter-spacing: 2px;">Rozpocznijmy współpracę</p>
@@ -322,253 +271,92 @@
         <div class="container">&copy; 2025 Michał Jar Portfolio. Designed with CMYK passion.</div>
     </footer>
 
-    <!-- SKRYPTY LOGIKI -->
     <script>
-        /**
-         * LOGIKA:
-         * 1. Wczytujemy obrazek JAzdj.jpg do niewidocznego canvasu w pamięci.
-         * 2. Pobieramy dane o pikselach (kolor i pozycja).
-         * 3. Tworzymy cząsteczki. Każda ma:
-         *    - Pozycję "Home" (na zdjęciu)
-         *    - Pozycję aktualną (losową na ekranie)
-         * 4. Jeśli mysz jest nad #photo-trigger -> cząsteczki lecą do "Home".
-         * 5. Jeśli nie -> cząsteczki latają losowo (efekt gwiazd).
-         */
-
-        const canvas = document.getElementById('particle-canvas');
-        const ctx = canvas.getContext('2d');
-        const triggerArea = document.getElementById('photo-trigger');
-
-        let particlesArray = [];
-        let isHovering = false;
-        
-        // Zmienne do pozycjonowania zdjęcia na ekranie
-        let imgX = 0;
-        let imgY = 0;
-        const imgSize = 300; // Rozmiar zdjęcia na canvasie (powinien pasować do CSS .canvas-trigger-area)
-
-        // Preloader
+        // --- 1. PRELOADER ---
         const preloader = document.getElementById('preloader');
-        function hidePreloader() {
-            if(!preloader || preloader.style.opacity === '0') return;
-            preloader.style.opacity = '0';
-            setTimeout(() => { preloader.style.display = 'none'; }, 500);
-        }
+        function hidePreloader() { if(preloader.style.opacity!=='0'){preloader.style.opacity='0'; setTimeout(()=>{preloader.style.display='none'},500);} }
+        window.addEventListener('load', ()=>{setTimeout(hidePreloader,500)});
+        if(document.readyState==='complete') hidePreloader();
+        setTimeout(hidePreloader,3000);
 
-        // 1. Wczytywanie obrazka
-        const image = new Image();
-        image.src = 'JAzdj.jpg'; 
-        // WAŻNE: Obrazek musi być w tym samym folderze. 
-        // Jeśli testujesz lokalnie bez serwera (file://), przeglądarka zablokuje dostęp do pikseli (CORS).
-        
-        image.onload = function() {
-            // Po załadowaniu obrazka inicjujemy cząsteczki
-            init();
-            hidePreloader();
-        };
-        // Fallback gdyby obrazek się nie załadował (np. brak pliku)
-        image.onerror = function() {
-            console.warn("Brak pliku JAzdj.jpg - uruchamiam tryb samych gwiazd");
-            hidePreloader();
-            // Inicjalizujemy puste cząsteczki (tylko białe gwiazdy)
-            initStarsOnly(); 
-        };
+        // --- 2. LOGIKA ODKRYWANIA ZDJĘCIA (TIMED REVEAL) ---
+        const photoContainer = document.getElementById('interactive-photo');
+        let revealTimeout;
 
-        // Obsługa Triggera
-        triggerArea.addEventListener('mouseenter', () => { isHovering = true; });
-        triggerArea.addEventListener('mouseleave', () => { isHovering = false; });
-
-        class Particle {
-            constructor(x, y, color) {
-                // Pozycja docelowa (na zdjęciu)
-                this.homeX = x;
-                this.homeY = y;
-                
-                // Pozycja aktualna (startowo losowa na ekranie)
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                
-                // Ruch swobodny (gwiazdy)
-                this.vx = (Math.random() - 0.5) * 1;
-                this.vy = (Math.random() - 0.5) * 1;
-                
-                this.color = color;
-                this.size = 2; // Rozmiar piksela
-                this.baseSize = this.size;
-            }
-
-            draw() {
-                ctx.fillStyle = this.color;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.closePath();
-                ctx.fill();
-            }
-
-            update() {
-                if (isHovering) {
-                    // TRYB FORMOWANIA ZDJĘCIA
-                    // Obliczamy aktualną pozycję zdjęcia na ekranie (bo scrollujemy!)
-                    const rect = triggerArea.getBoundingClientRect();
-                    // Pozycja docelowa to (pozycja elementu HTML) + (współrzędna piksela wewnątrz zdjęcia)
-                    let targetX = rect.left + this.homeX; 
-                    let targetY = rect.top + this.homeY;
-
-                    // Prosta fizyka dążenia do celu (Ease)
-                    let dx = targetX - this.x;
-                    let dy = targetY - this.y;
-                    
-                    this.x += dx * 0.1; // Szybkość formowania (0.1 = 10% dystansu na klatkę)
-                    this.y += dy * 0.1;
-
-                } else {
-                    // TRYB SWOBODNY (TŁO)
-                    this.x += this.vx;
-                    this.y += this.vy;
-
-                    // Odbijanie od krawędzi lub zawijanie
-                    if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-                    if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
-                    
-                    // Interakcja z myszą (odpychanie jak wcześniej)
-                    // ... (opcjonalnie można dodać, ale może to zakłócać przejście w tryb zdjęcia)
-                }
-            }
-        }
-
-        function init() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            particlesArray = [];
-
-            // Rysujemy obrazek na tymczasowym, małym canvasie w pamięci, aby pobrać dane
-            const tempCanvas = document.createElement('canvas');
-            const tempCtx = tempCanvas.getContext('2d');
-            tempCanvas.width = imgSize;
-            tempCanvas.height = imgSize;
-
-            // Rysujemy zdjęcie przeskalowane do 300x300
-            // Zachowujemy proporcje (zakładając że JAzdj.jpg jest w miarę kwadratowe lub cropujemy)
-            // Tu robimy "object-fit: cover" manualnie
-            let sWidth = image.width;
-            let sHeight = image.height;
-            let sx = 0, sy = 0;
-            if (sWidth > sHeight) {
-                sx = (sWidth - sHeight) / 2;
-                sWidth = sHeight;
-            } else {
-                sy = (sHeight - sWidth) / 2;
-                sHeight = sWidth;
-            }
-            tempCtx.drawImage(image, sx, sy, sWidth, sHeight, 0, 0, imgSize, imgSize);
-
-            // Pobieramy dane pikseli
-            const pixels = tempCtx.getImageData(0, 0, imgSize, imgSize);
-            const data = pixels.data; // Tablica [R, G, B, A, R, G, B, A, ...]
-
-            // Przeskakujemy co np. 4 piksel, żeby nie zabić procesora (density)
-            const gap = 4; 
-
-            for (let y = 0; y < imgSize; y += gap) {
-                for (let x = 0; x < imgSize; x += gap) {
-                    const index = (y * imgSize + x) * 4;
-                    const red = data[index];
-                    const green = data[index + 1];
-                    const blue = data[index + 2];
-                    const alpha = data[index + 3];
-
-                    // Ignorujemy przezroczyste piksele
-                    if (alpha > 128) {
-                        const color = `rgb(${red},${green},${blue})`;
-                        particlesArray.push(new Particle(x, y, color));
-                    }
-                }
-            }
+        photoContainer.addEventListener('mouseenter', () => {
+            // Czyścimy poprzedni timeout jeśli istnieje
+            clearTimeout(revealTimeout);
             
-            // Dodajemy trochę dodatkowych "luźnych" gwiazd CMYK, żeby tło nie było puste w trybie hover
-            // Te nie będą częścią zdjęcia
-            addBackgroundStars(200);
-        }
+            // Odkrywamy zdjęcie
+            photoContainer.classList.add('revealed');
 
-        // Dodatkowe gwiazdy tła (niezależne od zdjęcia)
-        let backgroundStars = [];
-        function addBackgroundStars(count) {
-            const colors = ['#00ffff', '#ff00ff', '#ffff00', '#ffffff'];
-            for(let i=0; i<count; i++) {
-                backgroundStars.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
-                    vx: (Math.random() - 0.5) * 0.5,
-                    vy: (Math.random() - 0.5) * 0.5,
-                    size: Math.random() * 2,
-                    color: colors[Math.floor(Math.random() * colors.length)]
-                });
-            }
-        }
-        
-        // Funkcja fallbackowa (gdy brak zdjęcia)
-        function initStarsOnly() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            addBackgroundStars(500); // Dużo gwiazd
-        }
-
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // 1. Rysuj i aktualizuj cząsteczki zdjęcia
-            for (let i = 0; i < particlesArray.length; i++) {
-                particlesArray[i].draw();
-                particlesArray[i].update();
-            }
-
-            // 2. Rysuj gwiazdy tła (zawsze swobodne)
-            for (let star of backgroundStars) {
-                ctx.fillStyle = star.color;
-                ctx.beginPath();
-                ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-                ctx.fill();
-                
-                star.x += star.vx;
-                star.y += star.vy;
-                if(star.x < 0) star.x = canvas.width;
-                if(star.x > canvas.width) star.x = 0;
-                if(star.y < 0) star.y = canvas.height;
-                if(star.y > canvas.height) star.y = 0;
-            }
-
-            requestAnimationFrame(animate);
-        }
-
-        animate();
-
-        // Obsługa zmiany rozmiaru okna
-        window.addEventListener('resize', function() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            // W idealnym świecie powinniśmy przeliczyć pozycje, ale dla uproszczenia
-            // cząsteczki same się odnajdą dzięki getBoundingClientRect w update()
+            // Ustawiamy timer na 3 sekundy
+            revealTimeout = setTimeout(() => {
+                // Po 3 sekundach zakrywamy zdjęcie, nawet jeśli myszka tam jest
+                photoContainer.classList.remove('revealed');
+            }, 3000);
         });
-        
-        // Obsługa Custom Cursor
-        const cursor = document.querySelector('.cursor');
-        const links = document.querySelectorAll('.link-hover, a, button, .project-img-wrapper, .canvas-trigger-area');
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-        });
-        links.forEach(link => {
-            link.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
-            link.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
-        });
-        
-        // Scroll Reveal
-        const revealElements = document.querySelectorAll('.reveal');
+
+        // Opcjonalnie: Jeśli zjedziemy myszką przed upływem 3 sekund, też zakrywamy (lub zostawiamy - kwestia gustu)
+        // W tej wersji: Zostawiamy odkryte do końca 3 sekund LUB do momentu ponownego najechania
+        // photoContainer.addEventListener('mouseleave', () => {
+             // Jeśli chcesz żeby znikało od razu po wyjechaniu myszką, odkomentuj linię niżej i zakomentuj logikę setTimeout powyżej
+             // photoContainer.classList.remove('revealed');
+        // });
+
+
+        // --- 3. SCROLL REVEAL ---
         const revealObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
         }, { threshold: 0.15 });
-        revealElements.forEach(el => revealObserver.observe(el));
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
+        // --- 4. CANVAS TŁA (GWIAZDY) ---
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas.getContext('2d');
+        let width, height, stars = [];
+        const mouse = { x: undefined, y: undefined };
+        const colors = ['#00ffff', '#ff00ff', '#ffff00', '#ffffff', '#ffffff']; 
+
+        function resize() { width=window.innerWidth; height=window.innerHeight; canvas.width=width; canvas.height=height; initStars(); }
+        
+        class Star {
+            constructor() {
+                this.x = Math.random() * width; this.y = Math.random() * height;
+                this.size = Math.random() * 2;
+                this.density = (Math.random() * 20) + 1;
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.vx = (Math.random() - 0.5) * 0.5; this.vy = (Math.random() - 0.5) * 0.5;
+                this.opacity = Math.random(); this.twinkle = Math.random() * 0.02 + 0.005;
+            }
+            draw() { ctx.fillStyle=this.color; ctx.globalAlpha=this.opacity; ctx.beginPath(); ctx.arc(this.x,this.y,this.size,0,Math.PI*2); ctx.fill(); ctx.globalAlpha=1; }
+            update() {
+                this.x+=this.vx; this.y+=this.vy;
+                if(this.x<0)this.x=width; if(this.x>width)this.x=0; if(this.y<0)this.y=height; if(this.y>height)this.y=0;
+                if(mouse.x){
+                    let dx=mouse.x-this.x, dy=mouse.y-this.y, dist=Math.sqrt(dx*dx+dy*dy);
+                    if(dist<150){
+                        let f=(150-dist)/150;
+                        this.x-=(dx/dist)*f*this.density*2; this.y-=(dy/dist)*f*this.density*2;
+                    }
+                }
+                this.opacity+=this.twinkle; if(this.opacity>1||this.opacity<0.2)this.twinkle=-this.twinkle;
+            }
+        }
+        function initStars(){ stars=[]; for(let i=0;i<(width*height)/8000;i++)stars.push(new Star()); }
+        function animateStars(){ ctx.clearRect(0,0,width,height); stars.forEach(s=>{s.draw();s.update()}); requestAnimationFrame(animateStars); }
+        
+        window.addEventListener('resize', resize);
+        window.addEventListener('mousemove', e=>{mouse.x=e.x; mouse.y=e.y});
+        
+        const cursor=document.querySelector('.cursor');
+        document.addEventListener('mousemove', e=>{cursor.style.left=e.clientX+'px'; cursor.style.top=e.clientY+'px'});
+        document.querySelectorAll('.link-hover, a, button, .project-img-wrapper, .noise-container').forEach(l=>{
+            l.addEventListener('mouseenter',()=>cursor.classList.add('hovered'));
+            l.addEventListener('mouseleave',()=>cursor.classList.remove('hovered'));
+        });
+
+        resize(); animateStars();
     </script>
 </body>
 </html>
