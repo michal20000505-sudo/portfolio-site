@@ -49,7 +49,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1; /* Tło pod spodem */
+            z-index: -1;
             pointer-events: none;
         }
 
@@ -177,7 +177,6 @@
             color: var(--text-color);
         }
 
-        /* Glitch Effect */
         .hero-title::before, .hero-title::after {
             content: 'CREATIVE\A DESIGNER';
             white-space: pre;
@@ -202,15 +201,8 @@
             animation: glitch-anim-2 3s infinite linear alternate-reverse;
         }
 
-        @keyframes glitch-anim-1 {
-            0% { transform: translate(-2px, -2px); }
-            100% { transform: translate(1px, 1px); }
-        }
-
-        @keyframes glitch-anim-2 {
-            0% { transform: translate(2px, 2px); }
-            100% { transform: translate(-1px, -1px); }
-        }
+        @keyframes glitch-anim-1 { 0% { transform: translate(-2px, -2px); } 100% { transform: translate(1px, 1px); } }
+        @keyframes glitch-anim-2 { 0% { transform: translate(2px, 2px); } 100% { transform: translate(-1px, -1px); } }
 
         .hero-subtitle {
             margin-top: 30px;
@@ -246,6 +238,91 @@
         }
         
         h2.section-title span { color: var(--yellow); }
+
+        /* --- O MNIE (NOWA SEKCJA Z HAŁASEM) --- */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr; /* Małe zdjęcie, dużo tekstu */
+            gap: 80px;
+            align-items: start;
+        }
+
+        .about-image-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 350px; /* Ograniczenie wielkości zdjęcia */
+        }
+
+        /* Kontener samego zdjęcia */
+        .noise-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1/1; /* Kwadrat */
+            overflow: hidden;
+            border: 2px solid #222;
+        }
+
+        .my-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.5) blur(3px); /* Domyślnie zniekształcone */
+            transition: all 0.5s ease-out;
+            transform: scale(1.1);
+        }
+
+        /* Warstwa szumu/aberracji */
+        .noise-overlay {
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background-image: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 1px,
+                var(--cyan) 1px,
+                var(--magenta) 2px
+            );
+            background-size: 100% 4px;
+            mix-blend-mode: hard-light;
+            opacity: 1;
+            z-index: 10;
+            animation: static-noise 0.2s infinite steps(4);
+            transition: opacity 0.5s ease;
+        }
+
+        @keyframes static-noise {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(-5px, 5px); }
+            50% { transform: translate(5px, -5px); }
+            75% { transform: translate(-5px, -5px); }
+            100% { transform: translate(5px, 5px); }
+        }
+
+        /* Efekt HOVER na zdjęcie */
+        .noise-container:hover .noise-overlay {
+            opacity: 0; /* Szum znika */
+        }
+
+        .noise-container:hover .my-photo {
+            filter: grayscale(0%) contrast(1) blur(0); /* Zdjęcie normalne */
+            transform: scale(1);
+        }
+
+        .photo-caption {
+            margin-top: 15px;
+            font-size: 0.8rem;
+            color: var(--cyan);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        .about-text {
+            font-size: 1.1rem;
+            color: #ccc;
+            line-height: 1.8;
+        }
 
         /* --- PORTFOLIO --- */
         .project-item {
@@ -364,6 +441,7 @@
 
         /* --- RESPONSYWNOŚĆ --- */
         @media (max-width: 1024px) {
+            .about-grid { grid-template-columns: 1fr; justify-items: center; }
             .services-grid { grid-template-columns: 1fr; gap: 1px; }
             .project-item, .project-item:nth-child(even) { grid-template-columns: 1fr; direction: ltr; }
             .cta-big { font-size: 8vw; }
@@ -419,13 +497,37 @@
         </div>
     </section>
 
-    <!-- O MNIE -->
+    <!-- O MNIE (ZMODYFIKOWANA SEKCJA) -->
     <section id="about">
         <div class="container">
-            <div class="reveal">
-                <p style="font-size: 2rem; max-width: 900px; line-height: 1.6; position: relative; z-index: 2;">
-                    Wierzę, że design w <span style="color: var(--cyan)">2025</span> roku musi być odważny. Łączę surową estetykę z najnowszymi technologiami webowymi. Moja praca to balans między <span style="color: var(--magenta)">chaosem sztuki</span> a <span style="color: var(--yellow)">porządkiem kodu</span>.
-                </p>
+            <h2 class="section-title reveal">O <span>Mnie</span></h2>
+            
+            <div class="about-grid reveal">
+                <!-- Lewa kolumna: Zdjęcie z szumem -->
+                <div class="about-image-wrapper">
+                    <div class="noise-container link-hover">
+                        <!-- Warstwa szumu -->
+                        <div class="noise-overlay"></div>
+                        <!-- Zdjęcie właściwe -->
+                        <img src="JAzdj.jpg" alt="Michał Jar" class="my-photo">
+                    </div>
+                    <p class="photo-caption">↘ najedź myszą i odkryj lemura</p>
+                </div>
+
+                <!-- Prawa kolumna: Tekst placeholder -->
+                <div class="about-text">
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin nibh augue, suscipit a, scelerisque sed, lacinia in, mi. Cras vel lorem. Etiam pellentesque aliquet tellus. Phasellus pharetra nulla ac diam. Quisque semper justo at risus.
+                    </p>
+                    <br>
+                    <p>
+                        Donec venenatis vulputate lorem. Maecenas vestibulum mollis diam. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla facilisi. Sed lacus. Donec lectus. Nullam pretium nibh ut turpis. Nam bibendum.
+                    </p>
+                    <br>
+                    <p style="color: var(--yellow);">
+                        <strong>In hac habitasse platea dictumst. Suspendisse potenti.</strong>
+                    </p>
+                </div>
             </div>
         </div>
     </section>
@@ -513,7 +615,7 @@
 
     <!-- SKRYPTY JS -->
     <script>
-        // --- 1. POPRAWIONY PRELOADER ---
+        // --- 1. PRELOADER ---
         const preloader = document.getElementById('preloader');
 
         function hidePreloader() {
@@ -527,11 +629,7 @@
         window.addEventListener('load', () => {
             setTimeout(hidePreloader, 500);
         });
-
-        if (document.readyState === 'complete') {
-            hidePreloader();
-        }
-
+        if (document.readyState === 'complete') hidePreloader();
         setTimeout(hidePreloader, 3000);
 
 
@@ -544,15 +642,11 @@
         }, { threshold: 0.15 });
         revealElements.forEach(el => revealObserver.observe(el));
 
-        // --- 3. INTERAKTYWNE TŁO GWIAZD (CANVAS) ---
+        // --- 3. CANVAS TŁA ---
         const canvas = document.getElementById('starfield');
         const ctx = canvas.getContext('2d');
-
-        let width, height;
-        let stars = [];
+        let width, height, stars = [];
         const mouse = { x: undefined, y: undefined };
-        
-        // Paleta CMYK dla gwiazd
         const colors = ['#00ffff', '#ff00ff', '#ffff00', '#ffffff', '#ffffff']; 
 
         function resize() {
@@ -568,8 +662,6 @@
                 this.x = Math.random() * width;
                 this.y = Math.random() * height;
                 this.size = Math.random() * 2;
-                this.baseX = this.x;
-                this.baseY = this.y;
                 this.density = (Math.random() * 20) + 1;
                 this.color = colors[Math.floor(Math.random() * colors.length)];
                 this.speedX = (Math.random() - 0.5) * 0.5;
@@ -577,7 +669,6 @@
                 this.opacity = Math.random();
                 this.twinkleSpeed = Math.random() * 0.02 + 0.005;
             }
-
             draw() {
                 ctx.fillStyle = this.color;
                 ctx.globalAlpha = this.opacity;
@@ -586,74 +677,49 @@
                 ctx.fill();
                 ctx.globalAlpha = 1;
             }
-
             update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-
-                if (this.x < 0) this.x = width;
-                if (this.x > width) this.x = 0;
-                if (this.y < 0) this.y = height;
-                if (this.y > height) this.y = 0;
+                this.x += this.speedX; this.y += this.speedY;
+                if (this.x < 0) this.x = width; if (this.x > width) this.x = 0;
+                if (this.y < 0) this.y = height; if (this.y > height) this.y = 0;
 
                 if (mouse.x && mouse.y) {
-                    let dx = mouse.x - this.x;
-                    let dy = mouse.y - this.y;
+                    let dx = mouse.x - this.x; let dy = mouse.y - this.y;
                     let distance = Math.sqrt(dx*dx + dy*dy);
-                    let maxDistance = 150;
-                    
-                    if (distance < maxDistance) {
+                    if (distance < 150) {
                         const forceDirectionX = dx / distance;
                         const forceDirectionY = dy / distance;
-                        const force = (maxDistance - distance) / maxDistance;
-                        const directionX = forceDirectionX * force * this.density;
-                        const directionY = forceDirectionY * force * this.density;
-
-                        this.x -= directionX * 2;
-                        this.y -= directionY * 2;
+                        const force = (150 - distance) / 150;
+                        this.x -= forceDirectionX * force * this.density * 2;
+                        this.y -= forceDirectionY * force * this.density * 2;
                     }
                 }
-
                 this.opacity += this.twinkleSpeed;
-                if (this.opacity > 1 || this.opacity < 0.2) {
-                    this.twinkleSpeed = -this.twinkleSpeed;
-                }
+                if (this.opacity > 1 || this.opacity < 0.2) this.twinkleSpeed = -this.twinkleSpeed;
             }
         }
 
         function initStars() {
             stars = [];
             let numberOfStars = (width * height) / 8000;
-            for (let i = 0; i < numberOfStars; i++) {
-                stars.push(new Star());
-            }
+            for (let i = 0; i < numberOfStars; i++) stars.push(new Star());
         }
 
         function animateStars() {
             ctx.clearRect(0, 0, width, height);
-            for (let i = 0; i < stars.length; i++) {
-                stars[i].draw();
-                stars[i].update();
-            }
+            stars.forEach(s => { s.draw(); s.update(); });
             requestAnimationFrame(animateStars);
         }
 
         window.addEventListener('resize', resize);
-        
-        window.addEventListener('mousemove', (e) => {
-            mouse.x = e.x;
-            mouse.y = e.y;
-        });
+        window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
 
-        // Custom Cursor Logic
+        // Cursor
         const cursor = document.querySelector('.cursor');
-        const links = document.querySelectorAll('.link-hover, a, button, .project-img-wrapper');
-
+        const links = document.querySelectorAll('.link-hover, a, button, .project-img-wrapper, .noise-container');
         document.addEventListener('mousemove', (e) => {
             cursor.style.left = e.clientX + 'px';
             cursor.style.top = e.clientY + 'px';
         });
-
         links.forEach(link => {
             link.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
             link.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
@@ -661,7 +727,6 @@
 
         resize();
         animateStars();
-
     </script>
 </body>
 </html>
