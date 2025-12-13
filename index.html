@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PORTFOLIO | Visual Experience</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- ZMIENNE KOLORYSTYCZNE (CMYK + DARK) --- */
+        :root {
+            --bg-color: #050505;
+            --text-color: #ffffff;
+            --cyan: #00ffff;
+            --magenta: #ff00ff;
+            --yellow: #ffff00;
+            --key: #000000;
+            --font-main: 'Space Grotesk', sans-serif;
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        /* --- RESET I BAZA --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none; /* Ukrywamy standardowy kursor */
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-main);
+            overflow-x: hidden;
+            line-height: 1.5;
+            position: relative;
+        }
+
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+        img { display: block; width: 100%; }
+
+        /* --- CANVAS TŁA (GWIAZDY) --- */
+        #starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Tło pod spodem */
+            pointer-events: none;
+        }
+
+        /* --- CUSTOM CURSOR --- */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--text-color);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease, background-color 0.2s;
+            mix-blend-mode: difference;
+        }
+
+        .cursor.hovered {
+            transform: translate(-50%, -50%) scale(2.5);
+            background-color: var(--text-color);
+            border-color: transparent;
+        }
+
+        /* --- PRELOADER --- */
+        #preloader {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-color);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease;
+        }
+        
+        .loader-text {
+            font-size: 2rem;
+            font-weight: 700;
+            animation: pulseCMYK 1s infinite alternate;
+        }
+
+        @keyframes pulseCMYK {
+            0% { text-shadow: 2px 2px 0 var(--cyan); }
+            50% { text-shadow: -2px 2px 0 var(--magenta); }
+            100% { text-shadow: -2px -2px 0 var(--yellow); }
+        }
+
+        /* --- CONTAINER --- */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        /* --- HEADER & NAV --- */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 30px 0;
+            z-index: 100;
+            mix-blend-mode: difference;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.5rem;
+            letter-spacing: -1px;
+            position: relative;
+        }
+
+        .logo span { color: var(--cyan); }
+
+        .nav-links {
+            display: flex;
+            gap: 50px;
+        }
+
+        .nav-links a {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--magenta);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after { width: 100%; }
+
+        /* --- HERO SECTION --- */
+        #hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 8vw;
+            font-weight: 700;
+            line-height: 0.9;
+            text-transform: uppercase;
+            position: relative;
+            color: var(--text-color);
+        }
+
+        /* Glitch Effect */
+        .hero-title::before, .hero-title::after {
+            content: 'CREATIVE\A DESIGNER';
+            white-space: pre;
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0.8;
+        }
+
+        .hero-title::before {
+            color: var(--cyan);
+            z-index: -1;
+            transform: translate(-3px, -3px);
+            mix-blend-mode: screen;
+            animation: glitch-anim-1 2s infinite linear alternate-reverse;
+        }
+
+        .hero-title::after {
+            color: var(--magenta);
+            z-index: -2;
+            transform: translate(3px, 3px);
+            mix-blend-mode: screen;
+            animation: glitch-anim-2 3s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim-1 {
+            0% { transform: translate(-2px, -2px); }
+            100% { transform: translate(1px, 1px); }
+        }
+
+        @keyframes glitch-anim-2 {
+            0% { transform: translate(2px, 2px); }
+            100% { transform: translate(-1px, -1px); }
+        }
+
+        .hero-subtitle {
+            margin-top: 30px;
+            font-size: 1.2rem;
+            color: #888;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        /* --- SEKCJE OGÓLNE --- */
+        section {
+            padding: 150px 0;
+            position: relative;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(100px);
+            transition: all 1s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        h2.section-title {
+            font-size: 4rem;
+            margin-bottom: 80px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 20px;
+            display: inline-block;
+        }
+        
+        h2.section-title span { color: var(--yellow); }
+
+        /* --- PORTFOLIO --- */
+        .project-item {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 50px;
+            margin-bottom: 150px;
+            align-items: center;
+        }
+
+        .project-item:nth-child(even) { direction: rtl; }
+        .project-item:nth-child(even) .project-info { direction: ltr; }
+
+        .project-img-wrapper {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #222;
+        }
+
+        .project-img-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--cyan);
+            opacity: 0;
+            mix-blend-mode: multiply;
+            transition: var(--transition);
+        }
+
+        .project-img-wrapper:hover::after { opacity: 0.6; }
+        .project-img-wrapper:hover img { transform: scale(1.1); filter: grayscale(100%); }
+
+        .project-img-wrapper img {
+            width: 100%;
+            height: auto;
+            transition: var(--transition);
+        }
+
+        .project-info h3 { font-size: 2.5rem; margin-bottom: 20px; color: var(--text-color); }
+        .project-info p { color: #aaa; margin-bottom: 30px; font-size: 1.1rem; }
+        
+        .tags span {
+            display: inline-block;
+            border: 1px solid var(--text-color);
+            padding: 8px 15px;
+            margin-right: 10px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            border-radius: 50px;
+        }
+
+        /* --- SERVICES --- */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta), var(--yellow));
+        }
+
+        .service-card {
+            background-color: rgba(5, 5, 5, 0.95);
+            padding: 60px 40px;
+            height: 100%;
+            transition: var(--transition);
+        }
+
+        .service-card:hover { background-color: #000; }
+        .service-card h3 { font-size: 2rem; margin-bottom: 20px; }
+
+        /* --- CONTACT --- */
+        .cta-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            align-items: center;
+            margin-top: 50px;
+        }
+
+        .cta-big {
+            font-size: 4vw;
+            font-weight: 700;
+            line-height: 1.2;
+            text-align: center;
+            display: block;
+            transition: var(--transition);
+        }
+        
+        .cta-small {
+            font-size: 2rem;
+            font-weight: 500;
+            color: #ccc;
+            letter-spacing: 2px;
+            transition: var(--transition);
+        }
+
+        .cta-big:hover, .cta-small:hover {
+            color: var(--bg-color);
+            text-shadow: 
+                -1px -1px 0 var(--cyan),  
+                1px -1px 0 var(--cyan),
+                -1px 1px 0 var(--cyan),
+                1px 1px 0 var(--cyan); 
+        }
+        
+        footer {
+            padding: 50px 0;
+            text-align: center;
+            border-top: 1px solid #222;
+            margin-top: 100px;
+            color: #666;
+            font-size: 0.8rem;
+            position: relative;
+            z-index: 2;
+            background-color: var(--bg-color);
+        }
+
+        /* --- RESPONSYWNOŚĆ --- */
+        @media (max-width: 1024px) {
+            .services-grid { grid-template-columns: 1fr; gap: 1px; }
+            .project-item, .project-item:nth-child(even) { grid-template-columns: 1fr; direction: ltr; }
+            .cta-big { font-size: 8vw; }
+            .cta-small { font-size: 1.5rem; }
+        }
+        
+        @media (max-width: 768px) {
+             .hero-title { font-size: 15vw; }
+             .nav-links { display: none; }
+             .container { padding: 0 20px; }
+             .cursor { display: none; }
+             * { cursor: auto; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- CANVAS TŁA -->
+    <canvas id="starfield"></canvas>
+
+    <!-- CUSTOM CURSOR -->
+    <div class="cursor"></div>
+
+    <!-- PRELOADER -->
+    <div id="preloader">
+        <div class="loader-text">LOADING...</div>
+    </div>
+
+    <!-- NAWIGACJA -->
+    <header>
+        <div class="container">
+            <nav>
+                <a href="#" class="logo link-hover">MJ<span>.</span></a>
+                <div class="nav-links">
+                    <a href="#about" class="link-hover">O mnie</a>
+                    <a href="#work" class="link-hover">Projekty</a>
+                    <a href="#contact" class="link-hover">Kontakt</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section id="hero">
+        <div class="container hero-content">
+            <div class="glitch-wrapper">
+                <h1 class="hero-title" title="Creative Designer">
+                    CREATIVE<br>DESIGNER
+                </h1>
+            </div>
+            <p class="hero-subtitle reveal">Web Design / Branding / Art Direction</p>
+        </div>
+    </section>
+
+    <!-- O MNIE -->
+    <section id="about">
+        <div class="container">
+            <div class="reveal">
+                <p style="font-size: 2rem; max-width: 900px; line-height: 1.6; position: relative; z-index: 2;">
+                    Wierzę, że design w <span style="color: var(--cyan)">2025</span> roku musi być odważny. Łączę surową estetykę z najnowszymi technologiami webowymi. Moja praca to balans między <span style="color: var(--magenta)">chaosem sztuki</span> a <span style="color: var(--yellow)">porządkiem kodu</span>.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- PORTFOLIO -->
+    <section id="work">
+        <div class="container">
+            <h2 class="section-title reveal">Wybrane <span>Prace</span></h2>
+
+            <!-- Projekt 1 -->
+            <div class="project-item reveal">
+                <div class="project-img-wrapper link-hover">
+                    <img src="https://placehold.co/800x600/111/FFF?text=Projekt+NEON" alt="Projekt 1">
+                </div>
+                <div class="project-info">
+                    <h3>Neon Commerce</h3>
+                    <p>Futurystyczny sklep internetowy z odzieżą streetwear. Pełen redesign UX/UI oraz wdrożenie animacji 3D.</p>
+                    <div class="tags">
+                        <span>UI Design</span>
+                        <span>WebGL</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Projekt 2 -->
+            <div class="project-item reveal">
+                <div class="project-img-wrapper link-hover">
+                    <img src="https://placehold.co/800x600/111/FFF?text=App+Interface" alt="Projekt 2">
+                </div>
+                <div class="project-info">
+                    <h3>Fintech App</h3>
+                    <p>Minimalistyczna aplikacja finansowa. Główny nacisk na czytelność danych i ciemny tryb oszczędzający energię.</p>
+                    <div class="tags">
+                        <span>Mobile App</span>
+                        <span>UX Research</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- USŁUGI -->
+    <section id="services">
+        <div class="container">
+            <h2 class="section-title reveal">Moje <span>Usługi</span></h2>
+            <div class="services-grid reveal">
+                <div class="service-card">
+                    <h3 style="color: var(--cyan)">Web Design</h3>
+                    <p>Tworzenie stron, które nie tylko wyglądają, ale działają. Responsywność, szybkość i interaktywność to standard.</p>
+                </div>
+                <div class="service-card">
+                    <h3 style="color: var(--magenta)">Branding</h3>
+                    <p>Projektowanie logo i identyfikacji wizualnej. Tworzę marki, które krzyczą z ekranu i zapadają w pamięć.</p>
+                </div>
+                <div class="service-card">
+                    <h3 style="color: var(--yellow)">Development</h3>
+                    <p>Wdrażanie projektów w życie. HTML5, CSS3, JavaScript oraz nowoczesne frameworki bez kompromisów.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- KONTAKT -->
+    <section id="contact">
+        <div class="container" style="text-align: center;">
+            <p class="reveal" style="color: #888; text-transform: uppercase; letter-spacing: 2px;">Rozpocznijmy współpracę</p>
+            
+            <div class="cta-container reveal">
+                <a href="mailto:graf.m.jar@gmail.com" class="cta-big link-hover">
+                    <span style="color: var(--cyan)">graf.m.jar</span><span style="color: var(--magenta)">@</span><span style="color: var(--yellow)">gmail.com</span>
+                </a>
+                
+                <a href="tel:+48608078802" class="cta-small link-hover">
+                    +48 608 078 802
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            &copy; 2025 Michał Jar Portfolio. Designed with CMYK passion.
+        </div>
+    </footer>
+
+    <!-- SKRYPTY JS -->
+    <script>
+        // --- 1. POPRAWIONY PRELOADER ---
+        const preloader = document.getElementById('preloader');
+
+        function hidePreloader() {
+            if (!preloader || preloader.style.opacity === '0') return;
+            preloader.style.opacity = '0';
+            setTimeout(() => {
+                preloader.style.display = 'none';
+            }, 500);
+        }
+
+        window.addEventListener('load', () => {
+            setTimeout(hidePreloader, 500);
+        });
+
+        if (document.readyState === 'complete') {
+            hidePreloader();
+        }
+
+        setTimeout(hidePreloader, 3000);
+
+
+        // --- 2. SCROLL REVEAL ---
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.15 });
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // --- 3. INTERAKTYWNE TŁO GWIAZD (CANVAS) ---
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+        let stars = [];
+        const mouse = { x: undefined, y: undefined };
+        
+        // Paleta CMYK dla gwiazd
+        const colors = ['#00ffff', '#ff00ff', '#ffff00', '#ffffff', '#ffffff']; 
+
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+            initStars();
+        }
+
+        class Star {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.size = Math.random() * 2;
+                this.baseX = this.x;
+                this.baseY = this.y;
+                this.density = (Math.random() * 20) + 1;
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.speedX = (Math.random() - 0.5) * 0.5;
+                this.speedY = (Math.random() - 0.5) * 0.5;
+                this.opacity = Math.random();
+                this.twinkleSpeed = Math.random() * 0.02 + 0.005;
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = this.opacity;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.globalAlpha = 1;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.x < 0) this.x = width;
+                if (this.x > width) this.x = 0;
+                if (this.y < 0) this.y = height;
+                if (this.y > height) this.y = 0;
+
+                if (mouse.x && mouse.y) {
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
+                    let distance = Math.sqrt(dx*dx + dy*dy);
+                    let maxDistance = 150;
+                    
+                    if (distance < maxDistance) {
+                        const forceDirectionX = dx / distance;
+                        const forceDirectionY = dy / distance;
+                        const force = (maxDistance - distance) / maxDistance;
+                        const directionX = forceDirectionX * force * this.density;
+                        const directionY = forceDirectionY * force * this.density;
+
+                        this.x -= directionX * 2;
+                        this.y -= directionY * 2;
+                    }
+                }
+
+                this.opacity += this.twinkleSpeed;
+                if (this.opacity > 1 || this.opacity < 0.2) {
+                    this.twinkleSpeed = -this.twinkleSpeed;
+                }
+            }
+        }
+
+        function initStars() {
+            stars = [];
+            let numberOfStars = (width * height) / 8000;
+            for (let i = 0; i < numberOfStars; i++) {
+                stars.push(new Star());
+            }
+        }
+
+        function animateStars() {
+            ctx.clearRect(0, 0, width, height);
+            for (let i = 0; i < stars.length; i++) {
+                stars[i].draw();
+                stars[i].update();
+            }
+            requestAnimationFrame(animateStars);
+        }
+
+        window.addEventListener('resize', resize);
+        
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+
+        // Custom Cursor Logic
+        const cursor = document.querySelector('.cursor');
+        const links = document.querySelectorAll('.link-hover, a, button, .project-img-wrapper');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        links.forEach(link => {
+            link.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+            link.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+        });
+
+        resize();
+        animateStars();
+
+    </script>
+</body>
+</html>
