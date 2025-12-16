@@ -67,75 +67,60 @@
         h2.section-title { font-size: 4rem; margin-bottom: 80px; border-bottom: 1px solid #333; padding-bottom: 20px; display: inline-block; }
         h2.section-title span { color: var(--yellow); }
 
-        /* --- O MNIE (ULEPSZONA SEKCJA Z HAŁASEM I TEKSTEM) --- */
-        .about-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 80px; align-items: start; }
+        /* --- O MNIE (POPRAWIONA SEKCJA) --- */
+        .about-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 60px; align-items: center; } /* Zmienione align-items na center */
         .about-image-wrapper { position: relative; width: 100%; max-width: 350px; }
 
-        .noise-container {
+        .flash-container {
             position: relative;
             width: 100%;
             aspect-ratio: 1/1;
             overflow: hidden;
-            border: 2px solid #222;
-            cursor: none;
+            border: 1px solid #333;
         }
 
         .my-photo {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            filter: grayscale(100%) contrast(3) blur(8px) brightness(0.6); 
-            transform: scale(1.2);
-            transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+            filter: grayscale(100%) contrast(1.2); /* Lekko szare na start */
+            transition: filter 0.5s ease;
         }
 
-        .noise-overlay {
+        /* Efekt błysku (Flash) */
+        .flash-container::after {
+            content: '';
             position: absolute;
-            top: -50%; left: -50%;
-            width: 200%; height: 200%;
-            background-image: repeating-linear-gradient(
-                0deg,
-                transparent,
-                transparent 1px,
-                #000 1px,
-                var(--cyan) 2px,
-                var(--magenta) 3px
-            );
-            background-size: 100% 3px;
-            mix-blend-mode: hard-light;
-            opacity: 0.9;
-            z-index: 10;
-            animation: static-noise 0.1s infinite steps(2);
-            transition: opacity 0.8s ease;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: white;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.1s ease-out; /* Szybki błysk */
+            mix-blend-mode: overlay;
         }
 
-        @keyframes static-noise {
-            0% { transform: translate(0, 0); }
-            25% { transform: translate(-10px, 10px); }
-            50% { transform: translate(10px, -10px); }
-            75% { transform: translate(-5px, -5px); }
-            100% { transform: translate(5px, 5px); }
+        .flash-container:hover::after {
+            opacity: 0.8; /* Siła błysku */
+            transition: opacity 0.05s ease-in;
         }
-
-        .noise-container.revealed .noise-overlay { opacity: 0; }
-        .noise-container.revealed .my-photo {
-            filter: grayscale(0%) contrast(1) blur(0) brightness(1);
-            transform: scale(1);
-        }
-
-        .photo-caption { margin-top: 15px; font-size: 0.8rem; color: var(--cyan); text-transform: uppercase; letter-spacing: 1px; text-align: center; }
         
-        /* NOWE STYLE DLA TEKSTU O MNIE */
-        .about-text { font-size: 1.25rem; color: #ccc; line-height: 1.7; font-weight: 300; }
-        .about-text .highlight-cyan { color: var(--cyan); font-weight: 500; }
-        .about-text .highlight-magenta { color: var(--magenta); font-weight: 500; }
-        .about-text .highlight-yellow { color: var(--yellow); font-weight: 500; }
-        .about-text .highlight-bold { color: var(--text-color); font-weight: 700; letter-spacing: -0.5px; }
-        .about-text p { margin-bottom: 25px; }
-        .about-text p:first-of-type::first-letter { font-size: 3.5rem; float: left; margin-right: 15px; line-height: 0.8; font-weight: 700; color: var(--text-color); }
+        /* Po błysku (ułamek sekundy później przez CSS delay w hoverze, ale tutaj prościej: na hover zmieniamy fotkę) */
+        .flash-container:hover .my-photo {
+            filter: grayscale(0%) contrast(1) brightness(1.1); /* Kolor po najechaniu */
+        }
 
+        /* --- NOWE STYLE DLA TEKSTU O MNIE --- */
+        .about-text { font-size: 1.15rem; color: #ddd; line-height: 1.8; font-weight: 300; text-align: justify; }
+        
+        /* Usunięto inicjał (drop cap) dla wyrównania */
+        .about-text p { margin-bottom: 20px; }
+        
+        .highlight-cyan { color: var(--cyan); font-weight: 500; }
+        .highlight-magenta { color: var(--magenta); font-weight: 500; }
+        .highlight-yellow { color: var(--yellow); font-weight: 500; }
+        .highlight-bold { color: #fff; font-weight: 700; }
 
-        /* --- STYLE PROJEKTÓW --- */
+        /* --- POZOSTAŁE STYLE (BEZ ZMIAN) --- */
         .project-item { display: grid; grid-template-columns: 1.5fr 1fr; gap: 50px; margin-bottom: 150px; align-items: center; }
         .project-item:nth-child(even) { direction: rtl; }
         .project-item:nth-child(even) .project-info { direction: ltr; }
@@ -166,13 +151,12 @@
         footer { padding: 50px 0; text-align: center; border-top: 1px solid #222; margin-top: 100px; color: #666; font-size: 0.8rem; position: relative; z-index: 2; background-color: var(--bg-color); }
 
         @media (max-width: 1024px) {
-            .about-grid { grid-template-columns: 1fr; justify-items: center; }
+            .about-grid { grid-template-columns: 1fr; justify-items: center; gap: 40px; }
             .services-grid { grid-template-columns: 1fr; gap: 1px; }
             .project-item, .project-item:nth-child(even) { grid-template-columns: 1fr; direction: ltr; }
             .cta-big { font-size: 8vw; }
             .cta-small { font-size: 1.5rem; }
-            .about-text { text-align: center; }
-            .about-text p:first-of-type::first-letter { float: none; margin: 0; font-size: inherit; }
+            .about-text { text-align: center; } /* Na mobile centrujemy */
         }
     </style>
 </head>
@@ -211,11 +195,11 @@
             
             <div class="about-grid reveal">
                 <div class="about-image-wrapper">
-                    <div class="noise-container link-hover" id="interactive-photo">
-                        <div class="noise-overlay"></div>
+                    <!-- Zmieniono klasę na flash-container -->
+                    <div class="flash-container link-hover">
                         <img src="JAzdj.jpg" alt="Michał Jar" class="my-photo">
                     </div>
-                    <p class="photo-caption">↘ najedź myszą i odkryj lemura</p>
+                    <!-- Usunięto podpis o lemurze -->
                 </div>
 
                 <div class="about-text">
@@ -231,7 +215,6 @@
         <div class="container">
             <h2 class="section-title reveal">Wybrane <span>Prace</span></h2>
             
-            <!-- PROJEKT 1: SSCAR -->
             <div class="project-item reveal">
                 <div class="project-img-wrapper link-hover">
                     <a href="https://skpolanowice-sourceskp.github.io/sscar/" target="_blank">
@@ -289,15 +272,7 @@
         if(document.readyState==='complete') hidePreloader();
         setTimeout(hidePreloader,3000);
 
-        const photoContainer = document.getElementById('interactive-photo');
-        let revealTimeout;
-        photoContainer.addEventListener('mouseenter', () => {
-            clearTimeout(revealTimeout);
-            photoContainer.classList.add('revealed');
-            revealTimeout = setTimeout(() => {
-                photoContainer.classList.remove('revealed');
-            }, 3000);
-        });
+        // Usunięto skrypt "Odkrywania zdjęcia", ponieważ teraz jest to czysty CSS hover
 
         const revealObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
@@ -343,7 +318,7 @@
         
         const cursor=document.querySelector('.cursor');
         document.addEventListener('mousemove', e=>{cursor.style.left=e.clientX+'px'; cursor.style.top=e.clientY+'px'});
-        document.querySelectorAll('.link-hover, a, button, .project-img-wrapper, .noise-container').forEach(l=>{
+        document.querySelectorAll('.link-hover, a, button, .project-img-wrapper, .flash-container').forEach(l=>{
             l.addEventListener('mouseenter',()=>cursor.classList.add('hovered'));
             l.addEventListener('mouseleave',()=>cursor.classList.remove('hovered'));
         });
