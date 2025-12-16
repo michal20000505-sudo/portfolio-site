@@ -67,7 +67,7 @@
         h2.section-title { font-size: 4rem; margin-bottom: 80px; border-bottom: 1px solid #333; padding-bottom: 20px; display: inline-block; }
         h2.section-title span { color: var(--yellow); }
 
-        /* --- O MNIE (POPRAWIONA SEKCJA - PROSTY ZOOM) --- */
+        /* --- O MNIE --- */
         .about-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 60px; align-items: center; }
         .about-image-wrapper { position: relative; width: 100%; max-width: 350px; }
 
@@ -75,7 +75,7 @@
             position: relative;
             width: 100%;
             aspect-ratio: 1/1;
-            overflow: hidden; /* Ważne, żeby zdjęcie nie wychodziło poza ramkę przy zoomie */
+            overflow: hidden; 
             border: 1px solid #333;
         }
 
@@ -83,15 +83,11 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Płynna animacja */
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
         }
 
-        /* Zoom o 30% po najechaniu */
-        .simple-zoom-container:hover .my-photo {
-            transform: scale(1.3);
-        }
+        .simple-zoom-container:hover .my-photo { transform: scale(1.3); }
 
-        /* --- STYLE DLA TEKSTU O MNIE --- */
         .about-text { font-size: 1.15rem; color: #ddd; line-height: 1.8; font-weight: 300; text-align: justify; }
         .about-text p { margin-bottom: 20px; }
         
@@ -100,7 +96,7 @@
         .highlight-yellow { color: var(--yellow); font-weight: 500; }
         .highlight-bold { color: #fff; font-weight: 700; }
 
-        /* --- POZOSTAŁE STYLE (BEZ ZMIAN) --- */
+        /* --- PROJEKTY --- */
         .project-item { display: grid; grid-template-columns: 1.5fr 1fr; gap: 50px; margin-bottom: 150px; align-items: center; }
         .project-item:nth-child(even) { direction: rtl; }
         .project-item:nth-child(even) .project-info { direction: ltr; }
@@ -152,7 +148,9 @@
                 <a href="#" class="logo link-hover">MJ<span>.</span></a>
                 <div class="nav-links">
                     <a href="#about" class="link-hover">O mnie</a>
-                    <a href="#work" class="link-hover">Projekty</a>
+                    <a href="#work" class="link-hover">Web</a>
+                    <!-- ZMIANA: Dodano link do nowej strony graficznej -->
+                    <a href="grafika.html" class="link-hover">Grafika</a>
                     <a href="#contact" class="link-hover">Kontakt</a>
                 </div>
             </nav>
@@ -175,7 +173,6 @@
             
             <div class="about-grid reveal">
                 <div class="about-image-wrapper">
-                    <!-- Zmieniono na prosty zoom -->
                     <div class="simple-zoom-container link-hover">
                         <img src="JAzdj.jpg" alt="Michał Jar" class="my-photo">
                     </div>
@@ -194,6 +191,7 @@
         <div class="container">
             <h2 class="section-title reveal">Wybrane <span>Prace</span></h2>
             
+            <!-- Projekt 1: SSCAR -->
             <div class="project-item reveal">
                 <div class="project-img-wrapper link-hover">
                     <a href="https://skpolanowice-sourceskp.github.io/sscar/" target="_blank">
@@ -207,14 +205,20 @@
                 </div>
             </div>
 
+            <!-- Projekt 2 (ZMIANA): Link do Portfolio Graficznego -->
             <div class="project-item reveal">
                 <div class="project-img-wrapper link-hover">
-                    <img src="https://placehold.co/800x600/111/FFF?text=App+Interface" alt="Projekt 2">
+                    <!-- Link do nowej podstrony -->
+                    <a href="grafika.html">
+                        <!-- Użycie zdjęcia z załączników jako miniaturki -->
+                        <img src="digicamoblue-powder.jpg" alt="Portfolio Graficzne">
+                    </a>
                 </div>
                 <div class="project-info">
-                    <h3>Fintech App</h3>
-                    <p>Minimalistyczna aplikacja finansowa. Główny nacisk na czytelność danych i ciemny tryb oszczędzający energię.</p>
-                    <div class="tags"><span>Mobile App</span><span>UX Research</span></div>
+                    <!-- Tytuł linkujący do podstrony -->
+                    <h3><a href="grafika.html">Graphic Portfolio</a></h3>
+                    <p>Pełna kolekcja projektów graficznych: branding, plakaty, DTP oraz materiały reklamowe. Zobacz wyselekcjonowane prace z lat 2014-2025.</p>
+                    <div class="tags"><span>Branding</span><span>Print</span><span>Art Direction</span></div>
                 </div>
             </div>
         </div>
