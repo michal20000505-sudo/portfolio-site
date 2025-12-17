@@ -98,29 +98,40 @@
         .work-info .category { color: var(--magenta); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; display: inline-block; margin-bottom: 10px; }
         .work-info p { color: #888; font-size: 0.95rem; font-weight: 300; line-height: 1.4; }
 
-        /* --- LIGHTBOX STYLES --- */
+        /* --- LIGHTBOX STYLES (POPRAWIONE) --- */
         #lightbox {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: rgba(0, 0, 0, 0.95);
-            z-index: 10001; /* Wyżej niż kursor i header */
+            z-index: 10001;
             display: none;
             justify-content: center; align-items: center;
             opacity: 0; transition: opacity 0.3s ease;
             backdrop-filter: blur(5px);
+            cursor: auto; /* Przywracamy kursor systemowy w lightboxie */
         }
         #lightbox.active { display: flex; opacity: 1; }
+        
         #lightbox img {
-            max-width: 90%; max-height: 90vh;
+            max-width: 90vw; 
+            max-height: 90vh;
+            width: auto;   /* Ważne dla proporcji */
+            height: auto;  /* Ważne dla proporcji */
+            object-fit: contain; /* Gwarancja braku rozciągnięcia */
             border: 2px solid #333;
             box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
-            transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+            transform: scale(0.9); 
+            transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+            cursor: default;
         }
+        
         #lightbox.active img { transform: scale(1); }
+        
         .lightbox-close {
             position: absolute; top: 30px; right: 40px;
             font-size: 3rem; color: var(--text-color);
-            cursor: none; /* Używamy naszego custom kursora */
+            cursor: pointer; /* Kursor łapki na przycisku zamknięcia */
             transition: color 0.3s;
+            z-index: 10002;
         }
         .lightbox-close:hover { color: var(--magenta); }
 
@@ -137,6 +148,7 @@
             .nav-links { gap: 20px; }
             .nav-links a { font-size: 0.75rem; }
             .page-title { font-size: 3.5rem; }
+            .lightbox-close { top: 20px; right: 20px; font-size: 2.5rem; }
         }
     </style>
 </head>
@@ -190,7 +202,7 @@
                     </div>
                 </div>
 
-                <!-- NOWE: Food Point (Pion) -->
+                <!-- 2. FOOD POINT -->
                 <div class="masonry-item reveal">
                     <a href="#" class="work-card link-hover">
                         <img src="Food-point-final-ciemne-tlo.jpg" alt="Food Point">
@@ -202,7 +214,7 @@
                     </div>
                 </div>
 
-                <!-- 2. GROM ART ULOTKA -->
+                <!-- 3. GROM ART ULOTKA -->
                 <div class="masonry-item reveal">
                     <a href="#" class="work-card link-hover">
                         <img src="Grom-art-b5-front.jpg" alt="Grom Art Statuetka">
@@ -214,7 +226,7 @@
                     </div>
                 </div>
 
-                <!-- NOWE: Dunajewska Ulotka (Pion) -->
+                <!-- 4. DUNAJEWSKA ULOTKA -->
                 <div class="masonry-item reveal">
                     <a href="#" class="work-card link-hover">
                         <img src="dunajewska-ulotka.jpg" alt="Trener Personalny Ulotka">
@@ -226,7 +238,7 @@
                     </div>
                 </div>
 
-                <!-- 3. KONTROLER -->
+                <!-- 5. KONTROLER -->
                 <div class="masonry-item reveal">
                     <a href="#" class="work-card link-hover">
                         <img src="digicamoblue-powder.jpg" alt="Custom PS4 Controller">
@@ -238,7 +250,7 @@
                     </div>
                 </div>
 
-                <!-- NOWE: Dunajewska Voucher (Poziom) -->
+                <!-- 6. DUNAJEWSKA VOUCHER -->
                 <div class="masonry-item reveal">
                     <a href="#" class="work-card link-hover">
                         <img src="Dunajewska-voucher.jpg" alt="Voucher Treningowy">
@@ -250,7 +262,7 @@
                     </div>
                 </div>
 
-                <!-- 4. WIZYTÓWKA SUDBAL (Z 'ó') -->
+                <!-- 7. WIZYTÓWKA SUDBAL -->
                 <div class="masonry-item reveal">
                     <a href="#" class="work-card link-hover">
                         <img src="Wizytówka-9x5-sudbal.jpg" alt="Sudbal Garage">
@@ -262,7 +274,7 @@
                     </div>
                 </div>
 
-                <!-- 5. WIZYTÓWKA TRENER (Z 'ó') -->
+                <!-- 8. WIZYTÓWKA TRENER -->
                 <div class="masonry-item reveal">
                     <a href="#" class="work-card link-hover">
                         <img src="Wizytówka-9x5.jpg" alt="Wizytówka Trenera">
@@ -274,7 +286,7 @@
                     </div>
                 </div>
 
-                <!-- NOWE: Grzegorz Piróg Wizytówka (Poziom) -->
+                <!-- 9. GRZEGORZ PIRÓG WIZYTÓWKA -->
                 <div class="masonry-item reveal">
                     <a href="#" class="work-card link-hover">
                         <img src="Grzegorz-pirog-wizytowka.jpg" alt="Usługi Budowlane">
@@ -286,7 +298,7 @@
                     </div>
                 </div>
 
-                <!-- 6. WIZYTÓWKI GROM MOCKUP -->
+                <!-- 10. WIZYTÓWKI GROM MOCKUP -->
                 <div class="masonry-item reveal">
                     <a href="#" class="work-card link-hover">
                         <img src="render2.jpg" alt="Grom Art Branding">
@@ -298,7 +310,7 @@
                     </div>
                 </div>
 
-                <!-- 7. WIZYTÓWKA SCHMIDT (Z 'ó') -->
+                <!-- 11. WIZYTÓWKA SCHMIDT -->
                 <div class="masonry-item reveal">
                     <a href="#" class="work-card link-hover">
                         <img src="wizytówka-max-bucz.jpg" alt="Schmidt Maszyny">
@@ -423,12 +435,11 @@
         // Funkcja otwierająca lightbox
         document.querySelectorAll('.work-card').forEach(card => {
             card.addEventListener('click', function(e) {
-                e.preventDefault(); // Zatrzymuje skok do góry strony
+                e.preventDefault(); 
                 const img = this.querySelector('img');
                 if (img) {
                     lightboxImg.src = img.src;
                     lightbox.classList.add('active');
-                    // Opcjonalnie: zablokuj scrollowanie strony pod spodem
                     document.body.style.overflow = 'hidden';
                 }
             });
@@ -437,20 +448,18 @@
         // Funkcja zamykająca lightbox
         function closeLightbox() {
             lightbox.classList.remove('active');
-            document.body.style.overflow = ''; // Przywróć scrollowanie
-            setTimeout(() => { lightboxImg.src = ''; }, 300); // Wyczyść src po animacji
+            document.body.style.overflow = ''; 
+            setTimeout(() => { lightboxImg.src = ''; }, 300);
         }
 
         closeBtn.addEventListener('click', closeLightbox);
         
-        // Kliknięcie w tło zamyka lightbox
         lightbox.addEventListener('click', function(e) {
             if (e.target === lightbox) {
                 closeLightbox();
             }
         });
 
-        // Zamknięcie klawiszem ESC
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape' && lightbox.classList.contains('active')) {
                 closeLightbox();
