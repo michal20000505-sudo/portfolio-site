@@ -51,16 +51,16 @@
         .nav-links a.active { color: var(--cyan); }
         .nav-links a.active::after { width: 100%; background: var(--cyan); }
 
-        /* --- HERO Z EFEKTEM "SHINE" (BEZ SVG) --- */
+        /* --- HERO Z EFEKTEM "SHINE" (JS TRIGGER) --- */
         #page-hero { padding: 150px 0 50px; text-align: center; }
         
         .page-title-container {
-            display: inline-block; /* Żeby hover działał na całość */
+            display: inline-block;
             padding: 20px;
         }
 
         .page-title {
-            font-size: 8rem; /* Duży rozmiar */
+            font-size: 8rem;
             line-height: 0.85;
             font-weight: 700;
             text-transform: uppercase;
@@ -75,16 +75,16 @@
 
         .title-works {
             display: block;
-            color: transparent; /* Przezroczyste wypełnienie */
-            -webkit-text-stroke: 2px var(--magenta); /* Fioletowy obrys */
+            color: transparent;
+            -webkit-text-stroke: 2px var(--magenta);
             position: relative;
             
             /* Gradient do animacji połysku */
             background: linear-gradient(
                 110deg, 
                 transparent 30%, 
-                rgba(255, 255, 255, 0.8) 45%, 
-                rgba(255, 0, 255, 0.5) 50%, 
+                rgba(255, 255, 255, 0.9) 45%, 
+                rgba(255, 0, 255, 0.6) 50%, 
                 transparent 60%
             );
             background-size: 250% 100%;
@@ -92,15 +92,15 @@
             -webkit-background-clip: text;
             background-clip: text;
             
+            /* Domyślnie brak cienia */
+            text-shadow: none;
             transition: text-shadow 0.3s ease;
         }
 
-        /* EFEKT NA HOVER */
-        .page-title-container:hover .title-works {
-            /* Przesuwanie gradientu (błysk) */
-            animation: shineText 1.5s infinite linear;
-            /* Lekka poświata neonowa */
-            text-shadow: 0 0 30px rgba(255, 0, 255, 0.4);
+        /* Klasa dodawana przez JS - uruchamia animację RAZ */
+        .title-works.shine-active {
+            animation: shineText 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; /* Szybsza, dynamiczna animacja */
+            text-shadow: 0 0 30px rgba(255, 0, 255, 0.5); /* Rozświetlenie podczas błysku */
         }
 
         @keyframes shineText {
@@ -200,11 +200,11 @@
 
     <div id="page-hero">
         <div class="container">
-            <!-- HEADER ZWYKŁY HTML Z CSSOWYM EFEKTEM "SHINE" -->
+            <!-- HEADER ZWYKŁY HTML Z JS TRIGGEREM -->
             <div class="page-title-container link-hover">
                 <h1 class="page-title">
                     <span class="title-visual">VISUAL</span>
-                    <span class="title-works">WORKS</span>
+                    <span class="title-works" id="worksText">WORKS</span>
                 </h1>
             </div>
 
@@ -441,6 +441,33 @@
             l.addEventListener('mouseenter',()=>cursor.classList.add('hovered'));
             l.addEventListener('mouseleave',()=>cursor.classList.remove('hovered'));
         });
+
+        // --- ZAAWANSOWANA OBSŁUGA EFEKTU "SHINE" (ONE-SHOT PLAYBACK) ---
+        const worksText = document.getElementById('worksText');
+        const titleContainer = document.querySelector('.page-title-container');
+        let isAnimating = false;
+
+        function triggerShine() {
+            if (isAnimating) return; // Jeśli już trwa, nie przerywaj ani nie startuj nowej
+            
+            isAnimating = true;
+            worksText.classList.add('shine-active');
+
+            // Nasłuchuj końca animacji
+            worksText.addEventListener('animationend', () => {
+                worksText.classList.remove('shine-active');
+                isAnimating = false;
+            }, { once: true }); // Ważne: listener wykonuje się tylko raz
+        }
+
+        if(titleContainer) {
+            titleContainer.addEventListener('mouseenter', triggerShine);
+        }
+
+        // --- AUTO-TRIGGER PO 3 SEKUNDACH ---
+        setTimeout(() => {
+            triggerShine();
+        }, 3000);
 
         // --- LIGHTBOX SCRIPT ---
         const lightbox = document.getElementById('lightbox');
