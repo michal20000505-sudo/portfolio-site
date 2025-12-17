@@ -88,11 +88,6 @@
             stroke-opacity: 0.5;
         }
 
-        /* Styl wypełnionego tekstu (sama woda) */
-        .text-works-filled {
-            fill: var(--magenta); /* Kolor wody */
-        }
-
         /* Animacja fali */
         .wave-anim {
             animation: waveMove 3s linear infinite;
@@ -195,32 +190,35 @@
     <div id="page-hero">
         <div class="container">
             
-            <!-- NOWA WERSJA SVG (MASKOWANIE "WORKS") -->
+            <!-- FINALNA WERSJA SVG Z CLIP-PATH -->
             <div class="page-title-container">
                 <svg class="liquid-text-svg" viewBox="0 0 600 220">
                     <defs>
-                        <!-- Maska w kształcie fali. Białe = widoczne, Czarne = niewidoczne -->
-                        <mask id="waveMask">
-                            <!-- Tło maski (czarne = ukrywa wszystko) -->
-                            <rect x="0" y="0" width="600" height="220" fill="black" />
-                            
-                            <!-- Biała fala ("woda"). To co pod nią, będzie widoczne -->
-                            <!-- Animujemy pozycję Y tej fali skryptem -->
-                            <path id="maskWave" class="wave-anim" fill="white" 
-                                  d="M-200,0 C-100,20 0,-20 100,0 S300,20 400,0 S600,-20 700,0 S900,20 1000,0 V500 H-200 Z"
-                                  transform="translate(0, 220)" /> 
-                        </mask>
+                        <!-- 1. DEFINIUJEMY CLIP-PATH (KSZTAŁT NAPISU WORKS) -->
+                        <clipPath id="textClip">
+                            <text x="300" y="180" class="svg-text">WORKS</text>
+                        </clipPath>
+
+                        <!-- Gradient fioletowy -->
+                        <linearGradient id="liquidGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:var(--magenta); stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#aa00aa; stop-opacity:0.8" />
+                        </linearGradient>
                     </defs>
 
-                    <!-- 1. VISUAL (Biały) -->
+                    <!-- 2. GÓRNY NAPIS VISUAL -->
                     <text x="300" y="80" class="svg-text text-visual">VISUAL</text>
 
-                    <!-- 2. WORKS (Kontur - tło dla wody) -->
+                    <!-- 3. DOLNY NAPIS WORKS - PUSTY OBRYS -->
                     <text x="300" y="180" class="svg-text text-works-outline">WORKS</text>
 
-                    <!-- 3. WORKS (Wypełniony - widoczny tylko tam, gdzie jest maska fali) -->
-                    <g mask="url(#waveMask)">
-                        <text x="300" y="180" class="svg-text text-works-filled">WORKS</text>
+                    <!-- 4. GRUPA PRZYCIĘTA DO KSZTAŁTU NAPISU "WORKS" -->
+                    <g clip-path="url(#textClip)">
+                        <!-- To jest nasza "woda". Duża fala (path), którą przesuwamy w górę/dół -->
+                        <!-- Startujemy nisko (translateY=50), skrypt podniesie to do góry -->
+                        <path id="liquidWave" class="wave-anim" fill="url(#liquidGradient)"
+                              d="M-200,0 C-100,20 0,-20 100,0 S300,20 400,0 S600,-20 700,0 S900,20 1000,0 V300 H-200 Z"
+                              transform="translate(0, 200)" />
                     </g>
                     
                 </svg>
@@ -460,14 +458,15 @@
             l.addEventListener('mouseleave',()=>cursor.classList.remove('hovered'));
         });
 
-        // --- LIQUID EFFECT SCRIPT (MASKOWANIE) ---
-        const maskWave = document.getElementById('maskWave');
+        // --- LIQUID EFFECT SCRIPT (CLIP-PATH - WERSJA PEWNA) ---
+        const liquidWave = document.getElementById('liquidWave');
         let mouseInfluence = 0;
 
         function updateWaves() {
-            // Sterujemy pozycją Y maski.
-            // Start (Y=200): Maska jest nisko, widać tylko dół litery.
-            // Koniec (Y=120): Maska jest wysoko, widać więcej litery.
+            // Logika: 
+            // y=180 -> Środek napisu
+            // Start (Y=200): Nisko, widać mało fioletu.
+            // Koniec (Y=120): Wysoko, widać dużo fioletu.
             
             let scrollFactor = Math.min(window.scrollY / 500, 1);
             let currentLevel = 200 - (scrollFactor * 80); 
@@ -477,17 +476,17 @@
                 mouseInfluence *= 0.95;
             }
 
-            // Przesuwamy maskę w górę/dół
-            if(maskWave) {
-                maskWave.setAttribute('transform', `translate(0, ${currentLevel})`);
+            // Przesuwamy obiekt 'liquidWave' w pionie
+            if(liquidWave) {
+                liquidWave.setAttribute('transform', `translate(0, ${currentLevel})`);
             }
             requestAnimationFrame(updateWaves);
         }
 
         const titleContainer = document.querySelector('.page-title-container');
         if(titleContainer) {
-            titleContainer.addEventListener('mousemove', (e) => { mouseInfluence = 15; });
-            titleContainer.addEventListener('touchmove', (e) => { mouseInfluence = 15; });
+            titleContainer.addEventListener('mousemove', (e) => { mouseInfluence = 20; });
+            titleContainer.addEventListener('touchmove', (e) => { mouseInfluence = 20; });
         }
 
         updateWaves();
