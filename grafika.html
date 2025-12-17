@@ -98,6 +98,32 @@
         .work-info .category { color: var(--magenta); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; display: inline-block; margin-bottom: 10px; }
         .work-info p { color: #888; font-size: 0.95rem; font-weight: 300; line-height: 1.4; }
 
+        /* --- LIGHTBOX STYLES --- */
+        #lightbox {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 10001; /* Wyżej niż kursor i header */
+            display: none;
+            justify-content: center; align-items: center;
+            opacity: 0; transition: opacity 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+        #lightbox.active { display: flex; opacity: 1; }
+        #lightbox img {
+            max-width: 90%; max-height: 90vh;
+            border: 2px solid #333;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+            transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        #lightbox.active img { transform: scale(1); }
+        .lightbox-close {
+            position: absolute; top: 30px; right: 40px;
+            font-size: 3rem; color: var(--text-color);
+            cursor: none; /* Używamy naszego custom kursora */
+            transition: color 0.3s;
+        }
+        .lightbox-close:hover { color: var(--magenta); }
+
         /* --- FOOTER --- */
         footer { padding: 50px 0; text-align: center; border-top: 1px solid #222; color: #666; font-size: 0.8rem; background-color: var(--bg-color); }
 
@@ -119,6 +145,12 @@
     <canvas id="starfield"></canvas>
     <div class="cursor"></div>
     <div id="preloader"><div class="loader-text">LOADING...</div></div>
+
+    <!-- LIGHTBOX CONTAINER -->
+    <div id="lightbox">
+        <div class="lightbox-close">&times;</div>
+        <img src="" alt="Pełny podgląd">
+    </div>
 
     <header>
         <div class="container">
@@ -381,6 +413,48 @@
         document.querySelectorAll('.link-hover, a, .work-card').forEach(l=>{
             l.addEventListener('mouseenter',()=>cursor.classList.add('hovered'));
             l.addEventListener('mouseleave',()=>cursor.classList.remove('hovered'));
+        });
+
+        // --- LIGHTBOX SCRIPT ---
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = lightbox.querySelector('img');
+        const closeBtn = lightbox.querySelector('.lightbox-close');
+
+        // Funkcja otwierająca lightbox
+        document.querySelectorAll('.work-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                e.preventDefault(); // Zatrzymuje skok do góry strony
+                const img = this.querySelector('img');
+                if (img) {
+                    lightboxImg.src = img.src;
+                    lightbox.classList.add('active');
+                    // Opcjonalnie: zablokuj scrollowanie strony pod spodem
+                    document.body.style.overflow = 'hidden';
+                }
+            });
+        });
+
+        // Funkcja zamykająca lightbox
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = ''; // Przywróć scrollowanie
+            setTimeout(() => { lightboxImg.src = ''; }, 300); // Wyczyść src po animacji
+        }
+
+        closeBtn.addEventListener('click', closeLightbox);
+        
+        // Kliknięcie w tło zamyka lightbox
+        lightbox.addEventListener('click', function(e) {
+            if (e.target === lightbox) {
+                closeLightbox();
+            }
+        });
+
+        // Zamknięcie klawiszem ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+                closeLightbox();
+            }
         });
 
         resize(); 
