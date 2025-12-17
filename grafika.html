@@ -57,50 +57,50 @@
         .page-title-container {
             position: relative;
             width: 100%;
-            height: 20vw; /* Responsywna wysokość */
-            max-height: 400px;
+            height: auto;
             display: flex;
             justify-content: center;
         }
 
         .liquid-text-svg {
             width: 100%;
-            height: 100%;
+            max-width: 800px; /* Ograniczamy szerokość żeby nie było za wielkie */
+            height: auto;
             overflow: visible;
         }
 
-        .liquid-text-svg text {
+        /* Style tekstów w SVG */
+        .svg-text {
             font-family: 'Space Grotesk', sans-serif;
             font-weight: 700;
             text-transform: uppercase;
-            font-size: 130px; /* Rozmiar bazowy */
+            font-size: 100px; /* Mniejszy, bezpieczniejszy rozmiar */
             dominant-baseline: middle;
             text-anchor: middle;
         }
 
-        .text-visual { fill: var(--text-color); }
-        .text-works { 
-            fill: transparent; 
-            stroke: var(--magenta); 
-            stroke-width: 2px; 
+        /* Górny napis VISUAL - biały */
+        .text-visual { fill: #ffffff; }
+
+        /* Dolny napis WORKS - tylko obrys */
+        .text-works-stroke {
+            fill: none;
+            stroke: var(--magenta);
+            stroke-width: 1px;
         }
 
         /* PŁYNNE WYPEŁNIENIE */
-        .liquid-fill {
+        .liquid-wave {
             fill: url(#liquidGradient);
-            mask: url(#worksMask);
-            opacity: 0.9;
+            opacity: 0.8;
+            /* Animacja falowania na boki */
+            animation: waveSide 3s ease-in-out infinite alternate;
+            transform-origin: center center;
         }
-        
-        /* Ruch fal */
-        .wave {
-            animation: waveMove 4s cubic-bezier(0.36, 0.45, 0.63, 0.53) infinite;
-            transform-origin: 50% 100%;
-        }
-        
-        @keyframes waveMove {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
+
+        @keyframes waveSide {
+            from { transform: translateX(-10px); }
+            to { transform: translateX(10px); }
         }
 
         .page-subtitle { color: #888; font-size: 1.2rem; letter-spacing: 4px; text-transform: uppercase; margin-top: 20px; }
@@ -156,15 +156,14 @@
         /* --- RESPONSIVE --- */
         @media (max-width: 1024px) {
             .masonry-grid { column-count: 2; column-gap: 20px; }
-            .liquid-text-svg text { font-size: 100px; }
+            .svg-text { font-size: 80px; }
         }
         @media (max-width: 768px) {
             .masonry-grid { column-count: 1; }
             .nav-links { gap: 20px; }
             .nav-links a { font-size: 0.75rem; }
             .lightbox-close { top: 20px; right: 20px; font-size: 2.5rem; }
-            .liquid-text-svg text { font-size: 70px; } /* Mniejszy napis na mobile */
-            .page-title-container { height: 150px; }
+            .svg-text { font-size: 60px; } /* Mniejszy napis na mobile */
         }
     </style>
 </head>
@@ -197,37 +196,39 @@
     <div id="page-hero">
         <div class="container">
             
-            <!-- LIQUID SVG HEADER -->
+            <!-- POPRAWIONY SVG Z CLIP-PATH -->
             <div class="page-title-container">
-                <svg class="liquid-text-svg" viewBox="0 0 800 250" preserveAspectRatio="xMidYMid meet">
+                <svg class="liquid-text-svg" viewBox="0 0 600 220">
                     <defs>
+                        <!-- Gradient fioletowy -->
                         <linearGradient id="liquidGradient" x1="0%" y1="0%" x2="0%" y2="100%">
                             <stop offset="0%" style="stop-color:var(--magenta); stop-opacity:1" />
                             <stop offset="100%" style="stop-color:#aa00aa; stop-opacity:0.8" />
                         </linearGradient>
-                        <!-- Maska tylko dla słowa WORKS -->
-                        <mask id="worksMask">
-                             <text x="50%" y="80%" class="text-works" fill="white">WORKS</text>
-                        </mask>
+                        
+                        <!-- DEFINICJA PRZYCIĘCIA (CLIP PATH) -->
+                        <clipPath id="textClip">
+                            <text x="300" y="180" class="svg-text">WORKS</text>
+                        </clipPath>
                     </defs>
 
-                    <!-- VISUAL (Biały) -->
-                    <text x="50%" y="35%" class="text-visual">VISUAL</text>
+                    <!-- 1. Napis VISUAL (na górze, biały, statyczny) -->
+                    <text x="300" y="80" class="svg-text text-visual">VISUAL</text>
 
-                    <!-- WORKS (Kontur) -->
-                    <text x="50%" y="80%" class="text-works">WORKS</text>
+                    <!-- 2. Grupa z efektem cieczy (tylko dla słowa WORKS) -->
+                    <g clip-path="url(#textClip)">
+                        <!-- Obrys napisu WORKS (żeby było widać granice) -->
+                        <text x="300" y="180" class="svg-text text-works-stroke">WORKS</text>
 
-                    <!-- WODA (Wypełnienie WORKS) -->
-                    <g mask="url(#worksMask)">
-                         <path class="wave liquid-fill" 
-                               d="M 0 300 V 200 Q 150 170 300 200 T 600 200 T 900 200 V 300 Z" 
-                               fill="url(#liquidGradient)" opacity="0.8">
-                         </path>
-                         <path class="wave liquid-fill" 
-                               d="M 0 300 V 210 Q 150 240 300 210 T 600 210 T 900 210 V 300 Z" 
-                               fill="url(#liquidGradient)" opacity="0.5" style="animation-duration: 6s; animation-direction: reverse;">
-                         </path>
+                        <!-- Fala (Prostokąt/Path który się porusza w górę/dół) -->
+                        <!-- Startujemy nisko (y=300), skrypt podniesie to do góry -->
+                        <path id="liquidWave" class="liquid-wave" 
+                              d="M-100,0 C150,50 450,-50 900,0 V500 H-100 Z" 
+                              transform="translate(0, 300)" />
                     </g>
+                    
+                    <!-- 3. Obrys na wierzchu (dla ostrości) -->
+                    <text x="300" y="180" class="svg-text text-works-stroke" pointer-events="none">WORKS</text>
                 </svg>
             </div>
 
@@ -465,33 +466,34 @@
             l.addEventListener('mouseleave',()=>cursor.classList.remove('hovered'));
         });
 
-        // --- LIQUID EFFECT SCRIPT ---
-        const wavePaths = document.querySelectorAll('.liquid-fill');
+        // --- LIQUID EFFECT SCRIPT (POPRAWIONY) ---
+        const liquidWave = document.getElementById('liquidWave');
         let mouseInfluence = 0;
 
         function updateWaves() {
-            // Poziom "wody" - na starcie zakrywa tylko dół, przy scrollu idzie w górę
-            // Bazowy poziom (260 = nisko, 180 = pełno)
-            let scrollFactor = Math.min(window.scrollY / 400, 1);
-            let currentLevel = 260 - (scrollFactor * 80); 
+            // Logika: 
+            // - Kiedy strona jest na górze (scrollY = 0), woda jest nisko (translateY = 200).
+            // - Kiedy scrollujemy w dół (scrollY rośnie), woda idzie do góry (translateY maleje do ok 120).
+            
+            let scrollFactor = Math.min(window.scrollY / 500, 1);
+            // Start: 200 (nisko, pusto), Koniec: 120 (wysoko, pełno)
+            let baseLevel = 200 - (scrollFactor * 80); 
 
             if(mouseInfluence > 0) {
-                currentLevel -= mouseInfluence;
+                baseLevel -= mouseInfluence;
                 mouseInfluence *= 0.95;
             }
 
-            // Przesuwamy fioletową "wodę" w górę/dół
-            wavePaths.forEach(path => {
-                let offset = currentLevel - 200; 
-                path.style.transform = `translateY(${offset}px)`;
-            });
+            if(liquidWave) {
+                liquidWave.setAttribute('transform', `translate(0, ${baseLevel})`);
+            }
             requestAnimationFrame(updateWaves);
         }
 
         const titleContainer = document.querySelector('.page-title-container');
         if(titleContainer) {
-            titleContainer.addEventListener('mousemove', (e) => { mouseInfluence = 15; });
-            titleContainer.addEventListener('touchmove', (e) => { mouseInfluence = 15; });
+            titleContainer.addEventListener('mousemove', (e) => { mouseInfluence = 20; });
+            titleContainer.addEventListener('touchmove', (e) => { mouseInfluence = 20; });
         }
 
         updateWaves();
