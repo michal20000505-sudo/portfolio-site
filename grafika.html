@@ -21,7 +21,13 @@
         }
 
         /* --- RESET & BASE --- */
-        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        /* Kursor niestandardowy tylko na desktopach */
+        @media (hover: hover) and (pointer: fine) {
+            * { cursor: none; }
+        }
+
         body { background-color: var(--bg-color); color: var(--text-color); font-family: var(--font-main); overflow-x: hidden; line-height: 1.6; position: relative; }
         a { text-decoration: none; color: inherit; }
         ul { list-style: none; }
@@ -30,8 +36,18 @@
         /* --- UI ELEMENTS --- */
         #starfield { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
         
-        .cursor { width: 20px; height: 20px; border: 2px solid var(--text-color); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); transition: transform 0.1s ease, background-color 0.2s; mix-blend-mode: difference; }
+        /* Cursor logic - ukryty na mobile */
+        .cursor { 
+            width: 20px; height: 20px; border: 2px solid var(--text-color); border-radius: 50%; 
+            position: fixed; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); 
+            transition: transform 0.1s ease, background-color 0.2s; mix-blend-mode: difference; 
+            display: none; 
+        }
         .cursor.hovered { transform: translate(-50%, -50%) scale(2.5); background-color: var(--text-color); border-color: transparent; }
+        
+        @media (hover: hover) and (pointer: fine) {
+            .cursor { display: block; }
+        }
 
         #preloader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 10000; display: flex; justify-content: center; align-items: center; transition: opacity 0.5s ease; }
         .loader-text { font-size: 2rem; font-weight: 700; animation: pulseCMYK 1s infinite alternate; }
@@ -42,14 +58,19 @@
         /* --- HEADER --- */
         header { position: fixed; top: 0; width: 100%; padding: 30px 0; z-index: 100; mix-blend-mode: difference; }
         nav { display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-weight: 700; font-size: 1.5rem; letter-spacing: -1px; } 
+        .logo { font-weight: 700; font-size: 1.5rem; letter-spacing: -1px; z-index: 101; } 
         .logo span { color: var(--cyan); }
+        
         .nav-links { display: flex; gap: 50px; }
         .nav-links a { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; position: relative; }
         .nav-links a::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background: var(--magenta); transition: var(--transition); }
         .nav-links a:hover::after { width: 100%; }
         .nav-links a.active { color: var(--cyan); }
         .nav-links a.active::after { width: 100%; background: var(--cyan); }
+
+        /* Hamburger Menu Icon */
+        .menu-toggle { display: none; flex-direction: column; gap: 6px; cursor: pointer; z-index: 101; }
+        .bar { width: 30px; height: 2px; background-color: #fff; transition: 0.3s; }
 
         /* --- HERO Z EFEKTEM "SHINE" (JS TRIGGER) --- */
         #page-hero { padding: 150px 0 50px; text-align: center; }
@@ -78,29 +99,18 @@
             color: transparent;
             -webkit-text-stroke: 2px var(--magenta);
             position: relative;
-            
-            /* Gradient do animacji połysku */
-            background: linear-gradient(
-                110deg, 
-                transparent 30%, 
-                rgba(255, 255, 255, 0.9) 45%, 
-                rgba(255, 0, 255, 0.6) 50%, 
-                transparent 60%
-            );
+            background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.9) 45%, rgba(255, 0, 255, 0.6) 50%, transparent 60%);
             background-size: 250% 100%;
-            background-position: 100% 0; /* Wyjściowa pozycja (poza tekstem) */
+            background-position: 100% 0;
             -webkit-background-clip: text;
             background-clip: text;
-            
-            /* Domyślnie brak cienia */
             text-shadow: none;
             transition: text-shadow 0.3s ease;
         }
 
-        /* Klasa dodawana przez JS - uruchamia animację RAZ */
         .title-works.shine-active {
-            animation: shineText 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; /* Szybsza, dynamiczna animacja */
-            text-shadow: 0 0 30px rgba(255, 0, 255, 0.5); /* Rozświetlenie podczas błysku */
+            animation: shineText 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            text-shadow: 0 0 30px rgba(255, 0, 255, 0.5);
         }
 
         @keyframes shineText {
@@ -115,6 +125,8 @@
         
         .masonry-grid { column-count: 3; column-gap: 40px; }
         .masonry-item { break-inside: avoid; margin-bottom: 40px; position: relative; }
+        .reveal { opacity: 0; transform: translateY(50px); transition: all 0.8s ease-out; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
 
         .work-card {
             display: block; position: relative; margin-bottom: 15px; border: 1px solid #222; overflow: hidden; transition: var(--transition);
@@ -158,17 +170,44 @@
         /* --- FOOTER --- */
         footer { padding: 50px 0; text-align: center; border-top: 1px solid #222; color: #666; font-size: 0.8rem; background-color: var(--bg-color); }
 
-        /* --- RESPONSIVE --- */
+        /* --- RESPONSIVE / MOBILE STYLES --- */
         @media (max-width: 1024px) {
+            .container { padding: 0 20px; }
             .masonry-grid { column-count: 2; column-gap: 20px; }
-            .page-title { font-size: 6rem; }
+            .page-title { font-size: 13vw; /* Skalowanie tytułu */ }
+            #page-hero { padding: 120px 0 30px; }
+            
+            /* Mobile Nav */
+            .menu-toggle { display: flex; }
+            .nav-links {
+                position: fixed;
+                top: 0; right: 0;
+                height: 100vh; width: 70%;
+                background: #0a0a0a;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                transform: translateX(100%);
+                transition: transform 0.4s ease-in-out;
+                z-index: 99;
+                border-left: 1px solid #222;
+            }
+            .nav-links.active { transform: translateX(0); }
+            
+            /* Hamburger animation */
+            .menu-toggle.active .bar:nth-child(1) { transform: rotate(45deg) translate(6px, 6px); }
+            .menu-toggle.active .bar:nth-child(2) { opacity: 0; }
+            .menu-toggle.active .bar:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
         }
+
         @media (max-width: 768px) {
-            .masonry-grid { column-count: 1; }
-            .nav-links { gap: 20px; }
-            .nav-links a { font-size: 0.75rem; }
-            .lightbox-close { top: 20px; right: 20px; font-size: 2.5rem; }
-            .page-title { font-size: 3.5rem; }
+            .masonry-grid { column-count: 1; } /* Jedna kolumna na telefonie */
+            .masonry-item { margin-bottom: 50px; }
+            
+            .page-subtitle { font-size: 0.9rem; letter-spacing: 2px; }
+            
+            .lightbox-close { top: 20px; right: 20px; font-size: 2.5rem; padding: 10px; background: rgba(0,0,0,0.5); border-radius: 50%; width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; line-height: 0; }
+            #lightbox img { max-width: 95vw; }
         }
     </style>
 </head>
@@ -188,6 +227,13 @@
         <div class="container">
             <nav>
                 <a href="index.html" class="logo link-hover">MJ<span>.</span></a>
+                
+                <div class="menu-toggle" id="mobile-menu">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+
                 <div class="nav-links">
                     <a href="index.html#about" class="link-hover">O mnie</a>
                     <a href="index.html#work" class="link-hover">Web</a>
@@ -431,16 +477,27 @@
         window.addEventListener('resize', resize);
         window.addEventListener('mousemove', e=>{mouse.x=e.x; mouse.y=e.y});
         
-        const cursor=document.querySelector('.cursor');
-        document.addEventListener('mousemove', e=>{
-            cursor.style.left=e.clientX+'px'; 
-            cursor.style.top=e.clientY+'px';
+        // --- MOBILE MENU SCRIPT ---
+        const menuToggle = document.getElementById('mobile-menu');
+        const navLinks = document.querySelector('.nav-links');
+        
+        menuToggle.addEventListener('click', () => {
+            menuToggle.classList.toggle('active');
+            navLinks.classList.toggle('active');
         });
         
-        document.querySelectorAll('.link-hover, a, .work-card').forEach(l=>{
-            l.addEventListener('mouseenter',()=>cursor.classList.add('hovered'));
-            l.addEventListener('mouseleave',()=>cursor.classList.remove('hovered'));
-        });
+        // --- CURSOR (DESKTOP ONLY) ---
+        const cursor=document.querySelector('.cursor');
+        if(window.matchMedia("(pointer: fine)").matches) {
+            document.addEventListener('mousemove', e=>{
+                cursor.style.left=e.clientX+'px'; 
+                cursor.style.top=e.clientY+'px';
+            });
+            document.querySelectorAll('.link-hover, a, .work-card').forEach(l=>{
+                l.addEventListener('mouseenter',()=>cursor.classList.add('hovered'));
+                l.addEventListener('mouseleave',()=>cursor.classList.remove('hovered'));
+            });
+        }
 
         // --- ZAAWANSOWANA OBSŁUGA EFEKTU "SHINE" (ONE-SHOT PLAYBACK) ---
         const worksText = document.getElementById('worksText');
@@ -448,23 +505,20 @@
         let isAnimating = false;
 
         function triggerShine() {
-            if (isAnimating) return; // Jeśli już trwa, nie przerywaj ani nie startuj nowej
-            
+            if (isAnimating) return; 
             isAnimating = true;
             worksText.classList.add('shine-active');
 
-            // Nasłuchuj końca animacji
             worksText.addEventListener('animationend', () => {
                 worksText.classList.remove('shine-active');
                 isAnimating = false;
-            }, { once: true }); // Ważne: listener wykonuje się tylko raz
+            }, { once: true }); 
         }
 
         if(titleContainer) {
             titleContainer.addEventListener('mouseenter', triggerShine);
         }
 
-        // --- AUTO-TRIGGER PO 3 SEKUNDACH ---
         setTimeout(() => {
             triggerShine();
         }, 3000);
