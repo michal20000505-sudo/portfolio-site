@@ -9,7 +9,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
     
     <style>
-        /* --- ZMIENNE KOLORYSTYCZNE --- */
         :root {
             --bg-color: #050505;
             --text-color: #ffffff;
@@ -20,32 +19,27 @@
             --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
-        /* --- RESET --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        /* Kursor niestandardowy tylko na desktopach */
         @media (hover: hover) and (pointer: fine) {
             * { cursor: none; }
         }
-        
+
         body { background-color: var(--bg-color); color: var(--text-color); font-family: var(--font-main); overflow-x: hidden; line-height: 1.6; position: relative; }
         a { text-decoration: none; color: inherit; }
         ul { list-style: none; }
         img { display: block; width: 100%; }
 
-        /* --- UI ELEMENTS --- */
         #starfield { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
         
-        /* Cursor logic - ukryty na mobile */
         .cursor { 
             width: 20px; height: 20px; border: 2px solid var(--text-color); border-radius: 50%; 
             position: fixed; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); 
             transition: transform 0.1s ease, background-color 0.2s; mix-blend-mode: difference; 
-            display: none; /* Domyślnie ukryty */
+            display: none;
         }
         .cursor.hovered { transform: translate(-50%, -50%) scale(2.5); background-color: var(--text-color); border-color: transparent; }
-        
         @media (hover: hover) and (pointer: fine) {
-            .cursor { display: block; } /* Pokaż tylko jeśli urządzenie ma myszkę */
+            .cursor { display: block; }
         }
 
         #preloader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 10000; display: flex; justify-content: center; align-items: center; transition: opacity 0.5s ease; }
@@ -54,22 +48,18 @@
 
         .container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
 
-        /* --- HEADER --- */
         header { position: fixed; top: 0; width: 100%; padding: 30px 0; z-index: 100; mix-blend-mode: difference; }
         nav { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-weight: 700; font-size: 1.5rem; letter-spacing: -1px; z-index: 101; } 
         .logo span { color: var(--cyan); }
-        
         .nav-links { display: flex; gap: 50px; }
         .nav-links a { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; position: relative; }
         .nav-links a::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background: var(--magenta); transition: var(--transition); }
         .nav-links a:hover::after { width: 100%; }
 
-        /* Hamburger Menu Icon */
         .menu-toggle { display: none; flex-direction: column; gap: 6px; cursor: pointer; z-index: 101; }
         .bar { width: 30px; height: 2px; background-color: #fff; transition: 0.3s; }
 
-        /* --- HERO --- */
         #hero { height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; padding: 0 20px; }
         .hero-content { text-align: center; z-index: 2; width: 100%; }
         .hero-title { font-size: 8vw; font-weight: 700; line-height: 0.9; text-transform: uppercase; position: relative; color: var(--text-color); }
@@ -80,16 +70,14 @@
         @keyframes glitch-anim-2 { 0% { transform: translate(2px, 2px); } 100% { transform: translate(-1px, -1px); } }
         .hero-subtitle { margin-top: 30px; font-size: 1.2rem; color: #888; letter-spacing: 3px; text-transform: uppercase; }
 
-        /* --- SEKCJE --- */
         section { padding: 150px 0; position: relative; }
         .reveal { opacity: 0; transform: translateY(100px); transition: all 1s ease-out; }
         .reveal.active { opacity: 1; transform: translateY(0); }
-        h2.section-title { font-size: 4rem; margin-bottom: 80px; border-bottom: 1px solid #333; padding-bottom: 20px; display: inline-block; word-wrap: break-word; line-height: 1.1; }
+        h2.section-title { font-size: 4rem; margin-bottom: 80px; border-bottom: 1px solid #333; padding-bottom: 20px; display: inline-block; }
         h2.section-title span { color: var(--yellow); }
 
-        /* --- O MNIE --- */
         .about-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 60px; align-items: center; }
-        .about-image-wrapper { position: relative; width: 100%; max-width: 350px; margin: 0 auto; }
+        .about-image-wrapper { position: relative; width: 100%; max-width: 350px; }
 
         .simple-zoom-container {
             position: relative;
@@ -116,7 +104,6 @@
         .highlight-yellow { color: var(--yellow); font-weight: 500; }
         .highlight-bold { color: #fff; font-weight: 700; }
 
-        /* --- PROJEKTY (HOVER Z NAPISEM) --- */
         .project-item { display: grid; grid-template-columns: 1.5fr 1fr; gap: 50px; margin-bottom: 150px; align-items: center; }
         .project-item:nth-child(even) { direction: rtl; }
         .project-item:nth-child(even) .project-info { direction: ltr; }
@@ -128,19 +115,17 @@
             transition: var(--transition); 
         }
 
-        /* Warstwa gradientu */
         .project-img-wrapper::after { 
             content: ''; 
             position: absolute; 
             top: 0; left: 0; width: 100%; height: 100%; 
-            background: linear-gradient(45deg, rgba(0,255,255,0.4), rgba(255,0,255,0.4)); 
+            background: linear-gradient(45deg, rgba(0,255,255,0.4), rgba(255,0,255,0.4));
             opacity: 0; 
             transition: var(--transition); 
             pointer-events: none; 
-            z-index: 1; 
+            z-index: 1;
         }
 
-        /* Napis "Kliknij..." */
         .project-img-wrapper::before {
             content: 'Kliknij i zobacz moje prace graficzne';
             position: absolute;
@@ -153,7 +138,7 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             opacity: 0;
-            z-index: 2; 
+            z-index: 2;
             transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
             text-shadow: 0 4px 10px rgba(0,0,0,0.5);
             pointer-events: none;
@@ -165,13 +150,12 @@
             border-color: var(--cyan); 
             box-shadow: 0 10px 30px -10px rgba(0, 255, 255, 0.15); 
         }
-
         .project-img-wrapper:hover::after { opacity: 1; }
         .project-img-wrapper:hover::before { opacity: 1; transform: translate(-50%, -50%) scale(1); }
         .project-img-wrapper:hover img { transform: scale(1.05); }
 
         .project-img-wrapper img { width: 100%; height: auto; transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1); }
-        .project-img-wrapper a { display: block; width: 100%; height: 100%; cursor: pointer; } /* cursor pointer on mobile */
+        .project-img-wrapper a { display: block; width: 100%; height: 100%; cursor: pointer; }
         
         .project-info h3 a { text-decoration: none; color: inherit; cursor: pointer; transition: color 0.3s; }
         .project-info h3 a:hover { color: var(--cyan); }
@@ -188,10 +172,7 @@
         .cta-big { font-size: 4vw; font-weight: 700; line-height: 1.2; text-align: center; display: block; transition: var(--transition); word-break: break-all; }
         .cta-small { font-size: 2rem; font-weight: 500; color: #ccc; letter-spacing: 2px; transition: var(--transition); }
         .cta-big:hover, .cta-small:hover { color: var(--bg-color); text-shadow: -1px -1px 0 var(--cyan), 1px -1px 0 var(--cyan), -1px 1px 0 var(--cyan), 1px 1px 0 var(--cyan); }
-        
-        footer { padding: 50px 0; text-align: center; border-top: 1px solid #222; margin-top: 100px; color: #666; font-size: 0.8rem; position: relative; z-index: 2; background-color: var(--bg-color); }
 
-        /* --- MOBILE STYLES --- */
         @media (max-width: 1024px) {
             .container { padding: 0 20px; }
             section { padding: 80px 0; }
@@ -209,7 +190,6 @@
             .cta-big { font-size: 1.8rem; word-break: break-word; }
             .cta-small { font-size: 1.2rem; }
             
-            /* Mobile Nav */
             .menu-toggle { display: flex; }
             .nav-links {
                 position: fixed;
@@ -226,16 +206,13 @@
             }
             .nav-links.active { transform: translateX(0); }
             
-            /* Hamburger animation */
             .menu-toggle.active .bar:nth-child(1) { transform: rotate(45deg) translate(6px, 6px); }
             .menu-toggle.active .bar:nth-child(2) { opacity: 0; }
             .menu-toggle.active .bar:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
 
-            /* Hero adjustments */
             .hero-title { font-size: 13vw; }
             .hero-subtitle { font-size: 0.9rem; letter-spacing: 1px; }
 
-            /* Hover effects on mobile - always show text on image */
             .project-img-wrapper::after { opacity: 0.3; }
             .project-img-wrapper::before { opacity: 1; font-size: 1.1rem; }
         }
@@ -277,7 +254,6 @@
         </div>
     </section>
 
-    <!-- O MNIE -->
     <section id="about">
         <div class="container">
             <h2 class="section-title reveal">O <span>Mnie</span></h2>
@@ -291,7 +267,6 @@
 
                 <div class="about-text">
                     <p>Nazywam się Michał, od <span class="highlight-cyan">2014 roku</span> zajmuję się designem. Przez większość mojej kariery zajmowałem się głównie <span class="highlight-magenta">brandingiem</span> i obsługą social mediów mniejszych i większych firm aż po korporacje.</p>
-                    
                     <p>Aktualnie przyszedł czas również na <span class="highlight-bold">strony internetowe</span>, a to co w tej chwili przeglądasz jest małą prezentacją tego co można zrobić <span class="highlight-yellow">względnie niewielkimi kosztami</span>, kiedy masz kreatywnego specjalistę na wyłączność.</p>
                 </div>
             </div>
@@ -302,7 +277,6 @@
         <div class="container">
             <h2 class="section-title reveal">Wybrane <span>Prace</span></h2>
             
-            <!-- Projekt 1 -->
             <div class="project-item reveal">
                 <div class="project-img-wrapper link-hover">
                     <a href="https://skpolanowice-sourceskp.github.io/sscar/" target="_blank">
@@ -316,7 +290,6 @@
                 </div>
             </div>
 
-            <!-- Projekt 2 -->
             <div class="project-item reveal">
                 <div class="project-img-wrapper link-hover">
                     <a href="grafika.html">
@@ -351,10 +324,6 @@
             </div>
         </div>
     </section>
-
-    <footer>
-        <div class="container">&copy; 2025 Michał Jar Portfolio. Designed with CMYK passion.</div>
-    </footer>
 
     <script>
         const preloader = document.getElementById('preloader');
@@ -405,16 +374,12 @@
         window.addEventListener('resize', resize);
         window.addEventListener('mousemove', e=>{mouse.x=e.x; mouse.y=e.y});
         
-        // --- MOBILE MENU SCRIPT ---
         const menuToggle = document.getElementById('mobile-menu');
         const navLinks = document.querySelector('.nav-links');
-        
         menuToggle.addEventListener('click', () => {
             menuToggle.classList.toggle('active');
             navLinks.classList.toggle('active');
         });
-
-        // Zamknij menu po kliknięciu w link
         document.querySelectorAll('.nav-links a').forEach(link => {
             link.addEventListener('click', () => {
                 menuToggle.classList.remove('active');
@@ -422,7 +387,6 @@
             });
         });
         
-        // Cursor only for desktop (logic in CSS handled via media query, JS fallback)
         const cursor=document.querySelector('.cursor');
         if(window.matchMedia("(pointer: fine)").matches) {
             document.addEventListener('mousemove', e=>{cursor.style.left=e.clientX+'px'; cursor.style.top=e.clientY+'px'});
