@@ -116,6 +116,7 @@
             transition: var(--transition); 
         }
 
+        /* Domyślny overlay + napis (dla dolnego projektu – grafika) */
         .project-img-wrapper::after { 
             content: ''; 
             position: absolute; 
@@ -126,7 +127,6 @@
             pointer-events: none; 
             z-index: 1;
         }
-
         .project-img-wrapper::before {
             content: 'Kliknij i zobacz moje prace graficzne';
             position: absolute;
@@ -144,6 +144,11 @@
             text-shadow: 0 4px 10px rgba(0,0,0,0.5);
             pointer-events: none;
             width: 80%;
+        }
+
+        /* NADPISANIE TEKSTU TYLKO DLA PIERWSZEGO PROJEKTU (SSCAR) */
+        #work .project-item:first-of-type .project-img-wrapper::before {
+            content: 'Kliknij i zobacz stronę przygotowaną dla klienta';
         }
 
         .project-img-wrapper:hover { 
@@ -278,6 +283,7 @@
         <div class="container">
             <h2 class="section-title reveal">Wybrane <span>Prace</span></h2>
             
+            <!-- Projekt 1: SSCAR -->
             <div class="project-item reveal">
                 <div class="project-img-wrapper link-hover">
                     <a href="https://skpolanowice-sourceskp.github.io/sscar/" target="_blank">
@@ -291,6 +297,7 @@
                 </div>
             </div>
 
+            <!-- Projekt 2: Portfolio graficzne (napis bez zmian) -->
             <div class="project-item reveal">
                 <div class="project-img-wrapper link-hover">
                     <a href="grafika.html">
@@ -397,7 +404,6 @@
             });
         }
 
-        // Zmiana tytułu, gdy karta jest nieaktywna
         const normalTitle = "Michał Jarosiński - Portfolio";
         const awayTitle   = "👋 Wróć do moich projektów!";
 
