@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Michał Jarosiński - Portfolio</title>
+    <link rel="icon" type="image/png" href="strona-icon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
@@ -395,6 +396,18 @@
                 l.addEventListener('mouseleave',()=>cursor.classList.remove('hovered'));
             });
         }
+
+        // Zmiana tytułu, gdy karta jest nieaktywna
+        const normalTitle = "Michał Jarosiński - Portfolio";
+        const awayTitle   = "👋 Wróć do moich projektów!";
+
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden) {
+                document.title = awayTitle;
+            } else {
+                document.title = normalTitle;
+            }
+        });
 
         resize(); animateStars();
     </script>
