@@ -83,15 +83,8 @@
         }
         .cursor.hovered { transform: translate(-50%, -50%) scale(3); background-color: var(--text-color); border-color: transparent; opacity: 0.8; }
         
-        .cursor-follower {
-            width: 8px; height: 8px; background: var(--cyan); border-radius: 50%;
-            position: fixed; pointer-events: none; z-index: 9998; transform: translate(-50%, -50%);
-            transition: top 0.15s ease-out, left 0.15s ease-out;
-            opacity: 0.6; display: none;
-        }
-
         @media (hover: hover) and (pointer: fine) {
-            .cursor, .cursor-follower { display: block; }
+            .cursor { display: block; }
         }
 
         #preloader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 10000; display: flex; justify-content: center; align-items: center; transition: opacity 0.5s ease; }
@@ -312,7 +305,7 @@
     <canvas id="starfield"></canvas>
     
     <div class="cursor"></div>
-    <div class="cursor-follower"></div>
+    <!-- <div class="cursor-follower"></div> USUNIĘTO KROPKĘ -->
     
     <div id="preloader"><div class="loader-text">LOADING...</div></div>
 
@@ -499,18 +492,11 @@
         
         // --- Cursor System ---
         const cursor = document.querySelector('.cursor');
-        const cursorFollower = document.querySelector('.cursor-follower');
         
         if(window.matchMedia("(pointer: fine)").matches) {
             document.addEventListener('mousemove', e=>{
                 cursor.style.left = e.clientX+'px'; 
                 cursor.style.top = e.clientY+'px';
-                
-                // Opóźniony follower
-                setTimeout(() => {
-                    cursorFollower.style.left = e.clientX+'px'; 
-                    cursorFollower.style.top = e.clientY+'px';
-                }, 50);
             });
 
             document.querySelectorAll('.link-hover, a, button, .project-img-wrapper, .simple-zoom-container').forEach(l=>{
