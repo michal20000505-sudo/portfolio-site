@@ -18,6 +18,7 @@
             --yellow: #ffff00;
             --font-main: 'Space Grotesk', sans-serif;
             --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -25,22 +26,72 @@
             * { cursor: none; }
         }
 
-        body { background-color: var(--bg-color); color: var(--text-color); font-family: var(--font-main); overflow-x: hidden; line-height: 1.6; position: relative; }
+        body { 
+            background-color: var(--bg-color); 
+            color: var(--text-color); 
+            font-family: var(--font-main); 
+            overflow-x: hidden; 
+            line-height: 1.6; 
+            position: relative; 
+        }
+
         a { text-decoration: none; color: inherit; }
         ul { list-style: none; }
         img { display: block; width: 100%; }
 
+        /* --- Scroll Progress Bar --- */
+        #progress-bar {
+            position: fixed;
+            top: 0; left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta), var(--yellow));
+            width: 0%;
+            z-index: 10001;
+            transition: width 0.1s;
+        }
+
+        /* --- Ambient Background Glows --- */
+        .ambient-glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.15;
+            z-index: -2;
+            pointer-events: none;
+            animation: floatGlow 15s infinite alternate ease-in-out;
+        }
+        .glow-1 { top: -10%; left: -10%; background: var(--cyan); }
+        .glow-2 { bottom: 10%; right: -10%; background: var(--magenta); animation-delay: -5s; }
+        .glow-3 { top: 40%; left: 40%; width: 400px; height: 400px; background: var(--yellow); opacity: 0.08; animation-delay: -10s; }
+
+        @keyframes floatGlow {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(50px, 30px) scale(1.1); }
+            100% { transform: translate(-30px, -50px) scale(0.9); }
+        }
+
         #starfield { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
         
+        /* --- Cursor --- */
         .cursor { 
             width: 20px; height: 20px; border: 2px solid var(--text-color); border-radius: 50%; 
             position: fixed; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); 
-            transition: transform 0.1s ease, background-color 0.2s; mix-blend-mode: difference; 
+            transition: transform 0.1s ease, background-color 0.2s, width 0.3s, height 0.3s; mix-blend-mode: difference; 
             display: none;
         }
-        .cursor.hovered { transform: translate(-50%, -50%) scale(2.5); background-color: var(--text-color); border-color: transparent; }
+        .cursor.hovered { transform: translate(-50%, -50%) scale(3); background-color: var(--text-color); border-color: transparent; opacity: 0.8; }
+        
+        .cursor-follower {
+            width: 8px; height: 8px; background: var(--cyan); border-radius: 50%;
+            position: fixed; pointer-events: none; z-index: 9998; transform: translate(-50%, -50%);
+            transition: top 0.15s ease-out, left 0.15s ease-out;
+            opacity: 0.6; display: none;
+        }
+
         @media (hover: hover) and (pointer: fine) {
-            .cursor { display: block; }
+            .cursor, .cursor-follower { display: block; }
         }
 
         #preloader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 10000; display: flex; justify-content: center; align-items: center; transition: opacity 0.5s ease; }
@@ -49,136 +100,169 @@
 
         .container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
 
-        header { position: fixed; top: 0; width: 100%; padding: 30px 0; z-index: 100; mix-blend-mode: difference; }
+        /* --- Header --- */
+        header { position: fixed; top: 0; width: 100%; padding: 30px 0; z-index: 100; mix-blend-mode: difference; transition: padding 0.3s; }
+        header.scrolled { padding: 15px 0; background: rgba(5,5,5,0.8); backdrop-filter: blur(10px); mix-blend-mode: normal; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        
         nav { display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-weight: 700; font-size: 1.5rem; letter-spacing: -1px; z-index: 101; } 
+        .logo { font-weight: 700; font-size: 1.5rem; letter-spacing: -1px; z-index: 101; position: relative; } 
         .logo span { color: var(--cyan); }
+        
         .nav-links { display: flex; gap: 50px; }
-        .nav-links a { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; position: relative; }
+        .nav-links a { 
+            font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; position: relative; 
+            transition: transform 0.3s var(--ease-out);
+            display: inline-block;
+        }
         .nav-links a::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background: var(--magenta); transition: var(--transition); }
         .nav-links a:hover::after { width: 100%; }
+        /* Magnetic effect CSS base */
+        .nav-links a:hover { color: var(--cyan); }
 
         .menu-toggle { display: none; flex-direction: column; gap: 6px; cursor: pointer; z-index: 101; }
         .bar { width: 30px; height: 2px; background-color: #fff; transition: 0.3s; }
 
-        #hero { height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; padding: 0 20px; }
-        .hero-content { text-align: center; z-index: 2; width: 100%; }
-        .hero-title { font-size: 8vw; font-weight: 700; line-height: 0.9; text-transform: uppercase; position: relative; color: var(--text-color); }
+        /* --- Hero --- */
+        #hero { height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; padding: 0 20px; overflow: hidden; }
+        .hero-content { text-align: center; z-index: 2; width: 100%; perspective: 1000px; }
+        
+        .hero-title { 
+            font-size: 8vw; font-weight: 700; line-height: 0.9; text-transform: uppercase; position: relative; color: var(--text-color);
+            transform-style: preserve-3d;
+        }
         .hero-title::before, .hero-title::after { content: 'CREATIVE\A DESIGNER'; white-space: pre; position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.8; }
-        .hero-title::before { color: var(--cyan); z-index: -1; transform: translate(-3px, -3px); mix-blend-mode: screen; animation: glitch-anim-1 2s infinite linear alternate-reverse; }
-        .hero-title::after { color: var(--magenta); z-index: -2; transform: translate(3px, 3px); mix-blend-mode: screen; animation: glitch-anim-2 3s infinite linear alternate-reverse; }
-        @keyframes glitch-anim-1 { 0% { transform: translate(-2px, -2px); } 100% { transform: translate(1px, 1px); } }
-        @keyframes glitch-anim-2 { 0% { transform: translate(2px, 2px); } 100% { transform: translate(-1px, -1px); } }
-        .hero-subtitle { margin-top: 30px; font-size: 1.2rem; color: #888; letter-spacing: 3px; text-transform: uppercase; }
+        .hero-title::before { color: var(--cyan); z-index: -1; transform: translate(-3px, -3px); mix-blend-mode: screen; animation: glitch-anim-1 2.5s infinite linear alternate-reverse; }
+        .hero-title::after { color: var(--magenta); z-index: -2; transform: translate(3px, 3px); mix-blend-mode: screen; animation: glitch-anim-2 3.5s infinite linear alternate-reverse; }
+        @keyframes glitch-anim-1 { 0% { transform: translate(-2px, -2px); clip-path: inset(10% 0 80% 0); } 20% { clip-path: inset(60% 0 10% 0); } 100% { transform: translate(1px, 1px); clip-path: inset(40% 0 30% 0); } }
+        @keyframes glitch-anim-2 { 0% { transform: translate(2px, 2px); clip-path: inset(80% 0 5% 0); } 20% { clip-path: inset(10% 0 60% 0); } 100% { transform: translate(-1px, -1px); clip-path: inset(20% 0 50% 0); } }
+        
+        .hero-subtitle { 
+            margin-top: 30px; font-size: 1.2rem; color: #888; letter-spacing: 3px; text-transform: uppercase; 
+            opacity: 0; animation: fadeUp 1s 1s forwards var(--ease-out);
+        }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* --- Sections & Animations --- */
         section { padding: 150px 0; position: relative; }
-        .reveal { opacity: 0; transform: translateY(100px); transition: all 1s ease-out; }
-        .reveal.active { opacity: 1; transform: translateY(0); }
-        h2.section-title { font-size: 4rem; margin-bottom: 80px; border-bottom: 1px solid #333; padding-bottom: 20px; display: inline-block; }
+        
+        .reveal { 
+            opacity: 0; 
+            transform: translateY(60px) scale(0.95); 
+            transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out); 
+        }
+        .reveal.active { opacity: 1; transform: translateY(0) scale(1); }
+
+        h2.section-title { font-size: 4rem; margin-bottom: 80px; border-bottom: 1px solid #333; padding-bottom: 20px; display: inline-block; position: relative; }
+        h2.section-title::before {
+            content: ''; position: absolute; bottom: -1px; left: 0; width: 0%; height: 1px; background: var(--cyan); transition: width 1s var(--ease-out);
+        }
+        .reveal.active h2.section-title::before { width: 50%; }
         h2.section-title span { color: var(--yellow); }
 
+        /* --- About --- */
         .about-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 60px; align-items: center; }
-        .about-image-wrapper { position: relative; width: 100%; max-width: 350px; }
+        .about-image-wrapper { position: relative; width: 100%; max-width: 350px; perspective: 1000px; }
 
         .simple-zoom-container {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 1/1;
-            overflow: hidden; 
-            border: 1px solid #333;
+            position: relative; width: 100%; aspect-ratio: 1/1; overflow: hidden; border: 1px solid #333;
+            transform-style: preserve-3d; transition: transform 0.2s ease-out;
         }
 
-        .my-photo {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
-        }
-
-        .simple-zoom-container:hover .my-photo { transform: scale(1.3); }
+        .my-photo { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s var(--ease-out); }
+        .simple-zoom-container:hover .my-photo { transform: scale(1.1); }
 
         .about-text { font-size: 1.15rem; color: #ddd; line-height: 1.8; font-weight: 300; text-align: justify; }
         .about-text p { margin-bottom: 20px; }
         
-        .highlight-cyan { color: var(--cyan); font-weight: 500; }
-        .highlight-magenta { color: var(--magenta); font-weight: 500; }
-        .highlight-yellow { color: var(--yellow); font-weight: 500; }
+        .highlight-cyan { color: var(--cyan); font-weight: 500; text-shadow: 0 0 10px rgba(0,255,255,0.3); }
+        .highlight-magenta { color: var(--magenta); font-weight: 500; text-shadow: 0 0 10px rgba(255,0,255,0.3); }
+        .highlight-yellow { color: var(--yellow); font-weight: 500; text-shadow: 0 0 10px rgba(255,255,0,0.3); }
         .highlight-bold { color: #fff; font-weight: 700; }
 
-        .project-item { display: grid; grid-template-columns: 1.5fr 1fr; gap: 50px; margin-bottom: 150px; align-items: center; }
+        /* --- Projects (3D Tilt) --- */
+        .project-item { 
+            display: grid; grid-template-columns: 1.5fr 1fr; gap: 50px; margin-bottom: 150px; align-items: center; 
+            perspective: 1500px;
+        }
         .project-item:nth-child(even) { direction: rtl; }
         .project-item:nth-child(even) .project-info { direction: ltr; }
         
         .project-img-wrapper { 
-            position: relative; 
-            overflow: hidden; 
-            border: 1px solid #222; 
-            transition: var(--transition); 
+            position: relative; overflow: hidden; border: 1px solid #222; 
+            transition: transform 0.2s ease-out, border-color 0.4s, box-shadow 0.4s;
+            transform-style: preserve-3d;
+            border-radius: 4px;
         }
 
-        /* Domyślny overlay + napis (dla dolnego projektu – grafika) */
+        /* 3D Glass Effect */
         .project-img-wrapper::after { 
-            content: ''; 
-            position: absolute; 
-            top: 0; left: 0; width: 100%; height: 100%; 
-            background: linear-gradient(45deg, rgba(0,255,255,0.4), rgba(255,0,255,0.4));
-            opacity: 0; 
-            transition: var(--transition); 
-            pointer-events: none; 
-            z-index: 1;
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            background: linear-gradient(135deg, rgba(0,255,255,0.2) 0%, rgba(255,0,255,0.2) 100%);
+            opacity: 0; transition: opacity 0.4s; pointer-events: none; z-index: 1; mix-blend-mode: overlay;
         }
+
         .project-img-wrapper::before {
             content: 'Kliknij i zobacz moje prace graficzne';
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%) scale(0.9);
-            color: #fff;
-            font-size: 1.5rem;
-            font-weight: 700;
-            text-align: center;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            opacity: 0;
-            z-index: 2;
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-            text-shadow: 0 4px 10px rgba(0,0,0,0.5);
-            pointer-events: none;
-            width: 80%;
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%) translateZ(50px) scale(0.9); /* 3D pop */
+            color: #fff; font-size: 1.5rem; font-weight: 700; text-align: center; text-transform: uppercase; letter-spacing: 1px;
+            opacity: 0; z-index: 2; transition: all 0.4s var(--ease-out);
+            text-shadow: 0 4px 10px rgba(0,0,0,0.8); pointer-events: none; width: 80%;
         }
 
-        /* NADPISANIE TEKSTU TYLKO DLA PIERWSZEGO PROJEKTU (SSCAR) */
+        /* SSCAR Custom Text */
         #work .project-item:first-of-type .project-img-wrapper::before {
             content: 'Kliknij i zobacz stronę przygotowaną dla klienta';
         }
 
         .project-img-wrapper:hover { 
-            transform: translateY(-5px); 
             border-color: var(--cyan); 
-            box-shadow: 0 10px 30px -10px rgba(0, 255, 255, 0.15); 
+            box-shadow: 0 20px 50px -20px rgba(0, 255, 255, 0.2); 
         }
         .project-img-wrapper:hover::after { opacity: 1; }
-        .project-img-wrapper:hover::before { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        .project-img-wrapper:hover::before { opacity: 1; transform: translate(-50%, -50%) translateZ(60px) scale(1); }
         .project-img-wrapper:hover img { transform: scale(1.05); }
 
-        .project-img-wrapper img { width: 100%; height: auto; transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1); }
-        .project-img-wrapper a { display: block; width: 100%; height: 100%; cursor: pointer; }
+        .project-img-wrapper img { width: 100%; height: auto; transition: transform 0.6s var(--ease-out); display: block; }
+        .project-img-wrapper a { display: block; width: 100%; height: 100%; cursor: pointer; transform-style: preserve-3d; }
         
-        .project-info h3 a { text-decoration: none; color: inherit; cursor: pointer; transition: color 0.3s; }
+        .project-info { transform: translateZ(30px); }
+        .project-info h3 a { text-decoration: none; color: inherit; cursor: pointer; transition: color 0.3s; position: relative; display: inline-block; }
+        .project-info h3 a::before {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: var(--cyan); transition: width 0.3s;
+        }
         .project-info h3 a:hover { color: var(--cyan); }
+        .project-info h3 a:hover::before { width: 100%; }
+        
         .project-info h3 { font-size: 2.5rem; margin-bottom: 20px; color: var(--text-color); }
         .project-info p { color: #aaa; margin-bottom: 30px; font-size: 1.1rem; }
-        .tags span { display: inline-block; border: 1px solid var(--text-color); padding: 8px 15px; margin-right: 10px; font-size: 0.8rem; text-transform: uppercase; border-radius: 50px; margin-bottom: 10px; }
+        .tags span { 
+            display: inline-block; border: 1px solid #444; padding: 8px 15px; margin-right: 10px; font-size: 0.8rem; 
+            text-transform: uppercase; border-radius: 50px; margin-bottom: 10px; transition: all 0.3s;
+        }
+        .tags span:hover { border-color: var(--magenta); color: var(--magenta); transform: translateY(-2px); }
 
+        /* --- Services --- */
         .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: linear-gradient(90deg, var(--cyan), var(--magenta), var(--yellow)); }
-        .service-card { background-color: rgba(5, 5, 5, 0.95); padding: 60px 40px; height: 100%; transition: var(--transition); }
-        .service-card:hover { background-color: #000; }
-        .service-card h3 { font-size: 2rem; margin-bottom: 20px; }
+        .service-card { 
+            background-color: rgba(5, 5, 5, 0.95); padding: 60px 40px; height: 100%; transition: transform 0.2s ease-out, background 0.3s; 
+            perspective: 1000px; transform-style: preserve-3d;
+        }
+        .service-card:hover { background-color: #000; z-index: 10; }
+        .service-card h3 { font-size: 2rem; margin-bottom: 20px; transform: translateZ(20px); }
+        .service-card p { transform: translateZ(10px); color: #ccc; }
 
-        .cta-container { display: flex; flex-direction: column; gap: 30px; align-items: center; margin-top: 50px; }
-        .cta-big { font-size: 4vw; font-weight: 700; line-height: 1.2; text-align: center; display: block; transition: var(--transition); word-break: break-all; }
-        .cta-small { font-size: 2rem; font-weight: 500; color: #ccc; letter-spacing: 2px; transition: var(--transition); }
-        .cta-big:hover, .cta-small:hover { color: var(--bg-color); text-shadow: -1px -1px 0 var(--cyan), 1px -1px 0 var(--cyan), -1px 1px 0 var(--cyan), 1px 1px 0 var(--cyan); }
+        /* --- Contact --- */
+        .cta-container { display: flex; flex-direction: column; gap: 30px; align-items: center; margin-top: 50px; perspective: 1000px; }
+        .cta-big { 
+            font-size: 4vw; font-weight: 700; line-height: 1.2; text-align: center; display: block; transition: all 0.4s var(--ease-out); word-break: break-all; 
+            position: relative; z-index: 1;
+        }
+        .cta-small { font-size: 2rem; font-weight: 500; color: #ccc; letter-spacing: 2px; transition: all 0.4s; }
+        .cta-big:hover { transform: scale(1.05) rotate(-2deg); color: var(--bg-color); text-shadow: -2px -2px 0 var(--cyan), 2px -2px 0 var(--cyan), -2px 2px 0 var(--cyan), 2px 2px 0 var(--cyan); }
+        .cta-small:hover { color: var(--magenta); letter-spacing: 4px; }
 
+        /* --- Mobile --- */
         @media (max-width: 1024px) {
             .container { padding: 0 20px; }
             section { padding: 80px 0; }
@@ -198,17 +282,8 @@
             
             .menu-toggle { display: flex; }
             .nav-links {
-                position: fixed;
-                top: 0; right: 0;
-                height: 100vh; width: 70%;
-                background: #0a0a0a;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                transform: translateX(100%);
-                transition: transform 0.4s ease-in-out;
-                z-index: 99;
-                border-left: 1px solid #222;
+                position: fixed; top: 0; right: 0; height: 100vh; width: 70%; background: #0a0a0a; flex-direction: column; justify-content: center; align-items: center;
+                transform: translateX(100%); transition: transform 0.4s ease-in-out; z-index: 99; border-left: 1px solid #222;
             }
             .nav-links.active { transform: translateX(0); }
             
@@ -221,13 +296,24 @@
 
             .project-img-wrapper::after { opacity: 0.3; }
             .project-img-wrapper::before { opacity: 1; font-size: 1.1rem; }
+            
+            /* Disable intense 3D tilts on mobile for performance */
+            .project-img-wrapper, .service-card, .simple-zoom-container { transform: none !important; }
         }
     </style>
 </head>
 <body>
 
+    <div id="progress-bar"></div>
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+    <div class="ambient-glow glow-3"></div>
+
     <canvas id="starfield"></canvas>
+    
     <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+    
     <div id="preloader"><div class="loader-text">LOADING...</div></div>
 
     <header>
@@ -242,10 +328,10 @@
                 </div>
 
                 <div class="nav-links">
-                    <a href="#about" class="link-hover">O mnie</a>
-                    <a href="#work" class="link-hover">Web</a>
-                    <a href="grafika.html" class="link-hover">Grafika</a>
-                    <a href="#contact" class="link-hover">Kontakt</a>
+                    <a href="#about" class="link-hover magnet">O mnie</a>
+                    <a href="#work" class="link-hover magnet">Web</a>
+                    <a href="grafika.html" class="link-hover magnet">Grafika</a>
+                    <a href="#contact" class="link-hover magnet">Kontakt</a>
                 </div>
             </nav>
         </div>
@@ -256,7 +342,7 @@
             <div class="glitch-wrapper">
                 <h1 class="hero-title" title="Creative Designer">CREATIVE<br>DESIGNER</h1>
             </div>
-            <p class="hero-subtitle reveal">Web Design / Branding / Art Direction</p>
+            <p class="hero-subtitle">Web Design / Branding / Art Direction</p>
         </div>
     </section>
 
@@ -265,7 +351,7 @@
             <h2 class="section-title reveal">O <span>Mnie</span></h2>
             
             <div class="about-grid reveal">
-                <div class="about-image-wrapper">
+                <div class="about-image-wrapper tilt-card">
                     <div class="simple-zoom-container link-hover">
                         <img src="JAzdj.jpg" alt="Michał Jar" class="my-photo">
                     </div>
@@ -283,9 +369,8 @@
         <div class="container">
             <h2 class="section-title reveal">Wybrane <span>Prace</span></h2>
             
-            <!-- Projekt 1: SSCAR -->
             <div class="project-item reveal">
-                <div class="project-img-wrapper link-hover">
+                <div class="project-img-wrapper link-hover tilt-card">
                     <a href="https://skpolanowice-sourceskp.github.io/sscar/" target="_blank">
                         <img src="sscar.jpg" alt="SSCAR Strona WWW">
                     </a>
@@ -297,9 +382,8 @@
                 </div>
             </div>
 
-            <!-- Projekt 2: Portfolio graficzne (napis bez zmian) -->
             <div class="project-item reveal">
-                <div class="project-img-wrapper link-hover">
+                <div class="project-img-wrapper link-hover tilt-card">
                     <a href="grafika.html">
                         <img src="digicamoblue-powder.jpg" alt="Portfolio Graficzne" onerror="this.src='render2.jpg'">
                     </a>
@@ -317,9 +401,9 @@
         <div class="container">
             <h2 class="section-title reveal">Moje <span>Usługi</span></h2>
             <div class="services-grid reveal">
-                <div class="service-card"><h3 style="color: var(--cyan)">Web Design</h3><p>Tworzenie stron, które nie tylko wyglądają, ale działają. Responsywność, szybkość i interaktywność to standard.</p></div>
-                <div class="service-card"><h3 style="color: var(--magenta)">Branding</h3><p>Projektowanie logo i identyfikacji wizualnej. Tworzę marki, które krzyczą z ekranu i zapadają w pamięć.</p></div>
-                <div class="service-card"><h3 style="color: var(--yellow)">Development</h3><p>Wdrażanie projektów w życie. HTML5, CSS3, JavaScript oraz nowoczesne frameworki bez kompromisów.</p></div>
+                <div class="service-card tilt-card"><h3 style="color: var(--cyan)">Web Design</h3><p>Tworzenie stron, które nie tylko wyglądają, ale działają. Responsywność, szybkość i interaktywność to standard.</p></div>
+                <div class="service-card tilt-card"><h3 style="color: var(--magenta)">Branding</h3><p>Projektowanie logo i identyfikacji wizualnej. Tworzę marki, które krzyczą z ekranu i zapadają w pamięć.</p></div>
+                <div class="service-card tilt-card"><h3 style="color: var(--yellow)">Development</h3><p>Wdrażanie projektów w życie. HTML5, CSS3, JavaScript oraz nowoczesne frameworki bez kompromisów.</p></div>
             </div>
         </section>
 
@@ -327,24 +411,41 @@
         <div class="container" style="text-align: center;">
             <p class="reveal" style="color: #888; text-transform: uppercase; letter-spacing: 2px;">Rozpocznijmy współpracę</p>
             <div class="cta-container reveal">
-                <a href="mailto:graf.m.jar@gmail.com" class="cta-big link-hover"><span style="color: var(--cyan)">graf.m.jar</span><span style="color: var(--magenta)">@</span><span style="color: var(--yellow)">gmail.com</span></a>
-                <a href="tel:+48608078802" class="cta-small link-hover">+48 608 078 802</a>
+                <a href="mailto:graf.m.jar@gmail.com" class="cta-big link-hover magnet"><span style="color: var(--cyan)">graf.m.jar</span><span style="color: var(--magenta)">@</span><span style="color: var(--yellow)">gmail.com</span></a>
+                <a href="tel:+48608078802" class="cta-small link-hover magnet">+48 608 078 802</a>
             </div>
         </div>
     </section>
 
     <script>
+        // --- Preloader ---
         const preloader = document.getElementById('preloader');
         function hidePreloader() { if(preloader.style.opacity!=='0'){preloader.style.opacity='0'; setTimeout(()=>{preloader.style.display='none'},500);} }
         window.addEventListener('load', ()=>{setTimeout(hidePreloader,500)});
         if(document.readyState==='complete') hidePreloader();
         setTimeout(hidePreloader,3000);
 
+        // --- Scroll Reveal ---
         const revealObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
-        }, { threshold: 0.15 });
+        }, { threshold: 0.1 });
         document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
+        // --- Header Scroll Effect & Progress Bar ---
+        const header = document.querySelector('header');
+        const progressBar = document.getElementById('progress-bar');
+        
+        window.addEventListener('scroll', () => {
+            if(window.scrollY > 50) header.classList.add('scrolled');
+            else header.classList.remove('scrolled');
+
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            progressBar.style.width = scrolled + "%";
+        });
+
+        // --- Starfield ---
         const canvas = document.getElementById('starfield');
         const ctx = canvas.getContext('2d');
         let width, height, stars = [];
@@ -381,7 +482,8 @@
         
         window.addEventListener('resize', resize);
         window.addEventListener('mousemove', e=>{mouse.x=e.x; mouse.y=e.y});
-        
+
+        // --- Mobile Menu ---
         const menuToggle = document.getElementById('mobile-menu');
         const navLinks = document.querySelector('.nav-links');
         menuToggle.addEventListener('click', () => {
@@ -395,24 +497,72 @@
             });
         });
         
-        const cursor=document.querySelector('.cursor');
+        // --- Cursor System ---
+        const cursor = document.querySelector('.cursor');
+        const cursorFollower = document.querySelector('.cursor-follower');
+        
         if(window.matchMedia("(pointer: fine)").matches) {
-            document.addEventListener('mousemove', e=>{cursor.style.left=e.clientX+'px'; cursor.style.top=e.clientY+'px'});
+            document.addEventListener('mousemove', e=>{
+                cursor.style.left = e.clientX+'px'; 
+                cursor.style.top = e.clientY+'px';
+                
+                // Opóźniony follower
+                setTimeout(() => {
+                    cursorFollower.style.left = e.clientX+'px'; 
+                    cursorFollower.style.top = e.clientY+'px';
+                }, 50);
+            });
+
             document.querySelectorAll('.link-hover, a, button, .project-img-wrapper, .simple-zoom-container').forEach(l=>{
                 l.addEventListener('mouseenter',()=>cursor.classList.add('hovered'));
                 l.addEventListener('mouseleave',()=>cursor.classList.remove('hovered'));
             });
+
+            // --- Magnetic Button Effect ---
+            const magnets = document.querySelectorAll('.magnet');
+            magnets.forEach((magnet) => {
+                magnet.addEventListener('mousemove', (e) => {
+                    const position = magnet.getBoundingClientRect();
+                    const x = e.clientX - position.left - position.width / 2;
+                    const y = e.clientY - position.top - position.height / 2;
+                    
+                    magnet.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+                });
+                magnet.addEventListener('mouseleave', () => {
+                    magnet.style.transform = 'translate(0px, 0px)';
+                });
+            });
+
+            // --- 3D Tilt Effect for Cards ---
+            const tiltCards = document.querySelectorAll('.tilt-card');
+            tiltCards.forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    const rotateX = (y - centerY) / 20;
+                    const rotateY = (centerX - x) / 20;
+
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+                });
+            });
         }
 
+        // --- Visibility Change ---
         const normalTitle = "Michał Jarosiński - Portfolio";
         const awayTitle   = "👋 Wróć do moich projektów!";
 
         document.addEventListener("visibilitychange", () => {
-            if (document.hidden) {
-                document.title = awayTitle;
-            } else {
-                document.title = normalTitle;
-            }
+            if (document.hidden) document.title = awayTitle;
+            else document.title = normalTitle;
         });
 
         resize(); animateStars();
