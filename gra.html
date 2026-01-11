@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gra Space Fighter - Michał Jarosiński</title>
+    <link rel="icon" type="image/png" href="strona-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #050505;
+            --text-color: #ffffff;
+            --cyan: #00ffff;
+            --magenta: #ff00ff;
+            --yellow: #ffff00;
+            --font-main: 'Space Grotesk', sans-serif;
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        @media (hover: hover) and (pointer: fine) {
+            * { cursor: none; }
+        }
+
+        body { 
+            background-color: var(--bg-color); 
+            color: var(--text-color); 
+            font-family: var(--font-main); 
+            overflow-x: hidden; 
+            line-height: 1.6; 
+            position: relative; 
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+        
+        /* --- Scroll Progress Bar --- */
+        #progress-bar {
+            position: fixed;
+            top: 0; left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta), var(--yellow));
+            width: 0%;
+            z-index: 10001;
+            transition: width 0.1s;
+        }
+
+        /* --- Ambient Background Glows --- */
+        .ambient-glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.15;
+            z-index: -2;
+            pointer-events: none;
+            animation: floatGlow 15s infinite alternate ease-in-out;
+        }
+        .glow-1 { top: -10%; left: -10%; background: var(--cyan); }
+        .glow-2 { bottom: 10%; right: -10%; background: var(--magenta); animation-delay: -5s; }
+        .glow-3 { top: 40%; left: 40%; width: 400px; height: 400px; background: var(--yellow); opacity: 0.08; animation-delay: -10s; }
+
+        @keyframes floatGlow {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(50px, 30px) scale(1.1); }
+            100% { transform: translate(-30px, -50px) scale(0.9); }
+        }
+
+        #starfield { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+        
+        /* --- Cursor --- */
+        .cursor { 
+            width: 20px; height: 20px; border: 2px solid var(--text-color); border-radius: 50%; 
+            position: fixed; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); 
+            transition: transform 0.1s ease, background-color 0.2s, width 0.3s, height 0.3s; mix-blend-mode: difference; 
+            display: none;
+        }
+        .cursor.hovered { transform: translate(-50%, -50%) scale(3); background-color: var(--text-color); border-color: transparent; opacity: 0.8; }
+        
+        @media (hover: hover) and (pointer: fine) {
+            .cursor { display: block; }
+        }
+
+        /* --- Preloader --- */
+        #preloader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 10000; display: flex; justify-content: center; align-items: center; transition: opacity 0.5s ease; }
+        .loader-text { font-size: 2rem; font-weight: 700; animation: pulseCMYK 1s infinite alternate; }
+        @keyframes pulseCMYK { 0% { text-shadow: 2px 2px 0 var(--cyan); } 50% { text-shadow: -2px 2px 0 var(--magenta); } 100% { text-shadow: -2px -2px 0 var(--yellow); } }
+
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
+
+        /* --- Header --- */
+        header { position: fixed; top: 0; width: 100%; padding: 30px 0; z-index: 100; mix-blend-mode: difference; transition: padding 0.3s; }
+        header.scrolled { padding: 15px 0; background: rgba(5,5,5,0.8); backdrop-filter: blur(10px); mix-blend-mode: normal; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        
+        nav { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: 700; font-size: 1.5rem; letter-spacing: -1px; z-index: 101; position: relative; } 
+        .logo span { color: var(--cyan); }
+        
+        .nav-links { display: flex; gap: 50px; }
+        .nav-links a { 
+            font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; position: relative; 
+            transition: transform 0.3s var(--ease-out);
+            display: inline-block;
+        }
+        .nav-links a::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background: var(--magenta); transition: var(--transition); }
+        .nav-links a:hover::after { width: 100%; }
+        .nav-links a:hover { color: var(--cyan); }
+        .nav-links a.active { color: var(--cyan); }
+        .nav-links a.active::after { width: 100%; }
+
+        .menu-toggle { display: none; flex-direction: column; gap: 6px; cursor: pointer; z-index: 101; }
+        .bar { width: 30px; height: 2px; background-color: #fff; transition: 0.3s; }
+
+        /* --- Game Download Section --- */
+        #game-section {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 150px 0;
+            position: relative;
+        }
+
+        .game-content {
+            text-align: center;
+            max-width: 800px;
+            z-index: 2;
+        }
+
+        h1.game-title {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            line-height: 1;
+            text-transform: uppercase;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h1.game-title span { color: var(--cyan); }
+
+        .game-desc {
+            font-size: 1.2rem;
+            color: #ccc;
+            margin-bottom: 50px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* --- Download Button --- */
+        .download-btn-wrapper {
+            position: relative;
+            display: inline-block;
+            perspective: 1000px;
+        }
+
+        .download-btn {
+            position: relative;
+            display: inline-block;
+            padding: 20px 50px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #000;
+            background: var(--cyan);
+            border: none;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            clip-path: polygon(10% 0, 100% 0, 100% 80%, 90% 100%, 0 100%, 0 20%);
+        }
+
+        .download-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+            transition: 0.5s;
+        }
+
+        .download-btn:hover {
+            background: var(--magenta);
+            color: #fff;
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(255, 0, 255, 0.4);
+        }
+
+        .download-btn:hover::before {
+            left: 100%;
+        }
+
+        .download-info {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #666;
+            font-family: monospace;
+        }
+
+        /* --- Phone Mockup Abstract --- */
+        .phone-mockup {
+            width: 300px;
+            height: 500px;
+            border: 2px solid #333;
+            border-radius: 30px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-10deg);
+            z-index: -1;
+            opacity: 0.1;
+            background: linear-gradient(135deg, rgba(255,255,255,0.05), transparent);
+        }
+
+        .reveal { 
+            opacity: 0; 
+            transform: translateY(30px); 
+            animation: fadeUpReveal 1s forwards var(--ease-out);
+        }
+        @keyframes fadeUpReveal { to { opacity: 1; transform: translateY(0); } }
+
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            border-top: 1px solid #111;
+            color: #444;
+            font-size: 0.9rem;
+        }
+
+        /* --- Mobile --- */
+        @media (max-width: 1024px) {
+            .container { padding: 0 20px; }
+            h1.game-title { font-size: 3rem; }
+            
+            .menu-toggle { display: flex; }
+            .nav-links {
+                position: fixed; top: 0; right: 0; height: 100vh; width: 70%; background: #0a0a0a; flex-direction: column; justify-content: center; align-items: center;
+                transform: translateX(100%); transition: transform 0.4s ease-in-out; z-index: 99; border-left: 1px solid #222;
+            }
+            .nav-links.active { transform: translateX(0); }
+            
+            .menu-toggle.active .bar:nth-child(1) { transform: rotate(45deg) translate(6px, 6px); }
+            .menu-toggle.active .bar:nth-child(2) { opacity: 0; }
+            .menu-toggle.active .bar:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="progress-bar"></div>
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+    <div class="ambient-glow glow-3"></div>
+
+    <canvas id="starfield"></canvas>
+    
+    <div class="cursor"></div>
+    
+    <div id="preloader"><div class="loader-text">LOADING...</div></div>
+
+    <header>
+        <div class="container">
+            <nav>
+                <a href="index.html" class="logo link-hover">MJ<span>.</span></a>
+                
+                <div class="menu-toggle" id="mobile-menu">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+
+                <div class="nav-links">
+                    <a href="index.html#about" class="link-hover magnet">O mnie</a>
+                    <a href="index.html#work" class="link-hover magnet">Web</a>
+                    <a href="grafika.html" class="link-hover magnet">Grafika</a>
+                    <a href="gra.html" class="link-hover magnet active">Gra</a>
+                    <a href="index.html#contact" class="link-hover magnet">Kontakt</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <section id="game-section">
+        <div class="phone-mockup"></div>
+        <div class="container game-content">
+            <h1 class="game-title reveal">Space <span>Fighter</span></h1>
+            <p class="game-desc reveal" style="animation-delay: 0.2s">
+                Autorska gra mobilna stworzona od podstaw. Przetestuj swoje umiejętności w kosmicznej strzelance. Pobierz plik APK bezpośrednio na swój telefon z systemem Android.
+            </p>
+            
+            <div class="download-btn-wrapper reveal tilt-card" style="animation-delay: 0.4s">
+                <!-- Bezpośredni link do pliku raw w repozytorium, aby pobieranie ruszyło od razu -->
+                <a href="https://github.com/michal20000505-sudo/portfolio-site/raw/main/SpaceFighterJaro.apk" class="download-btn link-hover magnet">
+                    Pobierz .APK
+                </a>
+                <div class="download-info">Wersja 1.0 | Android</div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            &copy; 2025 Michał Jarosiński. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        // --- Preloader ---
+        const preloader = document.getElementById('preloader');
+        function hidePreloader() { if(preloader.style.opacity!=='0'){preloader.style.opacity='0'; setTimeout(()=>{preloader.style.display='none'},500);} }
+        window.addEventListener('load', ()=>{setTimeout(hidePreloader,500)});
+        if(document.readyState==='complete') hidePreloader();
+        setTimeout(hidePreloader,1500);
+
+        // --- Header Scroll Effect & Progress Bar ---
+        const header = document.querySelector('header');
+        const progressBar = document.getElementById('progress-bar');
+        
+        window.addEventListener('scroll', () => {
+            if(window.scrollY > 50) header.classList.add('scrolled');
+            else header.classList.remove('scrolled');
+
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            progressBar.style.width = scrolled + "%";
+        });
+
+        // --- Starfield ---
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas.getContext('2d');
+        let width, height, stars = [];
+        const mouse = { x: undefined, y: undefined };
+        const colors = ['#00ffff', '#ff00ff', '#ffff00', '#ffffff', '#ffffff']; 
+
+        function resize() { width=window.innerWidth; height=window.innerHeight; canvas.width=width; canvas.height=height; initStars(); }
+        
+        class Star {
+            constructor() {
+                this.x = Math.random() * width; this.y = Math.random() * height;
+                this.size = Math.random() * 2;
+                this.density = (Math.random() * 20) + 1;
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.vx = (Math.random() - 0.5) * 0.5; this.vy = (Math.random() - 0.5) * 0.5;
+                this.opacity = Math.random(); this.twinkle = Math.random() * 0.02 + 0.005;
+            }
+            draw() { ctx.fillStyle=this.color; ctx.globalAlpha=this.opacity; ctx.beginPath(); ctx.arc(this.x,this.y,this.size,0,Math.PI*2); ctx.fill(); ctx.globalAlpha=1; }
+            update() {
+                this.x+=this.vx; this.y+=this.vy;
+                if(this.x<0)this.x=width; if(this.x>width)this.x=0; if(this.y<0)this.y=height; if(this.y>height)this.y=0;
+                if(mouse.x){
+                    let dx=mouse.x-this.x, dy=mouse.y-this.y, dist=Math.sqrt(dx*dx+dy*dy);
+                    if(dist<150){
+                        let f=(150-dist)/150;
+                        this.x-=(dx/dist)*f*this.density*2; this.y-=(dy/dist)*f*this.density*2;
+                    }
+                }
+                this.opacity+=this.twinkle; if(this.opacity>1||this.opacity<0.2)this.twinkle=-this.twinkle;
+            }
+        }
+        function initStars(){ stars=[]; for(let i=0;i<(width*height)/8000;i++)stars.push(new Star()); }
+        function animateStars(){ ctx.clearRect(0,0,width,height); stars.forEach(s=>{s.draw();s.update()}); requestAnimationFrame(animateStars); }
+        
+        window.addEventListener('resize', resize);
+        window.addEventListener('mousemove', e=>{mouse.x=e.x; mouse.y=e.y});
+
+        // --- Mobile Menu ---
+        const menuToggle = document.getElementById('mobile-menu');
+        const navLinks = document.querySelector('.nav-links');
+        menuToggle.addEventListener('click', () => {
+            menuToggle.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                menuToggle.classList.remove('active');
+                navLinks.classList.remove('active');
+            });
+        });
+        
+        // --- Cursor System ---
+        const cursor = document.querySelector('.cursor');
+        
+        if(window.matchMedia("(pointer: fine)").matches) {
+            document.addEventListener('mousemove', e=>{
+                cursor.style.left = e.clientX+'px'; 
+                cursor.style.top = e.clientY+'px';
+            });
+
+            document.querySelectorAll('.link-hover, a, button, .download-btn').forEach(l=>{
+                l.addEventListener('mouseenter',()=>cursor.classList.add('hovered'));
+                l.addEventListener('mouseleave',()=>cursor.classList.remove('hovered'));
+            });
+
+            // --- Magnetic Button Effect ---
+            const magnets = document.querySelectorAll('.magnet');
+            magnets.forEach((magnet) => {
+                magnet.addEventListener('mousemove', (e) => {
+                    const position = magnet.getBoundingClientRect();
+                    const x = e.clientX - position.left - position.width / 2;
+                    const y = e.clientY - position.top - position.height / 2;
+                    
+                    magnet.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+                });
+                magnet.addEventListener('mouseleave', () => {
+                    magnet.style.transform = 'translate(0px, 0px)';
+                });
+            });
+
+             // --- 3D Tilt Effect for Button ---
+             const tiltCards = document.querySelectorAll('.tilt-card');
+            tiltCards.forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateX = (y - centerY) / 10; 
+                    const rotateY = (centerX - x) / 10;
+
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+                });
+            });
+        }
+
+        resize(); animateStars();
+    </script>
+</body>
+</html>
