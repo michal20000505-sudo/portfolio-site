@@ -131,7 +131,7 @@
 
         .game-content {
             text-align: center;
-            max-width: 800px;
+            max-width: 900px;
             z-index: 2;
         }
 
@@ -155,6 +155,15 @@
             margin-right: auto;
         }
 
+        /* --- Download Container --- */
+        .download-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 50px;
+        }
+
         /* --- Download Button --- */
         .download-btn-wrapper {
             position: relative;
@@ -165,8 +174,8 @@
         .download-btn {
             position: relative;
             display: inline-block;
-            padding: 20px 50px;
-            font-size: 1.5rem;
+            padding: 20px 40px;
+            font-size: 1.2rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 2px;
@@ -177,6 +186,7 @@
             overflow: hidden;
             transition: all 0.3s ease;
             clip-path: polygon(10% 0, 100% 0, 100% 80%, 90% 100%, 0 100%, 0 20%);
+            white-space: nowrap;
         }
 
         .download-btn::before {
@@ -189,10 +199,22 @@
         }
 
         .download-btn:hover {
-            background: var(--magenta);
-            color: #fff;
             transform: scale(1.05);
+            color: #fff;
+        }
+
+        .download-btn.android:hover {
+            background: var(--magenta);
             box-shadow: 0 0 30px rgba(255, 0, 255, 0.4);
+        }
+
+        .download-btn.pc {
+            background: var(--magenta);
+        }
+
+        .download-btn.pc:hover {
+            background: var(--cyan);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.4);
         }
 
         .download-btn:hover::before {
@@ -243,6 +265,14 @@
             .menu-toggle.active .bar:nth-child(1) { transform: rotate(45deg) translate(6px, 6px); }
             .menu-toggle.active .bar:nth-child(2) { opacity: 0; }
             .menu-toggle.active .bar:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+            .download-container {
+                gap: 20px;
+            }
+            .download-btn {
+                padding: 15px 30px;
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
@@ -286,14 +316,23 @@
         <div class="container game-content">
             <h1 class="game-title reveal">Space <span>Fighter</span></h1>
             <p class="game-desc reveal" style="animation-delay: 0.2s">
-                Autorska gra mobilna stworzona od podstaw. Przetestuj swoje umiejętności w kosmicznej strzelance. Pobierz plik APK bezpośrednio na swój telefon z systemem Android.
+                Autorska gra mobilna stworzona od podstaw. Przetestuj swoje umiejętności w kosmicznej strzelance. Pobierz plik APK bezpośrednio na swój telefon lub wersję na PC.
             </p>
             
-            <div class="download-btn-wrapper reveal tilt-card" style="animation-delay: 0.4s">
-                <a href="https://github.com/michal20000505-sudo/portfolio-site/raw/main/SpaceFighterJaro.apk" class="download-btn link-hover magnet">
-                    Pobierz .APK
-                </a>
-                <div class="download-info">Wersja 0.0.2 | Android</div>
+            <div class="download-container">
+                <div class="download-btn-wrapper reveal tilt-card" style="animation-delay: 0.4s">
+                    <a href="https://github.com/michal20000505-sudo/portfolio-site/raw/main/SpaceFighterJaro.apk" class="download-btn android link-hover magnet">
+                        Pobierz .APK
+                    </a>
+                    <div class="download-info">Wersja 0.0.2 | Android</div>
+                </div>
+
+                <div class="download-btn-wrapper reveal tilt-card" style="animation-delay: 0.5s">
+                    <a href="https://drive.google.com/file/d/1KfFyLHV2DOfzME76y8s5Iwrhmh7f8fLQ/view?usp=drive_link" target="_blank" class="download-btn pc link-hover magnet">
+                        Pobierz na PC
+                    </a>
+                    <div class="download-info">Wersja 0.0.2 | Windows</div>
+                </div>
             </div>
         </div>
     </section>
