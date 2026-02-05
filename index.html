@@ -400,22 +400,26 @@
             cursor: default;
             position: relative;
             z-index: 10;
+            --anim-color: #fff;
+            /* Default animation color */
         }
 
         .letter.animating {
             animation: rubberBand 1s forwards;
-            /* 1s duration for the full cycle */
-            color: #fff;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+            /* Glow is now handled in keyframes for smoother fade */
         }
 
         @keyframes rubberBand {
             0% {
                 transform: scale3d(1, 1, 1);
+                color: inherit;
+                text-shadow: none;
             }
 
             30% {
                 transform: scale3d(1.15, 0.85, 1);
+                color: var(--anim-color);
+                text-shadow: 0 0 10px var(--anim-color);
             }
 
             /* Squashing */
@@ -426,6 +430,8 @@
             /* Stretching */
             50% {
                 transform: scale3d(1.05, 0.95, 1);
+                color: var(--anim-color);
+                text-shadow: 0 0 5px var(--anim-color);
             }
 
             /* Overshooting */
@@ -439,6 +445,33 @@
 
             100% {
                 transform: scale3d(1, 1, 1);
+                color: inherit;
+                text-shadow: none;
+            }
+        }
+
+        /* --- Dust Particles --- */
+        .dust {
+            position: absolute;
+            background: var(--anim-color, #fff);
+            /* Use variable or default white */
+            border-radius: 50%;
+            pointer-events: none;
+            box-shadow: 0 0 5px var(--anim-color, #fff);
+            opacity: 0;
+        }
+
+        /* Ejection Animation */
+        @keyframes dustMove {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                /* Moves to the CSS variable target, slowing down */
+                transform: translate(var(--tx), var(--ty)) scale(0);
+                opacity: 0;
             }
         }
 
@@ -485,6 +518,17 @@
 
         h2.section-title span {
             color: var(--yellow);
+        }
+
+        /* Fix: Ensure .letter spans in titles inherit color (white for text, yellow for spans) 
+           instead of all turning yellow due to the rule above. */
+        h2.section-title .letter {
+            color: inherit;
+        }
+
+        /* Set animation color to yellow for letters inside section spans */
+        h2.section-title span .letter {
+            --anim-color: var(--yellow);
         }
 
         /* --- About --- */
@@ -1202,35 +1246,124 @@
         resize(); animateStars();
 
         // --- Rubber Band Text Effect ---
-        const heroTitle = document.querySelector('.hero-title');
+        // Targets: Hero title and Section titles
+        const textElements = document.querySelectorAll('.hero-title, .section-title');
 
-        function splitTextToSpans(element) {
-            const html = element.innerHTML;
-            const lines = html.split('<br>');
-            element.innerHTML = lines.map(line => {
-                return line.split('').map(char => {
-                    if (char === ' ') return ' ';
-                    return `<span class="letter">${char}</span>`;
-                }).join('');
-            }).join('<br>');
+        function wrapLetters(element) {
+            // Use TreeWalker to find all text nodes, ignoring already wrapped ones
+            // We traverse into child elements via the walker
+            const walker = document.createTreeWalker(
+                element,
+                NodeFilter.SHOW_TEXT,
+                null,
+                false
+            );
+
+            const textNodes = [];
+            let node;
+            while (node = walker.nextNode()) {
+                // Ignore purely whitespace text nodes to avoid excessive spans
+                // but we need to be careful not to strip meaningful spaces.
+                // We'll wrap characters in non-empty nodes.
+                if (node.textContent.length > 0) {
+                    textNodes.push(node);
+                }
+            }
+
+            // Replace text nodes with span-wrapped letters
+            textNodes.forEach(textNode => {
+                const fragment = document.createDocumentFragment();
+                const text = textNode.textContent;
+
+                for (let char of text) {
+                    // Check for spaces/tabs/newlines
+                    // Use a simple text node for spaces to preserve layout
+                    if (char.match(/\s/)) {
+                        fragment.appendChild(document.createTextNode(char));
+                    } else {
+                        const span = document.createElement('span');
+                        span.className = 'letter';
+                        span.textContent = char;
+                        fragment.appendChild(span);
+                    }
+                }
+
+                textNode.parentNode.replaceChild(fragment, textNode);
+            });
         }
 
-        if (heroTitle) {
-            splitTextToSpans(heroTitle);
+        // Initialize effect
+        textElements.forEach(el => {
+            wrapLetters(el);
+        });
 
-            const letters = document.querySelectorAll('.letter');
-            letters.forEach(letter => {
-                letter.addEventListener('mouseenter', () => {
-                    // Only add if not already animating
-                    if (!letter.classList.contains('animating')) {
-                        letter.classList.add('animating');
+        // Bind events to all .letter elements (global)
+        const letters = document.querySelectorAll('.letter');
+        letters.forEach(letter => {
+            letter.addEventListener('mouseenter', () => {
+                // Force restart animation
+                letter.classList.remove('animating');
+                void letter.offsetWidth; // Trigger reflow
+                letter.classList.add('animating');
 
-                        letter.addEventListener('animationend', () => {
-                            letter.classList.remove('animating');
-                        }, { once: true });
-                    }
-                });
+                // Clear any pending dust from previous hover
+                if (letter.dustTimer) clearTimeout(letter.dustTimer);
+
+                // Spawn dust particles at 400ms (when returning from stretch)
+                letter.dustTimer = setTimeout(() => {
+                    spawnDust(letter);
+                }, 400);
+
+                letter.addEventListener('animationend', () => {
+                    letter.classList.remove('animating');
+                }, { once: true });
             });
+        });
+
+        function spawnDust(element) {
+            const rect = element.getBoundingClientRect();
+            // Center of the letter (adding scroll offsets to fix positioning on scrolled sections)
+            const centerX = rect.left + window.scrollX + rect.width / 2;
+            const centerY = rect.top + window.scrollY + rect.height / 2;
+
+            // Get computed color for particles from the element's CSS variable
+            const style = getComputedStyle(element);
+            const animColor = style.getPropertyValue('--anim-color').trim() || '#fff';
+
+            const particleCount = 6 + Math.random() * 4; // 6-10 particles
+
+            for (let i = 0; i < particleCount; i++) {
+                const dust = document.createElement('div');
+                dust.classList.add('dust');
+                document.body.appendChild(dust);
+
+                // Apply dynamic color
+                dust.style.background = animColor;
+                dust.style.boxShadow = `0 0 5px ${animColor}`;
+
+                const size = Math.random() * 3 + 2; // 2-5px
+
+                // Random angle and distance
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = Math.random() * 120 + 60; // Further distance (60-180px)
+
+                const tx = Math.cos(angle) * velocity + 'px';
+                const ty = Math.sin(angle) * velocity + 'px';
+
+                dust.style.width = `${size}px`;
+                dust.style.height = `${size}px`;
+                dust.style.left = `${centerX}px`;
+                dust.style.top = `${centerY}px`;
+                dust.style.setProperty('--tx', tx);
+                dust.style.setProperty('--ty', ty);
+
+                // Physics: start fast, slow down. 4s duration
+                dust.style.animation = `dustMove 4s cubic-bezier(0.2, 1, 0.3, 1) forwards`;
+
+                setTimeout(() => {
+                    dust.remove();
+                }, 4000);
+            }
         }
     </script>
 </body>
