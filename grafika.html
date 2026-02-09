@@ -298,74 +298,102 @@
             transition: 0.3s;
         }
 
-        /* --- Page Hero --- */
-        #page-hero {
-            padding: 150px 0 50px;
+        /* --- Hero --- */
+        #hero {
+            height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 0 20px;
+            overflow: hidden;
+        }
+
+        .hero-content {
             text-align: center;
+            z-index: 2;
+            width: 100%;
             perspective: 1000px;
         }
 
-        .page-title-container {
-            display: inline-block;
-            padding: 20px;
-            transition: transform 0.4s var(--ease-out);
-        }
-
-        .page-title-container:hover {
-            transform: scale(1.02);
-        }
-
-        .page-title {
-            font-size: 8rem;
-            line-height: 0.85;
+        .hero-title {
+            font-size: 8vw;
             font-weight: 700;
+            line-height: 0.9;
             text-transform: uppercase;
-            margin: 0;
-            letter-spacing: -2px;
-        }
-
-        .title-visual {
-            display: block;
-            color: #ffffff;
-        }
-
-        .title-works {
-            display: block;
-            color: transparent;
-            -webkit-text-stroke: 2px var(--magenta);
             position: relative;
-            background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.9) 45%, rgba(255, 0, 255, 0.6) 50%, transparent 60%);
-            background-size: 250% 100%;
-            background-position: 100% 0;
-            -webkit-background-clip: text;
-            background-clip: text;
-            text-shadow: none;
-            transition: text-shadow 0.3s ease;
+            color: var(--text-color);
+            transform-style: preserve-3d;
         }
 
-        .title-works.shine-active {
-            animation: shineText 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-            text-shadow: 0 0 30px rgba(255, 0, 255, 0.5);
+        .hero-title::before,
+        .hero-title::after {
+            content: 'VISUAL\A WORKS';
+            white-space: pre;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.8;
         }
 
-        @keyframes shineText {
+        .hero-title::before {
+            color: var(--cyan);
+            z-index: -1;
+            transform: translate(-3px, -3px);
+            mix-blend-mode: screen;
+            animation: glitch-anim-1 2.5s infinite linear alternate-reverse;
+        }
+
+        .hero-title::after {
+            color: var(--magenta);
+            z-index: -2;
+            transform: translate(3px, 3px);
+            mix-blend-mode: screen;
+            animation: glitch-anim-2 3.5s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim-1 {
             0% {
-                background-position: 100% 0;
+                transform: translate(-2px, -2px);
+                clip-path: inset(10% 0 80% 0);
+            }
+
+            20% {
+                clip-path: inset(60% 0 10% 0);
             }
 
             100% {
-                background-position: -150% 0;
+                transform: translate(1px, 1px);
+                clip-path: inset(40% 0 30% 0);
             }
         }
 
-        .page-subtitle {
-            color: #888;
+        @keyframes glitch-anim-2 {
+            0% {
+                transform: translate(2px, 2px);
+                clip-path: inset(80% 0 5% 0);
+            }
+
+            20% {
+                clip-path: inset(10% 0 60% 0);
+            }
+
+            100% {
+                transform: translate(-1px, -1px);
+                clip-path: inset(20% 0 50% 0);
+            }
+        }
+
+        .hero-subtitle {
+            margin-top: 30px;
             font-size: 1.2rem;
-            letter-spacing: 4px;
+            color: #888;
+            letter-spacing: 3px;
             text-transform: uppercase;
-            margin-top: 40px;
             opacity: 0;
-            animation: fadeUp 1s 0.5s forwards var(--ease-out);
+            animation: fadeUp 1s 1s forwards var(--ease-out);
         }
 
         @keyframes fadeUp {
@@ -377,6 +405,80 @@
             to {
                 opacity: 1;
                 transform: translateY(0);
+            }
+        }
+
+        /* --- Rubber Text Effect --- */
+        .letter {
+            display: inline-block;
+            transition: color 0.3s ease-out;
+            cursor: none;
+            position: relative;
+            z-index: 10;
+            --anim-color: #fff;
+        }
+
+        .letter.animating {
+            animation: rubberBand 1s forwards;
+        }
+
+        @keyframes rubberBand {
+            0% {
+                transform: scale3d(1, 1, 1);
+                color: inherit;
+                text-shadow: none;
+            }
+
+            30% {
+                transform: scale3d(1.15, 0.85, 1);
+                color: var(--anim-color);
+                text-shadow: 0 0 10px var(--anim-color);
+            }
+
+            40% {
+                transform: scale3d(0.85, 1.15, 1);
+            }
+
+            50% {
+                transform: scale3d(1.05, 0.95, 1);
+                color: var(--anim-color);
+                text-shadow: 0 0 5px var(--anim-color);
+            }
+
+            65% {
+                transform: scale3d(0.98, 1.02, 1);
+            }
+
+            75% {
+                transform: scale3d(1.02, 0.98, 1);
+            }
+
+            100% {
+                transform: scale3d(1, 1, 1);
+                color: inherit;
+                text-shadow: none;
+            }
+        }
+
+        /* --- Dust Particles --- */
+        .dust {
+            position: absolute;
+            background: var(--anim-color, #fff);
+            border-radius: 50%;
+            pointer-events: none;
+            box-shadow: 0 0 5px var(--anim-color, #fff);
+            opacity: 0;
+        }
+
+        @keyframes dustMove {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(var(--tx), var(--ty)) scale(0);
+                opacity: 0;
             }
         }
 
@@ -682,18 +784,12 @@
         </div>
     </header>
 
-    <div id="page-hero">
-        <div class="container">
-            <div class="page-title-container link-hover">
-                <h1 class="page-title">
-                    <span class="title-visual">VISUAL</span>
-                    <span class="title-works" id="worksText">WORKS</span>
-                </h1>
-            </div>
-
-            <p class="page-subtitle reveal">Branding / Print / Art Direction</p>
+    <section id="hero">
+        <div class="container hero-content">
+            <h1 class="hero-title" title="VISUAL WORKS">VISUAL<br>WORKS</h1>
+            <p class="hero-subtitle">Branding / Print / Art Direction</p>
         </div>
-    </div>
+    </section>
 
     <section class="gallery-section">
         <div class="container">
@@ -968,21 +1064,75 @@
             });
         }
 
-        // --- Shine Animation ---
-        const worksText = document.getElementById('worksText');
-        const titleContainer = document.querySelector('.page-title-container');
-        let isAnimating = false;
-        function triggerShine() {
-            if (isAnimating) return;
-            isAnimating = true;
-            worksText.classList.add('shine-active');
-            worksText.addEventListener('animationend', () => {
-                worksText.classList.remove('shine-active');
-                isAnimating = false;
-            }, { once: true });
+        // --- Rubber Band Text Effect ---
+        const textElements = document.querySelectorAll('.hero-title, .section-title');
+
+        function wrapLetters(element) {
+            const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
+            const textNodes = [];
+            let node;
+            while (node = walker.nextNode()) {
+                if (node.textContent.length > 0) textNodes.push(node);
+            }
+            textNodes.forEach(textNode => {
+                const fragment = document.createDocumentFragment();
+                const text = textNode.textContent;
+                for (let char of text) {
+                    if (char.match(/\s/)) {
+                        fragment.appendChild(document.createTextNode(char));
+                    } else {
+                        const span = document.createElement('span');
+                        span.className = 'letter';
+                        span.textContent = char;
+                        fragment.appendChild(span);
+                    }
+                }
+                textNode.parentNode.replaceChild(fragment, textNode);
+            });
         }
-        if (titleContainer) titleContainer.addEventListener('mouseenter', triggerShine);
-        setTimeout(() => { triggerShine(); }, 3000);
+
+        textElements.forEach(el => wrapLetters(el));
+
+        const letters = document.querySelectorAll('.letter');
+        letters.forEach(letter => {
+            letter.addEventListener('mouseenter', () => {
+                letter.classList.remove('animating');
+                void letter.offsetWidth;
+                letter.classList.add('animating');
+                if (letter.dustTimer) clearTimeout(letter.dustTimer);
+                letter.dustTimer = setTimeout(() => spawnDust(letter), 400);
+                letter.addEventListener('animationend', () => letter.classList.remove('animating'), { once: true });
+            });
+        });
+
+        function spawnDust(element) {
+            const rect = element.getBoundingClientRect();
+            const centerX = rect.left + window.scrollX + rect.width / 2;
+            const centerY = rect.top + window.scrollY + rect.height / 2;
+            const style = getComputedStyle(element);
+            const animColor = style.getPropertyValue('--anim-color').trim() || '#fff';
+            const particleCount = 6 + Math.random() * 4;
+            for (let i = 0; i < particleCount; i++) {
+                const dust = document.createElement('div');
+                dust.classList.add('dust');
+                document.body.appendChild(dust);
+                dust.style.background = animColor;
+                dust.style.boxShadow = `0 0 5px ${animColor}`;
+                const size = Math.random() * 3 + 2;
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = Math.random() * 120 + 60;
+                const tx = Math.cos(angle) * velocity + 'px';
+                const ty = Math.sin(angle) * velocity + 'px';
+                dust.style.width = `${size}px`;
+                dust.style.height = `${size}px`;
+                dust.style.left = `${centerX}px`;
+                dust.style.top = `${centerY}px`;
+                dust.style.setProperty('--tx', tx);
+                dust.style.setProperty('--ty', ty);
+                dust.style.animation = `dustMove 4s cubic-bezier(0.2, 1, 0.3, 1) forwards`;
+                setTimeout(() => dust.remove(), 4000);
+            }
+        }
 
         // --- Lightbox ---
         const lightbox = document.getElementById('lightbox');
