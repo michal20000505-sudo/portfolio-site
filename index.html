@@ -628,6 +628,70 @@
             font-weight: 700;
         }
 
+        /* --- Clients List --- */
+        .clients-intro {
+            margin-bottom: 15px;
+            margin-top: 25px;
+            font-weight: 500;
+            color: #fff;
+            border-left: 2px solid var(--cyan);
+            padding-left: 10px;
+            line-height: 1.2;
+        }
+
+        .clients-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            list-style: none;
+            padding: 0;
+            margin-bottom: 15px;
+        }
+
+        .clients-list li {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 10px 5px;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+            cursor: default;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .clients-list li:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Colored accents */
+        .clients-list li:nth-child(3n+1) {
+            border-bottom: 2px solid var(--cyan);
+            color: #daffff;
+        }
+
+        .clients-list li:nth-child(3n+2) {
+            border-bottom: 2px solid var(--magenta);
+            color: #ffdaff;
+        }
+
+        .clients-list li:nth-child(3n+3) {
+            border-bottom: 2px solid var(--yellow);
+            color: #ffffda;
+        }
+
+        .clients-footer {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 10px;
+            text-align: right;
+        }
+
         /* --- Projects (3D Tilt) --- */
         .project-item {
             display: grid;
@@ -891,6 +955,15 @@
                 text-align: left;
             }
 
+            .clients-list {
+                gap: 8px;
+            }
+
+            .clients-list li {
+                font-size: 0.85rem;
+                padding: 8px 4px;
+            }
+
             .services-grid {
                 grid-template-columns: 1fr;
                 gap: 1px;
@@ -1045,14 +1118,21 @@
                 </div>
 
                 <div class="about-text">
-                    <p>Nazywam się Michał, od <span class="highlight-cyan">2014 roku</span> zajmuję się designem. Przez
-                        większość mojej kariery zajmowałem się głównie <span
-                            class="highlight-magenta">brandingiem</span> i obsługą social mediów mniejszych i większych
-                        firm aż po korporacje.</p>
-                    <p>Aktualnie przyszedł czas również na <span class="highlight-bold">strony internetowe</span>, a to
-                        co w tej chwili przeglądasz jest małą prezentacją tego co można zrobić <span
-                            class="highlight-yellow">względnie niewielkimi kosztami</span>, kiedy masz kreatywnego
-                        specjalistę na wyłączność.</p>
+                    <p>Nazywam się Michał. Od <span class="highlight-cyan">2014 roku</span> projektuję dla marek <span
+                            class="highlight-bold">–</span> od małych firm po korporacje. Specjalizuję się w <span
+                            class="highlight-magenta">brandingu</span>, social mediach i nowoczesnych <span
+                            class="highlight-bold">stronach www</span>.</p>
+
+                    <p class="clients-intro">Zaufali mi między innymi:</p>
+                    <ul class="clients-list">
+                        <li>AimControllers</li>
+                        <li>Lavazza</li>
+                        <li>PGV</li>
+                        <li>Pol-vending</li>
+                        <li>Aora Vending</li>
+                        <li>Grom Art</li>
+                    </ul>
+                    <p class="clients-footer">...oraz wielu klientów prywatnych.</p>
                 </div>
             </div>
         </div>
