@@ -216,6 +216,10 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
+        header.menu-open {
+            mix-blend-mode: normal;
+        }
+
         nav {
             display: flex;
             justify-content: space-between;
@@ -1295,11 +1299,13 @@
         menuToggle.addEventListener('click', () => {
             menuToggle.classList.toggle('active');
             navLinks.classList.toggle('active');
+            header.classList.toggle('menu-open');
         });
         document.querySelectorAll('.nav-links a').forEach(link => {
             link.addEventListener('click', () => {
                 menuToggle.classList.remove('active');
                 navLinks.classList.remove('active');
+                header.classList.remove('menu-open');
             });
         });
 
