@@ -4,12 +4,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Michał Jarosiński - Portfolio</title>
+    <title>Michał Jarosiński - Portfolio | Web Design & Branding</title>
+    <meta name="description" content="Michał Jarosiński - creative designer specjalizujący się w web designie, brandingu i art direction od 2014 roku. Zobacz portfolio projektów dla klientów takich jak Lavazza, AimControllers, PGV.">
+    <meta name="keywords" content="web design, branding, portfolio, projektowanie stron, identyfikacja wizualna, UX/UI, frontend, grafika komputerowa, Michał Jarosiński">
+    <meta name="author" content="Michał Jarosiński">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="Polish">
+    <meta name="geo.region" content="PL">
+    <meta name="geo.placename" content="Poland">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://michal20000505-sudo.github.io/portfolio-site/">
+    <meta property="og:title" content="Michał Jarosiński - Portfolio | Web Design & Branding">
+    <meta property="og:description" content="Creative designer specjalizujący się w web designie, brandingu i art direction od 2014 roku. Zobacz portfolio projektów dla klientów takich jak Lavazza, AimControllers, PGV.">
+    <meta property="og:image" content="https://michal20000505-sudo.github.io/portfolio-site/strona-icon.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="Michał Jarosiński Portfolio">
+    <meta property="og:locale" content="pl_PL">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://michal20000505-sudo.github.io/portfolio-site/">
+    <meta property="twitter:title" content="Michał Jarosiński - Portfolio | Web Design & Branding">
+    <meta property="twitter:description" content="Creative designer specjalizujący się w web designie, brandingu i art direction od 2014 roku. Zobacz portfolio projektów dla klientów takich jak Lavazza, AimControllers, PGV.">
+    <meta property="twitter:image" content="https://michal20000505-sudo.github.io/portfolio-site/strona-icon.png">
+    
+    <!-- Additional SEO -->
+    <meta name="theme-color" content="#050505">
+    <meta name="msapplication-TileColor" content="#050505">
+    <link rel="canonical" href="https://michal20000505-sudo.github.io/portfolio-site/">
+    
+    <!-- Structured Data - JSON-LD -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Michał Jarosiński",
+        "jobTitle": "Creative Designer",
+        "description": "Creative designer specjalizujący się w web designie, brandingu i art direction od 2014 roku",
+        "url": "https://michal20000505-sudo.github.io/portfolio-site/",
+        "email": "graf.m.jar@gmail.com",
+        "telephone": "+48608078802",
+        "address": {
+            "@type": "PostalAddress",
+            "addressCountry": "PL"
+        },
+        "sameAs": [],
+        "knowsAbout": ["Web Design", "Branding", "UX/UI Design", "Graphic Design", "Frontend Development"],
+        "offers": {
+            "@type": "Offer",
+            "serviceType": ["Web Design", "Branding", "Development"],
+            "areaServed": "PL"
+        },
+        "worksFor": {
+            "@type": "Organization",
+            "name": "Freelance"
+        }
+    }
+    </script>
+    
     <link rel="icon" type="image/png" href="strona-icon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
-
+    
+    <!-- Performance optimizations -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="JAzdj.jpg" as="image">
+    <link rel="preload" href="rentgen.jpg" as="image">
+    <link rel="preload" href="strona-icon.png" as="image">
+    
     <style>
         :root {
             --bg-color: #050505;
@@ -881,7 +950,7 @@
             text-align: center;
             font-style: italic;
             position: relative;
-            padding: 15px;
+            padding: 15px 20px;
             background: rgba(255, 255, 255, 0.02);
             border-radius: 8px;
             border: 1px dashed rgba(255, 255, 255, 0.1);
@@ -1299,131 +1368,134 @@
         </div>
     </header>
 
-    <section id="hero">
-        <div class="container hero-content">
-            <div class="glitch-wrapper">
-                <h1 class="hero-title" title="Creative Designer">CREATIVE<br>DESIGNER</h1>
+    <main>
+        <section id="hero">
+            <div class="container hero-content">
+                <div class="glitch-wrapper">
+                    <h1 class="hero-title" title="Creative Designer">CREATIVE<br>DESIGNER</h1>
+                </div>
+                <p class="hero-subtitle">Web Design / Branding / Art Direction</p>
             </div>
-            <p class="hero-subtitle">Web Design / Branding / Art Direction</p>
-        </div>
-    </section>
+        </section>
 
-    <section id="about">
-        <div class="container">
-            <h2 class="section-title reveal">O <span>Mnie</span></h2>
+        <section id="about">
+            <div class="container">
+                <h2 class="section-title reveal">O <span>Mnie</span></h2>
 
-            <div class="about-grid reveal">
-                <div class="about-image-wrapper">
-                    <div class="simple-zoom-container link-hover">
-                        <img src="JAzdj.jpg" alt="Michał Jar" class="my-photo">
-                        <img src="rentgen.jpg" alt="Michał Jar X-Ray" class="my-photo-xray">
+                <div class="about-grid reveal">
+                    <div class="about-image-wrapper">
+                        <div class="simple-zoom-container link-hover">
+                            <img src="JAzdj.jpg" alt="Michał Jarosiński - zdjęcie portfolio" class="my-photo">
+                            <img src="rentgen.jpg" alt="Michał Jarosiński - efekt rentgenowski" class="my-photo-xray">
+                        </div>
+                    </div>
+
+                    <div class="about-text">
+                        <p>Nazywam się Michał. Od <span class="highlight-cyan">2014 roku</span> projektuję dla marek <span
+                                class="highlight-bold">–</span> od małych firm po korporacje. Specjalizuję się w <span
+                                class="highlight-magenta">brandingu</span>, social mediach i nowoczesnych <span
+                                class="highlight-bold">stronach www</span>.</p>
+
+                        <p class="clients-intro">Zaufali mi między innymi:</p>
+                        <ul class="clients-list">
+                            <li class="link-hover">AimControllers</li>
+                            <li class="link-hover">Lavazza</li>
+                            <li class="link-hover">PGV</li>
+                            <li class="link-hover">Pol-vending</li>
+                            <li class="link-hover">Aora Vending</li>
+                            <li class="link-hover">Grom Art</li>
+                        </ul>
+                        <p class="clients-footer">...oraz wielu klientów prywatnych.</p>
                     </div>
                 </div>
+            </div>
+        </section>
 
-                <div class="about-text">
-                    <p>Nazywam się Michał. Od <span class="highlight-cyan">2014 roku</span> projektuję dla marek <span
-                            class="highlight-bold">–</span> od małych firm po korporacje. Specjalizuję się w <span
-                            class="highlight-magenta">brandingu</span>, social mediach i nowoczesnych <span
-                            class="highlight-bold">stronach www</span>.</p>
+        <section id="work">
+            <div class="container">
+                <h2 class="section-title reveal">Wybrane <span>Prace</span></h2>
 
-                    <p class="clients-intro">Zaufali mi między innymi:</p>
-                    <ul class="clients-list">
-                        <li class="link-hover">AimControllers</li>
-                        <li class="link-hover">Lavazza</li>
-                        <li class="link-hover">PGV</li>
-                        <li class="link-hover">Pol-vending</li>
-                        <li class="link-hover">Aora Vending</li>
-                        <li class="link-hover">Grom Art</li>
-                    </ul>
-                    <p class="clients-footer">...oraz wielu klientów prywatnych.</p>
+                <article class="project-item reveal">
+                    <div class="project-img-wrapper link-hover">
+                        <a href="https://skpolanowice-sourceskp.github.io/sscar/" target="_blank">
+                            <img src="sscar.jpg" alt="SSCAR - strona internetowa dla serwisu samochodowego">
+                        </a>
+                    </div>
+                    <div class="project-info">
+                        <h3><a href="https://skpolanowice-sourceskp.github.io/sscar/" target="_blank">SSCAR</a></h3>
+                        <p>Zaawansowana platforma dla serwisu samochodowego, oferująca dedykowane bazy danych do klimatyzacji oraz systemy dekodowania numerów DAM i VIN. Projekt łączy nowoczesną estetykę z interaktywnymi efektami, takimi jak animacja rozmontowywania samochodu w tle podczas przewijania strony.</p>
+                        <div class="tags"><span>Web Design</span><span>Development</span></div>
+                    </div>
+                </article>
+
+                <article class="project-item reveal">
+                    <div class="project-img-wrapper link-hover">
+                        <a href="https://michal20000505-sudo.github.io/R-MAX-auto/index.html" target="_blank">
+                            <img src="rmax.jpg" alt="R-MAX Auto - nowoczesna strona serwisu samochodowego" onerror="this.src='sscar.jpg'">
+                        </a>
+                    </div>
+                    <div class="project-info">
+                        <h3><a href="https://michal20000505-sudo.github.io/R-MAX-auto/index.html" target="_blank">R-MAX
+                                Auto</a></h3>
+                        <p>Nowoczesna strona internetowa dla serwisu samochodowego R-MAX Auto. Atrakcyjny, ciemny design z
+                            wyraźnym wezwaniem do akcji i zoptymalizowanym układem opinii. Projekt nastawiony na wysoką
+                            konwersję i budowanie zaufania klientów.</p>
+                        <div class="tags"><span>Web Design</span><span>Development</span></div>
+                    </div>
+                </article>
+
+                <article class="project-item reveal">
+                    <div class="project-img-wrapper link-hover">
+                        <a href="grafika.html">
+                            <img src="digicamoblue-powder.jpg" alt="Portfolio graficzne - projektowanie grafiki komputerowej" onerror="this.src='render2.jpg'">
+                        </a>
+                    </div>
+                    <div class="project-info">
+                        <h3><a href="grafika.html">Portfolio Graficzne</a></h3>
+                        <p>Pełna kolekcja projektów graficznych: branding, plakaty, DTP oraz materiały reklamowe. Zobacz
+                            wyselekcjonowane prace z lat 2014-2025.</p>
+                        <div class="tags"><span>Branding</span><span>Print</span><span>Art Direction</span></div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section id="services">
+            <div class="container">
+                <h2 class="section-title reveal">Moje <span>Usługi</span></h2>
+                <div class="services-grid reveal">
+                    <div class="service-card">
+                        <h3 style="color: var(--cyan)">Web Design</h3>
+                        <p>Tworzenie stron, które nie tylko wyglądają, ale działają. Responsywność, szybkość i
+                            interaktywność to standard.</p>
+                    </div>
+                    <div class="service-card">
+                        <h3 style="color: var(--magenta)">Branding</h3>
+                        <p>Projektowanie logo i identyfikacji wizualnej. Tworzę marki, które krzyczą z ekranu i zapadają w
+                            pamięć.</p>
+                    </div>
+                    <div class="service-card">
+                        <h3 style="color: var(--yellow)">Development</h3>
+                        <p>Wdrażanie projektów w życie. HTML5, CSS3, JavaScript oraz nowoczesne frameworki bez kompromisów.
+                        </p>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section id="work">
-        <div class="container">
-            <h2 class="section-title reveal">Wybrane <span>Prace</span></h2>
-
-            <div class="project-item reveal">
-                <div class="project-img-wrapper link-hover">
-                    <a href="https://skpolanowice-sourceskp.github.io/sscar/" target="_blank">
-                        <img src="sscar.jpg" alt="SSCAR Strona WWW">
-                    </a>
-                </div>
-                <div class="project-info">
-                    <h3><a href="https://skpolanowice-sourceskp.github.io/sscar/" target="_blank">SSCAR</a></h3>
-                    <p>Zaawansowana platforma dla serwisu samochodowego, oferująca dedykowane bazy danych do klimatyzacji oraz systemy dekodowania numerów DAM i VIN. Projekt łączy nowoczesną estetykę z interaktywnymi efektami, takimi jak animacja rozmontowywania samochodu w tle podczas przewijania strony.</p>
-                    <div class="tags"><span>Web Design</span><span>Development</span></div>
+        <section id="contact">
+            <div class="container" style="text-align: center;">
+                <p class="reveal" style="color: #888; text-transform: uppercase; letter-spacing: 2px;">Rozpocznijmy
+                    współpracę</p>
+                <div class="cta-container reveal">
+                    <a href="mailto:graf.m.jar@gmail.com" class="cta-big link-hover magnet"><span
+                            style="color: var(--cyan)">graf.m.jar</span><span style="color: var(--magenta)">@</span><span
+                            style="color: var(--yellow)">gmail.com</span></a>
+                    <a href="tel:+48608078802" class="cta-small link-hover magnet">+48 608 078 802</a>
                 </div>
             </div>
-
-            <div class="project-item reveal">
-                <div class="project-img-wrapper link-hover">
-                    <a href="https://michal20000505-sudo.github.io/R-MAX-auto/index.html" target="_blank">
-                        <img src="rmax.jpg" alt="R-MAX Auto Strona WWW" onerror="this.src='sscar.jpg'">
-                    </a>
-                </div>
-                <div class="project-info">
-                    <h3><a href="https://michal20000505-sudo.github.io/R-MAX-auto/index.html" target="_blank">R-MAX
-                            Auto</a></h3>
-                    <p>Nowoczesna strona internetowa dla serwisu samochodowego R-MAX Auto. Atrakcyjny, ciemny design z
-                        wyraźnym wezwaniem do akcji i zoptymalizowanym układem opinii. Projekt nastawiony na wysoką
-                        konwersję i budowanie zaufania klientów.</p>
-                    <div class="tags"><span>Web Design</span><span>Development</span></div>
-                </div>
-            </div>
-
-            <div class="project-item reveal">
-                <div class="project-img-wrapper link-hover">
-                    <a href="grafika.html">
-                        <img src="digicamoblue-powder.jpg" alt="Portfolio Graficzne" onerror="this.src='render2.jpg'">
-                    </a>
-                </div>
-                <div class="project-info">
-                    <h3><a href="grafika.html">Portfolio Graficzne</a></h3>
-                    <p>Pełna kolekcja projektów graficznych: branding, plakaty, DTP oraz materiały reklamowe. Zobacz
-                        wyselekcjonowane prace z lat 2014-2025.</p>
-                    <div class="tags"><span>Branding</span><span>Print</span><span>Art Direction</span></div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="services">
-        <div class="container">
-            <h2 class="section-title reveal">Moje <span>Usługi</span></h2>
-            <div class="services-grid reveal">
-                <div class="service-card">
-                    <h3 style="color: var(--cyan)">Web Design</h3>
-                    <p>Tworzenie stron, które nie tylko wyglądają, ale działają. Responsywność, szybkość i
-                        interaktywność to standard.</p>
-                </div>
-                <div class="service-card">
-                    <h3 style="color: var(--magenta)">Branding</h3>
-                    <p>Projektowanie logo i identyfikacji wizualnej. Tworzę marki, które krzyczą z ekranu i zapadają w
-                        pamięć.</p>
-                </div>
-                <div class="service-card">
-                    <h3 style="color: var(--yellow)">Development</h3>
-                    <p>Wdrażanie projektów w życie. HTML5, CSS3, JavaScript oraz nowoczesne frameworki bez kompromisów.
-                    </p>
-                </div>
-            </div>
-    </section>
-
-    <section id="contact">
-        <div class="container" style="text-align: center;">
-            <p class="reveal" style="color: #888; text-transform: uppercase; letter-spacing: 2px;">Rozpocznijmy
-                współpracę</p>
-            <div class="cta-container reveal">
-                <a href="mailto:graf.m.jar@gmail.com" class="cta-big link-hover magnet"><span
-                        style="color: var(--cyan)">graf.m.jar</span><span style="color: var(--magenta)">@</span><span
-                        style="color: var(--yellow)">gmail.com</span></a>
-                <a href="tel:+48608078802" class="cta-small link-hover magnet">+48 608 078 802</a>
-            </div>
-        </div>
-    </section>
+        </section>
+    </main>
 
     <script>
         // --- Preloader ---
