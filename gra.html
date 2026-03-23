@@ -545,7 +545,7 @@
             </p>
 
             <div class="download-container">
-                <div class="download-btn-wrapper reveal tilt-card" style="animation-delay: 0.4s">
+                <div class="download-btn-wrapper reveal" style="animation-delay: 0.4s">
                     <a href="https://github.com/michal20000505-sudo/portfolio-site/raw/main/SpaceFighterJaro.apk"
                         class="download-btn android link-hover magnet">
                         Pobierz .APK
@@ -553,7 +553,7 @@
                     <div class="download-info">Wersja 0.0.2 | Android</div>
                 </div>
 
-                <div class="download-btn-wrapper reveal tilt-card" style="animation-delay: 0.5s">
+                <div class="download-btn-wrapper reveal" style="animation-delay: 0.5s">
                     <a href="https://drive.google.com/file/d/1KfFyLHV2DOfzME76y8s5Iwrhmh7f8fLQ/view?usp=drive_link"
                         target="_blank" class="download-btn pc link-hover magnet">
                         Pobierz na PC
@@ -669,24 +669,7 @@
                 });
             });
 
-            // --- 3D Tilt Effect for Button ---
-            const tiltCards = document.querySelectorAll('.tilt-card');
-            tiltCards.forEach(card => {
-                card.addEventListener('mousemove', (e) => {
-                    const rect = card.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-                    const centerX = rect.width / 2;
-                    const centerY = rect.height / 2;
-                    const rotateX = (y - centerY) / 10;
-                    const rotateY = (centerX - x) / 10;
 
-                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-                });
-                card.addEventListener('mouseleave', () => {
-                    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
-                });
-            });
         }
 
         resize(); animateStars();
