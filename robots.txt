@@ -1,22 +1,8 @@
 User-agent: *
 Allow: /
 
+# Blokuj pliki skryptów deweloperskich
+Disallow: /*.py$
+
 # Sitemap
 Sitemap: https://michal20000505-sudo.github.io/portfolio-site/sitemap.xml
-
-# Block unnecessary files
-Disallow: /css/
-Disallow: /js/
-Disallow: /thumbnails/
-Disallow: /*.py$
-Disallow: /check_modes.py
-Disallow: /generate_thumbnails.py
-
-# Allow important assets
-Allow: /css/*.css
-Allow: /js/*.js
-Allow: /thumbnails/*.jpg
-Allow: /thumbnails/*.png
-
-# Crawl delay for respectful crawling
-Crawl-delay: 1

@@ -66,6 +66,7 @@
     </script>
     
     <link rel="icon" type="image/png" href="strona-icon.png">
+    <link rel="apple-touch-icon" href="strona-icon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
@@ -1353,11 +1354,11 @@
             <nav>
                 <a href="#" class="logo link-hover">MJ<span>.</span></a>
 
-                <div class="menu-toggle" id="mobile-menu">
+                <button class="menu-toggle" id="mobile-menu" aria-label="Otwórz menu nawigacyjne" aria-expanded="false">
                     <span class="bar"></span>
                     <span class="bar"></span>
                     <span class="bar"></span>
-                </div>
+                </button>
 
                 <div class="nav-links">
                     <a href="#about" class="link-hover magnet">O mnie</a>
@@ -1387,8 +1388,8 @@
                 <div class="about-grid reveal">
                     <div class="about-image-wrapper">
                         <div class="simple-zoom-container link-hover">
-                            <img src="JAzdj.jpg" alt="Michał Jarosiński - zdjęcie portfolio" class="my-photo">
-                            <img src="rentgen.jpg" alt="Michał Jarosiński - efekt rentgenowski" class="my-photo-xray">
+                            <img src="JAzdj.jpg" alt="Michał Jarosiński - zdjęcie portfolio" class="my-photo" loading="lazy">
+                            <img src="rentgen.jpg" alt="Michał Jarosiński - efekt rentgenowski" class="my-photo-xray" loading="lazy">
                         </div>
                     </div>
 
@@ -1433,7 +1434,7 @@
                 <article class="project-item reveal">
                     <div class="project-img-wrapper link-hover">
                         <a href="https://michal20000505-sudo.github.io/R-MAX-auto/index.html" target="_blank">
-                            <img src="rmax.jpg" alt="R-MAX Auto - nowoczesna strona serwisu samochodowego" onerror="this.src='sscar.jpg'">
+                            <img src="rmax.jpg" alt="R-MAX Auto - nowoczesna strona serwisu samochodowego" loading="lazy" onerror="this.src='sscar.jpg'">
                         </a>
                     </div>
                     <div class="project-info">
@@ -1449,7 +1450,7 @@
                 <article class="project-item reveal">
                     <div class="project-img-wrapper link-hover">
                         <a href="https://skpolanowice-sourceskp.github.io/autofuturatest/#" target="_blank">
-                            <img src="autofutura.png" alt="AutoFutura - strona wizytówka serwisu blacharsko-lakierniczego">
+                            <img src="autofutura.png" alt="AutoFutura - strona wizytówka serwisu blacharsko-lakierniczego" loading="lazy">
                         </a>
                     </div>
                     <div class="project-info">
@@ -1462,7 +1463,7 @@
                 <article class="project-item reveal">
                     <div class="project-img-wrapper link-hover">
                         <a href="https://skpolanowice-sourceskp.github.io/BodycreatorTEST/" target="_blank">
-                            <img src="bodycreator.png" alt="Body Creator - strona studia treningowego z systemem zapisów i kalkulatorem BMI">
+                            <img src="bodycreator.png" alt="Body Creator - strona studia treningowego z systemem zapisów i kalkulatorem BMI" loading="lazy">
                         </a>
                     </div>
                     <div class="project-info">
@@ -1475,7 +1476,7 @@
                 <article class="project-item reveal">
                     <div class="project-img-wrapper link-hover">
                         <a href="grafika.html">
-                            <img src="digicamoblue-powder.jpg" alt="Portfolio graficzne - projektowanie grafiki komputerowej" onerror="this.src='render2.jpg'">
+                            <img src="digicamoblue-powder.jpg" alt="Portfolio graficzne - projektowanie grafiki komputerowej" loading="lazy" onerror="this.src='render2.jpg'">
                         </a>
                     </div>
                     <div class="project-info">
@@ -1524,6 +1525,10 @@
             </div>
         </section>
     </main>
+
+    <footer style="text-align:center; padding: 40px 20px; color: #444; font-size: 0.85rem; border-top: 1px solid #1a1a1a;">
+        <p>&copy; 2025 Michał Jarosiński. Wszelkie prawa zastrzeżone.</p>
+    </footer>
 
     <script>
         // --- Preloader ---
@@ -1595,15 +1600,19 @@
         const menuToggle = document.getElementById('mobile-menu');
         const navLinks = document.querySelector('.nav-links');
         menuToggle.addEventListener('click', () => {
-            menuToggle.classList.toggle('active');
+            const isOpen = menuToggle.classList.toggle('active');
             navLinks.classList.toggle('active');
             header.classList.toggle('menu-open');
+            menuToggle.setAttribute('aria-expanded', isOpen);
+            menuToggle.setAttribute('aria-label', isOpen ? 'Zamknij menu nawigacyjne' : 'Otwórz menu nawigacyjne');
         });
         document.querySelectorAll('.nav-links a').forEach(link => {
             link.addEventListener('click', () => {
                 menuToggle.classList.remove('active');
                 navLinks.classList.remove('active');
                 header.classList.remove('menu-open');
+                menuToggle.setAttribute('aria-expanded', 'false');
+                menuToggle.setAttribute('aria-label', 'Otwórz menu nawigacyjne');
             });
         });
 
