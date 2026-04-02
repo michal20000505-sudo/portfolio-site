@@ -1,0 +1,17 @@
+{
+  "name": "Michał Jarosiński Portfolio",
+  "short_name": "MJ Portfolio",
+  "description": "Portfolio web designu, brandingu i grafiki Michała Jarosińskiego",
+  "start_url": "/portfolio-site/",
+  "display": "browser",
+  "background_color": "#050505",
+  "theme_color": "#050505",
+  "icons": [
+    {
+      "src": "strona-icon.png",
+      "sizes": "500x500",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
