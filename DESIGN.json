@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-04-29T00:00:00Z",
+  "title": "Design System: Michał Jarosiński Portfolio",
+  "extensions": {
+    "colorMeta": {
+      "studio-black":    { "role": "neutral",   "displayName": "Studio Black",    "canonical": "oklch(3% 0.002 270)",   "tonalRamp": ["#050505","#0d0d0d","#141414","#1f1f1f","#2a2a2a","#404040","#606060","#909090"] },
+      "studio-white":    { "role": "neutral",   "displayName": "Studio White",    "canonical": "oklch(100% 0 0)",       "tonalRamp": ["#333333","#555555","#777777","#999999","#bbbbbb","#dddddd","#f0f0f0","#ffffff"] },
+      "electric-cyan":   { "role": "primary",   "displayName": "Electric Cyan",   "canonical": "oklch(91% 0.154 194)", "tonalRamp": ["#002020","#003535","#004848","#006060","#009090","#00b5b5","#00dede","#00ffff"] },
+      "signal-magenta":  { "role": "secondary", "displayName": "Signal Magenta",  "canonical": "oklch(70% 0.322 328)", "tonalRamp": ["#1e0018","#330028","#500040","#730060","#990080","#bb00bb","#dd55dd","#ff00ff"] },
+      "exposed-yellow":  { "role": "tertiary",  "displayName": "Exposed Yellow",  "canonical": "oklch(97% 0.211 109)", "tonalRamp": ["#1a1800","#2e2800","#464200","#636000","#909200","#bbb800","#e0dc00","#ffff00"] },
+      "surface-raised":  { "role": "neutral",   "displayName": "Surface Raised",  "canonical": "oklch(12% 0.002 270)", "tonalRamp": ["#050505","#0d0d0d","#141414","#1a1a1a","#222222","#2a2a2a","#333333","#404040"] },
+      "surface-mid":     { "role": "neutral",   "displayName": "Surface Mid",     "canonical": "oklch(15% 0.002 270)", "tonalRamp": ["#0d0d0d","#141414","#1a1a1a","#222222","#2a2a2a","#333333","#3d3d3d","#4a4a4a"] },
+      "surface-border":  { "role": "neutral",   "displayName": "Surface Border",  "canonical": "oklch(22% 0.002 270)", "tonalRamp": ["#141414","#1a1a1a","#222222","#2a2a2a","#333333","#404040","#4d4d4d","#5a5a5a"] },
+      "text-muted":      { "role": "neutral",   "displayName": "Text Muted",      "canonical": "oklch(58% 0.002 270)", "tonalRamp": ["#222222","#333333","#444444","#555555","#666666","#888888","#aaaaaa","#cccccc"] },
+      "text-dim":        { "role": "neutral",   "displayName": "Text Dim",        "canonical": "oklch(46% 0.002 270)", "tonalRamp": ["#1a1a1a","#282828","#363636","#444444","#555555","#666666","#888888","#aaaaaa"] }
+    },
+    "typographyMeta": {
+      "display":  { "displayName": "Display",  "purpose": "Hero titles only. Always uppercase. The glitch effect is applied exclusively at this scale." },
+      "headline": { "displayName": "Headline", "purpose": "Section titles. Always uppercase. Minimum 1.25x size ratio below Display." },
+      "title":    { "displayName": "Title",    "purpose": "Subsection labels, project names, card headings. Mixed case." },
+      "body":     { "displayName": "Body",     "purpose": "Long-form text. Weight 300. Max 70ch line length." },
+      "label":    { "displayName": "Label",    "purpose": "Tags, nav items, metadata chips. Uppercase with 0.1em tracking." }
+    },
+    "shadows": [
+      { "name": "glow-cyan-hover",   "value": "0 0 30px rgba(0, 255, 255, 0.3)",  "purpose": "Reactive hover glow on primary buttons and active interactive elements." },
+      { "name": "glow-card-hover",   "value": "0 0 40px rgba(0, 255, 255, 0.1)",  "purpose": "Diffuse card lift glow on hover. Structurally subtle — signals interactivity, not depth." },
+      { "name": "ambient-cyan",      "value": "radial-gradient(ellipse 60vw 60vw at 20% 40%, rgba(0,255,255,0.04) 0%, transparent 70%)",   "purpose": "Background atmosphere circle — cyan. Fixed position, not tied to any element." },
+      { "name": "ambient-magenta",   "value": "radial-gradient(ellipse 50vw 50vw at 80% 20%, rgba(255,0,255,0.04) 0%, transparent 70%)",  "purpose": "Background atmosphere circle — magenta. Creates depth alongside cyan." },
+      { "name": "ambient-yellow",    "value": "radial-gradient(ellipse 40vw 40vw at 60% 80%, rgba(255,255,0,0.03) 0%, transparent 70%)",  "purpose": "Background atmosphere circle — yellow. Lowest opacity; tertiary presence only." }
+    ],
+    "motion": [
+      { "name": "ease-standard",  "value": "cubic-bezier(0.165, 0.84, 0.44, 1)", "duration": "0.4s", "purpose": "Default easing for all interactive state changes (button hover, card lift, nav link)." },
+      { "name": "ease-snap",      "value": "cubic-bezier(0.23, 1, 0.32, 1)",     "duration": "0.6s", "purpose": "Sharper ease-out for scroll-triggered reveals and image scale transitions. Feels snappy." },
+      { "name": "ease-ambient",   "value": "ease-in-out",                         "duration": "15s",  "purpose": "Background glow drift animation. Slow, continuous, loops infinitely." },
+      { "name": "ease-glitch",    "value": "steps(1)",                            "duration": "0.1s", "purpose": "Glitch clip-path animation. Stepped, not eased — glitch is abrupt by nature." }
+    ],
+    "breakpoints": [
+      { "name": "mobile",  "value": "768px",  "notes": "Hamburger nav, single-column layout, 3D effects disabled, reduced particle density." },
+      { "name": "tablet",  "value": "1024px", "notes": "Two-column grid, 2.8rem headline scale, section padding 80px." },
+      { "name": "desktop", "value": "1400px", "notes": "Max container width. Full three-column grids, 4rem headlines, 150px section padding." }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Main CTA. Outline at rest, filled on hover. Magnetic effect requires JS.",
+      "html": "<button class=\"ds-btn-primary\">Zapytaj o projekt</button>",
+      "css": ".ds-btn-primary { display: inline-block; padding: 14px 32px; border: 1px solid #00ffff; background: transparent; color: #00ffff; font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; border-radius: 12px; cursor: pointer; transition: all 0.4s cubic-bezier(0.165,0.84,0.44,1); } .ds-btn-primary:hover { background: #00ffff; color: #050505; box-shadow: 0 0 30px rgba(0,255,255,0.3); transform: translateY(-2px); } .ds-btn-primary:focus-visible { outline: 2px solid #00ffff; outline-offset: 4px; } .ds-btn-primary:active { transform: translateY(0); }"
+    },
+    {
+      "name": "Navigation Link",
+      "kind": "nav",
+      "refersTo": null,
+      "description": "Transparent nav link. Defaults to muted gray, glows cyan on hover.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-link\" href=\"#\">Projekty</a><a class=\"ds-nav-link ds-nav-active\" href=\"#\">O mnie</a><a class=\"ds-nav-link\" href=\"#\">Kontakt</a></nav>",
+      "css": ".ds-nav { display: flex; gap: 32px; background: transparent; padding: 24px 0; } .ds-nav-link { color: #888888; text-decoration: none; font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.3s ease; } .ds-nav-link:hover { color: #00ffff; } .ds-nav-active { color: #00ffff; }"
+    },
+    {
+      "name": "Tag / Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Informational label. No hover state — labels, not actions.",
+      "html": "<span class=\"ds-chip\">Web Design</span>",
+      "css": ".ds-chip { display: inline-block; padding: 6px 16px; border: 1px solid #333333; border-radius: 50px; background: transparent; color: #888888; font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; }"
+    },
+    {
+      "name": "Portfolio Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Work sample card. Image scales on hover; card lifts with diffuse cyan glow.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card-img-wrap\"><img class=\"ds-card-img\" src=\"https://placehold.co/400x260/1a1a1a/333333\" alt=\"Project preview\"></div><div class=\"ds-card-body\"><h3 class=\"ds-card-title\">SSCAR</h3><p class=\"ds-card-desc\">Strona internetowa dla serwisu samochodowego z zaawansowanymi efektami wizualnymi.</p><span class=\"ds-chip\">Web Design</span></div></div>",
+      "css": ".ds-card { background: #1a1a1a; border: 1px solid #333333; border-radius: 16px; overflow: hidden; transition: box-shadow 0.4s cubic-bezier(0.165,0.84,0.44,1), transform 0.4s cubic-bezier(0.165,0.84,0.44,1), border-color 0.4s ease; } .ds-card:hover { box-shadow: 0 0 40px rgba(0,255,255,0.1); transform: translateY(-4px); border-color: transparent; } .ds-card-img-wrap { overflow: hidden; } .ds-card-img { width: 100%; display: block; aspect-ratio: 16/10; object-fit: cover; transition: transform 0.6s cubic-bezier(0.23,1,0.32,1); } .ds-card:hover .ds-card-img { transform: scale(1.05); } .ds-card-body { padding: 30px; } .ds-card-title { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 500; color: #ffffff; margin: 0 0 12px; line-height: 1.3; } .ds-card-desc { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 300; color: #888888; line-height: 1.7; margin: 0 0 20px; } .ds-chip { display: inline-block; padding: 6px 16px; border: 1px solid #333333; border-radius: 50px; background: transparent; color: #888888; font-family: 'Space Grotesk', sans-serif; font-size: 0.85rem; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; }"
+    },
+    {
+      "name": "Section Heading",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Uppercase section title with a small cyan accent rule below.",
+      "html": "<div class=\"ds-section-heading\"><h2 class=\"ds-section-title\">Projekty</h2><div class=\"ds-section-rule\"></div></div>",
+      "css": ".ds-section-heading { margin-bottom: 50px; } .ds-section-title { font-family: 'Space Grotesk', sans-serif; font-size: clamp(2rem, 4vw, 4rem); font-weight: 700; color: #ffffff; text-transform: uppercase; line-height: 1.1; margin: 0 0 16px; } .ds-section-rule { width: 48px; height: 2px; background: #00ffff; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Joyful Technician",
+    "overview": "This is a system built by someone who genuinely loves the craft. The glitch animations, rubber-band text, magnetic cursors, and starfield particles are not decoration — they are evidence. Evidence that the person who built this portfolio spent real time on each effect because it delighted them, not because a brief required it. That joy is the brand signal.\n\nThe palette is rooted in CMYK process printing: cyan, magenta, and yellow on a near-absolute black ground. Where print is static ink on a dark substrate, this site makes those same primaries interactive and alive. Future design additions should reinforce this logic: if an effect or color can't be traced back to 'this is how the materials behave,' reconsider it.\n\nThe intended audience — Polish SMB owners evaluating a designer to hire — should finish browsing and feel two things: admiration at the technical craft, and warmth toward the person who made it.",
+    "keyCharacteristics": [
+      "Full-palette CMYK triad (cyan, magenta, yellow) on a printing-plate ground",
+      "Single geometric sans (Space Grotesk) across every role; hierarchy through scale and weight only",
+      "No box-shadows at rest; depth via tonal layering and ambient glow",
+      "Interactive elements that respond before they are touched (magnetic, proximity-aware)",
+      "Motion as evidence of craft, not decoration",
+      "Warmth through personality and specificity, not warm hue"
+    ],
+    "rules": [
+      { "name": "The CMYK Logic Rule",      "body": "Cyan leads interactions. Magenta occupies ambience. Yellow punctuates motion. These roles are not interchangeable.",  "section": "colors" },
+      { "name": "The One Darkness Rule",    "body": "The background is Studio Black (#050505) everywhere. Depth is Surface Raised and Surface Mid, not a second dark value.",  "section": "colors" },
+      { "name": "The Weight Jump Rule",     "body": "Minimum weight contrast between adjacent hierarchy levels is one full step: 300 to 500, or 500 to 700. Never 300 to 300 differentiated only by size.",  "section": "typography" },
+      { "name": "The Uppercase Ceiling Rule", "body": "Display and Headline are always uppercase. Title and below are always mixed case. Uppercase body copy is prohibited outside Label contexts.",  "section": "typography" },
+      { "name": "The No-Shadow Rule",       "body": "box-shadow as a depth mechanism is prohibited. Elevation is tonal layering or state transforms. Reactive glow on hover is feedback, not depth.",  "section": "elevation" },
+      { "name": "The Ambient Glow Rule",    "body": "The three ambient circles are background atmosphere only. Do not bring glow into the foreground as card halos or text glows.",  "section": "elevation" },
+      { "name": "The Glitch-Once Rule",     "body": "The glitch effect is reserved for the hero title only. Applying it elsewhere dilutes the signal to noise.",  "section": "components" }
+    ],
+    "dos": [
+      "Do use Space Grotesk at weight 700 for all Display and Headline text. No exceptions, no second typeface.",
+      "Do use Electric Cyan as the primary interactive signal: link hover, button borders, active states, focus rings.",
+      "Do achieve depth through tonal layering (Studio Black → Surface Raised → Surface Mid) and ambient glow.",
+      "Do set Display and Headline type uppercase, Title and below mixed case.",
+      "Do cap body copy at 70ch max-width.",
+      "Do implement the magnetic proximity effect on primary CTAs.",
+      "Do honor prefers-reduced-motion: disable or simplify 3D transforms, particles, and rubber-band text."
+    ],
+    "donts": [
+      "Don't build a site that reads as a generic Webflow template: whitespace-maximal, serif headline, scroll-reveal-only animation.",
+      "Don't create a corporate portfolio: no case-study templates, no bullet-pointed outcomes, no methodology sections that bury the work.",
+      "Don't use box-shadow as a depth mechanism. The No-Shadow Rule is absolute at rest.",
+      "Don't apply the glitch effect to any element other than the hero title.",
+      "Don't assign magenta or yellow to interactive states. Those roles belong to cyan.",
+      "Don't use weight 300 below 1rem on dark backgrounds.",
+      "Don't introduce a second typeface.",
+      "Don't use glassmorphism as a default surface style.",
+      "Don't use side-stripe borders (border-left or border-right greater than 1px as a colored accent)."
+    ]
+  }
+}
