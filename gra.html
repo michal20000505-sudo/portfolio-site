@@ -4,19 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Space Fighter - Gra Mobilna | Michał Jarosiński</title>
-    <meta name="description" content="Space Fighter – autorska gra mobilna stworzona przez Michała Jarosińskiego. Kosmiczna strzelanka dostępna bezpłatnie na Android (APK) i Windows PC. Przetestuj swoje umiejętności w walce z wrogami w kosmosie.">
-    <meta name="keywords" content="Space Fighter, gra mobilna, gra android, APK, gra kosmiczna, strzelanka, indie game, Michał Jarosiński, gra na PC">
+    <title>SPACEFIGHTER: The Bullet Hell | Michał Jarosiński</title>
+    <meta name="description" content="SPACEFIGHTER: The Bullet Hell — autorska gra indie dostępna na Steam. Kosmiczna strzelanka bullet hell stworzona przez Michała Jarosińskiego.">
+    <meta name="keywords" content="SPACEFIGHTER, bullet hell, gra indie, Steam, kosmiczna strzelanka, Michał Jarosiński">
     <meta name="author" content="Michał Jarosiński">
     <meta name="robots" content="index, follow">
     <meta name="language" content="Polish">
     <meta name="geo.region" content="PL">
 
-    <!-- Open Graph / Facebook -->
+    <!-- Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://michal20000505-sudo.github.io/portfolio-site/gra.html">
-    <meta property="og:title" content="Space Fighter - Gra Mobilna | Michał Jarosiński">
-    <meta property="og:description" content="Autorska gra mobilna – kosmiczna strzelanka dostępna bezpłatnie na Android i Windows PC. Pobierz APK lub wersję na komputer.">
+    <meta property="og:title" content="SPACEFIGHTER: The Bullet Hell | Michał Jarosiński">
+    <meta property="og:description" content="Kosmiczna strzelanka bullet hell dostępna na Steam. Autorska gra indie stworzona przez Michała Jarosińskiego.">
     <meta property="og:image" content="https://michal20000505-sudo.github.io/portfolio-site/strona-icon.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -26,33 +26,28 @@
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://michal20000505-sudo.github.io/portfolio-site/gra.html">
-    <meta property="twitter:title" content="Space Fighter - Gra Mobilna | Michał Jarosiński">
-    <meta property="twitter:description" content="Autorska gra mobilna – kosmiczna strzelanka dostępna bezpłatnie na Android i Windows PC.">
+    <meta property="twitter:title" content="SPACEFIGHTER: The Bullet Hell | Michał Jarosiński">
+    <meta property="twitter:description" content="Kosmiczna strzelanka bullet hell dostępna na Steam.">
     <meta property="twitter:image" content="https://michal20000505-sudo.github.io/portfolio-site/strona-icon.png">
 
-    <!-- Additional SEO -->
     <meta name="theme-color" content="#050505">
     <link rel="canonical" href="https://michal20000505-sudo.github.io/portfolio-site/gra.html">
     <link rel="apple-touch-icon" sizes="500x500" href="strona-icon.png">
     <link rel="manifest" href="manifest.json">
     <link rel="dns-prefetch" href="//fonts.googleapis.com">
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link rel="dns-prefetch" href="//store.steampowered.com">
 
-    <!-- Structured Data - JSON-LD -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
-        "@type": "SoftwareApplication",
-        "name": "Space Fighter",
-        "description": "Autorska gra mobilna – kosmiczna strzelanka dostępna na Android i Windows PC",
-        "url": "https://michal20000505-sudo.github.io/portfolio-site/gra.html",
-        "applicationCategory": "GameApplication",
-        "operatingSystem": ["Android", "Windows"],
-        "offers": {
-            "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "PLN"
-        },
+        "@type": "VideoGame",
+        "name": "SPACEFIGHTER: The Bullet Hell",
+        "description": "Kosmiczna strzelanka bullet hell dostępna na Steam",
+        "url": "https://store.steampowered.com/app/4451950/SPACEFIGHTER__The_Bullet_Hell/",
+        "applicationCategory": "Game",
+        "operatingSystem": "Windows",
+        "genre": ["Bullet Hell", "Space Shooter"],
         "author": {
             "@type": "Person",
             "name": "Michał Jarosiński",
@@ -66,18 +61,8 @@
         "breadcrumb": {
             "@type": "BreadcrumbList",
             "itemListElement": [
-                {
-                    "@type": "ListItem",
-                    "position": 1,
-                    "name": "Portfolio",
-                    "item": "https://michal20000505-sudo.github.io/portfolio-site/"
-                },
-                {
-                    "@type": "ListItem",
-                    "position": 2,
-                    "name": "Space Fighter",
-                    "item": "https://michal20000505-sudo.github.io/portfolio-site/gra.html"
-                }
+                {"@type": "ListItem", "position": 1, "name": "Portfolio", "item": "https://michal20000505-sudo.github.io/portfolio-site/"},
+                {"@type": "ListItem", "position": 2, "name": "SPACEFIGHTER", "item": "https://michal20000505-sudo.github.io/portfolio-site/gra.html"}
             ]
         }
     }
@@ -90,128 +75,104 @@
 
     <style>
         :root {
-            --bg-color: #050505;
-            --text-color: #ffffff;
+            --bg: #050505;
+            --fg: #ffffff;
             --cyan: #00ffff;
             --magenta: #ff00ff;
             --yellow: #ffff00;
-            --font-main: 'Space Grotesk', sans-serif;
-            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-            --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+            --surface-raised: #1a1a1a;
+            --surface-mid: #222222;
+            --surface-border: #333333;
+            --text-muted: #888888;
+            --text-dim: #666666;
+            --font: 'Space Grotesk', system-ui, sans-serif;
+            --ease-standard: cubic-bezier(0.165, 0.84, 0.44, 1);
+            --ease-snap: cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        * {
+        *, *::before, *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
         @media (hover: hover) and (pointer: fine) {
-            * {
-                cursor: none;
-            }
+            * { cursor: none; }
         }
+
+        html { scroll-behavior: smooth; }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: var(--font-main);
+            background: var(--bg);
+            color: var(--fg);
+            font-family: var(--font);
             overflow-x: hidden;
             line-height: 1.6;
-            position: relative;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
         }
 
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
 
-        ul {
-            list-style: none;
-        }
-
-        /* --- Scroll Progress Bar --- */
+        /* ── PROGRESS BAR ── */
         #progress-bar {
             position: fixed;
-            top: 0;
-            left: 0;
+            top: 0; left: 0;
             height: 3px;
-            background: linear-gradient(90deg, var(--cyan), var(--magenta), var(--yellow));
             width: 0%;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta), var(--yellow));
             z-index: 10001;
-            transition: width 0.1s;
+            transition: width 0.1s linear;
         }
 
-        /* --- Ambient Background Glows --- */
-        .ambient-glow {
+        /* ── AMBIENT GLOW ── */
+        .ambient {
             position: fixed;
-            width: 600px;
-            height: 600px;
             border-radius: 50%;
             filter: blur(100px);
-            opacity: 0.15;
-            z-index: -2;
             pointer-events: none;
+            z-index: 0;
             animation: floatGlow 15s infinite alternate ease-in-out;
         }
-
-        .glow-1 {
-            top: -10%;
-            left: -10%;
+        .ambient-1 {
+            width: 600px; height: 600px;
+            top: -10%; left: -10%;
             background: var(--cyan);
+            opacity: 0.08;
         }
-
-        .glow-2 {
-            bottom: 10%;
-            right: -10%;
+        .ambient-2 {
+            width: 600px; height: 600px;
+            bottom: 5%; right: -10%;
             background: var(--magenta);
+            opacity: 0.10;
             animation-delay: -5s;
         }
-
-        .glow-3 {
-            top: 40%;
-            left: 40%;
-            width: 400px;
-            height: 400px;
+        .ambient-3 {
+            width: 400px; height: 400px;
+            top: 40%; left: 40%;
             background: var(--yellow);
-            opacity: 0.08;
+            opacity: 0.05;
             animation-delay: -10s;
         }
-
         @keyframes floatGlow {
-            0% {
-                transform: translate(0, 0) scale(1);
-            }
-
-            50% {
-                transform: translate(50px, 30px) scale(1.1);
-            }
-
-            100% {
-                transform: translate(-30px, -50px) scale(0.9);
-            }
+            0%   { transform: translate(0, 0) scale(1); }
+            50%  { transform: translate(40px, 25px) scale(1.08); }
+            100% { transform: translate(-25px, -40px) scale(0.92); }
         }
 
+        /* ── STARFIELD ── */
         #starfield {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
+            inset: 0;
+            z-index: 0;
             pointer-events: none;
         }
 
-        /* --- Cursor --- */
+        /* ── CURSOR ── */
         .cursor {
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--text-color);
-            border-radius: 50%;
             position: fixed;
+            width: 20px; height: 20px;
+            border: 2px solid var(--fg);
+            border-radius: 50%;
             pointer-events: none;
             z-index: 9999;
             transform: translate(-50%, -50%);
@@ -219,83 +180,64 @@
             mix-blend-mode: difference;
             display: none;
         }
-
         .cursor.hovered {
             transform: translate(-50%, -50%) scale(3);
-            background-color: var(--text-color);
+            background-color: var(--fg);
             border-color: transparent;
             opacity: 0.8;
         }
-
         @media (hover: hover) and (pointer: fine) {
-            .cursor {
-                display: block;
-            }
+            .cursor { display: block; }
         }
 
-        /* --- Preloader --- */
+        /* ── PRELOADER ── */
         #preloader {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--bg-color);
+            inset: 0;
+            background: var(--bg);
             z-index: 10000;
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
             transition: opacity 0.5s ease;
         }
-
         .loader-text {
             font-size: 2rem;
             font-weight: 700;
+            letter-spacing: 0.12em;
             animation: pulseCMYK 1s infinite alternate;
         }
-
         @keyframes pulseCMYK {
-            0% {
-                text-shadow: 2px 2px 0 var(--cyan);
-            }
-
-            50% {
-                text-shadow: -2px 2px 0 var(--magenta);
-            }
-
-            100% {
-                text-shadow: -2px -2px 0 var(--yellow);
-            }
+            0%   { text-shadow: 2px 2px 0 var(--cyan); }
+            50%  { text-shadow: -2px 2px 0 var(--magenta); }
+            100% { text-shadow: -2px -2px 0 var(--yellow); }
         }
 
+        /* ── CONTAINER ── */
         .container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 0 40px;
         }
 
-        /* --- Header --- */
+        /* ── HEADER ── */
         header {
             position: fixed;
-            top: 0;
-            width: 100%;
+            top: 0; width: 100%;
             padding: 30px 0;
             z-index: 100;
             mix-blend-mode: difference;
-            transition: padding 0.3s;
+            transition: padding 0.3s var(--ease-standard);
         }
-
         header.scrolled {
             padding: 15px 0;
-            background: rgba(5, 5, 5, 0.8);
-            backdrop-filter: blur(10px);
+            background: rgba(5, 5, 5, 0.88);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             mix-blend-mode: normal;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
         }
-
-        header.menu-open {
-            mix-blend-mode: normal;
-        }
+        header.menu-open { mix-blend-mode: normal; }
 
         nav {
             display: flex;
@@ -309,268 +251,435 @@
             letter-spacing: -1px;
             z-index: 101;
             position: relative;
-            display: inline-block;
             transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-
-        .logo:hover {
-            transform: rotate(360deg);
-        }
-
-        .logo span {
-            color: var(--cyan);
-        }
+        .logo:hover { transform: rotate(360deg); }
+        .logo span { color: var(--cyan); }
 
         .nav-links {
             display: flex;
             gap: 50px;
         }
-
         .nav-links a {
             font-size: 0.9rem;
+            font-weight: 500;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
             position: relative;
-            transition: transform 0.3s var(--ease-out);
-            display: inline-block;
+            transition: color 0.3s var(--ease-standard);
         }
-
         .nav-links a::after {
             content: '';
             position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--magenta);
-            transition: var(--transition);
+            bottom: -5px; left: 0;
+            width: 0; height: 1px;
+            background: var(--cyan);
+            transition: width 0.4s var(--ease-standard);
         }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        .nav-links a:hover {
-            color: var(--cyan);
-        }
-
-        .nav-links a.active {
-            color: var(--cyan);
-        }
-
-        .nav-links a.active::after {
-            width: 100%;
-        }
+        .nav-links a:hover { color: var(--cyan); }
+        .nav-links a:hover::after { width: 100%; }
+        .nav-links a.active { color: var(--cyan); }
+        .nav-links a.active::after { width: 100%; }
 
         .menu-toggle {
             display: none;
             flex-direction: column;
             gap: 6px;
-            cursor: pointer;
             z-index: 101;
+            background: transparent;
+            border: none;
+            padding: 4px;
         }
-
         .bar {
-            width: 30px;
-            height: 2px;
-            background-color: #fff;
-            transition: 0.3s;
+            width: 28px; height: 2px;
+            background: var(--fg);
+            transition: transform 0.3s, opacity 0.3s;
+            display: block;
         }
+        .menu-toggle.open .bar:nth-child(1) { transform: rotate(45deg) translate(6px, 6px); }
+        .menu-toggle.open .bar:nth-child(2) { opacity: 0; }
+        .menu-toggle.open .bar:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
 
-        /* --- Game Download Section --- */
-        #game-section {
-            flex: 1;
+        /* ── HERO ── */
+        #hero {
+            position: relative;
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 150px 0;
-            position: relative;
-        }
-
-        .game-content {
             text-align: center;
-            max-width: 900px;
+            z-index: 1;
+        }
+
+        .hero-inner {
+            position: relative;
             z-index: 2;
+            padding: 120px 40px 80px;
+            max-width: 1000px;
+            margin: 0 auto;
         }
 
-        h1.game-title {
-            font-size: 5rem;
-            margin-bottom: 20px;
-            line-height: 1;
-            text-transform: uppercase;
-            position: relative;
-            display: inline-block;
-        }
-
-        h1.game-title span {
-            color: var(--cyan);
-        }
-
-        .game-desc {
-            font-size: 1.2rem;
-            color: #ccc;
-            margin-bottom: 50px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* --- Download Container --- */
-        .download-container {
+        .hero-chips {
             display: flex;
+            gap: 10px;
             justify-content: center;
-            gap: 30px;
-            flex-wrap: wrap;
-            margin-top: 50px;
+            margin-bottom: 40px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: revealUp 0.8s var(--ease-snap) 0.1s forwards;
         }
-
-        /* --- Download Button --- */
-        .download-btn-wrapper {
-            position: relative;
-            display: inline-block;
-            perspective: 1000px;
-        }
-
-        .download-btn {
-            position: relative;
-            display: inline-block;
-            padding: 20px 40px;
-            font-size: 1.2rem;
-            font-weight: 700;
+        .chip {
+            font-size: 0.82rem;
+            font-weight: 500;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #000;
-            background: var(--cyan);
-            border: none;
-            cursor: pointer;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            clip-path: polygon(10% 0, 100% 0, 100% 80%, 90% 100%, 0 100%, 0 20%);
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            border: 1px solid var(--surface-border);
+            border-radius: 50px;
+            padding: 6px 16px;
             white-space: nowrap;
         }
-
-        .download-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
-            transition: 0.5s;
+        .chip-steam {
+            color: var(--cyan);
+            border-color: rgba(0, 255, 255, 0.25);
         }
 
-        .download-btn:hover {
-            transform: scale(1.05);
-            color: #fff;
+        .hero-title {
+            font-size: clamp(3.5rem, 8vw, 8rem);
+            font-weight: 700;
+            line-height: 0.9;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+            color: var(--fg);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: revealUp 0.9s var(--ease-snap) 0.2s forwards;
         }
 
-        .download-btn.android:hover {
-            background: var(--magenta);
-            box-shadow: 0 0 30px rgba(255, 0, 255, 0.4);
+        .hero-subtitle {
+            font-size: clamp(1.4rem, 3.2vw, 3.2rem);
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-top: 14px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: revealUp 0.8s var(--ease-snap) 0.3s forwards;
         }
 
-        .download-btn.pc {
-            background: var(--magenta);
+        .hero-divider {
+            width: 60px;
+            height: 1px;
+            background: var(--surface-border);
+            margin: 44px auto;
+            opacity: 0;
+            animation: revealUp 0.6s var(--ease-snap) 0.38s forwards;
         }
 
-        .download-btn.pc:hover {
-            background: var(--cyan);
-            box-shadow: 0 0 30px rgba(0, 255, 255, 0.4);
+        .hero-desc {
+            font-size: 1.2rem;
+            font-weight: 300;
+            line-height: 1.9;
+            color: var(--text-muted);
+            max-width: 50ch;
+            margin: 0 auto 52px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: revealUp 0.8s var(--ease-snap) 0.46s forwards;
         }
 
-        .download-btn:hover::before {
-            left: 100%;
+        .hero-cta {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: revealUp 0.8s var(--ease-snap) 0.56s forwards;
         }
 
-        .download-info {
-            margin-top: 15px;
+        @keyframes revealUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── BUTTON ── */
+        .btn {
+            display: inline-block;
+            padding: 14px 36px;
+            font-family: var(--font);
             font-size: 0.9rem;
-            color: #666;
-            font-family: monospace;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--cyan);
+            background: transparent;
+            border: 1px solid var(--cyan);
+            border-radius: 12px;
+            cursor: pointer;
+            position: relative;
+            transition: background 0.4s var(--ease-standard),
+                        color 0.4s var(--ease-standard),
+                        transform 0.4s var(--ease-standard),
+                        box-shadow 0.4s var(--ease-standard);
+        }
+        .btn:hover {
+            background: var(--cyan);
+            color: var(--bg);
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        }
+        .btn:focus-visible {
+            outline: 2px solid var(--cyan);
+            outline-offset: 4px;
+        }
+        .btn-hero {
+            font-size: 1rem;
+            padding: 18px 52px;
         }
 
-        /* --- Phone Mockup Abstract --- */
-        .phone-mockup {
-            width: 300px;
-            height: 500px;
-            border: 2px solid #333;
-            border-radius: 30px;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-10deg);
-            z-index: -1;
-            opacity: 0.1;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), transparent);
-        }
-
+        /* ── SCROLL REVEAL ── */
         .reveal {
             opacity: 0;
             transform: translateY(30px);
-            animation: fadeUpReveal 1s forwards var(--ease-out);
+            transition: opacity 0.8s var(--ease-snap),
+                        transform 0.8s var(--ease-snap);
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        @keyframes fadeUpReveal {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        /* ── SECTION LABEL ── */
+        .section-label {
+            font-size: 0.82rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-dim);
+            margin-bottom: 20px;
         }
 
-        /* --- Mobile --- */
+        /* ── STEAM SECTION ── */
+        #steam {
+            position: relative;
+            z-index: 1;
+            padding: 130px 0;
+        }
+        .steam-content { text-align: center; }
+
+        .steam-heading {
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: -0.01em;
+            line-height: 1.1;
+            margin-bottom: 60px;
+        }
+
+        .steam-wrapper {
+            --w: 646;
+            --h: 190;
+            --scale: clamp(0.46, calc((100vw - 80px) / 646), 1);
+            width: calc(var(--w) * var(--scale) * 1px);
+            height: calc(var(--h) * var(--scale) * 1px);
+            overflow: hidden;
+            margin: 0 auto;
+            border-radius: 8px;
+        }
+        .steam-wrapper iframe {
+            width: 646px;
+            height: 190px;
+            border: none;
+            transform-origin: top left;
+            transform: scale(var(--scale));
+            display: block;
+        }
+
+        .steam-fallback {
+            margin-top: 32px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* ── SCREENSHOTS SECTION ── */
+        #screenshots {
+            position: relative;
+            z-index: 1;
+            padding: 0 0 150px;
+        }
+
+        .screenshots-header { margin-bottom: 60px; }
+
+        .screenshots-heading {
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: -0.01em;
+            line-height: 1.1;
+        }
+
+        .screenshots-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .screenshot-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            background: var(--surface-raised);
+            border: 1px solid var(--surface-border);
+            aspect-ratio: 16 / 9;
+            cursor: pointer;
+            transition: transform 0.6s var(--ease-snap),
+                        box-shadow 0.6s var(--ease-snap),
+                        border-color 0.4s;
+        }
+        .screenshot-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 0 40px rgba(0, 255, 255, 0.12);
+            border-color: rgba(0, 255, 255, 0.22);
+        }
+        .screenshot-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.6s var(--ease-snap);
+        }
+        .screenshot-item:hover img { transform: scale(1.04); }
+
+        .screenshot-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 255, 255, 0.05);
+            opacity: 0;
+            transition: opacity 0.4s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .screenshot-item:hover .screenshot-overlay { opacity: 1; }
+
+        .zoom-icon {
+            width: 44px; height: 44px;
+            border: 1px solid rgba(0, 255, 255, 0.5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cyan);
+            font-size: 1.3rem;
+            line-height: 1;
+            user-select: none;
+        }
+
+        /* ── LIGHTBOX ── */
+        #lightbox {
+            border: none;
+            background: transparent;
+            padding: 0;
+            margin: 0;
+            max-width: 100vw;
+            max-height: 100vh;
+            width: 100vw;
+            height: 100vh;
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+        }
+        #lightbox::backdrop {
+            background: rgba(5, 5, 5, 0.96);
+        }
+        .lightbox-inner {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        #lightbox-img {
+            max-width: 88vw;
+            max-height: 84vh;
+            object-fit: contain;
+            border-radius: 8px;
+            display: block;
+        }
+        .lightbox-close {
+            position: absolute;
+            top: 28px; right: 36px;
+            width: 44px; height: 44px;
+            background: transparent;
+            border: 1px solid var(--surface-border);
+            border-radius: 50%;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: border-color 0.3s, color 0.3s;
+            font-family: var(--font);
+            line-height: 1;
+        }
+        .lightbox-close:hover {
+            border-color: var(--cyan);
+            color: var(--cyan);
+        }
+        .lightbox-close:focus-visible {
+            outline: 2px solid var(--cyan);
+            outline-offset: 4px;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid var(--surface-border);
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* ── RESPONSIVE ── */
         @media (max-width: 1024px) {
-            .container {
-                padding: 0 20px;
-            }
-
-            h1.game-title {
-                font-size: 3rem;
-            }
-
-            .menu-toggle {
-                display: flex;
-            }
-
+            .container { padding: 0 24px; }
+            .menu-toggle { display: flex; }
             .nav-links {
                 position: fixed;
-                top: 0;
-                right: 0;
+                top: 0; right: 0;
                 height: 100vh;
                 width: 70%;
-                background: #0a0a0a;
+                background: rgba(5, 5, 5, 0.98);
+                backdrop-filter: blur(14px);
+                -webkit-backdrop-filter: blur(14px);
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
+                gap: 40px;
                 transform: translateX(100%);
-                transition: transform 0.4s ease-in-out;
+                transition: transform 0.4s var(--ease-standard);
                 z-index: 99;
-                border-left: 1px solid #222;
+                border-left: 1px solid var(--surface-border);
             }
+            .nav-links.open { transform: translateX(0); }
+            .screenshots-grid { grid-template-columns: repeat(2, 1fr); }
+        }
 
-            .nav-links.active {
-                transform: translateX(0);
-            }
+        @media (max-width: 600px) {
+            .hero-chips { flex-wrap: wrap; gap: 8px; }
+            .hero-inner { padding: 100px 24px 60px; }
+            .screenshots-grid { grid-template-columns: 1fr; }
+            .btn-hero { padding: 16px 40px; }
+        }
 
-            .menu-toggle.active .bar:nth-child(1) {
-                transform: rotate(45deg) translate(6px, 6px);
-            }
-
-            .menu-toggle.active .bar:nth-child(2) {
-                opacity: 0;
-            }
-
-            .menu-toggle.active .bar:nth-child(3) {
-                transform: rotate(-45deg) translate(5px, -5px);
-            }
-
-            .download-container {
-                gap: 20px;
-            }
-
-            .download-btn {
-                padding: 15px 30px;
-                font-size: 1rem;
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
             }
         }
     </style>
@@ -579,185 +688,370 @@
 <body>
 
     <div id="progress-bar"></div>
-    <div class="ambient-glow glow-1"></div>
-    <div class="ambient-glow glow-2"></div>
-    <div class="ambient-glow glow-3"></div>
 
-    <canvas id="starfield"></canvas>
+    <div class="ambient ambient-1" aria-hidden="true"></div>
+    <div class="ambient ambient-2" aria-hidden="true"></div>
+    <div class="ambient ambient-3" aria-hidden="true"></div>
 
-    <div class="cursor"></div>
+    <canvas id="starfield" aria-hidden="true"></canvas>
 
-    <div id="preloader">
-        <div class="loader-text">LOADING...</div>
+    <div class="cursor" role="presentation" aria-hidden="true"></div>
+
+    <div id="preloader" aria-hidden="true">
+        <span class="loader-text">LOADING...</span>
     </div>
 
-    <header>
+    <header id="site-header">
         <div class="container">
-            <nav>
-                <a href="index.html" class="logo link-hover">MJ<span>.</span></a>
+            <nav aria-label="Nawigacja główna">
+                <a href="index.html" class="logo" aria-label="MJ Portfolio — strona główna">MJ<span>.</span></a>
 
-                <div class="menu-toggle" id="mobile-menu">
+                <button class="menu-toggle" id="menu-toggle"
+                        aria-label="Otwórz menu" aria-expanded="false" aria-controls="nav-links">
                     <span class="bar"></span>
                     <span class="bar"></span>
                     <span class="bar"></span>
-                </div>
+                </button>
 
-                <div class="nav-links">
-                    <a href="index.html#about" class="link-hover magnet">O mnie</a>
-                    <a href="index.html#work" class="link-hover magnet">Web</a>
-                    <a href="grafika.html" class="link-hover magnet">Grafika</a>
-                    <a href="gra.html" class="link-hover magnet active">Gra</a>
-                    <a href="index.html#contact" class="link-hover magnet">Kontakt</a>
-                </div>
+                <ul class="nav-links" id="nav-links" role="list">
+                    <li><a href="index.html#about" class="magnet">O mnie</a></li>
+                    <li><a href="index.html#work" class="magnet">Web</a></li>
+                    <li><a href="grafika.html" class="magnet">Grafika</a></li>
+                    <li><a href="gra.html" class="magnet active" aria-current="page">Gra</a></li>
+                    <li><a href="index.html#contact" class="magnet">Kontakt</a></li>
+                </ul>
             </nav>
         </div>
     </header>
 
     <main>
-    <section id="game-section">
-        <div class="phone-mockup"></div>
-        <div class="container game-content">
-            <h1 class="game-title reveal">Space <span>Fighter</span></h1>
-            <p class="game-desc reveal" style="animation-delay: 0.2s">
-                Autorska gra mobilna stworzona od podstaw. Przetestuj swoje umiejętności w kosmicznej strzelance.
-                Pobierz plik APK bezpośrednio na swój telefon lub wersję na PC.
-            </p>
 
-            <div class="download-container">
-                <div class="download-btn-wrapper reveal" style="animation-delay: 0.4s">
-                    <a href="https://github.com/michal20000505-sudo/portfolio-site/raw/main/SpaceFighterJaro.apk"
-                        class="download-btn android link-hover magnet">
-                        Pobierz .APK
-                    </a>
-                    <div class="download-info">Wersja 0.0.2 | Android</div>
+        <!-- HERO -->
+        <section id="hero" aria-label="SPACEFIGHTER: The Bullet Hell">
+            <div class="hero-inner">
+                <div class="hero-chips" aria-hidden="true">
+                    <span class="chip chip-steam">Steam</span>
+                    <span class="chip">Bullet Hell</span>
+                    <span class="chip">Indie</span>
                 </div>
 
-                <div class="download-btn-wrapper reveal" style="animation-delay: 0.5s">
-                    <a href="https://drive.google.com/file/d/1KfFyLHV2DOfzME76y8s5Iwrhmh7f8fLQ/view?usp=drive_link"
-                        target="_blank" class="download-btn pc link-hover magnet">
-                        Pobierz na PC
+                <h1 class="hero-title">SPACEFIGHTER</h1>
+                <p class="hero-subtitle">The Bullet Hell</p>
+
+                <div class="hero-divider" role="presentation" aria-hidden="true"></div>
+
+                <p class="hero-desc">
+                    Zmasowany ogień, precyzja i kosmiczna arena.
+                    Autorska gra indie stworzona od podstaw.
+                    Jak długo wytrzymasz?
+                </p>
+
+                <div class="hero-cta">
+                    <a href="https://store.steampowered.com/app/4451950/SPACEFIGHTER__The_Bullet_Hell/"
+                       class="btn btn-hero magnet"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       aria-label="Zagraj na Steam — otwiera stronę Steam w nowej karcie">
+                        Zagraj na Steam
                     </a>
-                    <div class="download-info">Wersja 0.0.2 | Windows</div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+
+        <!-- STEAM WIDGET -->
+        <section id="steam" aria-label="Strona Steam">
+            <div class="container">
+                <div class="steam-content">
+                    <p class="section-label reveal">Dostępne na</p>
+                    <h2 class="steam-heading reveal">Steam</h2>
+
+                    <div class="steam-wrapper reveal">
+                        <iframe
+                            src="https://store.steampowered.com/widget/4451950/"
+                            title="SPACEFIGHTER: The Bullet Hell — Steam Store"
+                            loading="lazy">
+                        </iframe>
+                    </div>
+
+                    <div class="steam-fallback reveal">
+                        <a href="https://store.steampowered.com/app/4451950/SPACEFIGHTER__The_Bullet_Hell/"
+                           class="btn magnet"
+                           target="_blank"
+                           rel="noopener noreferrer">
+                            Otwórz stronę Steam ↗
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCREENSHOTS -->
+        <section id="screenshots" aria-label="Galeria screenshotów z gry">
+            <div class="container">
+                <div class="screenshots-header">
+                    <p class="section-label reveal">Galeria</p>
+                    <h2 class="screenshots-heading reveal">Screenshoty</h2>
+                </div>
+
+                <div class="screenshots-grid">
+                    <div class="screenshot-item reveal"
+                         role="button" tabindex="0"
+                         aria-label="Screenshot 1 — kliknij aby powiększyć">
+                        <img src="screenshots/01.jpg" alt="SPACEFIGHTER gameplay screenshot 1" loading="lazy">
+                        <div class="screenshot-overlay" aria-hidden="true">
+                            <div class="zoom-icon">+</div>
+                        </div>
+                    </div>
+                    <div class="screenshot-item reveal"
+                         style="transition-delay: 0.08s"
+                         role="button" tabindex="0"
+                         aria-label="Screenshot 2 — kliknij aby powiększyć">
+                        <img src="screenshots/02.jpg" alt="SPACEFIGHTER gameplay screenshot 2" loading="lazy">
+                        <div class="screenshot-overlay" aria-hidden="true">
+                            <div class="zoom-icon">+</div>
+                        </div>
+                    </div>
+                    <div class="screenshot-item reveal"
+                         style="transition-delay: 0.16s"
+                         role="button" tabindex="0"
+                         aria-label="Screenshot 3 — kliknij aby powiększyć">
+                        <img src="screenshots/03.jpg" alt="SPACEFIGHTER gameplay screenshot 3" loading="lazy">
+                        <div class="screenshot-overlay" aria-hidden="true">
+                            <div class="zoom-icon">+</div>
+                        </div>
+                    </div>
+                    <div class="screenshot-item reveal"
+                         style="transition-delay: 0.24s"
+                         role="button" tabindex="0"
+                         aria-label="Screenshot 4 — kliknij aby powiększyć">
+                        <img src="screenshots/04.jpg" alt="SPACEFIGHTER gameplay screenshot 4" loading="lazy">
+                        <div class="screenshot-overlay" aria-hidden="true">
+                            <div class="zoom-icon">+</div>
+                        </div>
+                    </div>
+                    <div class="screenshot-item reveal"
+                         style="transition-delay: 0.32s"
+                         role="button" tabindex="0"
+                         aria-label="Screenshot 5 — kliknij aby powiększyć">
+                        <img src="screenshots/05.jpg" alt="SPACEFIGHTER gameplay screenshot 5" loading="lazy">
+                        <div class="screenshot-overlay" aria-hidden="true">
+                            <div class="zoom-icon">+</div>
+                        </div>
+                    </div>
+                    <div class="screenshot-item reveal"
+                         style="transition-delay: 0.40s"
+                         role="button" tabindex="0"
+                         aria-label="Screenshot 6 — kliknij aby powiększyć">
+                        <img src="screenshots/06.jpg" alt="SPACEFIGHTER gameplay screenshot 6" loading="lazy">
+                        <div class="screenshot-overlay" aria-hidden="true">
+                            <div class="zoom-icon">+</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
-    <footer style="text-align:center; padding: 40px 20px; color: #444; font-size: 0.85rem; border-top: 1px solid #1a1a1a;">
-        <p>&copy; 2025 Michał Jarosiński. Wszelkie prawa zastrzeżone.</p>
+    <!-- LIGHTBOX -->
+    <dialog id="lightbox" aria-label="Podgląd screenshota">
+        <div class="lightbox-inner">
+            <button class="lightbox-close" aria-label="Zamknij podgląd">✕</button>
+            <img id="lightbox-img" src="" alt="">
+        </div>
+    </dialog>
+
+    <footer>
+        <p>© 2025 Michał Jarosiński. Wszelkie prawa zastrzeżone.</p>
     </footer>
 
     <script>
-        // --- Preloader ---
+        // ── PRELOADER ──
         const preloader = document.getElementById('preloader');
-        function hidePreloader() { if (preloader.style.opacity !== '0') { preloader.style.opacity = '0'; setTimeout(() => { preloader.style.display = 'none' }, 500); } }
-        window.addEventListener('load', () => { setTimeout(hidePreloader, 500) });
+        function hidePreloader() {
+            if (preloader.style.opacity === '0') return;
+            preloader.style.opacity = '0';
+            setTimeout(() => { preloader.style.display = 'none'; }, 500);
+        }
+        window.addEventListener('load', () => setTimeout(hidePreloader, 400));
         if (document.readyState === 'complete') hidePreloader();
         setTimeout(hidePreloader, 1500);
 
-        // --- Header Scroll Effect & Progress Bar ---
-        const header = document.querySelector('header');
+        // ── SCROLL: HEADER + PROGRESS BAR ──
+        const siteHeader = document.getElementById('site-header');
         const progressBar = document.getElementById('progress-bar');
-
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) header.classList.add('scrolled');
-            else header.classList.remove('scrolled');
+            siteHeader.classList.toggle('scrolled', window.scrollY > 50);
+            const el = document.documentElement;
+            const pct = el.scrollTop / (el.scrollHeight - el.clientHeight);
+            progressBar.style.width = (pct * 100) + '%';
+        }, { passive: true });
 
-            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (winScroll / height) * 100;
-            progressBar.style.width = scrolled + "%";
-        });
-
-        // --- Starfield ---
+        // ── STARFIELD ──
         const canvas = document.getElementById('starfield');
         const ctx = canvas.getContext('2d');
-        let width, height, stars = [];
-        const mouse = { x: undefined, y: undefined };
-        const colors = ['#00ffff', '#ff00ff', '#ffff00', '#ffffff', '#ffffff'];
-
-        function resize() { width = window.innerWidth; height = window.innerHeight; canvas.width = width; canvas.height = height; initStars(); }
+        let W, H, stars = [];
+        const mouse = { x: null, y: null };
+        const COLORS = ['#00ffff', '#ff00ff', '#ffff00', '#ffffff', '#ffffff', '#ffffff'];
 
         class Star {
-            constructor() {
-                this.x = Math.random() * width; this.y = Math.random() * height;
-                this.size = Math.random() * 2;
-                this.density = (Math.random() * 20) + 1;
-                this.color = colors[Math.floor(Math.random() * colors.length)];
-                this.vx = (Math.random() - 0.5) * 0.5; this.vy = (Math.random() - 0.5) * 0.5;
-                this.opacity = Math.random(); this.twinkle = Math.random() * 0.02 + 0.005;
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * W;
+                this.y = Math.random() * H;
+                this.size = Math.random() * 1.8 + 0.2;
+                this.density = Math.random() * 20 + 1;
+                this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
+                this.vx = (Math.random() - 0.5) * 0.4;
+                this.vy = (Math.random() - 0.5) * 0.4;
+                this.opacity = Math.random();
+                this.twinkle = (Math.random() * 0.015 + 0.004) * (Math.random() < 0.5 ? 1 : -1);
             }
-            draw() { ctx.fillStyle = this.color; ctx.globalAlpha = this.opacity; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 1; }
+            draw() {
+                ctx.globalAlpha = Math.max(0.1, Math.min(1, this.opacity));
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.globalAlpha = 1;
+            }
             update() {
-                this.x += this.vx; this.y += this.vy;
-                if (this.x < 0) this.x = width; if (this.x > width) this.x = 0; if (this.y < 0) this.y = height; if (this.y > height) this.y = 0;
-                if (mouse.x) {
-                    let dx = mouse.x - this.x, dy = mouse.y - this.y, dist = Math.sqrt(dx * dx + dy * dy);
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < 0) this.x = W;
+                if (this.x > W) this.x = 0;
+                if (this.y < 0) this.y = H;
+                if (this.y > H) this.y = 0;
+                if (mouse.x !== null) {
+                    const dx = mouse.x - this.x;
+                    const dy = mouse.y - this.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
                     if (dist < 150) {
-                        let f = (150 - dist) / 150;
-                        this.x -= (dx / dist) * f * this.density * 2; this.y -= (dy / dist) * f * this.density * 2;
+                        const f = (150 - dist) / 150;
+                        this.x -= (dx / dist) * f * this.density * 1.5;
+                        this.y -= (dy / dist) * f * this.density * 1.5;
                     }
                 }
-                this.opacity += this.twinkle; if (this.opacity > 1 || this.opacity < 0.2) this.twinkle = -this.twinkle;
+                this.opacity += this.twinkle;
+                if (this.opacity > 1 || this.opacity < 0.1) this.twinkle = -this.twinkle;
             }
         }
-        function initStars() { stars = []; for (let i = 0; i < (width * height) / 8000; i++)stars.push(new Star()); }
-        function animateStars() { ctx.clearRect(0, 0, width, height); stars.forEach(s => { s.draw(); s.update() }); requestAnimationFrame(animateStars); }
 
-        window.addEventListener('resize', resize);
-        window.addEventListener('mousemove', e => { mouse.x = e.x; mouse.y = e.y });
+        function initStars() {
+            stars = [];
+            const n = Math.floor((W * H) / 8000);
+            for (let i = 0; i < n; i++) stars.push(new Star());
+        }
+        function tick() {
+            ctx.clearRect(0, 0, W, H);
+            stars.forEach(s => { s.update(); s.draw(); });
+            requestAnimationFrame(tick);
+        }
+        function resizeCanvas() {
+            W = canvas.width = window.innerWidth;
+            H = canvas.height = window.innerHeight;
+            initStars();
+        }
+        window.addEventListener('resize', resizeCanvas, { passive: true });
+        window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; }, { passive: true });
+        resizeCanvas();
+        tick();
 
-        // --- Mobile Menu ---
-        const menuToggle = document.getElementById('mobile-menu');
-        const navLinks = document.querySelector('.nav-links');
+        // ── MOBILE MENU ──
+        const menuToggle = document.getElementById('menu-toggle');
+        const navLinks = document.getElementById('nav-links');
         menuToggle.addEventListener('click', () => {
-            menuToggle.classList.toggle('active');
-            navLinks.classList.toggle('active');
-            header.classList.toggle('menu-open');
+            const open = menuToggle.classList.toggle('open');
+            navLinks.classList.toggle('open', open);
+            siteHeader.classList.toggle('menu-open', open);
+            menuToggle.setAttribute('aria-expanded', String(open));
+            menuToggle.setAttribute('aria-label', open ? 'Zamknij menu' : 'Otwórz menu');
         });
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                menuToggle.classList.remove('active');
-                navLinks.classList.remove('active');
-                header.classList.remove('menu-open');
+        navLinks.querySelectorAll('a').forEach(a => {
+            a.addEventListener('click', () => {
+                menuToggle.classList.remove('open');
+                navLinks.classList.remove('open');
+                siteHeader.classList.remove('menu-open');
+                menuToggle.setAttribute('aria-expanded', 'false');
+                menuToggle.setAttribute('aria-label', 'Otwórz menu');
             });
         });
 
-        // --- Cursor System ---
+        // ── CURSOR ──
         const cursor = document.querySelector('.cursor');
-
-        if (window.matchMedia("(pointer: fine)").matches) {
+        const isFinePointer = window.matchMedia('(pointer: fine)').matches;
+        if (isFinePointer) {
             document.addEventListener('mousemove', e => {
                 cursor.style.left = e.clientX + 'px';
                 cursor.style.top = e.clientY + 'px';
+            }, { passive: true });
+            document.querySelectorAll('a, button, .screenshot-item').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
             });
-
-            document.querySelectorAll('.link-hover, a, button, .download-btn').forEach(l => {
-                l.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
-                l.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
-            });
-
-            // --- Magnetic Button Effect ---
-            const magnets = document.querySelectorAll('.magnet');
-            magnets.forEach((magnet) => {
-                magnet.addEventListener('mousemove', (e) => {
-                    const position = magnet.getBoundingClientRect();
-                    const x = e.clientX - position.left - position.width / 2;
-                    const y = e.clientY - position.top - position.height / 2;
-
-                    magnet.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
-                });
-                magnet.addEventListener('mouseleave', () => {
-                    magnet.style.transform = 'translate(0px, 0px)';
-                });
-            });
-
-
         }
 
-        resize(); animateStars();
-    </script>
-</body>
+        // ── MAGNETIC BUTTONS ──
+        if (isFinePointer) {
+            document.querySelectorAll('.magnet').forEach(el => {
+                el.addEventListener('mousemove', e => {
+                    const r = el.getBoundingClientRect();
+                    const x = e.clientX - r.left - r.width / 2;
+                    const y = e.clientY - r.top - r.height / 2;
+                    el.style.transform = `translate(${x * 0.28}px, ${y * 0.28}px)`;
+                });
+                el.addEventListener('mouseleave', () => {
+                    el.style.transform = '';
+                });
+            });
+        }
 
+        // ── SCROLL REVEAL ──
+        const revealObserver = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add('visible');
+                    revealObserver.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+        // ── LIGHTBOX ──
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const lightboxClose = document.querySelector('.lightbox-close');
+
+        function openLightbox(src, alt) {
+            lightboxImg.src = src;
+            lightboxImg.alt = alt || '';
+            lightbox.showModal();
+        }
+        function closeLightbox() {
+            lightbox.close();
+            setTimeout(() => { lightboxImg.src = ''; }, 300);
+        }
+
+        document.querySelectorAll('.screenshot-item').forEach(item => {
+            const img = item.querySelector('img');
+            const activate = () => {
+                if (img.complete && img.naturalWidth > 0) {
+                    openLightbox(img.src, img.alt);
+                }
+            };
+            item.addEventListener('click', activate);
+            item.addEventListener('keydown', e => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    activate();
+                }
+            });
+        });
+
+        lightboxClose.addEventListener('click', closeLightbox);
+        lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+        lightbox.addEventListener('cancel', e => { e.preventDefault(); closeLightbox(); });
+    </script>
+
+</body>
 </html>
