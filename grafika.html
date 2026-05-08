@@ -305,11 +305,12 @@
             z-index: 101;
             position: relative;
             display: inline-block;
-            transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: transform 0.25s var(--ease-out), letter-spacing 0.25s var(--ease-out);
         }
 
         .logo:hover {
-            transform: rotate(360deg);
+            transform: skewX(-6deg) scale(1.04);
+            letter-spacing: 1px;
         }
 
         .logo span {
@@ -333,16 +334,18 @@
         .nav-links a::after {
             content: '';
             position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--magenta);
-            transition: var(--transition);
+            bottom: -8px;
+            left: 50%;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--cyan);
+            transform: translateX(-50%) scale(0);
+            transition: transform 0.3s var(--ease-out);
         }
 
         .nav-links a:hover::after {
-            width: 100%;
+            transform: translateX(-50%) scale(1);
         }
 
         .nav-links a.active {
@@ -350,8 +353,7 @@
         }
 
         .nav-links a.active::after {
-            width: 100%;
-            background: var(--cyan);
+            transform: translateX(-50%) scale(1);
         }
 
         .nav-links a:hover {

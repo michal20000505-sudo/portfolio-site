@@ -304,11 +304,12 @@
             z-index: 101;
             position: relative;
             display: inline-block;
-            transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: transform 0.25s var(--ease-out), letter-spacing 0.25s var(--ease-out);
         }
 
         .logo:hover {
-            transform: rotate(360deg);
+            transform: skewX(-6deg) scale(1.04);
+            letter-spacing: 1px;
         }
 
         .logo span {
@@ -332,19 +333,20 @@
         .nav-links a::after {
             content: '';
             position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--magenta);
-            transition: var(--transition);
+            bottom: -8px;
+            left: 50%;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--cyan);
+            transform: translateX(-50%) scale(0);
+            transition: transform 0.3s var(--ease-out);
         }
 
         .nav-links a:hover::after {
-            width: 100%;
+            transform: translateX(-50%) scale(1);
         }
 
-        /* Magnetic effect CSS base */
         .nav-links a:hover {
             color: var(--cyan);
         }
@@ -727,40 +729,10 @@
             line-height: 1.9;
             font-weight: 300;
             position: relative;
-            padding: 40px;
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-        }
-
-        .about-text::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--cyan), var(--magenta), var(--yellow));
-            border-radius: 16px 16px 0 0;
         }
 
         .about-text p {
             margin-bottom: 25px;
-            position: relative;
-            padding-left: 20px;
-        }
-
-        .about-text p::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 12px;
-            width: 8px;
-            height: 8px;
-            background: var(--cyan);
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--cyan);
         }
 
         .highlight-cyan {
@@ -846,26 +818,10 @@
             margin-bottom: 30px;
             margin-top: 40px;
             font-weight: 600;
-            font-size: 1.1rem;
-            color: #fff;
-            background: linear-gradient(90deg, var(--cyan), var(--magenta));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            position: relative;
-            padding-left: 30px;
-        }
-
-        .clients-intro::before {
-            content: '✦';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
+            font-size: 0.8rem;
             color: var(--cyan);
-            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
         }
 
         .clients-list {
@@ -914,35 +870,37 @@
             border-color: rgba(255, 255, 255, 0.2);
         }
 
-        /* Enhanced colored accents */
         .clients-list li:nth-child(3n+1) {
-            border-left: 3px solid var(--cyan);
+            background: rgba(0, 255, 255, 0.04);
             color: #b3ffff;
+            border-color: rgba(0, 255, 255, 0.18);
         }
 
         .clients-list li:nth-child(3n+1):hover {
             background: rgba(0, 255, 255, 0.1);
-            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.15);
         }
 
         .clients-list li:nth-child(3n+2) {
-            border-left: 3px solid var(--magenta);
+            background: rgba(255, 0, 255, 0.04);
             color: #ffb3ff;
+            border-color: rgba(255, 0, 255, 0.18);
         }
 
         .clients-list li:nth-child(3n+2):hover {
             background: rgba(255, 0, 255, 0.1);
-            box-shadow: 0 10px 30px rgba(255, 0, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(255, 0, 255, 0.15);
         }
 
         .clients-list li:nth-child(3n+3) {
-            border-left: 3px solid var(--yellow);
+            background: rgba(255, 255, 0, 0.03);
             color: #ffffb3;
+            border-color: rgba(255, 255, 0, 0.15);
         }
 
         .clients-list li:nth-child(3n+3):hover {
-            background: rgba(255, 255, 0, 0.1);
-            box-shadow: 0 10px 30px rgba(255, 255, 0, 0.2);
+            background: rgba(255, 255, 0, 0.08);
+            box-shadow: 0 10px 30px rgba(255, 255, 0, 0.12);
         }
 
         .clients-footer {
@@ -1227,7 +1185,6 @@
 
             .about-text {
                 text-align: left;
-                padding: 30px 20px;
             }
 
             .clients-list {
