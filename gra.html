@@ -37,6 +37,7 @@
     <link rel="dns-prefetch" href="//fonts.googleapis.com">
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link rel="dns-prefetch" href="//store.steampowered.com">
+    <link rel="preload" as="image" href="press/logo/LOGOGRY.png">
 
     <script type="application/ld+json">
     {
@@ -352,9 +353,18 @@
             letter-spacing: -0.02em;
             text-transform: uppercase;
             color: var(--fg);
+            margin: 0;
             opacity: 0;
             transform: translateY(30px);
             animation: revealUp 0.9s var(--ease-snap) 0.2s forwards;
+        }
+        .hero-logo-img {
+            display: block;
+            margin: 0 auto;
+            width: 100%;
+            max-width: min(90%, 720px);
+            height: auto;
+            object-fit: contain;
         }
 
         .hero-subtitle {
@@ -735,7 +745,9 @@
                     <span class="chip">Indie</span>
                 </div>
 
-                <h1 class="hero-title">SPACEFIGHTER</h1>
+                <h1 class="hero-title">
+                    <img src="press/logo/LOGOGRY.png" alt="SPACEFIGHTER" class="hero-logo-img" fetchpriority="high">
+                </h1>
                 <p class="hero-subtitle">The Bullet Hell</p>
 
                 <div class="hero-divider" role="presentation" aria-hidden="true"></div>
@@ -793,61 +805,7 @@
                     <h2 class="screenshots-heading reveal">Screenshoty</h2>
                 </div>
 
-                <div class="screenshots-grid">
-                    <div class="screenshot-item reveal"
-                         role="button" tabindex="0"
-                         aria-label="Screenshot 1 — kliknij aby powiększyć">
-                        <img src="screenshots/01.jpg" alt="SPACEFIGHTER gameplay screenshot 1" loading="lazy">
-                        <div class="screenshot-overlay" aria-hidden="true">
-                            <div class="zoom-icon">+</div>
-                        </div>
-                    </div>
-                    <div class="screenshot-item reveal"
-                         style="transition-delay: 0.08s"
-                         role="button" tabindex="0"
-                         aria-label="Screenshot 2 — kliknij aby powiększyć">
-                        <img src="screenshots/02.jpg" alt="SPACEFIGHTER gameplay screenshot 2" loading="lazy">
-                        <div class="screenshot-overlay" aria-hidden="true">
-                            <div class="zoom-icon">+</div>
-                        </div>
-                    </div>
-                    <div class="screenshot-item reveal"
-                         style="transition-delay: 0.16s"
-                         role="button" tabindex="0"
-                         aria-label="Screenshot 3 — kliknij aby powiększyć">
-                        <img src="screenshots/03.jpg" alt="SPACEFIGHTER gameplay screenshot 3" loading="lazy">
-                        <div class="screenshot-overlay" aria-hidden="true">
-                            <div class="zoom-icon">+</div>
-                        </div>
-                    </div>
-                    <div class="screenshot-item reveal"
-                         style="transition-delay: 0.24s"
-                         role="button" tabindex="0"
-                         aria-label="Screenshot 4 — kliknij aby powiększyć">
-                        <img src="screenshots/04.jpg" alt="SPACEFIGHTER gameplay screenshot 4" loading="lazy">
-                        <div class="screenshot-overlay" aria-hidden="true">
-                            <div class="zoom-icon">+</div>
-                        </div>
-                    </div>
-                    <div class="screenshot-item reveal"
-                         style="transition-delay: 0.32s"
-                         role="button" tabindex="0"
-                         aria-label="Screenshot 5 — kliknij aby powiększyć">
-                        <img src="screenshots/05.jpg" alt="SPACEFIGHTER gameplay screenshot 5" loading="lazy">
-                        <div class="screenshot-overlay" aria-hidden="true">
-                            <div class="zoom-icon">+</div>
-                        </div>
-                    </div>
-                    <div class="screenshot-item reveal"
-                         style="transition-delay: 0.40s"
-                         role="button" tabindex="0"
-                         aria-label="Screenshot 6 — kliknij aby powiększyć">
-                        <img src="screenshots/06.jpg" alt="SPACEFIGHTER gameplay screenshot 6" loading="lazy">
-                        <div class="screenshot-overlay" aria-hidden="true">
-                            <div class="zoom-icon">+</div>
-                        </div>
-                    </div>
-                </div>
+                <div class="screenshots-grid" id="screenshots-grid"></div>
             </div>
         </section>
 
@@ -862,7 +820,7 @@
     </dialog>
 
     <footer>
-        <p>© 2025 Michał Jarosiński. Wszelkie prawa zastrzeżone.</p>
+        <p>© 2025 Michał Jarosiński. Wszelkie prawa zastrzeżone. · <a href="gra-press.html" style="color: var(--text-muted); border-bottom: 1px solid transparent; transition: color 0.3s, border-color 0.3s;" onmouseover="this.style.color='var(--cyan)';this.style.borderBottomColor='var(--cyan)';" onmouseout="this.style.color='var(--text-muted)';this.style.borderBottomColor='transparent';">Press Kit ↗</a></p>
     </footer>
 
     <script>
@@ -876,6 +834,39 @@
         window.addEventListener('load', () => setTimeout(hidePreloader, 400));
         if (document.readyState === 'complete') hidePreloader();
         setTimeout(hidePreloader, 1500);
+
+        // ── SCREENSHOTS GRID ──
+        // Generated first so subsequent handlers (cursor, lightbox, reveal) can pick up the items.
+        const SCREENSHOTS = [
+            { file: '1wave.png',          alt: 'SPACEFIGHTER — pierwsza fala wrogów' },
+            { file: '11sec.png',          alt: 'SPACEFIGHTER — wczesna runa, 11 sekund' },
+            { file: 'hive1.png',          alt: 'SPACEFIGHTER — rój Hive' },
+            { file: 'hivefleetwave.png',  alt: 'SPACEFIGHTER — fala Hive Fleet' },
+            { file: 'irontidewave.png',   alt: 'SPACEFIGHTER — fala Iron Tide' },
+            { file: 'the hunter.png',     alt: 'SPACEFIGHTER — boss The Hunter' },
+            { file: 'boss2.png',          alt: 'SPACEFIGHTER — walka z bossem' },
+            { file: 'upgrades.png',       alt: 'SPACEFIGHTER — wybór ulepszeń' },
+            { file: 'uworkshop.png',      alt: 'SPACEFIGHTER — warsztat ulepszeń' },
+            { file: 'unlockedweapons.png',alt: 'SPACEFIGHTER — odblokowane bronie' },
+            { file: 'gameoverscreen.png', alt: 'SPACEFIGHTER — ekran game over' }
+        ];
+        const screenshotsGrid = document.getElementById('screenshots-grid');
+        SCREENSHOTS.forEach((shot, i) => {
+            const src = `screenshots/${encodeURIComponent(shot.file)}`;
+            const item = document.createElement('div');
+            item.className = 'screenshot-item reveal';
+            item.style.transitionDelay = `${(i % 3) * 0.08}s`;
+            item.setAttribute('role', 'button');
+            item.setAttribute('tabindex', '0');
+            item.setAttribute('aria-label', `${shot.alt} — kliknij aby powiększyć`);
+            item.innerHTML = `
+                <img src="${src}" alt="${shot.alt}" loading="lazy">
+                <div class="screenshot-overlay" aria-hidden="true">
+                    <div class="zoom-icon">+</div>
+                </div>
+            `;
+            screenshotsGrid.appendChild(item);
+        });
 
         // ── SCROLL: HEADER + PROGRESS BAR ──
         const siteHeader = document.getElementById('site-header');

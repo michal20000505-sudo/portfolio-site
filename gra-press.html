@@ -1,0 +1,1940 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPACEFIGHTER: The Bullet Hell — Press Kit</title>
+    <meta name="description" content="Official press kit for SPACEFIGHTER: The Bullet Hell — solo-dev bullet heaven launching June 8, 2026 inside Steam Bullet Fest 2026.">
+    <meta name="author" content="Michał Jarosiński">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="SPACEFIGHTER: The Bullet Hell — Press Kit">
+    <meta property="og:description" content="Press kit for SPACEFIGHTER: The Bullet Hell. Factsheet, screenshots, descriptions, assets, contact.">
+    <meta property="og:image" content="strona-icon.png">
+
+    <meta name="theme-color" content="#050505">
+    <link rel="icon" type="image/png" sizes="500x500" href="strona-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="preload" as="image" href="press/logo/LOGOGRY.png">
+
+    <style>
+        :root {
+            --bg: #050505;
+            --fg: #ffffff;
+            --cyan: #00ffff;
+            --magenta: #ff00ff;
+            --yellow: #ffff00;
+            --surface-raised: #1a1a1a;
+            --surface-mid: #222222;
+            --surface-border: #333333;
+            --text-muted: #888888;
+            --text-dim: #666666;
+            --font: 'Space Grotesk', system-ui, sans-serif;
+            --ease-standard: cubic-bezier(0.165, 0.84, 0.44, 1);
+            --ease-snap: cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg);
+            color: var(--fg);
+            font-family: var(--font);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        /* ── STATIC AMBIENT GLOW (no animation — press kit is functional) ── */
+        .ambient {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .ambient-1 {
+            width: 500px; height: 500px;
+            top: -8%; left: -8%;
+            background: var(--cyan);
+            opacity: 0.05;
+        }
+        .ambient-2 {
+            width: 500px; height: 500px;
+            bottom: 5%; right: -8%;
+            background: var(--magenta);
+            opacity: 0.06;
+        }
+
+        /* ── HEADER (matches gra.html) ── */
+        header {
+            position: fixed;
+            top: 0; width: 100%;
+            padding: 20px 0;
+            z-index: 100;
+            background: rgba(5, 5, 5, 0.88);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.5rem;
+            letter-spacing: -1px;
+            z-index: 101;
+            position: relative;
+            transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .logo:hover { transform: rotate(360deg); }
+        .logo span { color: var(--cyan); }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+        }
+        .nav-links a {
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            position: relative;
+            transition: color 0.3s var(--ease-standard);
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px; left: 0;
+            width: 0; height: 1px;
+            background: var(--cyan);
+            transition: width 0.4s var(--ease-standard);
+        }
+        .nav-links a:hover { color: var(--cyan); }
+        .nav-links a:hover::after { width: 100%; }
+        .nav-links a.active { color: var(--cyan); }
+        .nav-links a.active::after { width: 100%; }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            z-index: 101;
+            background: transparent;
+            border: none;
+            padding: 4px;
+            cursor: pointer;
+        }
+        .bar {
+            width: 28px; height: 2px;
+            background: var(--fg);
+            transition: transform 0.3s, opacity 0.3s;
+            display: block;
+        }
+        .menu-toggle.open .bar:nth-child(1) { transform: rotate(45deg) translate(6px, 6px); }
+        .menu-toggle.open .bar:nth-child(2) { opacity: 0; }
+        .menu-toggle.open .bar:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+        /* ── MAIN ── */
+        main {
+            position: relative;
+            z-index: 1;
+            padding-top: 90px;
+        }
+
+        /* ── PRESS HERO ── */
+        #press-hero {
+            padding: 60px 0 50px;
+            position: relative;
+        }
+
+        .breadcrumb {
+            font-size: 0.78rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: var(--text-dim);
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .breadcrumb a {
+            color: var(--text-muted);
+            transition: color 0.3s;
+        }
+        .breadcrumb a:hover { color: var(--cyan); }
+        .breadcrumb .sep { color: var(--text-dim); }
+        .breadcrumb .current { color: var(--cyan); }
+
+        .press-label {
+            display: inline-block;
+            font-size: 0.78rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--cyan);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 50px;
+            padding: 6px 16px;
+            margin-bottom: 28px;
+        }
+
+        .press-hero-logo {
+            display: block;
+            width: 100%;
+            max-width: 420px;
+            height: auto;
+            margin: 0 0 24px;
+            object-fit: contain;
+        }
+
+        .hero-title {
+            font-size: clamp(2.8rem, 6.5vw, 6rem);
+            font-weight: 700;
+            line-height: 0.95;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+            color: var(--fg);
+            margin-bottom: 18px;
+        }
+
+        .hero-tagline {
+            font-size: clamp(1.1rem, 2vw, 1.6rem);
+            font-weight: 300;
+            line-height: 1.4;
+            color: var(--text-muted);
+            margin-bottom: 36px;
+            max-width: 60ch;
+        }
+        .hero-tagline strong {
+            color: var(--fg);
+            font-weight: 500;
+        }
+
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 36px;
+        }
+
+        .chip {
+            font-size: 0.78rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            border: 1px solid var(--surface-border);
+            border-radius: 50px;
+            padding: 6px 16px;
+            white-space: nowrap;
+        }
+        .chip-cyan {
+            color: var(--cyan);
+            border-color: rgba(0, 255, 255, 0.3);
+        }
+        .chip-yellow {
+            color: var(--yellow);
+            border-color: rgba(255, 255, 0, 0.3);
+        }
+
+        /* ── QUICK NAV (jump links) ── */
+        .quick-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 32px;
+            padding: 22px 0;
+            border-top: 1px solid var(--surface-border);
+            border-bottom: 1px solid var(--surface-border);
+        }
+        .quick-nav a {
+            font-size: 0.82rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-muted);
+            transition: color 0.3s;
+            padding: 4px 0;
+        }
+        .quick-nav a:hover { color: var(--cyan); }
+
+        /* ── SECTIONS ── */
+        section.kit-section {
+            padding: 70px 0;
+            border-bottom: 1px solid var(--surface-border);
+        }
+
+        .section-label {
+            font-size: 0.78rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: var(--text-dim);
+            margin-bottom: 16px;
+        }
+
+        .section-heading {
+            font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: -0.01em;
+            line-height: 1.1;
+            margin-bottom: 36px;
+        }
+
+        /* ── BUTTON ── */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            font-family: var(--font);
+            font-size: 0.82rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--cyan);
+            background: transparent;
+            border: 1px solid var(--cyan);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.3s var(--ease-standard),
+                        color 0.3s var(--ease-standard),
+                        transform 0.3s var(--ease-standard);
+        }
+        .btn:hover {
+            background: var(--cyan);
+            color: var(--bg);
+            transform: translateY(-2px);
+        }
+        .btn:focus-visible {
+            outline: 2px solid var(--cyan);
+            outline-offset: 4px;
+        }
+        .btn-muted {
+            color: var(--text-muted);
+            border-color: var(--surface-border);
+        }
+        .btn-muted:hover {
+            background: var(--surface-raised);
+            color: var(--fg);
+            border-color: var(--text-muted);
+        }
+        .btn-large {
+            padding: 16px 32px;
+            font-size: 0.9rem;
+        }
+
+        /* ── TRAILER ── */
+        .trailer-wrap {
+            position: relative;
+            aspect-ratio: 16 / 9;
+            width: 100%;
+            background: var(--surface-raised);
+            border: 1px solid var(--surface-border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .trailer-wrap iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+        .trailer-placeholder {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            text-align: center;
+            padding: 20px;
+        }
+        .trailer-placeholder .icon {
+            font-size: 3rem;
+            color: var(--text-dim);
+            margin-bottom: 16px;
+            line-height: 1;
+        }
+        .trailer-placeholder .note {
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-dim);
+        }
+
+        /* ── FACTSHEET ── */
+        .factsheet {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 0;
+            border-top: 1px solid var(--surface-border);
+        }
+        .factsheet dt,
+        .factsheet dd {
+            padding: 16px 4px;
+            border-bottom: 1px solid var(--surface-border);
+        }
+        .factsheet dt {
+            font-size: 0.82rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-dim);
+        }
+        .factsheet dd {
+            font-size: 0.98rem;
+            font-weight: 300;
+            color: var(--fg);
+            line-height: 1.6;
+        }
+        .factsheet dd a {
+            color: var(--cyan);
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.3s;
+        }
+        .factsheet dd a:hover { border-bottom-color: var(--cyan); }
+        .factsheet dd .todo {
+            color: var(--yellow);
+            font-style: italic;
+            opacity: 0.75;
+        }
+
+        /* ── DESCRIPTION TABS ── */
+        .desc-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 28px;
+            border-bottom: 1px solid var(--surface-border);
+            flex-wrap: wrap;
+        }
+        .desc-tab {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            padding: 12px 20px;
+            font-family: var(--font);
+            font-size: 0.82rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color 0.3s, border-color 0.3s;
+            margin-bottom: -1px;
+        }
+        .desc-tab:hover { color: var(--fg); }
+        .desc-tab.active {
+            color: var(--cyan);
+            border-bottom-color: var(--cyan);
+        }
+        .desc-tab:focus-visible {
+            outline: 2px solid var(--cyan);
+            outline-offset: 2px;
+        }
+
+        .desc-panel {
+            display: none;
+            background: var(--surface-raised);
+            border: 1px solid var(--surface-border);
+            border-radius: 12px;
+            padding: 28px 30px 24px;
+        }
+        .desc-panel.active { display: block; }
+        .desc-panel-text {
+            font-size: 1rem;
+            font-weight: 300;
+            line-height: 1.75;
+            color: var(--fg);
+            white-space: pre-wrap;
+            max-width: 75ch;
+        }
+        .desc-panel-text em {
+            color: var(--cyan);
+            font-style: italic;
+        }
+        .desc-panel-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 22px;
+            padding-top: 18px;
+            border-top: 1px solid var(--surface-border);
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .word-count {
+            font-size: 0.78rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-dim);
+        }
+
+        /* ── LOCALE / STORE DESCRIPTION ── */
+        .locale-controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+        }
+        .locale-label {
+            font-size: 0.78rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-dim);
+        }
+        .locale-select {
+            font-family: var(--font);
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--fg);
+            background: var(--surface-raised);
+            border: 1px solid var(--surface-border);
+            border-radius: 8px;
+            padding: 10px 16px;
+            cursor: pointer;
+            transition: border-color 0.3s;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath fill='%2300ffff' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            background-size: 10px;
+            padding-right: 36px;
+            min-width: 180px;
+        }
+        .locale-select:hover { border-color: var(--cyan); }
+        .locale-select:focus-visible {
+            outline: 2px solid var(--cyan);
+            outline-offset: 2px;
+        }
+
+        .store-block {
+            background: var(--surface-raised);
+            border: 1px solid var(--surface-border);
+            border-radius: 12px;
+            padding: 28px 30px 24px;
+            margin-bottom: 20px;
+        }
+        .store-block-label {
+            font-size: 0.78rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-dim);
+            margin-bottom: 14px;
+        }
+        .store-short-text {
+            font-size: 1rem;
+            font-weight: 300;
+            line-height: 1.7;
+            color: var(--fg);
+            max-width: 75ch;
+        }
+        .store-long-text {
+            font-size: 0.98rem;
+            font-weight: 300;
+            line-height: 1.75;
+            color: var(--fg);
+            max-width: 75ch;
+        }
+        .store-long-text .bb-h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: -0.01em;
+            color: var(--fg);
+            margin: 0 0 14px;
+            line-height: 1.2;
+        }
+        .store-long-text .bb-h2 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--cyan);
+            margin: 24px 0 10px;
+            line-height: 1.25;
+        }
+        .store-long-text strong { font-weight: 500; color: var(--fg); }
+        .store-long-text .bb-list {
+            list-style: none;
+            margin: 6px 0 10px;
+            padding-left: 0;
+        }
+        .store-long-text .bb-list li {
+            position: relative;
+            padding-left: 18px;
+            margin-bottom: 6px;
+        }
+        .store-long-text .bb-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 12px;
+            width: 8px;
+            height: 1px;
+            background: var(--cyan);
+        }
+        .store-long-text p {
+            margin-bottom: 12px;
+        }
+
+        .store-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 18px;
+            padding-top: 16px;
+            border-top: 1px solid var(--surface-border);
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        /* ── QUOTES ── */
+        .quotes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .quote-card {
+            background: var(--surface-raised);
+            border: 1px solid var(--surface-border);
+            border-radius: 12px;
+            padding: 28px 28px 24px;
+            position: relative;
+        }
+        .quote-card::before {
+            content: '"';
+            position: absolute;
+            top: 8px;
+            left: 18px;
+            font-size: 3.5rem;
+            color: var(--cyan);
+            opacity: 0.15;
+            font-weight: 700;
+            line-height: 1;
+        }
+        .quote-text {
+            font-size: 1.05rem;
+            font-weight: 300;
+            line-height: 1.6;
+            color: var(--fg);
+            margin-bottom: 18px;
+            position: relative;
+            z-index: 1;
+        }
+        .quote-attr {
+            font-size: 0.78rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-muted);
+        }
+
+        /* ── SCREENSHOTS ── */
+        .screenshots-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+        .screenshot-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            background: var(--surface-raised);
+            border: 1px solid var(--surface-border);
+            aspect-ratio: 16 / 9;
+            cursor: pointer;
+            transition: transform 0.3s var(--ease-standard),
+                        border-color 0.3s;
+        }
+        .screenshot-item:hover {
+            transform: translateY(-2px);
+            border-color: rgba(0, 255, 255, 0.4);
+        }
+        .screenshot-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .screenshot-empty {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-dim);
+        }
+        .screenshot-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 255, 255, 0.06);
+            opacity: 0;
+            transition: opacity 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .screenshot-item:hover .screenshot-overlay { opacity: 1; }
+        .zoom-icon {
+            width: 44px; height: 44px;
+            border: 1px solid rgba(0, 255, 255, 0.5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cyan);
+            font-size: 1.3rem;
+            line-height: 1;
+            user-select: none;
+        }
+        .screenshots-note {
+            margin-top: 20px;
+            font-size: 0.82rem;
+            color: var(--text-dim);
+        }
+
+        /* ── ASSETS GRID ── */
+        .assets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 14px;
+        }
+        .asset-card {
+            background: var(--surface-raised);
+            border: 1px solid var(--surface-border);
+            border-radius: 12px;
+            padding: 22px 22px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: border-color 0.3s, transform 0.3s var(--ease-standard);
+        }
+        .asset-card:hover {
+            border-color: rgba(0, 255, 255, 0.4);
+            transform: translateY(-2px);
+        }
+        .asset-card-title {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--fg);
+        }
+        .asset-card-meta {
+            font-size: 0.78rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-dim);
+            margin-bottom: 8px;
+        }
+        .asset-card .btn {
+            align-self: flex-start;
+            margin-top: 6px;
+        }
+
+        .download-all {
+            margin-top: 28px;
+            padding: 24px 28px;
+            background: var(--surface-raised);
+            border: 1px solid rgba(0, 255, 255, 0.25);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .download-all-text {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--fg);
+        }
+        .download-all-meta {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            font-weight: 300;
+            margin-top: 2px;
+        }
+
+        /* ── CONTACT ── */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+        .contact-card {
+            background: var(--surface-raised);
+            border: 1px solid var(--surface-border);
+            border-radius: 12px;
+            padding: 24px 26px 22px;
+        }
+        .contact-card-label {
+            font-size: 0.78rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-dim);
+            margin-bottom: 10px;
+        }
+        .contact-card-value {
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: var(--fg);
+            word-break: break-word;
+        }
+        .contact-card-value a {
+            color: var(--cyan);
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.3s;
+        }
+        .contact-card-value a:hover { border-bottom-color: var(--cyan); }
+
+        /* ── LINKS ── */
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 260px));
+            gap: 12px;
+        }
+        .link-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background: var(--surface-raised);
+            border: 1px solid var(--surface-border);
+            border-radius: 10px;
+            color: var(--fg);
+            font-size: 0.92rem;
+            font-weight: 500;
+            transition: border-color 0.3s, color 0.3s, transform 0.3s var(--ease-standard);
+        }
+        .link-card:hover {
+            border-color: var(--cyan);
+            color: var(--cyan);
+            transform: translateY(-2px);
+        }
+        .link-card .arrow {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            transition: color 0.3s, transform 0.3s;
+        }
+        .link-card:hover .arrow {
+            color: var(--cyan);
+            transform: translate(2px, -2px);
+        }
+
+        /* ── COPY BUTTON FEEDBACK ── */
+        .copy-btn[data-copied="true"] {
+            background: var(--cyan);
+            color: var(--bg);
+        }
+
+        /* ── LIGHTBOX ── */
+        #lightbox {
+            border: none;
+            background: transparent;
+            padding: 0;
+            margin: 0;
+            max-width: 100vw;
+            max-height: 100vh;
+            width: 100vw;
+            height: 100vh;
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+        }
+        #lightbox::backdrop {
+            background: rgba(5, 5, 5, 0.96);
+        }
+        .lightbox-inner {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        #lightbox-img {
+            max-width: 88vw;
+            max-height: 80vh;
+            object-fit: contain;
+            border-radius: 8px;
+            display: block;
+        }
+        .lightbox-close {
+            position: absolute;
+            top: 24px; right: 28px;
+            width: 44px; height: 44px;
+            background: transparent;
+            border: 1px solid var(--surface-border);
+            border-radius: 50%;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: border-color 0.3s, color 0.3s;
+            font-family: var(--font);
+            line-height: 1;
+        }
+        .lightbox-close:hover {
+            border-color: var(--cyan);
+            color: var(--cyan);
+        }
+        .lightbox-download {
+            position: absolute;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 36px 20px;
+            border-top: 1px solid var(--surface-border);
+            color: var(--text-dim);
+            font-size: 0.82rem;
+            font-weight: 500;
+        }
+        footer a {
+            color: var(--text-muted);
+            transition: color 0.3s;
+        }
+        footer a:hover { color: var(--cyan); }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 1024px) {
+            .container { padding: 0 24px; }
+            .menu-toggle { display: flex; }
+            .nav-links {
+                position: fixed;
+                top: 0; right: 0;
+                height: 100vh;
+                width: 70%;
+                background: rgba(5, 5, 5, 0.98);
+                backdrop-filter: blur(14px);
+                -webkit-backdrop-filter: blur(14px);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 40px;
+                transform: translateX(100%);
+                transition: transform 0.4s var(--ease-standard);
+                z-index: 99;
+                border-left: 1px solid var(--surface-border);
+            }
+            .nav-links.open { transform: translateX(0); }
+            .screenshots-grid { grid-template-columns: repeat(2, 1fr); }
+            .factsheet { grid-template-columns: 160px 1fr; }
+        }
+
+        @media (max-width: 700px) {
+            section.kit-section { padding: 50px 0; }
+            .screenshots-grid { grid-template-columns: 1fr; }
+            .factsheet {
+                grid-template-columns: 1fr;
+            }
+            .factsheet dt {
+                padding-bottom: 4px;
+                border-bottom: none;
+            }
+            .factsheet dd {
+                padding-top: 4px;
+            }
+            .quick-nav { gap: 4px 18px; }
+            .quick-nav a { font-size: 0.75rem; }
+            .desc-panel { padding: 20px 22px; }
+            .download-all { padding: 18px 22px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="ambient ambient-1" aria-hidden="true"></div>
+    <div class="ambient ambient-2" aria-hidden="true"></div>
+
+    <header id="site-header">
+        <div class="container">
+            <nav aria-label="Main navigation">
+                <a href="index.html" class="logo" aria-label="MJ Portfolio — homepage">MJ<span>.</span></a>
+
+                <button class="menu-toggle" id="menu-toggle"
+                        aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </button>
+
+                <ul class="nav-links" id="nav-links" role="list">
+                    <li><a href="index.html#about">O mnie</a></li>
+                    <li><a href="index.html#work">Web</a></li>
+                    <li><a href="grafika.html">Grafika</a></li>
+                    <li><a href="gra.html" class="active">Gra</a></li>
+                    <li><a href="index.html#contact">Kontakt</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+
+        <!-- ── PRESS HERO ── -->
+        <section id="press-hero">
+            <div class="container">
+                <nav class="breadcrumb" aria-label="Breadcrumb">
+                    <a href="index.html">Portfolio</a>
+                    <span class="sep">/</span>
+                    <a href="gra.html">SPACEFIGHTER</a>
+                    <span class="sep">/</span>
+                    <span class="current">Press Kit</span>
+                </nav>
+
+                <span class="press-label">Press Kit</span>
+
+                <img src="press/logo/LOGOGRY.png" alt="" class="press-hero-logo" loading="eager">
+
+                <h1 class="hero-title">SPACEFIGHTER<br>The Bullet Hell</h1>
+
+                <p class="hero-tagline">
+                    <strong>Vampire Survivors meets bullet hell — in space.</strong>
+                    A top-down bullet-heaven roguelite where every run is a new build.
+                    Solo-dev project launching <strong>June 8, 2026</strong> inside Steam Bullet Fest 2026.
+                </p>
+
+                <div class="hero-meta">
+                    <span class="chip chip-yellow">Releases June 8, 2026</span>
+                    <span class="chip chip-cyan">Steam · Windows</span>
+                    <span class="chip">Bullet Heaven</span>
+                    <span class="chip">Roguelite</span>
+                    <span class="chip">Survivors-like</span>
+                    <span class="chip">Solo Dev</span>
+                </div>
+
+                <nav class="quick-nav" aria-label="Press kit sections">
+                    <a href="#trailer">Trailer</a>
+                    <a href="#factsheet">Factsheet</a>
+                    <a href="#description">Description</a>
+                    <a href="#store">Store copy</a>
+                    <a href="#quotes">Quotes</a>
+                    <a href="#screenshots">Screenshots</a>
+                    <a href="#assets">Assets</a>
+                    <a href="#contact">Contact</a>
+                </nav>
+            </div>
+        </section>
+
+        <!-- ── TRAILER ── -->
+        <section class="kit-section" id="trailer">
+            <div class="container">
+                <p class="section-label">01 — Trailer</p>
+                <h2 class="section-heading">Watch the trailer</h2>
+
+                <div class="trailer-wrap">
+                    <!-- TODO: Replace src with your YouTube embed URL once trailer is uploaded.
+                         Format: https://www.youtube.com/embed/VIDEO_ID
+                         Then delete .trailer-placeholder div below. -->
+                    <div class="trailer-placeholder" id="trailer-placeholder">
+                        <div class="icon">▶</div>
+                        <div class="note">Trailer embed — TODO: paste YouTube URL</div>
+                    </div>
+                    <!-- <iframe
+                        src="https://www.youtube.com/embed/REPLACE_VIDEO_ID"
+                        title="SPACEFIGHTER — Official Trailer"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen
+                        loading="lazy"></iframe> -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ── FACTSHEET ── -->
+        <section class="kit-section" id="factsheet">
+            <div class="container">
+                <p class="section-label">02 — Factsheet</p>
+                <h2 class="section-heading">At a glance</h2>
+
+                <dl class="factsheet">
+                    <dt>Title</dt>
+                    <dd>SPACEFIGHTER - The Bullet Hell</dd>
+
+                    <dt>Developer</dt>
+                    <dd>Michał JARO Jarosiński (solo)</dd>
+
+                    <dt>Publisher</dt>
+                    <dd>Michał JARO Jarosiński (self-published)</dd>
+
+                    <dt>Based in</dt>
+                    <dd>Wrocław, Poland</dd>
+
+                    <dt>Release date</dt>
+                    <dd>June 8, 2026 — inside <strong>Steam Bullet Fest 2026</strong> (June 8–15)</dd>
+
+                    <dt>Platforms</dt>
+                    <dd>Windows (Steam)</dd>
+
+                    <dt>Genres</dt>
+                    <dd>Bullet Heaven · Roguelite · Top-Down Shooter · Survivors-like</dd>
+
+                    <dt>Price</dt>
+                    <dd>$2.99 USD (official launch price)</dd>
+
+                    <dt>Languages</dt>
+                    <dd>English (interface + audio) · Store page in EN, 简体中文, Русский, Deutsch, 日本語, Português-BR, Español-LatAm, Français, Polski</dd>
+
+                    <dt>Engine</dt>
+                    <dd>Kotlin + LibGDX</dd>
+
+                    <dt>Length</dt>
+                    <dd>8–15h base game, hundreds of hours for completionists</dd>
+
+                    <dt>Steam page</dt>
+                    <dd><a href="https://store.steampowered.com/app/4451950/SPACEFIGHTER__The_Bullet_Hell/" target="_blank" rel="noopener noreferrer">store.steampowered.com/app/4451950 ↗</a></dd>
+
+                    <dt>Press contact</dt>
+                    <dd><a href="mailto:support.spacefighter@gmail.com">support.spacefighter@gmail.com</a></dd>
+                </dl>
+            </div>
+        </section>
+
+        <!-- ── DESCRIPTION 3 LENGTHS ── -->
+        <section class="kit-section" id="description">
+            <div class="container">
+                <p class="section-label">03 — Description</p>
+                <h2 class="section-heading">Three lengths, ready to paste</h2>
+
+                <div class="desc-tabs" role="tablist" aria-label="Description length">
+                    <button class="desc-tab active" role="tab" aria-selected="true"
+                            aria-controls="desc-50" data-target="desc-50">50 words</button>
+                    <button class="desc-tab" role="tab" aria-selected="false"
+                            aria-controls="desc-200" data-target="desc-200">200 words</button>
+                    <button class="desc-tab" role="tab" aria-selected="false"
+                            aria-controls="desc-500" data-target="desc-500">500 words</button>
+                </div>
+
+                <div class="desc-panel active" id="desc-50" role="tabpanel">
+                    <p class="desc-panel-text" data-copy-source>SPACEFIGHTER is a top-down bullet-heaven roguelite where every run is a new build. Stack three weapon trees into broken synergies, fight bosses with real mechanics, and survive the chaos. Solo-dev project launching June 8 on Steam — right inside Steam Bullet Fest 2026.</p>
+                    <div class="desc-panel-footer">
+                        <span class="word-count">~50 words · tweet / one-liner</span>
+                        <button class="btn btn-muted copy-btn" data-copy="desc-50">Copy to clipboard</button>
+                    </div>
+                </div>
+
+                <div class="desc-panel" id="desc-200" role="tabpanel">
+                    <p class="desc-panel-text" data-copy-source>SPACEFIGHTER - The Bullet Hell is a top-down auto-shooter survival game launching June 8, 2026, on Steam — directly inside Steam Bullet Fest 2026. The game blends bullet-heaven structure (Vampire Survivors, Brotato) with shooter craft (real boss mechanics, weapon synergies, pilot identity).
+
+Players pilot a 2D starship and build their arsenal across three branching weapon trees — ballistic, explosive, and energy — fusing them into cross-tree synergies that break the game by minute 12 (if you choose well). Bosses arrive with telegraphed patterns, weak points, and phase transitions. Meta-progression unlocks new ships, branches, and modifiers across deaths.
+
+The game is built solo by Michał JARO Jarosiński (Wrocław, Poland) using a modern AI-assisted development workflow — Claude Code for the codebase, AI image tools for a portion of visual assets, with creative direction, balancing, and integration owned by the developer. Full AI disclosure is on the Steam page.
+
+Launch coincides with Steam Bullet Fest 2026 (June 8–15) and the Steam Summer Sale (June 25–July 9). Official launch price: $2.99 USD.</p>
+                    <div class="desc-panel-footer">
+                        <span class="word-count">~200 words · article intro</span>
+                        <button class="btn btn-muted copy-btn" data-copy="desc-200">Copy to clipboard</button>
+                    </div>
+                </div>
+
+                <div class="desc-panel" id="desc-500" role="tabpanel">
+                    <p class="desc-panel-text" data-copy-source>When Vampire Survivors showed up in 2022, one dev with a tiny engine kicked off a whole genre. Three years later, "bullet heaven" is one of the most copied formats on Steam — and most copies miss what made the original click: the meta-loop, the build identity, the feeling that you found the synergy.
+
+SPACEFIGHTER - The Bullet Hell is one solo dev's answer to "what should a bullet heaven feel like in 2026?" Pilot a 2D starship, choose from a roster of ships with distinct kits, and grow your arsenal across three weapon trees — ballistic, explosive, and energy. Each tree has its own scaling identity: ballistic rewards precision and consecutive hits, explosive cranks chain detonations and area control, energy is the synergy-builder with beams, lock-on, and regen tools. The fun is in the cross-tree combinations — 5 explosive plus 2 energy turns into chain detonations on energy crit; 4 ballistic plus 3 explosive turns into piercing rounds that detonate at max range. By minute 12 of a good run, the screen is unreadable and you're a god.
+
+Where many survivors-likes stumble is the boss design. SPACEFIGHTER answers with bosses that have real kits: telegraphed wind-ups, weak points, phase transitions, patterns to learn. The first kill feels earned. The first wipe teaches something. Death is data — and meta-progression unlocks new ships, new branches, new starting modifiers each time.
+
+The game is built by Michał JARO Jarosiński, a solo developer from Wrocław, Poland, using a modern AI-assisted workflow. Claude Code (Anthropic) handles the codebase under his direction. AI image tools cover a portion of visual assets, with the developer doing direction, editing, balancing, audio, and final integration. The Steam page has full AI disclosure. It's part of an emerging movement of solo developers shipping at content scale that would have required full studios five years ago — and Jarosiński is openly documenting the workflow because, as he puts it, "transparency is the only way this works long-term."
+
+SPACEFIGHTER launches June 8, 2026 — squarely inside Steam Bullet Fest 2026 (June 8–15), Valve's first dedicated showcase for the bullet hell / bullet heaven genre. A second push lands during Steam Summer Sale (June 25 – July 9). Official launch price: $2.99 USD.
+
+For fans of Vampire Survivors, Brotato, Halls of Torment, and 20 Minutes Till Dawn — but with bosses that actually fight back.</p>
+                    <div class="desc-panel-footer">
+                        <span class="word-count">~500 words · review-ready</span>
+                        <button class="btn btn-muted copy-btn" data-copy="desc-500">Copy to clipboard</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── STORE DESCRIPTION (LOCALIZED) ── -->
+        <section class="kit-section" id="store">
+            <div class="container">
+                <p class="section-label">04 — Store description</p>
+                <h2 class="section-heading">Localized store copy</h2>
+
+                <div class="locale-controls">
+                    <span class="locale-label">Language</span>
+                    <select id="locale-select" class="locale-select" aria-label="Choose language">
+                        <option value="en">English</option>
+                        <option value="pl">Polski</option>
+                        <option value="de">Deutsch</option>
+                        <option value="es-LA">Español (LatAm)</option>
+                        <option value="fr">Français</option>
+                        <option value="ja">日本語</option>
+                        <option value="pt-BR">Português (BR)</option>
+                        <option value="ru">Русский</option>
+                        <option value="zh-CN">简体中文</option>
+                    </select>
+                </div>
+
+                <div class="store-block">
+                    <p class="store-block-label">Short description (≤ 300 chars)</p>
+                    <p class="store-short-text" id="store-short" data-copy-source></p>
+                    <div class="store-footer">
+                        <span class="word-count" id="store-short-meta"></span>
+                        <button class="btn btn-muted copy-btn" data-copy="store-short">Copy to clipboard</button>
+                    </div>
+                </div>
+
+                <div class="store-block">
+                    <p class="store-block-label">Long description (Steam-ready)</p>
+                    <div class="store-long-text" id="store-long"></div>
+                    <textarea id="store-long-raw" data-copy-source style="display:none;"></textarea>
+                    <div class="store-footer">
+                        <span class="word-count" id="store-long-meta">BBCode preserved</span>
+                        <button class="btn btn-muted copy-btn" data-copy="store-long-raw" data-format="bbcode">Copy as BBCode</button>
+                        <button class="btn btn-muted copy-btn" data-copy="store-long" data-format="text">Copy as plain text</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── QUOTES ── -->
+        <section class="kit-section" id="quotes">
+            <div class="container">
+                <p class="section-label">05 — Quotes</p>
+                <h2 class="section-heading">Developer quotes</h2>
+
+                <div class="quotes-grid">
+                    <blockquote class="quote-card">
+                        <p class="quote-text">I built the <em>Vampire Survivors</em> I'd want to play in 2026 — with bosses that actually fight back.</p>
+                        <footer class="quote-attr">— Michał JARO Jarosiński, developer</footer>
+                    </blockquote>
+
+                    <blockquote class="quote-card">
+                        <p class="quote-text">Solo dev plus modern AI-assisted workflow is the future of indie content scale. I'm not hiding the tools — they let me ship things one person couldn't ship five years ago.</p>
+                        <footer class="quote-attr">— Michał JARO Jarosiński, developer</footer>
+                    </blockquote>
+
+                    <blockquote class="quote-card">
+                        <p class="quote-text">Bullet heaven is the most exciting genre on Steam in 2026, and survivors-like fans deserve more than HP-sponge bosses.</p>
+                        <footer class="quote-attr">— Michał JARO Jarosiński, developer</footer>
+                    </blockquote>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── SCREENSHOTS ── -->
+        <section class="kit-section" id="screenshots">
+            <div class="container">
+                <p class="section-label">06 — Screenshots</p>
+                <h2 class="section-heading">Gallery</h2>
+
+                <div class="screenshots-grid" id="screenshots-grid">
+                    <!-- Screenshots are generated from the SCREENSHOTS array in the script below.
+                         To add/remove/reorder, edit that array. -->
+                </div>
+
+                <p class="screenshots-note">
+                    Click any screenshot to view full-size · all images are high-resolution, free to use for editorial coverage with credit to <strong>Michał JARO Jarosiński</strong>.
+                </p>
+            </div>
+        </section>
+
+        <!-- ── ASSETS ── -->
+        <section class="kit-section" id="assets">
+            <div class="container">
+                <p class="section-label">07 — Assets</p>
+                <h2 class="section-heading">Logos &amp; capsule art</h2>
+
+                <div class="assets-grid">
+                    <div class="asset-card">
+                        <div class="asset-card-meta">Logo</div>
+                        <div class="asset-card-title">Game logo (transparent PNG)</div>
+                        <a href="press/logo/LOGOGRY.png" download class="btn btn-muted" aria-label="Download game logo">Download PNG ↓</a>
+                    </div>
+
+                    <div class="asset-card">
+                        <div class="asset-card-meta">Capsule</div>
+                        <div class="asset-card-title">Header capsule (Steam)</div>
+                        <a href="press/capsule/store_capsule_header.png" download class="btn btn-muted">Download PNG ↓</a>
+                    </div>
+
+                    <div class="asset-card">
+                        <div class="asset-card-meta">Capsule</div>
+                        <div class="asset-card-title">Small capsule</div>
+                        <a href="press/capsule/store_capsule_small.png" download class="btn btn-muted">Download PNG ↓</a>
+                    </div>
+
+                    <div class="asset-card">
+                        <div class="asset-card-meta">Capsule</div>
+                        <div class="asset-card-title">Library capsule</div>
+                        <a href="press/capsule/library_capsule.png" download class="btn btn-muted">Download PNG ↓</a>
+                    </div>
+                </div>
+
+                <!-- TODO: Build press-kit.zip containing screenshots + logos + capsules + factsheet.txt,
+                     place at press/press-kit.zip, then this button will work. -->
+                <div class="download-all">
+                    <div>
+                        <div class="download-all-text">Download everything as ZIP</div>
+                        <div class="download-all-meta">Screenshots · logos · capsules · factsheet — single bundle</div>
+                    </div>
+                    <a href="press/press-kit.zip" download class="btn btn-large">Download press-kit.zip ↓</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── CONTACT ── -->
+        <section class="kit-section" id="contact">
+            <div class="container">
+                <p class="section-label">08 — Press contact</p>
+                <h2 class="section-heading">Get in touch</h2>
+
+                <div class="contact-grid">
+                    <div class="contact-card">
+                        <div class="contact-card-label">Email</div>
+                        <div class="contact-card-value">
+                            <a href="mailto:support.spacefighter@gmail.com">support.spacefighter@gmail.com</a>
+                        </div>
+                    </div>
+
+                    <div class="contact-card">
+                        <div class="contact-card-label">Developer</div>
+                        <div class="contact-card-value">Michał JARO Jarosiński<br><span style="font-weight:300;color:var(--text-muted);font-size:0.9rem;">Wrocław, Poland · solo indie</span></div>
+                    </div>
+
+                    <div class="contact-card">
+                        <div class="contact-card-label">Steam keys for coverage</div>
+                        <div class="contact-card-value" style="font-size:0.95rem;font-weight:300;">
+                            Available on request — email for press / streamer / Curator access.
+                        </div>
+                    </div>
+                </div>
+
+                <p class="section-label" style="margin-top:8px;">Follow / connect</p>
+                <div class="links-grid">
+                    <a href="https://store.steampowered.com/app/4451950/SPACEFIGHTER__The_Bullet_Hell/" target="_blank" rel="noopener noreferrer" class="link-card">
+                        <span>Steam page</span><span class="arrow">↗</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- LIGHTBOX -->
+    <dialog id="lightbox" aria-label="Screenshot preview">
+        <div class="lightbox-inner">
+            <button class="lightbox-close" aria-label="Close preview">✕</button>
+            <img id="lightbox-img" src="" alt="">
+            <a id="lightbox-download" class="btn lightbox-download" download href="">Download full-size ↓</a>
+        </div>
+    </dialog>
+
+    <footer>
+        <p>© 2026 Michał Jarosiński · <a href="index.html">Portfolio</a> · <a href="gra.html">Game page</a></p>
+    </footer>
+
+    <script>
+        // ── MOBILE MENU ──
+        const menuToggle = document.getElementById('menu-toggle');
+        const navLinks = document.getElementById('nav-links');
+        menuToggle.addEventListener('click', () => {
+            const open = menuToggle.classList.toggle('open');
+            navLinks.classList.toggle('open', open);
+            menuToggle.setAttribute('aria-expanded', String(open));
+            menuToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+        });
+        navLinks.querySelectorAll('a').forEach(a => {
+            a.addEventListener('click', () => {
+                menuToggle.classList.remove('open');
+                navLinks.classList.remove('open');
+                menuToggle.setAttribute('aria-expanded', 'false');
+            });
+        });
+
+        // ── DESCRIPTION TABS ──
+        const tabs = document.querySelectorAll('.desc-tab');
+        const panels = document.querySelectorAll('.desc-panel');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const target = tab.dataset.target;
+                tabs.forEach(t => {
+                    const active = t === tab;
+                    t.classList.toggle('active', active);
+                    t.setAttribute('aria-selected', String(active));
+                });
+                panels.forEach(p => {
+                    p.classList.toggle('active', p.id === target);
+                });
+            });
+        });
+
+        // ── COPY TO CLIPBOARD ──
+        document.querySelectorAll('.copy-btn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const targetId = btn.dataset.copy;
+                const target = document.getElementById(targetId);
+                if (!target) return;
+
+                let text;
+                if (target.tagName === 'TEXTAREA') {
+                    text = target.value;
+                } else if (btn.dataset.format === 'text') {
+                    text = target.innerText;
+                } else {
+                    text = target.textContent || target.innerText;
+                }
+                text = text.trim();
+
+                try {
+                    await navigator.clipboard.writeText(text);
+                    const original = btn.textContent;
+                    btn.dataset.copied = 'true';
+                    btn.textContent = 'Copied ✓';
+                    setTimeout(() => {
+                        btn.dataset.copied = 'false';
+                        btn.textContent = original;
+                    }, 1800);
+                } catch (e) {
+                    // Fallback: select text manually
+                    const range = document.createRange();
+                    range.selectNodeContents(target);
+                    const sel = window.getSelection();
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                }
+            });
+        });
+
+        // ── LOCALE / STORE DESCRIPTION ──
+        const LOCALES = {
+            'en': {
+                short: 'Vampire Survivors meets bullet hell — in space. Pilot a 2D starship, fuse weapon branches into broken builds, and survive waves of bullets and bosses with real mechanics. Solo dev project.',
+                long: `[h1]SPACEFIGHTER — Bullet Heaven in Space[/h1]
+
+[b]Vampire Survivors meets bullet hell.[/b] One pilot, one ship, hundreds of enemies on screen, and a build that breaks the game by minute 12 — if you choose the right upgrades.
+
+[h2]Build your run[/h2]
+Every run starts with a ship choice and an empty arsenal. As you level up, you pick from three weapon branches:
+[list]
+[*][b]Ballistic[/b] — fast, precise, scales with crit and pierce
+[*][b]Explosive[/b] — area damage, knockback, chain detonations
+[*][b]Energy[/b] — beams, lock-on, energy regen synergies
+[/list]
+Mix branches for cross-tree synergies, or specialize for runaway scaling. Passive upgrades amplify whatever direction you commit to. No "best build" — just builds that work this run.
+
+[h2]Bosses with real mechanics[/h2]
+Forget bullet-sponges. Every boss has a kit: tells, weak points, phase transitions, and patterns you'll learn the hard way before you learn them the right way. Defeating a boss feels earned. Failing teaches you something.
+
+[h2]Survive the waves[/h2]
+Enemy variety scales with run length. Swarms, snipers, dive bombers, splitters, mini-bosses that demand your attention while the swarm catches up from behind. The screen will fill. Your job is to thrive in it.
+
+[h2]Meta-progression[/h2]
+Death is data. Each run unlocks new ships, new upgrade branches, new starting conditions and modifiers. The game opens up as you fail forward.
+
+[h2]Built solo[/h2]
+SPACEFIGHTER is a one-developer project. Game design, balancing, level structure, audio direction and final integration are mine. I used a modern AI-assisted workflow (Claude Code for codebase, AI tools for a portion of visual assets) to ship this solo — full disclosure in the AI Content section below.
+
+[h2]At a glance[/h2]
+[list]
+[*]Top-down 2D bullet-heaven / survivors-like
+[*]Branching upgrade trees with deep synergies
+[*]Bosses with mechanics, not just HP
+[*]Meta-progression across runs
+[*]Built solo, with transparency about tooling
+[/list]`
+            },
+            'pl': {
+                short: 'Vampire Survivors spotyka bullet hell — w kosmosie. Pilotuj statek 2D, łącz gałęzie broni w rozbitne buildy i przeżyj fale kul oraz bossów z prawdziwymi mechanikami. Projekt solowego indie deva.',
+                long: `[h1]SPACEFIGHTER — Bullet Heaven w Kosmosie[/h1]
+
+[b]Vampire Survivors spotyka bullet hell.[/b] Jeden pilot, jeden statek, setki wrogów na ekranie — i build, który rozrywa grę w 12. minucie, jeśli wybierzesz właściwe ulepszenia.
+
+[h2]Buduj swój run[/h2]
+Każdy run zaczyna się od wyboru statku i pustego arsenału. Z każdym poziomem wybierasz z trzech gałęzi broni:
+[list]
+[*][b]Balistyczna[/b] — szybka, precyzyjna, skaluje się z crit i przebiciem
+[*][b]Wybuchowa[/b] — obrażenia obszarowe, odrzut, łańcuchowe detonacje
+[*][b]Energetyczna[/b] — wiązki, lock-on, synergie regeneracji energii
+[/list]
+Mieszaj gałęzie dla synergii między drzewkami lub specjalizuj się dla runaway scalingu. Nie ma „najlepszego buildu" — są tylko buildy, które działają w tym runie.
+
+[h2]Bossowie z prawdziwymi mechanikami[/h2]
+Zapomnij o bullet-sponge'ach. Każdy boss ma własny zestaw ruchów: telegraphe, słabe punkty, przejścia między fazami i wzorce, których nauczysz się przez śmierć — a potem przez umiejętności. Pokonanie bossa daje satysfakcję. Porażka uczy czegoś nowego.
+
+[h2]Przeżyj fale[/h2]
+Różnorodność wrogów rośnie z długością runa. Roje, snajperzy, dive bombery, splitterzy, mini-bossowie wymagający uwagi, gdy rój dogania cię od tyłu. Ekran się zapełni. Twoim zadaniem jest w tym rozkwitać.
+
+[h2]Meta-progresja[/h2]
+Śmierć to dane. Każdy run odblokowuje nowe statki, nowe gałęzie ulepszeń, nowe warunki startowe i modyfikatory. Gra otwiera się w miarę jak ponosisz porażki i idziesz dalej.
+
+[h2]Stworzony solo[/h2]
+SPACEFIGHTER to projekt jednego dewelopera. Game design, balancing, struktura poziomów, audio direction i finalna integracja — to moja robota. Użyłem nowoczesnego workflow wspomaganego AI (Claude Code dla kodu, narzędzia AI dla części assetów wizualnych), żeby wydać to samodzielnie — pełne informacje w sekcji „AI Generated Content" na stronie Steam.
+
+[h2]W skrócie[/h2]
+[list]
+[*]Top-down 2D bullet heaven / survivors-like
+[*]Rozgałęzione drzewka ulepszeń z głębokimi synergiami
+[*]Bossowie z mechanikami, nie tylko HP
+[*]Meta-progresja między runami
+[*]Stworzony solo, z transparentnością co do narzędzi
+[/list]
+
+⚠️ Gra jest obecnie dostępna wyłącznie w języku angielskim (interfejs i audio). Strona sklepu została przetłumaczona dla wygody.`
+            },
+            'de': {
+                short: 'Vampire Survivors trifft Bullet Hell – im Weltraum. Steuere ein 2D-Raumschiff, kombiniere Waffenzweige zu kaputten Builds und überlebe Wellen von Geschossen und Bossen mit echten Mechaniken. Solo-Indie-Projekt.',
+                long: `[h1]SPACEFIGHTER — Bullet Heaven im Weltraum[/h1]
+
+[b]Vampire Survivors trifft Bullet Hell.[/b] Ein Pilot, ein Schiff, hunderte Gegner auf dem Bildschirm – und ein Build, der das Spiel ab Minute 12 zerlegt, wenn du die richtigen Upgrades wählst.
+
+[h2]Bau deinen Run[/h2]
+Jeder Run startet mit einer Schiffsauswahl und einem leeren Arsenal. Mit jedem Level wählst du aus drei Waffenzweigen:
+[list]
+[*][b]Ballistisch[/b] — schnell, präzise, skaliert mit Crit und Durchdringung
+[*][b]Explosiv[/b] — Flächenschaden, Rückstoß, Kettendetonationen
+[*][b]Energie[/b] — Strahlen, Lock-On, Energie-Regen-Synergien
+[/list]
+Mische Zweige für Cross-Tree-Synergien oder spezialisiere dich für unkontrolliertes Skaling. Es gibt keinen „besten Build" – nur Builds, die in diesem Run funktionieren.
+
+[h2]Bosse mit echten Mechaniken[/h2]
+Vergiss Bullet-Sponges. Jeder Boss hat ein Move-Set: Telegraphs, Schwachstellen, Phasenübergänge und Muster, die du erst durch Tode und dann durch Können lernst. Einen Boss zu besiegen fühlt sich verdient an. Scheitern bringt dir etwas bei.
+
+[h2]Überlebe die Wellen[/h2]
+Die Gegner-Vielfalt skaliert mit der Run-Länge. Schwärme, Scharfschützen, Sturzbomber, Splitter, Mini-Bosse, die deine Aufmerksamkeit fordern, während der Schwarm dich von hinten einholt. Der Bildschirm wird sich füllen. Deine Aufgabe: darin gedeihen.
+
+[h2]Meta-Progression[/h2]
+Tod ist Daten. Jeder Run schaltet neue Schiffe, neue Upgrade-Zweige, neue Startbedingungen und Modifikatoren frei. Das Spiel öffnet sich, während du nach vorne scheiterst.
+
+[h2]Solo entwickelt[/h2]
+SPACEFIGHTER ist ein Solo-Entwicklerprojekt. Game Design, Balancing, Level-Struktur, Audio-Direction und finale Integration sind von mir. Ich habe einen modernen KI-unterstützten Workflow (Claude Code für die Codebasis, KI-Tools für einen Teil der visuellen Assets) genutzt, um das solo zu shippen — vollständige Offenlegung auf der Steam-Seite unter „AI Generated Content".
+
+[h2]Auf einen Blick[/h2]
+[list]
+[*]Top-Down 2D Bullet Heaven / Survivors-Like
+[*]Verzweigte Upgrade-Trees mit tiefen Synergien
+[*]Bosse mit Mechaniken, nicht nur HP
+[*]Meta-Progression über Runs hinweg
+[*]Solo entwickelt, mit Transparenz über die Tools
+[/list]
+
+⚠️ Das Spiel ist derzeit nur in englischer Sprache verfügbar (Interface und Audio). Die Store-Seite wurde zur besseren Lesbarkeit übersetzt.`
+            },
+            'es-LA': {
+                short: 'Vampire Survivors se cruza con bullet hell — en el espacio. Pilota una nave 2D, fusiona ramas de armas en builds rotas, y sobrevive oleadas de balas y jefes con mecánicas reales. Proyecto solo de un desarrollador indie.',
+                long: `[h1]SPACEFIGHTER — Bullet Heaven en el Espacio[/h1]
+
+[b]Vampire Survivors se cruza con bullet hell.[/b] Un piloto, una nave, cientos de enemigos en pantalla — y una build que rompe el juego en el minuto 12, si eliges las mejoras correctas.
+
+[h2]Construye tu run[/h2]
+Cada run empieza con la elección de una nave y un arsenal vacío. Con cada nivel, eliges entre tres ramas de armas:
+[list]
+[*][b]Balístico[/b] — rápido, preciso, escala con crítico y penetración
+[*][b]Explosivo[/b] — daño en área, knockback, detonaciones en cadena
+[*][b]Energía[/b] — rayos, lock-on, sinergias de regeneración de energía
+[/list]
+Mezcla ramas para sinergias cross-tree, o especialízate para un scaling descontrolado. No hay "la mejor build" — solo builds que funcionan en esta run.
+
+[h2]Jefes con mecánicas reales[/h2]
+Olvida los enemigos esponja. Cada jefe tiene un kit: telegrafías, puntos débiles, transiciones de fase y patrones que aprendes primero muriendo, luego acertando. Derrotar a un jefe se siente ganado. Fallar te enseña algo.
+
+[h2]Sobrevive las oleadas[/h2]
+La variedad de enemigos escala con la duración de la run. Enjambres, francotiradores, bombarderos en picado, enemigos que se dividen, mini-jefes que exigen tu atención mientras el enjambre te alcanza por la espalda. La pantalla se llenará. Tu trabajo es prosperar dentro de ella.
+
+[h2]Meta-progresión[/h2]
+La muerte es información. Cada run desbloquea nuevas naves, nuevas ramas de mejora, nuevas condiciones iniciales y modificadores. El juego se expande mientras fallas hacia adelante.
+
+[h2]Desarrollo solo[/h2]
+SPACEFIGHTER es un proyecto de un solo desarrollador. El diseño del juego, el balance, la estructura de niveles, la dirección de audio y la integración final son todos míos. Usé un flujo de trabajo moderno asistido por IA (Claude Code para el código, herramientas de IA para una parte de los assets visuales) para lanzar esto solo — divulgación completa en la sección "AI Generated Content" de la página de la tienda.
+
+[h2]Resumen[/h2]
+[list]
+[*]Bullet heaven / survivors-like top-down 2D
+[*]Árboles de mejora ramificados con sinergias profundas
+[*]Jefes con mecánicas, no solo HP
+[*]Meta-progresión entre runs
+[*]Desarrollado solo, con transparencia sobre las herramientas
+[/list]
+
+⚠️ Este juego está actualmente disponible solo en inglés (interfaz y audio). La página de la tienda fue traducida para mayor comodidad.`
+            },
+            'fr': {
+                short: "Vampire Survivors rencontre le bullet hell — dans l'espace. Pilote un vaisseau 2D, fusionne les branches d'armes en builds cassés, et survis aux vagues de balles et de boss aux mécaniques réelles. Projet solo d'un développeur indé.",
+                long: `[h1]SPACEFIGHTER — Bullet Heaven dans l'Espace[/h1]
+
+[b]Vampire Survivors rencontre le bullet hell.[/b] Un pilote, un vaisseau, des centaines d'ennemis à l'écran — et un build qui casse le jeu à la 12e minute, si tu choisis les bonnes améliorations.
+
+[h2]Construis ton run[/h2]
+Chaque run commence par le choix d'un vaisseau et un arsenal vide. À chaque niveau, tu choisis parmi trois branches d'armes :
+[list]
+[*][b]Balistique[/b] — rapide, précis, scale avec le crit et la perforation
+[*][b]Explosif[/b] — dégâts de zone, knockback, détonations en chaîne
+[*][b]Énergie[/b] — rayons, lock-on, synergies de régénération d'énergie
+[/list]
+Mélange les branches pour des synergies cross-tree, ou spécialise-toi pour un scaling sans limite. Il n'y a pas de "meilleur build" — juste des builds qui fonctionnent dans ce run.
+
+[h2]Des boss avec de vraies mécaniques[/h2]
+Oublie les éponges à dégâts. Chaque boss a son kit : signaux, points faibles, transitions de phase, et des patterns que tu apprends d'abord en mourant, puis en réussissant. Vaincre un boss donne le sentiment de l'avoir mérité. Échouer t'apprend quelque chose.
+
+[h2]Survis aux vagues[/h2]
+La variété des ennemis évolue avec la durée du run. Essaims, snipers, bombardiers en piqué, ennemis qui se divisent, mini-boss qui exigent ton attention pendant que l'essaim te rattrape par derrière. L'écran va se remplir. Ton boulot : y prospérer.
+
+[h2]Méta-progression[/h2]
+La mort est de la donnée. Chaque run débloque de nouveaux vaisseaux, de nouvelles branches d'améliorations, de nouvelles conditions de départ et de nouveaux modificateurs. Le jeu s'ouvre à mesure que tu échoues en avant.
+
+[h2]Développement solo[/h2]
+SPACEFIGHTER est un projet de développeur solo. Game design, équilibrage, structure des niveaux, direction audio et intégration finale sont tous de moi. J'ai utilisé un workflow moderne assisté par IA (Claude Code pour la codebase, outils d'IA pour une partie des assets visuels) pour expédier ça en solo — divulgation complète dans la section "AI Generated Content" de la page Steam.
+
+[h2]En un coup d'œil[/h2]
+[list]
+[*]Bullet heaven / survivors-like top-down 2D
+[*]Arbres d'améliorations ramifiés avec synergies profondes
+[*]Boss avec mécaniques, pas juste des PV
+[*]Méta-progression entre les runs
+[*]Développé solo, avec transparence sur les outils
+[/list]
+
+⚠️ Le jeu est actuellement disponible uniquement en anglais (interface et audio). La page de la boutique a été traduite pour plus de confort.`
+            },
+            'ja': {
+                short: '『ヴァンパイア・サバイバーズ』と弾幕シューティングの融合——宇宙で。2D宇宙戦闘機を操縦し、武器の枝を融合させて壊れたビルドを構築、本物のメカニクスを持つボスと弾幕の波を生き抜け。ソロ開発者のプロジェクト。',
+                long: `[h1]SPACEFIGHTER — 宇宙のブレットヘブン[/h1]
+
+[b]『ヴァンパイア・サバイバーズ』と弾幕シューティングの融合。[/b] 一人のパイロット、一機の戦闘機、画面を埋め尽くす数百の敵——そして正しいアップグレードを選べば、12分目にゲームを壊すビルド。
+
+[h2]ランを構築せよ[/h2]
+すべてのランは戦闘機の選択と空っぽの武器庫から始まる。レベルアップごとに、3つの武器ツリーから選ぶ：
+[list]
+[*][b]Ballistic（弾道）[/b] — 高速、精確、クリティカルと貫通でスケール
+[*][b]Explosive（爆発）[/b] — 範囲ダメージ、ノックバック、連鎖爆発
+[*][b]Energy（エネルギー）[/b] — ビーム、ロックオン、エネルギー再生のシナジー
+[/list]
+ツリーを混ぜてクロスツリーのシナジーを作るか、特化して暴走的なスケーリングを目指せ。「最強ビルド」は存在しない——あるのは、このランで機能するビルドだけだ。
+
+[h2]本物のメカニクスを持つボス[/h2]
+HPスポンジは忘れろ。すべてのボスにはキットがある：前兆、弱点、フェーズ移行、そして何度も死んでから掴むパターン。ボスを倒した時、その勝利は獲得したものだと感じる。失敗からは何かを学ぶ。
+
+[h2]ウェーブを生き抜け[/h2]
+ランの長さとともに敵のバリエーションがスケールする。群れ、スナイパー、急降下爆撃機、分裂する敵、注意を引きつけるミニボス——その間にも群れが背後から追ってくる。画面は埋まる。お前の仕事は、その中で繁栄することだ。
+
+[h2]メタプログレッション[/h2]
+死はデータだ。ランごとに新しい戦闘機、新しいアップグレードの枝、新しい開始条件とモディファイアが解禁される。失敗を重ねるごとにゲームが開かれていく。
+
+[h2]ソロ開発[/h2]
+SPACEFIGHTERはソロ開発者プロジェクト。ゲームデザイン、バランス、レベル構造、音響演出、そして最終統合はすべて私のものだ。現代のAIアシスト型ワークフロー（Claude Codeでコードベース、AIツールで一部のビジュアルアセット）を使ってソロでリリースを実現した——完全な開示はストアページの「AI Generated Content」セクションを参照。
+
+[h2]一目で[/h2]
+[list]
+[*]トップダウン2Dブレットヘブン / サバイバーズライク
+[*]深いシナジーを持つ分岐型アップグレードツリー
+[*]HPだけでなくメカニクスを持つボス
+[*]ランを跨ぐメタプログレッション
+[*]ソロ開発、ツールについての透明性
+[/list]
+
+⚠️ このゲームは現在、英語（インターフェースと音声）のみで提供されています。ストアページは読みやすさのために翻訳されました。`
+            },
+            'pt-BR': {
+                short: 'Vampire Survivors encontra bullet hell — no espaço. Pilote uma espaçonave 2D, combine ramos de armas em builds quebradas e sobreviva a ondas de balas e chefes com mecânicas reais. Projeto solo de um desenvolvedor indie.',
+                long: `[h1]SPACEFIGHTER — Bullet Heaven no Espaço[/h1]
+
+[b]Vampire Survivors encontra bullet hell.[/b] Um piloto, uma nave, centenas de inimigos na tela — e uma build que quebra o jogo no minuto 12, se você escolher as melhorias certas.
+
+[h2]Construa sua run[/h2]
+Toda run começa com a escolha de uma nave e um arsenal vazio. A cada level up, você escolhe entre três ramos de armas:
+[list]
+[*][b]Balístico[/b] — rápido, preciso, escala com crítico e perfuração
+[*][b]Explosivo[/b] — dano em área, knockback, detonações em cadeia
+[*][b]Energia[/b] — feixes, lock-on, sinergias de regeneração de energia
+[/list]
+Misture ramos para sinergias cross-tree, ou especialize para um scaling descontrolado. Não existe "a melhor build" — só existem builds que funcionam nesta run.
+
+[h2]Chefes com mecânicas de verdade[/h2]
+Esqueça inimigos esponja. Cada chefe tem um kit: telegrafos, pontos fracos, transições de fase e padrões que você aprende primeiro morrendo, depois acertando. Derrotar um chefe parece merecido. Falhar te ensina algo.
+
+[h2]Sobreviva às ondas[/h2]
+A variedade de inimigos escala com a duração da run. Enxames, snipers, bombardeiros em mergulho, divisores, mini-chefes que exigem sua atenção enquanto o enxame te alcança por trás. A tela vai encher. Seu trabalho é prosperar dentro dela.
+
+[h2]Meta-progressão[/h2]
+Morte é dado. Cada run desbloqueia novas naves, novos ramos de upgrade, novas condições iniciais e modificadores. O jogo se expande conforme você falha avançando.
+
+[h2]Desenvolvimento solo[/h2]
+SPACEFIGHTER é um projeto de um único desenvolvedor. Game design, balanceamento, estrutura de níveis, direção de áudio e integração final são todos meus. Usei um workflow moderno assistido por IA (Claude Code para a base de código, ferramentas de IA para uma parte dos assets visuais) para lançar isso solo — divulgação completa na seção "AI Generated Content" da página da loja.
+
+[h2]Resumo[/h2]
+[list]
+[*]Bullet heaven / survivors-like top-down 2D
+[*]Árvores de upgrade ramificadas com sinergias profundas
+[*]Chefes com mecânicas, não apenas HP
+[*]Meta-progressão entre runs
+[*]Desenvolvido solo, com transparência sobre as ferramentas
+[/list]
+
+⚠️ Este jogo está atualmente disponível apenas em inglês (interface e áudio). A página da loja foi traduzida para facilitar a leitura.`
+            },
+            'ru': {
+                short: 'Vampire Survivors встречает bullet hell — в космосе. Управляй 2D-звездолётом, объединяй ветви оружия в сломанные билды и выживай в волнах пуль и боссов с настоящими механиками. Соло-проект инди-разработчика.',
+                long: `[h1]SPACEFIGHTER — Bullet Heaven в космосе[/h1]
+
+[b]Vampire Survivors встречает bullet hell.[/b] Один пилот, один корабль, сотни врагов на экране — и билд, который ломает игру к 12-й минуте, если ты выбрал правильные апгрейды.
+
+[h2]Собирай свой ран[/h2]
+Каждый ран начинается с выбора корабля и пустого арсенала. С каждым уровнем выбираешь из трёх веток оружия:
+[list]
+[*][b]Баллистика[/b] — быстрая, точная, масштабируется через крит и пробитие
+[*][b]Взрыв[/b] — урон по площади, отбрасывание, цепные детонации
+[*][b]Энергия[/b] — лучи, наведение, синергии регена энергии
+[/list]
+Смешивай ветки для кросс-синергий или специализируйся для неудержимого скейлинга. Нет «лучшего билда» — есть только билды, которые работают именно в этом ране.
+
+[h2]Боссы с настоящими механиками[/h2]
+Забудь про губки для урона. У каждого босса есть свой кит: тэлеграфы, слабые места, фазы и паттерны, которые ты сначала учишь через смерти, а потом — через мастерство. Победа над боссом ощущается как заслуженная. Поражение учит тебя чему-то.
+
+[h2]Выживай в волнах[/h2]
+Разнообразие врагов растёт вместе с длительностью рана. Толпы, снайперы, пикирующие бомбардировщики, разделяющиеся враги, мини-боссы, которые требуют внимания, пока толпа догоняет тебя со спины. Экран будет заполнен. Твоя задача — процветать внутри этого хаоса.
+
+[h2]Мета-прогрессия[/h2]
+Смерть — это данные. Каждый ран открывает новые корабли, новые ветки апгрейдов, новые стартовые условия и модификаторы. Игра раскрывается через твои поражения.
+
+[h2]Соло-разработка[/h2]
+SPACEFIGHTER — это проект одного разработчика. Геймдизайн, баланс, структура уровней, аудионаправление и финальная интеграция — всё это моё. Я использовал современный AI-ассистированный воркфлоу (Claude Code для кодовой базы, AI-инструменты для части визуальных ассетов), чтобы выпустить это в одиночку. Полное раскрытие об использовании AI на странице магазина.
+
+[h2]Кратко о игре[/h2]
+[list]
+[*]Топ-даун 2D bullet heaven / survivors-like
+[*]Ветвящиеся древа апгрейдов с глубокими синергиями
+[*]Боссы с механиками, а не просто HP
+[*]Мета-прогрессия между ранами
+[*]Соло-проект с прозрачностью о инструментах
+[/list]
+
+⚠️ Игра в настоящий момент доступна только на английском (интерфейс и звук). Страница магазина переведена для удобства.`
+            },
+            'zh-CN': {
+                short: '《吸血鬼幸存者》遇上弹幕地狱——在太空中。驾驶 2D 星际战机，融合武器分支打造破坏性构筑，在子弹与拥有真正机制的 Boss 浪潮中生存。单人开发者作品。',
+                long: `[h1]SPACEFIGHTER — 太空中的弹幕天堂[/h1]
+
+[b]《吸血鬼幸存者》遇上弹幕地狱。[/b] 一名飞行员，一艘战机，屏幕上数百名敌人，以及一套到第 12 分钟就能打破游戏平衡的构筑——前提是你选对了升级。
+
+[h2]构筑你的回合[/h2]
+每一局从选择战机和一无所有的武器库开始。随着等级提升，从三大武器分支中选择：
+[list]
+[*][b]弹道（Ballistic）[/b] —— 高速、精准，依靠暴击与穿透叠加伤害
+[*][b]爆破（Explosive）[/b] —— 范围伤害，击退，连锁引爆
+[*][b]能量（Energy）[/b] —— 光束、锁定、能量再生协同效应
+[/list]
+混合多个分支获得跨树协同，或专精单一方向实现指数级成长。没有"最强构筑"——只有这一局能用的构筑。
+
+[h2]拥有真正机制的 Boss[/h2]
+告别血量海绵。每个 Boss 都有自己的招式组：前摇、弱点、阶段转换，以及你必须先吃苦后开窍的攻击模式。击败 Boss 的感觉是赚来的。失败教会你一些东西。
+
+[h2]在弹幕中生存[/h2]
+敌人多样性随回合长度扩展。蜂群、狙击手、俯冲轰炸机、分裂者、需要你分心应对的小 Boss——而蜂群从背后追上来。屏幕会被填满。你的工作是在其中如鱼得水。
+
+[h2]元进度[/h2]
+死亡即数据。每一局解锁新战机、新升级分支、新起始条件与修饰符。游戏在你失败前行的过程中逐渐展开。
+
+[h2]单人开发[/h2]
+SPACEFIGHTER 是单人开发者项目。游戏设计、平衡、关卡结构、音频方向与最终整合全部由我完成。我使用现代 AI 辅助工作流（Claude Code 处理代码，AI 工具生成部分视觉素材）实现了一人独立发布——详细 AI 内容披露见下方说明。
+
+[h2]速览[/h2]
+[list]
+[*]俯视 2D 弹幕天堂 / 类幸存者
+[*]深度协同的分支升级树
+[*]拥有机制的 Boss，而非血条堆
+[*]跨回合元进度
+[*]单人开发，工具透明披露
+[/list]
+
+⚠️ 本游戏目前仅支持英语界面与音频。商店页面已翻译以方便阅读。`
+            }
+        };
+
+        function escapeHtml(s) {
+            return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function bbcodeToHtml(bb) {
+            let html = escapeHtml(bb);
+            // Lists first (block-level)
+            html = html.replace(/\[list\]([\s\S]*?)\[\/list\]/g, (_, inner) => {
+                const items = inner.split('[*]').map(s => s.trim()).filter(Boolean);
+                return '\n<ul class="bb-list">' + items.map(it => `<li>${it}</li>`).join('') + '</ul>\n';
+            });
+            // Headings
+            html = html.replace(/\[h1\]([\s\S]*?)\[\/h1\]/g, '<h4 class="bb-h1">$1</h4>');
+            html = html.replace(/\[h2\]([\s\S]*?)\[\/h2\]/g, '<h5 class="bb-h2">$1</h5>');
+            // Inline
+            html = html.replace(/\[b\]([\s\S]*?)\[\/b\]/g, '<strong>$1</strong>');
+            html = html.replace(/\[i\]([\s\S]*?)\[\/i\]/g, '<em>$1</em>');
+            // Paragraphs: split by blank lines, wrap non-block content
+            const blocks = html.split(/\n{2,}/);
+            return blocks.map(b => {
+                b = b.trim();
+                if (!b) return '';
+                if (/^<(h4|h5|ul)/.test(b)) return b;
+                return '<p>' + b.replace(/\n/g, '<br>') + '</p>';
+            }).join('\n');
+        }
+
+        const localeSelect = document.getElementById('locale-select');
+        const storeShort = document.getElementById('store-short');
+        const storeShortMeta = document.getElementById('store-short-meta');
+        const storeLong = document.getElementById('store-long');
+        const storeLongRaw = document.getElementById('store-long-raw');
+
+        function applyLocale(code) {
+            const data = LOCALES[code] || LOCALES['en'];
+            storeShort.textContent = data.short;
+            storeShortMeta.textContent = `${data.short.length} chars · Steam limit 300`;
+            storeLong.innerHTML = bbcodeToHtml(data.long);
+            storeLongRaw.value = data.long;
+        }
+        localeSelect.addEventListener('change', e => applyLocale(e.target.value));
+        applyLocale('en');
+
+        // ── SCREENSHOTS GRID GENERATION ──
+        // Edit this array to add/remove/reorder screenshots from press/screenshots/.
+        // `file` is the filename on disk; `alt` is the descriptive alt text.
+        const SCREENSHOTS = [
+            { file: '1wave.png',          alt: 'SPACEFIGHTER — first wave of enemies' },
+            { file: '11sec.png',          alt: 'SPACEFIGHTER — early run, 11 seconds in' },
+            { file: 'hive1.png',          alt: 'SPACEFIGHTER — Hive enemy swarm' },
+            { file: 'hivefleetwave.png',  alt: 'SPACEFIGHTER — Hive Fleet wave' },
+            { file: 'irontidewave.png',   alt: 'SPACEFIGHTER — Iron Tide wave' },
+            { file: 'the hunter.png',     alt: 'SPACEFIGHTER — The Hunter boss' },
+            { file: 'boss2.png',          alt: 'SPACEFIGHTER — boss encounter' },
+            { file: 'upgrades.png',       alt: 'SPACEFIGHTER — upgrade selection' },
+            { file: 'uworkshop.png',      alt: 'SPACEFIGHTER — upgrade workshop' },
+            { file: 'unlockedweapons.png',alt: 'SPACEFIGHTER — unlocked weapons' },
+            { file: 'gameoverscreen.png', alt: 'SPACEFIGHTER — game over screen' }
+        ];
+
+        const screenshotsGrid = document.getElementById('screenshots-grid');
+        SCREENSHOTS.forEach((shot, i) => {
+            const src = `press/screenshots/${encodeURIComponent(shot.file)}`;
+            const item = document.createElement('div');
+            item.className = 'screenshot-item';
+            item.setAttribute('role', 'button');
+            item.setAttribute('tabindex', '0');
+            item.setAttribute('aria-label', `${shot.alt} — click to enlarge`);
+            item.dataset.src = src;
+            item.dataset.alt = shot.alt;
+            item.innerHTML = `
+                <span class="screenshot-empty" aria-hidden="true">Screenshot ${String(i + 1).padStart(2, '0')}</span>
+                <img src="${src}" alt="${shot.alt}" loading="lazy"
+                     onload="this.previousElementSibling.style.display='none'"
+                     onerror="this.style.display='none'">
+                <div class="screenshot-overlay" aria-hidden="true">
+                    <div class="zoom-icon">+</div>
+                </div>
+            `;
+            screenshotsGrid.appendChild(item);
+        });
+
+        // ── LIGHTBOX ──
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const lightboxClose = document.querySelector('.lightbox-close');
+        const lightboxDownload = document.getElementById('lightbox-download');
+
+        function openLightbox(src, alt) {
+            lightboxImg.src = src;
+            lightboxImg.alt = alt || '';
+            lightboxDownload.href = src;
+            lightbox.showModal();
+        }
+        function closeLightbox() {
+            lightbox.close();
+            setTimeout(() => { lightboxImg.src = ''; }, 200);
+        }
+
+        screenshotsGrid.addEventListener('click', e => {
+            const item = e.target.closest('.screenshot-item');
+            if (!item) return;
+            const img = item.querySelector('img');
+            // Only open lightbox if image actually loaded
+            if (img && img.complete && img.naturalWidth > 0) {
+                openLightbox(item.dataset.src, item.dataset.alt);
+            }
+        });
+        screenshotsGrid.addEventListener('keydown', e => {
+            const item = e.target.closest('.screenshot-item');
+            if (!item) return;
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                const img = item.querySelector('img');
+                if (img && img.complete && img.naturalWidth > 0) {
+                    openLightbox(item.dataset.src, item.dataset.alt);
+                }
+            }
+        });
+
+        lightboxClose.addEventListener('click', closeLightbox);
+        lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+        lightbox.addEventListener('cancel', e => { e.preventDefault(); closeLightbox(); });
+
+        // ── PLACEHOLDER LINK GUARDS ──
+        // Anchors marked data-todo="..." (Discord, TikTok, etc.) shouldn't navigate to "#".
+        document.querySelectorAll('a[data-todo]').forEach(a => {
+            a.addEventListener('click', e => {
+                if (a.getAttribute('href') === '#') {
+                    e.preventDefault();
+                    const label = a.dataset.todo;
+                    console.info(`[press kit] ${label} link not yet configured.`);
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
