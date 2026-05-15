@@ -78,17 +78,24 @@
             opacity: 0.06;
         }
 
-        /* ── HEADER (matches gra.html) ── */
+        /* ── HEADER (matches index.html) ── */
         header {
             position: fixed;
             top: 0; width: 100%;
-            padding: 20px 0;
+            padding: 30px 0;
             z-index: 100;
-            background: rgba(5, 5, 5, 0.88);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            mix-blend-mode: difference;
+            transition: padding 0.3s var(--ease-standard);
         }
+        header.scrolled {
+            padding: 15px 0;
+            background: rgba(5, 5, 5, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            mix-blend-mode: normal;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        header.menu-open { mix-blend-mode: normal; }
 
         .container {
             max-width: 1280px;
@@ -108,36 +115,43 @@
             letter-spacing: -1px;
             z-index: 101;
             position: relative;
-            transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: inline-block;
+            transition: transform 0.25s var(--ease-standard), letter-spacing 0.25s var(--ease-standard);
         }
-        .logo:hover { transform: rotate(360deg); }
+        .logo:hover {
+            transform: skewX(-6deg) scale(1.04);
+            letter-spacing: 1px;
+        }
         .logo span { color: var(--cyan); }
 
         .nav-links {
             display: flex;
-            gap: 40px;
+            gap: 50px;
         }
         .nav-links a {
-            font-size: 0.85rem;
-            font-weight: 500;
+            font-size: 0.9rem;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--text-muted);
+            letter-spacing: 2px;
             position: relative;
-            transition: color 0.3s var(--ease-standard);
+            transition: transform 0.3s var(--ease-standard), color 0.3s var(--ease-standard);
+            display: inline-block;
         }
         .nav-links a::after {
             content: '';
             position: absolute;
-            bottom: -5px; left: 0;
-            width: 0; height: 1px;
+            bottom: -8px;
+            left: 50%;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
             background: var(--cyan);
-            transition: width 0.4s var(--ease-standard);
+            transform: translateX(-50%) scale(0);
+            transition: transform 0.3s var(--ease-standard);
         }
         .nav-links a:hover { color: var(--cyan); }
-        .nav-links a:hover::after { width: 100%; }
+        .nav-links a:hover::after { transform: translateX(-50%) scale(1); }
         .nav-links a.active { color: var(--cyan); }
-        .nav-links a.active::after { width: 100%; }
+        .nav-links a.active::after { transform: translateX(-50%) scale(1); }
 
         .menu-toggle {
             display: none;
@@ -164,6 +178,97 @@
             position: relative;
             z-index: 1;
             padding-top: 90px;
+        }
+
+        /* ── GLOBAL LANGUAGE SWITCHER ── */
+        .lang-switcher {
+            position: relative;
+            z-index: 2;
+            padding: 18px 0 0;
+        }
+        .lang-switcher-inner {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            padding: 12px 16px;
+            background: rgba(26, 26, 26, 0.65);
+            border: 1px solid var(--surface-border);
+            border-radius: 999px;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        .lang-switcher-label {
+            font-size: 0.72rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.22em;
+            color: var(--text-muted);
+            padding-left: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .lang-switcher-label::before {
+            content: '';
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 1.5px solid currentColor;
+            position: relative;
+            background:
+                linear-gradient(currentColor, currentColor) center/100% 1.5px no-repeat,
+                linear-gradient(currentColor, currentColor) center/1.5px 100% no-repeat;
+            opacity: 0.7;
+        }
+        .lang-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        .lang-pill {
+            font-family: var(--font);
+            font-size: 0.78rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid transparent;
+            border-radius: 999px;
+            padding: 7px 13px;
+            cursor: pointer;
+            transition: color 0.2s, border-color 0.2s, background 0.2s;
+        }
+        .lang-pill:hover {
+            color: var(--fg);
+            border-color: var(--surface-border);
+        }
+        .lang-pill.active {
+            color: var(--cyan);
+            border-color: rgba(0, 255, 255, 0.45);
+            background: rgba(0, 255, 255, 0.06);
+        }
+        .lang-pill:focus-visible {
+            outline: 2px solid var(--cyan);
+            outline-offset: 2px;
+        }
+        @media (max-width: 720px) {
+            .lang-switcher { padding-top: 12px; }
+            .lang-switcher-inner {
+                gap: 8px;
+                padding: 10px 12px;
+                border-radius: 16px;
+            }
+            .lang-switcher-label {
+                width: 100%;
+                font-size: 0.68rem;
+                padding-left: 4px;
+            }
+            .lang-pill {
+                padding: 6px 10px;
+                font-size: 0.74rem;
+            }
         }
 
         /* ── PRESS HERO ── */
@@ -205,12 +310,15 @@
             margin-bottom: 28px;
         }
 
+        .press-hero-title {
+            margin: 0 0 24px;
+            line-height: 0;
+        }
         .press-hero-logo {
             display: block;
             width: 100%;
             max-width: 420px;
             height: auto;
-            margin: 0 0 24px;
             object-fit: contain;
         }
 
@@ -1016,11 +1124,11 @@
                 </button>
 
                 <ul class="nav-links" id="nav-links" role="list">
-                    <li><a href="index.html#about">O mnie</a></li>
-                    <li><a href="index.html#work">Web</a></li>
-                    <li><a href="grafika.html">Grafika</a></li>
-                    <li><a href="gra.html" class="active">Gra</a></li>
-                    <li><a href="index.html#contact">Kontakt</a></li>
+                    <li><a href="index.html#about" data-i18n="nav.about">O mnie</a></li>
+                    <li><a href="index.html#work" data-i18n="nav.web">Web</a></li>
+                    <li><a href="grafika.html" data-i18n="nav.grafika">Grafika</a></li>
+                    <li><a href="gra.html" class="active" data-i18n="nav.gra">Gra</a></li>
+                    <li><a href="index.html#contact" data-i18n="nav.kontakt">Kontakt</a></li>
                 </ul>
             </nav>
         </div>
@@ -1028,47 +1136,57 @@
 
     <main>
 
+        <!-- ── LANGUAGE SWITCHER ── -->
+        <div class="lang-switcher">
+            <div class="container">
+                <div class="lang-switcher-inner" role="group" aria-label="Page language">
+                    <span class="lang-switcher-label" data-i18n="lang.label">Language</span>
+                    <div class="lang-pills" id="lang-pills"></div>
+                </div>
+            </div>
+        </div>
+
         <!-- ── PRESS HERO ── -->
         <section id="press-hero">
             <div class="container">
                 <nav class="breadcrumb" aria-label="Breadcrumb">
-                    <a href="index.html">Portfolio</a>
+                    <a href="index.html" data-i18n="bc.portfolio">Portfolio</a>
                     <span class="sep">/</span>
                     <a href="gra.html">SPACEFIGHTER</a>
                     <span class="sep">/</span>
-                    <span class="current">Press Kit</span>
+                    <span class="current" data-i18n="bc.presskit">Press Kit</span>
                 </nav>
 
-                <span class="press-label">Press Kit</span>
+                <span class="press-label" data-i18n="press_label">Press Kit</span>
 
-                <img src="press/logo/LOGOGRY.png" alt="" class="press-hero-logo" loading="eager">
+                <h1 class="press-hero-title">
+                    <img src="press/logo/LOGOGRY.png" alt="SPACEFIGHTER: The Bullet Hell" class="press-hero-logo" fetchpriority="high">
+                </h1>
 
-                <h1 class="hero-title">SPACEFIGHTER<br>The Bullet Hell</h1>
-
-                <p class="hero-tagline">
+                <p class="hero-tagline" data-i18n-html="hero.tag">
                     <strong>Vampire Survivors meets bullet hell — in space.</strong>
                     A top-down bullet-heaven roguelite where every run is a new build.
                     Solo-dev project launching <strong>June 8, 2026</strong> inside Steam Bullet Fest 2026.
                 </p>
 
                 <div class="hero-meta">
-                    <span class="chip chip-yellow">Releases June 8, 2026</span>
-                    <span class="chip chip-cyan">Steam · Windows</span>
-                    <span class="chip">Bullet Heaven</span>
-                    <span class="chip">Roguelite</span>
-                    <span class="chip">Survivors-like</span>
-                    <span class="chip">Solo Dev</span>
+                    <span class="chip chip-yellow" data-i18n="chip.release">Releases June 8, 2026</span>
+                    <span class="chip chip-cyan" data-i18n="chip.platform">Steam · Windows</span>
+                    <span class="chip" data-i18n="chip.bullet">Bullet Heaven</span>
+                    <span class="chip" data-i18n="chip.roguelite">Roguelite</span>
+                    <span class="chip" data-i18n="chip.survivors">Survivors-like</span>
+                    <span class="chip" data-i18n="chip.solo">Solo Dev</span>
                 </div>
 
                 <nav class="quick-nav" aria-label="Press kit sections">
-                    <a href="#trailer">Trailer</a>
-                    <a href="#factsheet">Factsheet</a>
-                    <a href="#description">Description</a>
-                    <a href="#store">Store copy</a>
-                    <a href="#quotes">Quotes</a>
-                    <a href="#screenshots">Screenshots</a>
-                    <a href="#assets">Assets</a>
-                    <a href="#contact">Contact</a>
+                    <a href="#trailer" data-i18n="qnav.trailer">Trailer</a>
+                    <a href="#factsheet" data-i18n="qnav.factsheet">Factsheet</a>
+                    <a href="#description" data-i18n="qnav.description">Description</a>
+                    <a href="#store" data-i18n="qnav.store">Store copy</a>
+                    <a href="#quotes" data-i18n="qnav.quotes">Quotes</a>
+                    <a href="#screenshots" data-i18n="qnav.screenshots">Screenshots</a>
+                    <a href="#assets" data-i18n="qnav.assets">Assets</a>
+                    <a href="#contact" data-i18n="qnav.contact">Contact</a>
                 </nav>
             </div>
         </section>
@@ -1076,8 +1194,8 @@
         <!-- ── TRAILER ── -->
         <section class="kit-section" id="trailer">
             <div class="container">
-                <p class="section-label">01 — Trailer</p>
-                <h2 class="section-heading">Watch the trailer</h2>
+                <p class="section-label" data-i18n="sec.01.label">01 — Trailer</p>
+                <h2 class="section-heading" data-i18n="sec.01.heading">Watch the trailer</h2>
 
                 <div class="trailer-wrap">
                     <!-- TODO: Replace src with your YouTube embed URL once trailer is uploaded.
@@ -1085,7 +1203,7 @@
                          Then delete .trailer-placeholder div below. -->
                     <div class="trailer-placeholder" id="trailer-placeholder">
                         <div class="icon">▶</div>
-                        <div class="note">Trailer embed — TODO: paste YouTube URL</div>
+                        <div class="note" data-i18n="trailer.placeholder">Trailer embed — TODO: paste YouTube URL</div>
                     </div>
                     <!-- <iframe
                         src="https://www.youtube.com/embed/REPLACE_VIDEO_ID"
@@ -1100,47 +1218,47 @@
         <!-- ── FACTSHEET ── -->
         <section class="kit-section" id="factsheet">
             <div class="container">
-                <p class="section-label">02 — Factsheet</p>
-                <h2 class="section-heading">At a glance</h2>
+                <p class="section-label" data-i18n="sec.02.label">02 — Factsheet</p>
+                <h2 class="section-heading" data-i18n="sec.02.heading">At a glance</h2>
 
                 <dl class="factsheet">
-                    <dt>Title</dt>
+                    <dt data-i18n="fs.title">Title</dt>
                     <dd>SPACEFIGHTER - The Bullet Hell</dd>
 
-                    <dt>Developer</dt>
-                    <dd>Michał JARO Jarosiński (solo)</dd>
+                    <dt data-i18n="fs.developer">Developer</dt>
+                    <dd data-i18n="fs.developer_val">Michał JARO Jarosiński (solo)</dd>
 
-                    <dt>Publisher</dt>
-                    <dd>Michał JARO Jarosiński (self-published)</dd>
+                    <dt data-i18n="fs.publisher">Publisher</dt>
+                    <dd data-i18n="fs.publisher_val">Michał JARO Jarosiński (self-published)</dd>
 
-                    <dt>Based in</dt>
-                    <dd>Wrocław, Poland</dd>
+                    <dt data-i18n="fs.based">Based in</dt>
+                    <dd data-i18n="fs.based_val">Wrocław, Poland</dd>
 
-                    <dt>Release date</dt>
-                    <dd>June 8, 2026 — inside <strong>Steam Bullet Fest 2026</strong> (June 8–15)</dd>
+                    <dt data-i18n="fs.release">Release date</dt>
+                    <dd data-i18n-html="fs.release_val">June 8, 2026 — inside <strong>Steam Bullet Fest 2026</strong> (June 8–15)</dd>
 
-                    <dt>Platforms</dt>
-                    <dd>Windows (Steam)</dd>
+                    <dt data-i18n="fs.platforms">Platforms</dt>
+                    <dd data-i18n="fs.platforms_val">Windows (Steam)</dd>
 
-                    <dt>Genres</dt>
-                    <dd>Bullet Heaven · Roguelite · Top-Down Shooter · Survivors-like</dd>
+                    <dt data-i18n="fs.genres">Genres</dt>
+                    <dd data-i18n="fs.genres_val">Bullet Heaven · Roguelite · Top-Down Shooter · Survivors-like</dd>
 
-                    <dt>Price</dt>
-                    <dd>$2.99 USD (official launch price)</dd>
+                    <dt data-i18n="fs.price">Price</dt>
+                    <dd data-i18n="fs.price_val">$2.99 USD (official launch price)</dd>
 
-                    <dt>Languages</dt>
-                    <dd>English (interface + audio) · Store page in EN, 简体中文, Русский, Deutsch, 日本語, Português-BR, Español-LatAm, Français, Polski</dd>
+                    <dt data-i18n="fs.languages">Languages</dt>
+                    <dd data-i18n="fs.languages_val">English (interface + audio) · Store page in EN, 简体中文, Русский, Deutsch, 日本語, Português-BR, Español-LatAm, Français, Polski</dd>
 
-                    <dt>Engine</dt>
+                    <dt data-i18n="fs.engine">Engine</dt>
                     <dd>Kotlin + LibGDX</dd>
 
-                    <dt>Length</dt>
-                    <dd>8–15h base game, hundreds of hours for completionists</dd>
+                    <dt data-i18n="fs.length">Length</dt>
+                    <dd data-i18n="fs.length_val">8–15h base game, hundreds of hours for completionists</dd>
 
-                    <dt>Steam page</dt>
+                    <dt data-i18n="fs.steam">Steam page</dt>
                     <dd><a href="https://store.steampowered.com/app/4451950/SPACEFIGHTER__The_Bullet_Hell/" target="_blank" rel="noopener noreferrer">store.steampowered.com/app/4451950 ↗</a></dd>
 
-                    <dt>Press contact</dt>
+                    <dt data-i18n="fs.contact">Press contact</dt>
                     <dd><a href="mailto:support.spacefighter@gmail.com">support.spacefighter@gmail.com</a></dd>
                 </dl>
             </div>
@@ -1149,28 +1267,28 @@
         <!-- ── DESCRIPTION 3 LENGTHS ── -->
         <section class="kit-section" id="description">
             <div class="container">
-                <p class="section-label">03 — Description</p>
-                <h2 class="section-heading">Three lengths, ready to paste</h2>
+                <p class="section-label" data-i18n="sec.03.label">03 — Description</p>
+                <h2 class="section-heading" data-i18n="sec.03.heading">Three lengths, ready to paste</h2>
 
                 <div class="desc-tabs" role="tablist" aria-label="Description length">
                     <button class="desc-tab active" role="tab" aria-selected="true"
-                            aria-controls="desc-50" data-target="desc-50">50 words</button>
+                            aria-controls="desc-50" data-target="desc-50" data-i18n="desc.tab50">50 words</button>
                     <button class="desc-tab" role="tab" aria-selected="false"
-                            aria-controls="desc-200" data-target="desc-200">200 words</button>
+                            aria-controls="desc-200" data-target="desc-200" data-i18n="desc.tab200">200 words</button>
                     <button class="desc-tab" role="tab" aria-selected="false"
-                            aria-controls="desc-500" data-target="desc-500">500 words</button>
+                            aria-controls="desc-500" data-target="desc-500" data-i18n="desc.tab500">500 words</button>
                 </div>
 
                 <div class="desc-panel active" id="desc-50" role="tabpanel">
-                    <p class="desc-panel-text" data-copy-source>SPACEFIGHTER is a top-down bullet-heaven roguelite where every run is a new build. Stack three weapon trees into broken synergies, fight bosses with real mechanics, and survive the chaos. Solo-dev project launching June 8 on Steam — right inside Steam Bullet Fest 2026.</p>
+                    <p class="desc-panel-text" id="desc-50-text" data-i18n="desc.text50" data-copy-source>SPACEFIGHTER is a top-down bullet-heaven roguelite where every run is a new build. Stack three weapon trees into broken synergies, fight bosses with real mechanics, and survive the chaos. Solo-dev project launching June 8 on Steam — right inside Steam Bullet Fest 2026.</p>
                     <div class="desc-panel-footer">
-                        <span class="word-count">~50 words · tweet / one-liner</span>
-                        <button class="btn btn-muted copy-btn" data-copy="desc-50">Copy to clipboard</button>
+                        <span class="word-count" data-i18n="desc.meta50">~50 words · tweet / one-liner</span>
+                        <button class="btn btn-muted copy-btn" data-copy="desc-50" data-i18n="copy_btn">Copy to clipboard</button>
                     </div>
                 </div>
 
                 <div class="desc-panel" id="desc-200" role="tabpanel">
-                    <p class="desc-panel-text" data-copy-source>SPACEFIGHTER - The Bullet Hell is a top-down auto-shooter survival game launching June 8, 2026, on Steam — directly inside Steam Bullet Fest 2026. The game blends bullet-heaven structure (Vampire Survivors, Brotato) with shooter craft (real boss mechanics, weapon synergies, pilot identity).
+                    <p class="desc-panel-text" id="desc-200-text" data-i18n="desc.text200" data-copy-source>SPACEFIGHTER - The Bullet Hell is a top-down auto-shooter survival game launching June 8, 2026, on Steam — directly inside Steam Bullet Fest 2026. The game blends bullet-heaven structure (Vampire Survivors, Brotato) with shooter craft (real boss mechanics, weapon synergies, pilot identity).
 
 Players pilot a 2D starship and build their arsenal across three branching weapon trees — ballistic, explosive, and energy — fusing them into cross-tree synergies that break the game by minute 12 (if you choose well). Bosses arrive with telegraphed patterns, weak points, and phase transitions. Meta-progression unlocks new ships, branches, and modifiers across deaths.
 
@@ -1178,13 +1296,13 @@ The game is built solo by Michał JARO Jarosiński (Wrocław, Poland) using a mo
 
 Launch coincides with Steam Bullet Fest 2026 (June 8–15) and the Steam Summer Sale (June 25–July 9). Official launch price: $2.99 USD.</p>
                     <div class="desc-panel-footer">
-                        <span class="word-count">~200 words · article intro</span>
-                        <button class="btn btn-muted copy-btn" data-copy="desc-200">Copy to clipboard</button>
+                        <span class="word-count" data-i18n="desc.meta200">~200 words · article intro</span>
+                        <button class="btn btn-muted copy-btn" data-copy="desc-200" data-i18n="copy_btn">Copy to clipboard</button>
                     </div>
                 </div>
 
                 <div class="desc-panel" id="desc-500" role="tabpanel">
-                    <p class="desc-panel-text" data-copy-source>When Vampire Survivors showed up in 2022, one dev with a tiny engine kicked off a whole genre. Three years later, "bullet heaven" is one of the most copied formats on Steam — and most copies miss what made the original click: the meta-loop, the build identity, the feeling that you found the synergy.
+                    <p class="desc-panel-text" id="desc-500-text" data-i18n="desc.text500" data-copy-source>When Vampire Survivors showed up in 2022, one dev with a tiny engine kicked off a whole genre. Three years later, "bullet heaven" is one of the most copied formats on Steam — and most copies miss what made the original click: the meta-loop, the build identity, the feeling that you found the synergy.
 
 SPACEFIGHTER - The Bullet Hell is one solo dev's answer to "what should a bullet heaven feel like in 2026?" Pilot a 2D starship, choose from a roster of ships with distinct kits, and grow your arsenal across three weapon trees — ballistic, explosive, and energy. Each tree has its own scaling identity: ballistic rewards precision and consecutive hits, explosive cranks chain detonations and area control, energy is the synergy-builder with beams, lock-on, and regen tools. The fun is in the cross-tree combinations — 5 explosive plus 2 energy turns into chain detonations on energy crit; 4 ballistic plus 3 explosive turns into piercing rounds that detonate at max range. By minute 12 of a good run, the screen is unreadable and you're a god.
 
@@ -1196,8 +1314,8 @@ SPACEFIGHTER launches June 8, 2026 — squarely inside Steam Bullet Fest 2026 (J
 
 For fans of Vampire Survivors, Brotato, Halls of Torment, and 20 Minutes Till Dawn — but with bosses that actually fight back.</p>
                     <div class="desc-panel-footer">
-                        <span class="word-count">~500 words · review-ready</span>
-                        <button class="btn btn-muted copy-btn" data-copy="desc-500">Copy to clipboard</button>
+                        <span class="word-count" data-i18n="desc.meta500">~500 words · review-ready</span>
+                        <button class="btn btn-muted copy-btn" data-copy="desc-500" data-i18n="copy_btn">Copy to clipboard</button>
                     </div>
                 </div>
             </div>
@@ -1206,11 +1324,11 @@ For fans of Vampire Survivors, Brotato, Halls of Torment, and 20 Minutes Till Da
         <!-- ── STORE DESCRIPTION (LOCALIZED) ── -->
         <section class="kit-section" id="store">
             <div class="container">
-                <p class="section-label">04 — Store description</p>
-                <h2 class="section-heading">Localized store copy</h2>
+                <p class="section-label" data-i18n="sec.04.label">04 — Store description</p>
+                <h2 class="section-heading" data-i18n="sec.04.heading">Localized store copy</h2>
 
                 <div class="locale-controls">
-                    <span class="locale-label">Language</span>
+                    <span class="locale-label" data-i18n="store.lang_label">Language</span>
                     <select id="locale-select" class="locale-select" aria-label="Choose language">
                         <option value="en">English</option>
                         <option value="pl">Polski</option>
@@ -1225,22 +1343,22 @@ For fans of Vampire Survivors, Brotato, Halls of Torment, and 20 Minutes Till Da
                 </div>
 
                 <div class="store-block">
-                    <p class="store-block-label">Short description (≤ 300 chars)</p>
+                    <p class="store-block-label" data-i18n="store.short_block_label">Short description (≤ 300 chars)</p>
                     <p class="store-short-text" id="store-short" data-copy-source></p>
                     <div class="store-footer">
                         <span class="word-count" id="store-short-meta"></span>
-                        <button class="btn btn-muted copy-btn" data-copy="store-short">Copy to clipboard</button>
+                        <button class="btn btn-muted copy-btn" data-copy="store-short" data-i18n="copy_btn">Copy to clipboard</button>
                     </div>
                 </div>
 
                 <div class="store-block">
-                    <p class="store-block-label">Long description (Steam-ready)</p>
+                    <p class="store-block-label" data-i18n="store.long_block_label">Long description (Steam-ready)</p>
                     <div class="store-long-text" id="store-long"></div>
                     <textarea id="store-long-raw" data-copy-source style="display:none;"></textarea>
                     <div class="store-footer">
-                        <span class="word-count" id="store-long-meta">BBCode preserved</span>
-                        <button class="btn btn-muted copy-btn" data-copy="store-long-raw" data-format="bbcode">Copy as BBCode</button>
-                        <button class="btn btn-muted copy-btn" data-copy="store-long" data-format="text">Copy as plain text</button>
+                        <span class="word-count" id="store-long-meta" data-i18n="store.long_meta">BBCode preserved</span>
+                        <button class="btn btn-muted copy-btn" data-copy="store-long-raw" data-format="bbcode" data-i18n="store.copy_bbcode">Copy as BBCode</button>
+                        <button class="btn btn-muted copy-btn" data-copy="store-long" data-format="text" data-i18n="store.copy_plain">Copy as plain text</button>
                     </div>
                 </div>
             </div>
@@ -1249,23 +1367,23 @@ For fans of Vampire Survivors, Brotato, Halls of Torment, and 20 Minutes Till Da
         <!-- ── QUOTES ── -->
         <section class="kit-section" id="quotes">
             <div class="container">
-                <p class="section-label">05 — Quotes</p>
-                <h2 class="section-heading">Developer quotes</h2>
+                <p class="section-label" data-i18n="sec.05.label">05 — Quotes</p>
+                <h2 class="section-heading" data-i18n="sec.05.heading">Developer quotes</h2>
 
                 <div class="quotes-grid">
                     <blockquote class="quote-card">
-                        <p class="quote-text">I built the <em>Vampire Survivors</em> I'd want to play in 2026 — with bosses that actually fight back.</p>
-                        <footer class="quote-attr">— Michał JARO Jarosiński, developer</footer>
+                        <p class="quote-text" data-i18n-html="quote1">I built the <em>Vampire Survivors</em> I'd want to play in 2026 — with bosses that actually fight back.</p>
+                        <footer class="quote-attr" data-i18n="quote_attr">— Michał JARO Jarosiński, developer</footer>
                     </blockquote>
 
                     <blockquote class="quote-card">
-                        <p class="quote-text">Solo dev plus modern AI-assisted workflow is the future of indie content scale. I'm not hiding the tools — they let me ship things one person couldn't ship five years ago.</p>
-                        <footer class="quote-attr">— Michał JARO Jarosiński, developer</footer>
+                        <p class="quote-text" data-i18n="quote2">Solo dev plus modern AI-assisted workflow is the future of indie content scale. I'm not hiding the tools — they let me ship things one person couldn't ship five years ago.</p>
+                        <footer class="quote-attr" data-i18n="quote_attr">— Michał JARO Jarosiński, developer</footer>
                     </blockquote>
 
                     <blockquote class="quote-card">
-                        <p class="quote-text">Bullet heaven is the most exciting genre on Steam in 2026, and survivors-like fans deserve more than HP-sponge bosses.</p>
-                        <footer class="quote-attr">— Michał JARO Jarosiński, developer</footer>
+                        <p class="quote-text" data-i18n="quote3">Bullet heaven is the most exciting genre on Steam in 2026, and survivors-like fans deserve more than HP-sponge bosses.</p>
+                        <footer class="quote-attr" data-i18n="quote_attr">— Michał JARO Jarosiński, developer</footer>
                     </blockquote>
                 </div>
             </div>
@@ -1274,15 +1392,15 @@ For fans of Vampire Survivors, Brotato, Halls of Torment, and 20 Minutes Till Da
         <!-- ── SCREENSHOTS ── -->
         <section class="kit-section" id="screenshots">
             <div class="container">
-                <p class="section-label">06 — Screenshots</p>
-                <h2 class="section-heading">Gallery</h2>
+                <p class="section-label" data-i18n="sec.06.label">06 — Screenshots</p>
+                <h2 class="section-heading" data-i18n="sec.06.heading">Gallery</h2>
 
                 <div class="screenshots-grid" id="screenshots-grid">
                     <!-- Screenshots are generated from the SCREENSHOTS array in the script below.
                          To add/remove/reorder, edit that array. -->
                 </div>
 
-                <p class="screenshots-note">
+                <p class="screenshots-note" data-i18n-html="screenshots.note">
                     Click any screenshot to view full-size · all images are high-resolution, free to use for editorial coverage with credit to <strong>Michał JARO Jarosiński</strong>.
                 </p>
             </div>
@@ -1291,43 +1409,41 @@ For fans of Vampire Survivors, Brotato, Halls of Torment, and 20 Minutes Till Da
         <!-- ── ASSETS ── -->
         <section class="kit-section" id="assets">
             <div class="container">
-                <p class="section-label">07 — Assets</p>
-                <h2 class="section-heading">Logos &amp; capsule art</h2>
+                <p class="section-label" data-i18n="sec.07.label">07 — Assets</p>
+                <h2 class="section-heading" data-i18n="sec.07.heading">Logos &amp; capsule art</h2>
 
                 <div class="assets-grid">
                     <div class="asset-card">
-                        <div class="asset-card-meta">Logo</div>
-                        <div class="asset-card-title">Game logo (transparent PNG)</div>
-                        <a href="press/logo/LOGOGRY.png" download class="btn btn-muted" aria-label="Download game logo">Download PNG ↓</a>
+                        <div class="asset-card-meta" data-i18n="assets.logo_meta">Logo</div>
+                        <div class="asset-card-title" data-i18n="assets.logo_title">Game logo (transparent PNG)</div>
+                        <a href="press/logo/LOGOGRY.png" download class="btn btn-muted" aria-label="Download game logo" data-i18n="assets.download_png">Download PNG ↓</a>
                     </div>
 
                     <div class="asset-card">
-                        <div class="asset-card-meta">Capsule</div>
-                        <div class="asset-card-title">Header capsule (Steam)</div>
-                        <a href="press/capsule/store_capsule_header.png" download class="btn btn-muted">Download PNG ↓</a>
+                        <div class="asset-card-meta" data-i18n="assets.capsule_meta">Capsule</div>
+                        <div class="asset-card-title" data-i18n="assets.cap_header">Header capsule (Steam)</div>
+                        <a href="press/capsule/store_capsule_header.png" download class="btn btn-muted" data-i18n="assets.download_png">Download PNG ↓</a>
                     </div>
 
                     <div class="asset-card">
-                        <div class="asset-card-meta">Capsule</div>
-                        <div class="asset-card-title">Small capsule</div>
-                        <a href="press/capsule/store_capsule_small.png" download class="btn btn-muted">Download PNG ↓</a>
+                        <div class="asset-card-meta" data-i18n="assets.capsule_meta">Capsule</div>
+                        <div class="asset-card-title" data-i18n="assets.cap_small">Small capsule</div>
+                        <a href="press/capsule/store_capsule_small.png" download class="btn btn-muted" data-i18n="assets.download_png">Download PNG ↓</a>
                     </div>
 
                     <div class="asset-card">
-                        <div class="asset-card-meta">Capsule</div>
-                        <div class="asset-card-title">Library capsule</div>
-                        <a href="press/capsule/library_capsule.png" download class="btn btn-muted">Download PNG ↓</a>
+                        <div class="asset-card-meta" data-i18n="assets.capsule_meta">Capsule</div>
+                        <div class="asset-card-title" data-i18n="assets.cap_library">Library capsule</div>
+                        <a href="press/capsule/library_capsule.png" download class="btn btn-muted" data-i18n="assets.download_png">Download PNG ↓</a>
                     </div>
                 </div>
 
-                <!-- TODO: Build press-kit.zip containing screenshots + logos + capsules + factsheet.txt,
-                     place at press/press-kit.zip, then this button will work. -->
                 <div class="download-all">
                     <div>
-                        <div class="download-all-text">Download everything as ZIP</div>
-                        <div class="download-all-meta">Screenshots · logos · capsules · factsheet — single bundle</div>
+                        <div class="download-all-text" data-i18n="assets.dl_all_title">Download everything as ZIP</div>
+                        <div class="download-all-meta" data-i18n="assets.dl_all_meta">Screenshots · logos · capsules · factsheet — single bundle</div>
                     </div>
-                    <a href="press/press-kit.zip" download class="btn btn-large">Download press-kit.zip ↓</a>
+                    <a href="press/press-kit-bundle.zip" download class="btn btn-large" data-i18n="assets.dl_btn">Download press-kit-bundle.zip ↓</a>
                 </div>
             </div>
         </section>
@@ -1335,34 +1451,34 @@ For fans of Vampire Survivors, Brotato, Halls of Torment, and 20 Minutes Till Da
         <!-- ── CONTACT ── -->
         <section class="kit-section" id="contact">
             <div class="container">
-                <p class="section-label">08 — Press contact</p>
-                <h2 class="section-heading">Get in touch</h2>
+                <p class="section-label" data-i18n="sec.08.label">08 — Press contact</p>
+                <h2 class="section-heading" data-i18n="sec.08.heading">Get in touch</h2>
 
                 <div class="contact-grid">
                     <div class="contact-card">
-                        <div class="contact-card-label">Email</div>
+                        <div class="contact-card-label" data-i18n="contact.email_label">Email</div>
                         <div class="contact-card-value">
                             <a href="mailto:support.spacefighter@gmail.com">support.spacefighter@gmail.com</a>
                         </div>
                     </div>
 
                     <div class="contact-card">
-                        <div class="contact-card-label">Developer</div>
-                        <div class="contact-card-value">Michał JARO Jarosiński<br><span style="font-weight:300;color:var(--text-muted);font-size:0.9rem;">Wrocław, Poland · solo indie</span></div>
+                        <div class="contact-card-label" data-i18n="contact.dev_label">Developer</div>
+                        <div class="contact-card-value" data-i18n-html="contact.dev_value">Michał JARO Jarosiński<br><span style="font-weight:300;color:var(--text-muted);font-size:0.9rem;">Wrocław, Poland · solo indie</span></div>
                     </div>
 
                     <div class="contact-card">
-                        <div class="contact-card-label">Steam keys for coverage</div>
-                        <div class="contact-card-value" style="font-size:0.95rem;font-weight:300;">
+                        <div class="contact-card-label" data-i18n="contact.keys_label">Steam keys for coverage</div>
+                        <div class="contact-card-value" style="font-size:0.95rem;font-weight:300;" data-i18n="contact.keys_value">
                             Available on request — email for press / streamer / Curator access.
                         </div>
                     </div>
                 </div>
 
-                <p class="section-label" style="margin-top:8px;">Follow / connect</p>
+                <p class="section-label" style="margin-top:8px;" data-i18n="contact.follow_label">Follow / connect</p>
                 <div class="links-grid">
                     <a href="https://store.steampowered.com/app/4451950/SPACEFIGHTER__The_Bullet_Hell/" target="_blank" rel="noopener noreferrer" class="link-card">
-                        <span>Steam page</span><span class="arrow">↗</span>
+                        <span data-i18n="contact.steam_label">Steam page</span><span class="arrow">↗</span>
                     </a>
                 </div>
             </div>
@@ -1375,21 +1491,28 @@ For fans of Vampire Survivors, Brotato, Halls of Torment, and 20 Minutes Till Da
         <div class="lightbox-inner">
             <button class="lightbox-close" aria-label="Close preview">✕</button>
             <img id="lightbox-img" src="" alt="">
-            <a id="lightbox-download" class="btn lightbox-download" download href="">Download full-size ↓</a>
+            <a id="lightbox-download" class="btn lightbox-download" download href="" data-i18n="lightbox.download">Download full-size ↓</a>
         </div>
     </dialog>
 
     <footer>
-        <p>© 2026 Michał Jarosiński · <a href="index.html">Portfolio</a> · <a href="gra.html">Game page</a></p>
+        <p data-i18n-html="footer.line">© 2026 Michał Jarosiński · <a href="index.html">Portfolio</a> · <a href="gra.html">Game page</a></p>
     </footer>
 
     <script>
+        // ── HEADER SCROLL STATE ──
+        const siteHeader = document.getElementById('site-header');
+        window.addEventListener('scroll', () => {
+            siteHeader.classList.toggle('scrolled', window.scrollY > 50);
+        }, { passive: true });
+
         // ── MOBILE MENU ──
         const menuToggle = document.getElementById('menu-toggle');
         const navLinks = document.getElementById('nav-links');
         menuToggle.addEventListener('click', () => {
             const open = menuToggle.classList.toggle('open');
             navLinks.classList.toggle('open', open);
+            siteHeader.classList.toggle('menu-open', open);
             menuToggle.setAttribute('aria-expanded', String(open));
             menuToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
         });
@@ -1397,6 +1520,7 @@ For fans of Vampire Survivors, Brotato, Halls of Torment, and 20 Minutes Till Da
             a.addEventListener('click', () => {
                 menuToggle.classList.remove('open');
                 navLinks.classList.remove('open');
+                siteHeader.classList.remove('menu-open');
                 menuToggle.setAttribute('aria-expanded', 'false');
             });
         });
@@ -1454,6 +1578,1184 @@ For fans of Vampire Survivors, Brotato, Halls of Torment, and 20 Minutes Till Da
                 }
             });
         });
+
+        // ── i18n: UI TRANSLATIONS ──
+        const UI_T = {
+  'en': {
+    'lang.label': 'Language',
+    'nav.about': 'About',
+    'nav.web': 'Web',
+    'nav.grafika': 'Graphics',
+    'nav.gra': 'Game',
+    'nav.kontakt': 'Contact',
+    'bc.portfolio': 'Portfolio',
+    'bc.presskit': 'Press Kit',
+    'press_label': 'Press Kit',
+    'hero.tag': '<strong>Vampire Survivors meets bullet hell — in space.</strong> A top-down bullet-heaven roguelite where every run is a new build. Solo-dev project launching <strong>June 8, 2026</strong> inside Steam Bullet Fest 2026.',
+    'chip.release': 'Releases June 8, 2026',
+    'chip.platform': 'Steam · Windows',
+    'chip.bullet': 'Bullet Heaven',
+    'chip.roguelite': 'Roguelite',
+    'chip.survivors': 'Survivors-like',
+    'chip.solo': 'Solo Dev',
+    'qnav.trailer': 'Trailer',
+    'qnav.factsheet': 'Factsheet',
+    'qnav.description': 'Description',
+    'qnav.store': 'Store copy',
+    'qnav.quotes': 'Quotes',
+    'qnav.screenshots': 'Screenshots',
+    'qnav.assets': 'Assets',
+    'qnav.contact': 'Contact',
+    'sec.01.label': '01 — Trailer',
+    'sec.01.heading': 'Watch the trailer',
+    'sec.02.label': '02 — Factsheet',
+    'sec.02.heading': 'At a glance',
+    'sec.03.label': '03 — Description',
+    'sec.03.heading': 'Three lengths, ready to paste',
+    'sec.04.label': '04 — Store description',
+    'sec.04.heading': 'Localized store copy',
+    'sec.05.label': '05 — Quotes',
+    'sec.05.heading': 'Developer quotes',
+    'sec.06.label': '06 — Screenshots',
+    'sec.06.heading': 'Gallery',
+    'sec.07.label': '07 — Assets',
+    'sec.07.heading': 'Logos & capsule art',
+    'sec.08.label': '08 — Press contact',
+    'sec.08.heading': 'Get in touch',
+    'trailer.placeholder': 'Trailer embed — TODO: paste YouTube URL',
+    'fs.title': 'Title',
+    'fs.developer': 'Developer',
+    'fs.developer_val': 'Michał JARO Jarosiński (solo)',
+    'fs.publisher': 'Publisher',
+    'fs.publisher_val': 'Michał JARO Jarosiński (self-published)',
+    'fs.based': 'Based in',
+    'fs.based_val': 'Wrocław, Poland',
+    'fs.release': 'Release date',
+    'fs.release_val': 'June 8, 2026 — inside <strong>Steam Bullet Fest 2026</strong> (June 8–15)',
+    'fs.platforms': 'Platforms',
+    'fs.platforms_val': 'Windows (Steam)',
+    'fs.genres': 'Genres',
+    'fs.genres_val': 'Bullet Heaven · Roguelite · Top-Down Shooter · Survivors-like',
+    'fs.price': 'Price',
+    'fs.price_val': '$2.99 USD (official launch price)',
+    'fs.languages': 'Languages',
+    'fs.languages_val': 'English (interface + audio) · Store page in EN, 简体中文, Русский, Deutsch, 日本語, Português-BR, Español-LatAm, Français, Polski',
+    'fs.engine': 'Engine',
+    'fs.length': 'Length',
+    'fs.length_val': '8–15h base game, hundreds of hours for completionists',
+    'fs.steam': 'Steam page',
+    'fs.contact': 'Press contact',
+    'desc.tab50': '50 words',
+    'desc.tab200': '200 words',
+    'desc.tab500': '500 words',
+    'desc.meta50': '~50 words · tweet / one-liner',
+    'desc.meta200': '~200 words · article intro',
+    'desc.meta500': '~500 words · review-ready',
+    'copy_btn': 'Copy to clipboard',
+    'desc.text50': `SPACEFIGHTER is a top-down bullet-heaven roguelite where every run is a new build. Stack three weapon trees into broken synergies, fight bosses with real mechanics, and survive the chaos. Solo-dev project launching June 8 on Steam — right inside Steam Bullet Fest 2026.`,
+    'desc.text200': `SPACEFIGHTER - The Bullet Hell is a top-down auto-shooter survival game launching June 8, 2026, on Steam — directly inside Steam Bullet Fest 2026. The game blends bullet-heaven structure (Vampire Survivors, Brotato) with shooter craft (real boss mechanics, weapon synergies, pilot identity).
+
+Players pilot a 2D starship and build their arsenal across three branching weapon trees — ballistic, explosive, and energy — fusing them into cross-tree synergies that break the game by minute 12 (if you choose well). Bosses arrive with telegraphed patterns, weak points, and phase transitions. Meta-progression unlocks new ships, branches, and modifiers across deaths.
+
+The game is built solo by Michał JARO Jarosiński (Wrocław, Poland) using a modern AI-assisted development workflow — Claude Code for the codebase, AI image tools for a portion of visual assets, with creative direction, balancing, and integration owned by the developer. Full AI disclosure is on the Steam page.
+
+Launch coincides with Steam Bullet Fest 2026 (June 8–15) and the Steam Summer Sale (June 25–July 9). Official launch price: $2.99 USD.`,
+    'desc.text500': `When Vampire Survivors showed up in 2022, one dev with a tiny engine kicked off a whole genre. Three years later, "bullet heaven" is one of the most copied formats on Steam — and most copies miss what made the original click: the meta-loop, the build identity, the feeling that you found the synergy.
+
+SPACEFIGHTER - The Bullet Hell is one solo dev's answer to "what should a bullet heaven feel like in 2026?" Pilot a 2D starship, choose from a roster of ships with distinct kits, and grow your arsenal across three weapon trees — ballistic, explosive, and energy. Each tree has its own scaling identity: ballistic rewards precision and consecutive hits, explosive cranks chain detonations and area control, energy is the synergy-builder with beams, lock-on, and regen tools. The fun is in the cross-tree combinations — 5 explosive plus 2 energy turns into chain detonations on energy crit; 4 ballistic plus 3 explosive turns into piercing rounds that detonate at max range. By minute 12 of a good run, the screen is unreadable and you're a god.
+
+Where many survivors-likes stumble is the boss design. SPACEFIGHTER answers with bosses that have real kits: telegraphed wind-ups, weak points, phase transitions, patterns to learn. The first kill feels earned. The first wipe teaches something. Death is data — and meta-progression unlocks new ships, new branches, new starting modifiers each time.
+
+The game is built by Michał JARO Jarosiński, a solo developer from Wrocław, Poland, using a modern AI-assisted workflow. Claude Code (Anthropic) handles the codebase under his direction. AI image tools cover a portion of visual assets, with the developer doing direction, editing, balancing, audio, and final integration. The Steam page has full AI disclosure. It's part of an emerging movement of solo developers shipping at content scale that would have required full studios five years ago — and Jarosiński is openly documenting the workflow because, as he puts it, "transparency is the only way this works long-term."
+
+SPACEFIGHTER launches June 8, 2026 — squarely inside Steam Bullet Fest 2026 (June 8–15), Valve's first dedicated showcase for the bullet hell / bullet heaven genre. A second push lands during Steam Summer Sale (June 25 – July 9). Official launch price: $2.99 USD.
+
+For fans of Vampire Survivors, Brotato, Halls of Torment, and 20 Minutes Till Dawn — but with bosses that actually fight back.`,
+    'store.lang_label': 'Language',
+    'store.short_block_label': 'Short description (≤ 300 chars)',
+    'store.long_block_label': 'Long description (Steam-ready)',
+    'store.long_meta': 'BBCode preserved',
+    'store.copy_bbcode': 'Copy as BBCode',
+    'store.copy_plain': 'Copy as plain text',
+    'quote1': 'I built the <em>Vampire Survivors</em> I\'d want to play in 2026 — with bosses that actually fight back.',
+    'quote2': 'Solo dev plus modern AI-assisted workflow is the future of indie content scale. I\'m not hiding the tools — they let me ship things one person couldn\'t ship five years ago.',
+    'quote3': 'Bullet heaven is the most exciting genre on Steam in 2026, and survivors-like fans deserve more than HP-sponge bosses.',
+    'quote_attr': '— Michał JARO Jarosiński, developer',
+    'screenshots.note': 'Click any screenshot to view full-size · all images are high-resolution, free to use for editorial coverage with credit to <strong>Michał JARO Jarosiński</strong>.',
+    'lightbox.download': 'Download full-size ↓',
+    'assets.logo_meta': 'Logo',
+    'assets.capsule_meta': 'Capsule',
+    'assets.logo_title': 'Game logo (transparent PNG)',
+    'assets.cap_header': 'Header capsule (Steam)',
+    'assets.cap_small': 'Small capsule',
+    'assets.cap_library': 'Library capsule',
+    'assets.download_png': 'Download PNG ↓',
+    'assets.dl_all_title': 'Download everything as ZIP',
+    'assets.dl_all_meta': 'Screenshots · logos · capsules · factsheet — single bundle',
+    'assets.dl_btn': 'Download press-kit-bundle.zip ↓',
+    'contact.email_label': 'Email',
+    'contact.dev_label': 'Developer',
+    'contact.dev_value': 'Michał JARO Jarosiński<br><span style="font-weight:300;color:var(--text-muted);font-size:0.9rem;">Wrocław, Poland · solo indie</span>',
+    'contact.keys_label': 'Steam keys for coverage',
+    'contact.keys_value': 'Available on request — email for press / streamer / Curator access.',
+    'contact.follow_label': 'Follow / connect',
+    'contact.steam_label': 'Steam page',
+    'footer.line': '© 2026 Michał Jarosiński · <a href="index.html">Portfolio</a> · <a href="gra.html">Game page</a>',
+  },
+  'pl': {
+    'lang.label': 'Język',
+    'nav.about': 'O mnie',
+    'nav.web': 'Web',
+    'nav.grafika': 'Grafika',
+    'nav.gra': 'Gra',
+    'nav.kontakt': 'Kontakt',
+    'bc.portfolio': 'Portfolio',
+    'bc.presskit': 'Press Kit',
+    'press_label': 'Press Kit',
+    'hero.tag': '<strong>Vampire Survivors spotyka bullet hell — w kosmosie.</strong> Top-down bullet-heaven roguelite, w którym każdy run to nowy build. Projekt solowego dewa, premiera <strong>8 czerwca 2026</strong> w ramach Steam Bullet Fest 2026.',
+    'chip.release': 'Premiera 8 czerwca 2026',
+    'chip.platform': 'Steam · Windows',
+    'chip.bullet': 'Bullet Heaven',
+    'chip.roguelite': 'Roguelite',
+    'chip.survivors': 'Survivors-like',
+    'chip.solo': 'Solo dev',
+    'qnav.trailer': 'Trailer',
+    'qnav.factsheet': 'Factsheet',
+    'qnav.description': 'Opis',
+    'qnav.store': 'Opis na Steam',
+    'qnav.quotes': 'Cytaty',
+    'qnav.screenshots': 'Screenshoty',
+    'qnav.assets': 'Assety',
+    'qnav.contact': 'Kontakt',
+    'sec.01.label': '01 — Trailer',
+    'sec.01.heading': 'Zobacz trailer',
+    'sec.02.label': '02 — Factsheet',
+    'sec.02.heading': 'W skrócie',
+    'sec.03.label': '03 — Opis',
+    'sec.03.heading': 'Trzy długości, gotowe do wklejenia',
+    'sec.04.label': '04 — Opis sklepowy',
+    'sec.04.heading': 'Zlokalizowany opis ze Steam',
+    'sec.05.label': '05 — Cytaty',
+    'sec.05.heading': 'Cytaty dewelopera',
+    'sec.06.label': '06 — Screenshoty',
+    'sec.06.heading': 'Galeria',
+    'sec.07.label': '07 — Assety',
+    'sec.07.heading': 'Logotypy i capsule art',
+    'sec.08.label': '08 — Kontakt prasowy',
+    'sec.08.heading': 'Skontaktuj się',
+    'trailer.placeholder': 'Trailer embed — TODO: wklej URL YouTube',
+    'fs.title': 'Tytuł',
+    'fs.developer': 'Deweloper',
+    'fs.developer_val': 'Michał JARO Jarosiński (solo)',
+    'fs.publisher': 'Wydawca',
+    'fs.publisher_val': 'Michał JARO Jarosiński (self-published)',
+    'fs.based': 'Lokalizacja',
+    'fs.based_val': 'Wrocław, Polska',
+    'fs.release': 'Data premiery',
+    'fs.release_val': '8 czerwca 2026 — w ramach <strong>Steam Bullet Fest 2026</strong> (8–15 czerwca)',
+    'fs.platforms': 'Platformy',
+    'fs.platforms_val': 'Windows (Steam)',
+    'fs.genres': 'Gatunki',
+    'fs.genres_val': 'Bullet Heaven · Roguelite · Top-Down Shooter · Survivors-like',
+    'fs.price': 'Cena',
+    'fs.price_val': '$2.99 USD (oficjalna cena premierowa)',
+    'fs.languages': 'Języki',
+    'fs.languages_val': 'Angielski (interfejs + audio) · Strona sklepu w EN, 简体中文, Русский, Deutsch, 日本語, Português-BR, Español-LatAm, Français, Polski',
+    'fs.engine': 'Silnik',
+    'fs.length': 'Długość rozgrywki',
+    'fs.length_val': '8–15h gry podstawowej, setki godzin dla completionistów',
+    'fs.steam': 'Strona Steam',
+    'fs.contact': 'Kontakt prasowy',
+    'desc.tab50': '50 słów',
+    'desc.tab200': '200 słów',
+    'desc.tab500': '500 słów',
+    'desc.meta50': '~50 słów · tweet / one-liner',
+    'desc.meta200': '~200 słów · intro do artykułu',
+    'desc.meta500': '~500 słów · gotowe pod recenzję',
+    'copy_btn': 'Skopiuj do schowka',
+    'desc.text50': `SPACEFIGHTER to top-down bullet-heaven roguelite, w którym każdy run to nowy build. Łącz trzy drzewka broni w rozbitne synergie, walcz z bossami o prawdziwych mechanikach i przeżyj chaos. Projekt solowego dewa, premiera 8 czerwca na Steamie — w ramach Steam Bullet Fest 2026.`,
+    'desc.text200': `SPACEFIGHTER - The Bullet Hell to top-down auto-shooter survival, którego premiera odbędzie się 8 czerwca 2026 na Steamie — w ramach Steam Bullet Fest 2026. Gra łączy strukturę bullet heaven (Vampire Survivors, Brotato) z rzemiosłem klasycznego shootera (prawdziwe mechaniki bossów, synergie broni, tożsamość pilota).
+
+Gracz pilotuje statek 2D i buduje arsenał w trzech rozgałęzionych drzewkach broni — balistycznym, wybuchowym i energetycznym — łącząc je w cross-tree synergie, które rozrywają grę w 12. minucie (jeśli wybierzesz dobrze). Bossowie mają telegraphowane wzorce, słabe punkty i przejścia między fazami. Meta-progresja odblokowuje nowe statki, gałęzie i modyfikatory między śmierciami.
+
+Grę tworzy solo Michał JARO Jarosiński (Wrocław, Polska), korzystając z nowoczesnego workflow wspomaganego AI — Claude Code dla kodu, narzędzia AI dla części assetów wizualnych, przy czym kierunek artystyczny, balancing i integracja należą do dewelopera. Pełne ujawnienie AI znajduje się na stronie Steam.
+
+Premiera zbiega się ze Steam Bullet Fest 2026 (8–15 czerwca) oraz Steam Summer Sale (25 czerwca – 9 lipca). Oficjalna cena premierowa: $2.99 USD.`,
+    'desc.text500': `Kiedy w 2022 pojawił się Vampire Survivors, jeden deweloper z malutkim silnikiem rozpalił cały gatunek. Trzy lata później „bullet heaven" to jeden z najczęściej kopiowanych formatów na Steamie — a większość kopii nie łapie tego, co sprawiło, że oryginał zaskoczył: meta-loopa, tożsamości buildu, uczucia, że to ty znalazłeś synergię.
+
+SPACEFIGHTER - The Bullet Hell to odpowiedź jednego solowego dewa na pytanie „jak powinien wyglądać bullet heaven w 2026?". Pilotuj statek 2D, wybieraj spośród różnych statków z odrębnymi zestawami i rozbudowuj arsenał w trzech drzewkach broni — balistycznym, wybuchowym i energetycznym. Każde drzewko ma własną tożsamość skalowania: balistyka nagradza precyzję i serie trafień, wybuchy rozkręcają detonacje łańcuchowe i kontrolę obszaru, energia jest budowniczym synergii — wiązki, lock-on, narzędzia regeneracji. Frajda kryje się w cross-tree kombinacjach — 5 wybuchu plus 2 energii to detonacje łańcuchowe na crit energii; 4 balistyki plus 3 wybuchu to przebijające pociski detonujące na maksymalnym dystansie. W 12. minucie dobrego runa ekran jest nieczytelny, a ty jesteś bogiem.
+
+Tam, gdzie wiele survivors-like potyka się, jest design bossów. SPACEFIGHTER odpowiada bossami z prawdziwymi zestawami: telegraphowane wind-upy, słabe punkty, przejścia między fazami, wzorce do nauczenia. Pierwszy kill czuje się zasłużenie. Pierwszy wipe czegoś uczy. Śmierć to dane — a meta-progresja za każdym razem odblokowuje nowe statki, nowe gałęzie, nowe modyfikatory startowe.
+
+Grę tworzy Michał JARO Jarosiński, solowy deweloper z Wrocławia, korzystając z nowoczesnego workflow wspomaganego AI. Claude Code (Anthropic) obsługuje codebase pod jego kierunkiem. Narzędzia AI pokrywają część assetów wizualnych, a deweloper odpowiada za reżyserię, edycję, balancing, audio i finalną integrację. Strona Steam zawiera pełne ujawnienie AI. To część rodzącego się ruchu solowych deweloperów, którzy dostarczają content w skali, jaka pięć lat temu wymagała pełnego studia — a Jarosiński otwarcie dokumentuje swój workflow, bo, jak sam mówi: „transparentność to jedyny sposób, żeby to się sprawdziło na dłuższą metę".
+
+SPACEFIGHTER ma premierę 8 czerwca 2026 — dokładnie w trakcie Steam Bullet Fest 2026 (8–15 czerwca), pierwszego dedykowanego pokazu Valve dla gatunku bullet hell / bullet heaven. Drugi push przypada na Steam Summer Sale (25 czerwca – 9 lipca). Oficjalna cena premierowa: $2.99 USD.
+
+Dla fanów Vampire Survivors, Brotato, Halls of Torment i 20 Minutes Till Dawn — ale z bossami, którzy faktycznie oddają.`,
+    'store.lang_label': 'Język',
+    'store.short_block_label': 'Krótki opis (≤ 300 znaków)',
+    'store.long_block_label': 'Długi opis (gotowy pod Steam)',
+    'store.long_meta': 'BBCode zachowany',
+    'store.copy_bbcode': 'Skopiuj jako BBCode',
+    'store.copy_plain': 'Skopiuj jako zwykły tekst',
+    'quote1': 'Zrobiłem <em>Vampire Survivors</em>, w które chciałbym pograć w 2026 — z bossami, którzy faktycznie oddają.',
+    'quote2': 'Solo dev plus nowoczesny workflow wspomagany AI to przyszłość skali contentu w indie. Nie ukrywam narzędzi — pozwalają mi wydawać rzeczy, których jedna osoba pięć lat temu nie była w stanie wydać.',
+    'quote3': 'Bullet heaven to najciekawszy gatunek na Steamie w 2026, a fani survivors-like zasługują na coś więcej niż bossów-gąbek HP.',
+    'quote_attr': '— Michał JARO Jarosiński, deweloper',
+    'screenshots.note': 'Kliknij screenshot, żeby zobaczyć w pełnym rozmiarze · wszystkie obrazy są wysokiej rozdzielczości, do dowolnego użycia w materiałach redakcyjnych z podaniem autora: <strong>Michał JARO Jarosiński</strong>.',
+    'lightbox.download': 'Pobierz w pełnym rozmiarze ↓',
+    'assets.logo_meta': 'Logo',
+    'assets.capsule_meta': 'Capsule',
+    'assets.logo_title': 'Logo gry (przezroczyste PNG)',
+    'assets.cap_header': 'Header capsule (Steam)',
+    'assets.cap_small': 'Small capsule',
+    'assets.cap_library': 'Library capsule',
+    'assets.download_png': 'Pobierz PNG ↓',
+    'assets.dl_all_title': 'Pobierz wszystko jako ZIP',
+    'assets.dl_all_meta': 'Screenshoty · logotypy · capsules · factsheet — jeden pakiet',
+    'assets.dl_btn': 'Pobierz press-kit-bundle.zip ↓',
+    'contact.email_label': 'E-mail',
+    'contact.dev_label': 'Deweloper',
+    'contact.dev_value': 'Michał JARO Jarosiński<br><span style="font-weight:300;color:var(--text-muted);font-size:0.9rem;">Wrocław, Polska · solo indie</span>',
+    'contact.keys_label': 'Klucze Steam dla prasy',
+    'contact.keys_value': 'Dostępne na życzenie — napisz po dostęp dla prasy / streamerów / Curatorów.',
+    'contact.follow_label': 'Obserwuj / złap kontakt',
+    'contact.steam_label': 'Strona Steam',
+    'footer.line': '© 2026 Michał Jarosiński · <a href="index.html">Portfolio</a> · <a href="gra.html">Strona gry</a>',
+  },
+  'de': {
+    'lang.label': 'Sprache',
+    'nav.about': 'Über mich',
+    'nav.web': 'Web',
+    'nav.grafika': 'Grafik',
+    'nav.gra': 'Spiel',
+    'nav.kontakt': 'Kontakt',
+    'bc.portfolio': 'Portfolio',
+    'bc.presskit': 'Press Kit',
+    'press_label': 'Press Kit',
+    'hero.tag': '<strong>Vampire Survivors trifft Bullet Hell — im Weltraum.</strong> Ein Top-Down Bullet-Heaven-Roguelite, in dem jeder Run ein neuer Build ist. Solo-Dev-Projekt, Release am <strong>8. Juni 2026</strong> innerhalb des Steam Bullet Fest 2026.',
+    'chip.release': 'Erscheint am 8. Juni 2026',
+    'chip.platform': 'Steam · Windows',
+    'chip.bullet': 'Bullet Heaven',
+    'chip.roguelite': 'Roguelite',
+    'chip.survivors': 'Survivors-Like',
+    'chip.solo': 'Solo Dev',
+    'qnav.trailer': 'Trailer',
+    'qnav.factsheet': 'Factsheet',
+    'qnav.description': 'Beschreibung',
+    'qnav.store': 'Store-Text',
+    'qnav.quotes': 'Zitate',
+    'qnav.screenshots': 'Screenshots',
+    'qnav.assets': 'Assets',
+    'qnav.contact': 'Kontakt',
+    'sec.01.label': '01 — Trailer',
+    'sec.01.heading': 'Trailer ansehen',
+    'sec.02.label': '02 — Factsheet',
+    'sec.02.heading': 'Auf einen Blick',
+    'sec.03.label': '03 — Beschreibung',
+    'sec.03.heading': 'Drei Längen, bereit zum Einfügen',
+    'sec.04.label': '04 — Store-Beschreibung',
+    'sec.04.heading': 'Lokalisierter Store-Text',
+    'sec.05.label': '05 — Zitate',
+    'sec.05.heading': 'Entwickler-Zitate',
+    'sec.06.label': '06 — Screenshots',
+    'sec.06.heading': 'Galerie',
+    'sec.07.label': '07 — Assets',
+    'sec.07.heading': 'Logos & Capsule Art',
+    'sec.08.label': '08 — Pressekontakt',
+    'sec.08.heading': 'Nimm Kontakt auf',
+    'trailer.placeholder': 'Trailer Embed — TODO: YouTube-URL einfügen',
+    'fs.title': 'Titel',
+    'fs.developer': 'Entwickler',
+    'fs.developer_val': 'Michał JARO Jarosiński (solo)',
+    'fs.publisher': 'Publisher',
+    'fs.publisher_val': 'Michał JARO Jarosiński (self-published)',
+    'fs.based': 'Sitz',
+    'fs.based_val': 'Wrocław, Polen',
+    'fs.release': 'Release-Datum',
+    'fs.release_val': '8. Juni 2026 — innerhalb des <strong>Steam Bullet Fest 2026</strong> (8.–15. Juni)',
+    'fs.platforms': 'Plattformen',
+    'fs.platforms_val': 'Windows (Steam)',
+    'fs.genres': 'Genres',
+    'fs.genres_val': 'Bullet Heaven · Roguelite · Top-Down Shooter · Survivors-Like',
+    'fs.price': 'Preis',
+    'fs.price_val': '$2.99 USD (offizieller Launch-Preis)',
+    'fs.languages': 'Sprachen',
+    'fs.languages_val': 'Englisch (Interface + Audio) · Store-Seite in EN, 简体中文, Русский, Deutsch, 日本語, Português-BR, Español-LatAm, Français, Polski',
+    'fs.engine': 'Engine',
+    'fs.length': 'Spiellänge',
+    'fs.length_val': '8–15 Std. Hauptspiel, hunderte Stunden für Completionisten',
+    'fs.steam': 'Steam-Seite',
+    'fs.contact': 'Pressekontakt',
+    'desc.tab50': '50 Wörter',
+    'desc.tab200': '200 Wörter',
+    'desc.tab500': '500 Wörter',
+    'desc.meta50': '~50 Wörter · Tweet / Einzeiler',
+    'desc.meta200': '~200 Wörter · Artikel-Intro',
+    'desc.meta500': '~500 Wörter · review-ready',
+    'copy_btn': 'In die Zwischenablage kopieren',
+    'desc.text50': `SPACEFIGHTER ist ein Top-Down Bullet-Heaven-Roguelite, in dem jeder Run ein neuer Build ist. Stack drei Waffenzweige zu kaputten Synergien, bekämpfe Bosse mit echten Mechaniken und überlebe das Chaos. Solo-Dev-Projekt, Release am 8. Juni auf Steam — direkt im Steam Bullet Fest 2026.`,
+    'desc.text200': `SPACEFIGHTER - The Bullet Hell ist ein Top-Down Auto-Shooter-Survival-Game, das am 8. Juni 2026 auf Steam erscheint — direkt innerhalb des Steam Bullet Fest 2026. Das Spiel verbindet die Bullet-Heaven-Struktur (Vampire Survivors, Brotato) mit klassischem Shooter-Handwerk (echte Boss-Mechaniken, Waffen-Synergien, Pilot-Identität).
+
+Spieler steuern ein 2D-Raumschiff und bauen ihr Arsenal über drei verzweigte Waffenzweige aus — ballistisch, explosiv und Energie — und fusionieren sie zu Cross-Tree-Synergien, die das Spiel ab Minute 12 zerlegen (wenn du klug wählst). Bosse kommen mit angekündigten Mustern, Schwachstellen und Phasenübergängen. Meta-Progression schaltet über mehrere Tode neue Schiffe, Zweige und Modifikatoren frei.
+
+Das Spiel wird solo von Michał JARO Jarosiński (Wrocław, Polen) entwickelt — mit einem modernen KI-unterstützten Workflow: Claude Code für die Codebasis, KI-Bildtools für einen Teil der visuellen Assets, während Creative Direction, Balancing und Integration beim Entwickler liegen. Die vollständige KI-Offenlegung steht auf der Steam-Seite.
+
+Der Launch fällt mit dem Steam Bullet Fest 2026 (8.–15. Juni) und dem Steam Summer Sale (25. Juni – 9. Juli) zusammen. Offizieller Launch-Preis: $2.99 USD.`,
+    'desc.text500': `Als Vampire Survivors 2022 auftauchte, hat ein Entwickler mit einer winzigen Engine ein ganzes Genre angeschoben. Drei Jahre später ist „Bullet Heaven" eines der meistkopierten Formate auf Steam — und die meisten Kopien verfehlen das, was das Original ausgemacht hat: den Meta-Loop, die Build-Identität, das Gefühl, dass du die Synergie selbst gefunden hast.
+
+SPACEFIGHTER - The Bullet Hell ist die Antwort eines Solo-Devs auf die Frage „wie sollte sich ein Bullet Heaven 2026 anfühlen?". Steuere ein 2D-Raumschiff, wähle aus einem Lineup von Schiffen mit eigenständigen Kits und baue dein Arsenal über drei Waffenzweige aus — ballistisch, explosiv und Energie. Jeder Zweig hat seine eigene Scaling-Identität: ballistisch belohnt Präzision und aufeinanderfolgende Treffer, explosiv kurbelt Kettendetonationen und Flächenkontrolle an, Energie ist der Synergie-Builder mit Strahlen, Lock-On und Regen-Tools. Der Spaß liegt in den Cross-Tree-Kombinationen — 5 explosiv plus 2 Energie ergibt Kettendetonationen auf Energie-Crit; 4 ballistisch plus 3 explosiv wird zu durchschlagenden Geschossen, die auf maximaler Reichweite detonieren. Ab Minute 12 eines guten Runs ist der Bildschirm unlesbar und du bist ein Gott.
+
+Wo viele Survivors-Likes stolpern, ist das Boss-Design. SPACEFIGHTER antwortet mit Bossen, die echte Kits haben: angekündigte Wind-Ups, Schwachstellen, Phasenübergänge, Patterns zum Lernen. Der erste Kill fühlt sich verdient an. Der erste Wipe lehrt dich etwas. Tod ist Daten — und Meta-Progression schaltet jedes Mal neue Schiffe, neue Zweige, neue Start-Modifikatoren frei.
+
+Das Spiel wird von Michał JARO Jarosiński entwickelt, einem Solo-Entwickler aus Wrocław in Polen, mit einem modernen KI-unterstützten Workflow. Claude Code (Anthropic) übernimmt die Codebasis unter seiner Leitung. KI-Bildtools decken einen Teil der visuellen Assets ab, während der Entwickler Regie, Editing, Balancing, Audio und finale Integration selbst macht. Die Steam-Seite enthält die vollständige KI-Offenlegung. Es ist Teil einer aufstrebenden Bewegung von Solo-Entwicklern, die Content-Skalen liefern, für die vor fünf Jahren ganze Studios nötig gewesen wären — und Jarosiński dokumentiert den Workflow offen, denn, wie er sagt: „Transparenz ist der einzige Weg, wie das langfristig funktioniert."
+
+SPACEFIGHTER erscheint am 8. Juni 2026 — mittendrin im Steam Bullet Fest 2026 (8.–15. Juni), Valves erstem dedizierten Showcase für das Bullet Hell / Bullet Heaven Genre. Ein zweiter Push folgt während des Steam Summer Sale (25. Juni – 9. Juli). Offizieller Launch-Preis: $2.99 USD.
+
+Für Fans von Vampire Survivors, Brotato, Halls of Torment und 20 Minutes Till Dawn — aber mit Bossen, die tatsächlich zurückschlagen.`,
+    'store.lang_label': 'Sprache',
+    'store.short_block_label': 'Kurzbeschreibung (≤ 300 Zeichen)',
+    'store.long_block_label': 'Lange Beschreibung (Steam-ready)',
+    'store.long_meta': 'BBCode erhalten',
+    'store.copy_bbcode': 'Als BBCode kopieren',
+    'store.copy_plain': 'Als Klartext kopieren',
+    'quote1': 'Ich habe das <em>Vampire Survivors</em> gebaut, das ich 2026 spielen wollte — mit Bossen, die tatsächlich zurückschlagen.',
+    'quote2': 'Solo-Dev plus moderner KI-unterstützter Workflow ist die Zukunft der Indie-Content-Skala. Ich verstecke die Tools nicht — sie lassen mich Dinge shippen, die eine Person vor fünf Jahren nicht hätte shippen können.',
+    'quote3': 'Bullet Heaven ist das aufregendste Genre auf Steam 2026, und Survivors-Like-Fans verdienen mehr als HP-Schwamm-Bosse.',
+    'quote_attr': '— Michał JARO Jarosiński, Entwickler',
+    'screenshots.note': 'Klicke einen Screenshot an, um ihn in voller Größe zu sehen · alle Bilder sind hochauflösend und kostenlos für redaktionelle Berichterstattung nutzbar, mit Credit an <strong>Michał JARO Jarosiński</strong>.',
+    'lightbox.download': 'In voller Größe herunterladen ↓',
+    'assets.logo_meta': 'Logo',
+    'assets.capsule_meta': 'Capsule',
+    'assets.logo_title': 'Spiele-Logo (transparentes PNG)',
+    'assets.cap_header': 'Header Capsule (Steam)',
+    'assets.cap_small': 'Small Capsule',
+    'assets.cap_library': 'Library Capsule',
+    'assets.download_png': 'PNG herunterladen ↓',
+    'assets.dl_all_title': 'Alles als ZIP herunterladen',
+    'assets.dl_all_meta': 'Screenshots · Logos · Capsules · Factsheet — ein einziges Bundle',
+    'assets.dl_btn': 'press-kit-bundle.zip herunterladen ↓',
+    'contact.email_label': 'E-Mail',
+    'contact.dev_label': 'Entwickler',
+    'contact.dev_value': 'Michał JARO Jarosiński<br><span style="font-weight:300;color:var(--text-muted);font-size:0.9rem;">Wrocław, Polen · Solo Indie</span>',
+    'contact.keys_label': 'Steam-Keys für Berichterstattung',
+    'contact.keys_value': 'Auf Anfrage verfügbar — E-Mail für Presse- / Streamer- / Curator-Zugang.',
+    'contact.follow_label': 'Folgen / vernetzen',
+    'contact.steam_label': 'Steam-Seite',
+    'footer.line': '© 2026 Michał Jarosiński · <a href="index.html">Portfolio</a> · <a href="gra.html">Spielseite</a>',
+  },
+  'es-LA': {
+    'lang.label': 'Idioma',
+    'nav.about': 'Sobre mí',
+    'nav.web': 'Web',
+    'nav.grafika': 'Gráfica',
+    'nav.gra': 'Juego',
+    'nav.kontakt': 'Contacto',
+    'bc.portfolio': 'Portfolio',
+    'bc.presskit': 'Press Kit',
+    'press_label': 'Press Kit',
+    'hero.tag': '<strong>Vampire Survivors se cruza con bullet hell — en el espacio.</strong> Un bullet-heaven roguelite top-down donde cada run es una build nueva. Proyecto solo dev, lanzamiento <strong>8 de junio de 2026</strong> dentro del Steam Bullet Fest 2026.',
+    'chip.release': 'Lanzamiento 8 de junio de 2026',
+    'chip.platform': 'Steam · Windows',
+    'chip.bullet': 'Bullet Heaven',
+    'chip.roguelite': 'Roguelite',
+    'chip.survivors': 'Survivors-like',
+    'chip.solo': 'Solo Dev',
+    'qnav.trailer': 'Tráiler',
+    'qnav.factsheet': 'Ficha',
+    'qnav.description': 'Descripción',
+    'qnav.store': 'Texto de tienda',
+    'qnav.quotes': 'Citas',
+    'qnav.screenshots': 'Capturas',
+    'qnav.assets': 'Assets',
+    'qnav.contact': 'Contacto',
+    'sec.01.label': '01 — Tráiler',
+    'sec.01.heading': 'Mira el tráiler',
+    'sec.02.label': '02 — Ficha',
+    'sec.02.heading': 'De un vistazo',
+    'sec.03.label': '03 — Descripción',
+    'sec.03.heading': 'Tres extensiones, listas para pegar',
+    'sec.04.label': '04 — Descripción de tienda',
+    'sec.04.heading': 'Texto de tienda localizado',
+    'sec.05.label': '05 — Citas',
+    'sec.05.heading': 'Citas del desarrollador',
+    'sec.06.label': '06 — Capturas',
+    'sec.06.heading': 'Galería',
+    'sec.07.label': '07 — Assets',
+    'sec.07.heading': 'Logos y capsule art',
+    'sec.08.label': '08 — Contacto de prensa',
+    'sec.08.heading': 'Ponte en contacto',
+    'trailer.placeholder': 'Embed del tráiler — TODO: pega la URL de YouTube',
+    'fs.title': 'Título',
+    'fs.developer': 'Desarrollador',
+    'fs.developer_val': 'Michał JARO Jarosiński (solo)',
+    'fs.publisher': 'Editor',
+    'fs.publisher_val': 'Michał JARO Jarosiński (self-published)',
+    'fs.based': 'Sede',
+    'fs.based_val': 'Wrocław, Polonia',
+    'fs.release': 'Fecha de lanzamiento',
+    'fs.release_val': '8 de junio de 2026 — dentro del <strong>Steam Bullet Fest 2026</strong> (8–15 de junio)',
+    'fs.platforms': 'Plataformas',
+    'fs.platforms_val': 'Windows (Steam)',
+    'fs.genres': 'Géneros',
+    'fs.genres_val': 'Bullet Heaven · Roguelite · Top-Down Shooter · Survivors-like',
+    'fs.price': 'Precio',
+    'fs.price_val': '$2.99 USD (precio oficial de lanzamiento)',
+    'fs.languages': 'Idiomas',
+    'fs.languages_val': 'Inglés (interfaz + audio) · Página de tienda en EN, 简体中文, Русский, Deutsch, 日本語, Português-BR, Español-LatAm, Français, Polski',
+    'fs.engine': 'Motor',
+    'fs.length': 'Duración',
+    'fs.length_val': '8–15h juego base, cientos de horas para completionistas',
+    'fs.steam': 'Página de Steam',
+    'fs.contact': 'Contacto de prensa',
+    'desc.tab50': '50 palabras',
+    'desc.tab200': '200 palabras',
+    'desc.tab500': '500 palabras',
+    'desc.meta50': '~50 palabras · tweet / one-liner',
+    'desc.meta200': '~200 palabras · intro de artículo',
+    'desc.meta500': '~500 palabras · listo para reseña',
+    'copy_btn': 'Copiar al portapapeles',
+    'desc.text50': `SPACEFIGHTER es un bullet-heaven roguelite top-down donde cada run es una build nueva. Apila tres árboles de armas en sinergias rotas, enfrenta jefes con mecánicas reales y sobrevive al caos. Proyecto solo dev, lanzamiento el 8 de junio en Steam — dentro del Steam Bullet Fest 2026.`,
+    'desc.text200': `SPACEFIGHTER - The Bullet Hell es un juego de supervivencia top-down auto-shooter que se lanza el 8 de junio de 2026 en Steam — directamente dentro del Steam Bullet Fest 2026. El juego mezcla la estructura de bullet heaven (Vampire Survivors, Brotato) con el oficio shooter (mecánicas de jefe reales, sinergias de armas, identidad del piloto).
+
+Los jugadores pilotan una nave 2D y construyen su arsenal a través de tres árboles de armas ramificados — balístico, explosivo y energía — fusionándolos en sinergias cross-tree que rompen el juego al minuto 12 (si eliges bien). Los jefes llegan con patrones telegrafiados, puntos débiles y transiciones de fase. La meta-progresión desbloquea nuevas naves, ramas y modificadores entre muertes.
+
+El juego lo construye en solitario Michał JARO Jarosiński (Wrocław, Polonia) usando un flujo moderno asistido por IA — Claude Code para el código, herramientas de imagen IA para una parte de los assets visuales, mientras la dirección creativa, el balance y la integración los lleva el desarrollador. La divulgación completa de IA está en la página de Steam.
+
+El lanzamiento coincide con el Steam Bullet Fest 2026 (8–15 de junio) y el Steam Summer Sale (25 de junio – 9 de julio). Precio oficial de lanzamiento: $2.99 USD.`,
+    'desc.text500': `Cuando Vampire Survivors apareció en 2022, un solo dev con un motor diminuto encendió todo un género. Tres años después, "bullet heaven" es uno de los formatos más copiados en Steam — y la mayoría de las copias no captan lo que hizo clic con el original: el meta-loop, la identidad de build, la sensación de que tú encontraste la sinergia.
+
+SPACEFIGHTER - The Bullet Hell es la respuesta de un solo dev a "¿cómo debería sentirse un bullet heaven en 2026?". Pilota una nave 2D, elige entre un roster de naves con kits distintos y haz crecer tu arsenal a través de tres árboles de armas — balístico, explosivo y energía. Cada árbol tiene su propia identidad de scaling: balístico recompensa precisión y golpes consecutivos, explosivo dispara detonaciones en cadena y control de área, energía es el armador de sinergias con rayos, lock-on y herramientas de regen. La diversión está en las combinaciones cross-tree — 5 explosivo más 2 energía se convierte en detonaciones en cadena con crit de energía; 4 balístico más 3 explosivo se vuelve proyectiles perforantes que detonan a máximo alcance. Al minuto 12 de una buena run, la pantalla es ilegible y tú eres un dios.
+
+Donde muchos survivors-like tropiezan es en el diseño de jefes. SPACEFIGHTER responde con jefes con kits reales: wind-ups telegrafiados, puntos débiles, transiciones de fase, patrones que aprender. La primera kill se siente ganada. El primer wipe enseña algo. La muerte es información — y la meta-progresión desbloquea nuevas naves, nuevas ramas y nuevos modificadores iniciales cada vez.
+
+El juego lo construye Michał JARO Jarosiński, un desarrollador solo de Wrocław, Polonia, usando un workflow moderno asistido por IA. Claude Code (Anthropic) maneja la codebase bajo su dirección. Herramientas de imagen IA cubren una parte de los assets visuales, mientras el desarrollador hace dirección, edición, balance, audio e integración final. La página de Steam tiene la divulgación completa de IA. Es parte de un movimiento emergente de desarrolladores solo que están sacando a escala de contenido lo que hace cinco años habría requerido estudios completos — y Jarosiński documenta el workflow abiertamente porque, como dice, "la transparencia es la única manera de que esto funcione a largo plazo".
+
+SPACEFIGHTER se lanza el 8 de junio de 2026 — justo dentro del Steam Bullet Fest 2026 (8–15 de junio), el primer escaparate dedicado de Valve al género bullet hell / bullet heaven. Un segundo empuje cae durante el Steam Summer Sale (25 de junio – 9 de julio). Precio oficial de lanzamiento: $2.99 USD.
+
+Para fans de Vampire Survivors, Brotato, Halls of Torment y 20 Minutes Till Dawn — pero con jefes que de verdad responden.`,
+    'store.lang_label': 'Idioma',
+    'store.short_block_label': 'Descripción corta (≤ 300 caracteres)',
+    'store.long_block_label': 'Descripción larga (lista para Steam)',
+    'store.long_meta': 'BBCode preservado',
+    'store.copy_bbcode': 'Copiar como BBCode',
+    'store.copy_plain': 'Copiar como texto plano',
+    'quote1': 'Construí el <em>Vampire Survivors</em> que querría jugar en 2026 — con jefes que de verdad responden.',
+    'quote2': 'Solo dev más workflow moderno asistido por IA es el futuro de la escala de contenido indie. No escondo las herramientas — me dejan sacar cosas que una persona no podía sacar hace cinco años.',
+    'quote3': 'Bullet heaven es el género más emocionante en Steam en 2026, y los fans de survivors-like merecen más que jefes esponja de HP.',
+    'quote_attr': '— Michał JARO Jarosiński, desarrollador',
+    'screenshots.note': 'Haz clic en cualquier captura para verla en tamaño completo · todas las imágenes son de alta resolución, libres de usar para cobertura editorial con crédito a <strong>Michał JARO Jarosiński</strong>.',
+    'lightbox.download': 'Descargar tamaño completo ↓',
+    'assets.logo_meta': 'Logo',
+    'assets.capsule_meta': 'Capsule',
+    'assets.logo_title': 'Logo del juego (PNG transparente)',
+    'assets.cap_header': 'Header capsule (Steam)',
+    'assets.cap_small': 'Small capsule',
+    'assets.cap_library': 'Library capsule',
+    'assets.download_png': 'Descargar PNG ↓',
+    'assets.dl_all_title': 'Descargar todo como ZIP',
+    'assets.dl_all_meta': 'Capturas · logos · capsules · ficha — un solo bundle',
+    'assets.dl_btn': 'Descargar press-kit-bundle.zip ↓',
+    'contact.email_label': 'Email',
+    'contact.dev_label': 'Desarrollador',
+    'contact.dev_value': 'Michał JARO Jarosiński<br><span style="font-weight:300;color:var(--text-muted);font-size:0.9rem;">Wrocław, Polonia · solo indie</span>',
+    'contact.keys_label': 'Keys de Steam para cobertura',
+    'contact.keys_value': 'Disponibles bajo pedido — escribe para acceso de prensa / streamer / Curador.',
+    'contact.follow_label': 'Sigue / conecta',
+    'contact.steam_label': 'Página de Steam',
+    'footer.line': '© 2026 Michał Jarosiński · <a href="index.html">Portfolio</a> · <a href="gra.html">Página del juego</a>',
+  },
+  'fr': {
+    'lang.label': 'Langue',
+    'nav.about': 'À propos',
+    'nav.web': 'Web',
+    'nav.grafika': 'Graphisme',
+    'nav.gra': 'Jeu',
+    'nav.kontakt': 'Contact',
+    'bc.portfolio': 'Portfolio',
+    'bc.presskit': 'Press Kit',
+    'press_label': 'Press Kit',
+    'hero.tag': '<strong>Vampire Survivors rencontre le bullet hell — dans l\'espace.</strong> Un bullet-heaven roguelite en vue de dessus où chaque run est un nouveau build. Projet solo dev, sortie le <strong>8 juin 2026</strong> dans le Steam Bullet Fest 2026.',
+    'chip.release': 'Sortie le 8 juin 2026',
+    'chip.platform': 'Steam · Windows',
+    'chip.bullet': 'Bullet Heaven',
+    'chip.roguelite': 'Roguelite',
+    'chip.survivors': 'Survivors-like',
+    'chip.solo': 'Solo Dev',
+    'qnav.trailer': 'Trailer',
+    'qnav.factsheet': 'Fiche',
+    'qnav.description': 'Description',
+    'qnav.store': 'Texte de la boutique',
+    'qnav.quotes': 'Citations',
+    'qnav.screenshots': 'Captures',
+    'qnav.assets': 'Assets',
+    'qnav.contact': 'Contact',
+    'sec.01.label': '01 — Trailer',
+    'sec.01.heading': 'Regarder le trailer',
+    'sec.02.label': '02 — Fiche',
+    'sec.02.heading': 'En un coup d\'œil',
+    'sec.03.label': '03 — Description',
+    'sec.03.heading': 'Trois longueurs, prêtes à coller',
+    'sec.04.label': '04 — Description boutique',
+    'sec.04.heading': 'Texte boutique localisé',
+    'sec.05.label': '05 — Citations',
+    'sec.05.heading': 'Citations du développeur',
+    'sec.06.label': '06 — Captures',
+    'sec.06.heading': 'Galerie',
+    'sec.07.label': '07 — Assets',
+    'sec.07.heading': 'Logos et capsule art',
+    'sec.08.label': '08 — Contact presse',
+    'sec.08.heading': 'Prends contact',
+    'trailer.placeholder': 'Embed du trailer — TODO : colle l\'URL YouTube',
+    'fs.title': 'Titre',
+    'fs.developer': 'Développeur',
+    'fs.developer_val': 'Michał JARO Jarosiński (solo)',
+    'fs.publisher': 'Éditeur',
+    'fs.publisher_val': 'Michał JARO Jarosiński (self-published)',
+    'fs.based': 'Basé à',
+    'fs.based_val': 'Wrocław, Pologne',
+    'fs.release': 'Date de sortie',
+    'fs.release_val': '8 juin 2026 — dans le <strong>Steam Bullet Fest 2026</strong> (8–15 juin)',
+    'fs.platforms': 'Plateformes',
+    'fs.platforms_val': 'Windows (Steam)',
+    'fs.genres': 'Genres',
+    'fs.genres_val': 'Bullet Heaven · Roguelite · Top-Down Shooter · Survivors-like',
+    'fs.price': 'Prix',
+    'fs.price_val': '$2.99 USD (prix officiel de lancement)',
+    'fs.languages': 'Langues',
+    'fs.languages_val': 'Anglais (interface + audio) · Page boutique en EN, 简体中文, Русский, Deutsch, 日本語, Português-BR, Español-LatAm, Français, Polski',
+    'fs.engine': 'Moteur',
+    'fs.length': 'Durée',
+    'fs.length_val': '8–15h pour le jeu de base, des centaines d\'heures pour les completionnistes',
+    'fs.steam': 'Page Steam',
+    'fs.contact': 'Contact presse',
+    'desc.tab50': '50 mots',
+    'desc.tab200': '200 mots',
+    'desc.tab500': '500 mots',
+    'desc.meta50': '~50 mots · tweet / accroche',
+    'desc.meta200': '~200 mots · intro d\'article',
+    'desc.meta500': '~500 mots · prêt pour test',
+    'copy_btn': 'Copier dans le presse-papiers',
+    'desc.text50': `SPACEFIGHTER est un bullet-heaven roguelite en vue de dessus où chaque run est un nouveau build. Empile trois arbres d'armes en synergies cassées, affronte des boss aux mécaniques réelles, et survis au chaos. Projet solo dev, sortie le 8 juin sur Steam — en plein Steam Bullet Fest 2026.`,
+    'desc.text200': `SPACEFIGHTER - The Bullet Hell est un jeu de survie auto-shooter en vue de dessus qui sort le 8 juin 2026 sur Steam — directement dans le Steam Bullet Fest 2026. Le jeu mêle la structure du bullet heaven (Vampire Survivors, Brotato) au savoir-faire du shooter (vraies mécaniques de boss, synergies d'armes, identité du pilote).
+
+Tu pilotes un vaisseau 2D et construis ton arsenal à travers trois arbres d'armes — balistique, explosif et énergie — en les fusionnant en synergies cross-tree qui cassent le jeu à la 12e minute (si tu choisis bien). Les boss arrivent avec des patterns télégraphés, des points faibles et des transitions de phase. La méta-progression débloque de nouveaux vaisseaux, branches et modificateurs au fil des morts.
+
+Le jeu est construit en solo par Michał JARO Jarosiński (Wrocław, Pologne) avec un workflow moderne assisté par IA — Claude Code pour la codebase, outils d'imagerie IA pour une partie des assets visuels, la direction créative, l'équilibrage et l'intégration restant entre les mains du développeur. La divulgation complète d'IA est sur la page Steam.
+
+Le lancement coïncide avec le Steam Bullet Fest 2026 (8–15 juin) et le Steam Summer Sale (25 juin – 9 juillet). Prix officiel de lancement : $2.99 USD.`,
+    'desc.text500': `Quand Vampire Survivors est arrivé en 2022, un seul développeur avec un moteur minuscule a lancé tout un genre. Trois ans plus tard, "bullet heaven" est l'un des formats les plus copiés sur Steam — et la plupart des copies ratent ce qui faisait cliquer l'original : la méta-boucle, l'identité du build, le sentiment d'avoir trouvé la synergie.
+
+SPACEFIGHTER - The Bullet Hell est la réponse d'un dev solo à la question "à quoi devrait ressembler un bullet heaven en 2026 ?". Pilote un vaisseau 2D, choisis parmi un roster de vaisseaux avec des kits distincts, et fais grandir ton arsenal à travers trois arbres d'armes — balistique, explosif et énergie. Chaque arbre a sa propre identité de scaling : le balistique récompense la précision et les coups consécutifs, l'explosif fait monter les détonations en chaîne et le contrôle de zone, l'énergie est le bâtisseur de synergies avec rayons, lock-on et outils de regen. Le fun se trouve dans les combinaisons cross-tree — 5 explosif plus 2 énergie devient des détonations en chaîne sur crit d'énergie ; 4 balistique plus 3 explosif devient des projectiles perforants qui détonent à portée max. À la 12e minute d'un bon run, l'écran est illisible et tu es un dieu.
+
+Là où beaucoup de survivors-like trébuchent, c'est le design des boss. SPACEFIGHTER répond avec des boss qui ont de vrais kits : wind-ups télégraphés, points faibles, transitions de phase, patterns à apprendre. Le premier kill se sent mérité. Le premier wipe t'apprend quelque chose. La mort, c'est de la donnée — et la méta-progression débloque à chaque fois de nouveaux vaisseaux, branches et modificateurs de départ.
+
+Le jeu est construit par Michał JARO Jarosiński, développeur solo basé à Wrocław en Pologne, avec un workflow moderne assisté par IA. Claude Code (Anthropic) gère la codebase sous sa direction. Des outils d'imagerie IA couvrent une partie des assets visuels, le développeur faisant la direction, le montage, l'équilibrage, l'audio et l'intégration finale. La page Steam contient la divulgation complète d'IA. Cela s'inscrit dans un mouvement émergent de développeurs solo livrant à des échelles de contenu qui auraient demandé des studios entiers il y a cinq ans — et Jarosiński documente le workflow ouvertement, parce que, comme il le dit, "la transparence est la seule façon que ça fonctionne sur le long terme".
+
+SPACEFIGHTER sort le 8 juin 2026 — pile dans le Steam Bullet Fest 2026 (8–15 juin), la première vitrine dédiée de Valve au genre bullet hell / bullet heaven. Un second push tombe pendant le Steam Summer Sale (25 juin – 9 juillet). Prix officiel de lancement : $2.99 USD.
+
+Pour les fans de Vampire Survivors, Brotato, Halls of Torment et 20 Minutes Till Dawn — mais avec des boss qui ripostent vraiment.`,
+    'store.lang_label': 'Langue',
+    'store.short_block_label': 'Description courte (≤ 300 caractères)',
+    'store.long_block_label': 'Description longue (prête pour Steam)',
+    'store.long_meta': 'BBCode préservé',
+    'store.copy_bbcode': 'Copier en BBCode',
+    'store.copy_plain': 'Copier en texte brut',
+    'quote1': 'J\'ai construit le <em>Vampire Survivors</em> auquel j\'aurais voulu jouer en 2026 — avec des boss qui ripostent vraiment.',
+    'quote2': 'Dev solo plus workflow moderne assisté par IA, c\'est l\'avenir de l\'échelle de contenu indie. Je ne cache pas les outils — ils me permettent de sortir des choses qu\'une personne ne pouvait pas sortir il y a cinq ans.',
+    'quote3': 'Le bullet heaven est le genre le plus excitant sur Steam en 2026, et les fans de survivors-like méritent mieux que des boss-éponges à PV.',
+    'quote_attr': '— Michał JARO Jarosiński, développeur',
+    'screenshots.note': 'Clique sur n\'importe quelle capture pour la voir en taille réelle · toutes les images sont en haute résolution, libres d\'utilisation pour une couverture éditoriale avec crédit à <strong>Michał JARO Jarosiński</strong>.',
+    'lightbox.download': 'Télécharger en taille réelle ↓',
+    'assets.logo_meta': 'Logo',
+    'assets.capsule_meta': 'Capsule',
+    'assets.logo_title': 'Logo du jeu (PNG transparent)',
+    'assets.cap_header': 'Header capsule (Steam)',
+    'assets.cap_small': 'Small capsule',
+    'assets.cap_library': 'Library capsule',
+    'assets.download_png': 'Télécharger PNG ↓',
+    'assets.dl_all_title': 'Tout télécharger en ZIP',
+    'assets.dl_all_meta': 'Captures · logos · capsules · fiche — un seul bundle',
+    'assets.dl_btn': 'Télécharger press-kit-bundle.zip ↓',
+    'contact.email_label': 'E-mail',
+    'contact.dev_label': 'Développeur',
+    'contact.dev_value': 'Michał JARO Jarosiński<br><span style="font-weight:300;color:var(--text-muted);font-size:0.9rem;">Wrocław, Pologne · solo indé</span>',
+    'contact.keys_label': 'Clés Steam pour couverture',
+    'contact.keys_value': 'Disponibles sur demande — écris pour un accès presse / streamer / Curateur.',
+    'contact.follow_label': 'Suivre / se connecter',
+    'contact.steam_label': 'Page Steam',
+    'footer.line': '© 2026 Michał Jarosiński · <a href="index.html">Portfolio</a> · <a href="gra.html">Page du jeu</a>',
+  },
+  'ja': {
+    'lang.label': '言語',
+    'nav.about': 'プロフィール',
+    'nav.web': 'Web',
+    'nav.grafika': 'グラフィック',
+    'nav.gra': 'ゲーム',
+    'nav.kontakt': 'お問い合わせ',
+    'bc.portfolio': 'ポートフォリオ',
+    'bc.presskit': 'プレスキット',
+    'press_label': 'プレスキット',
+    'hero.tag': '<strong>『ヴァンパイア・サバイバーズ』と弾幕シューティングの融合——宇宙で。</strong> ランごとに新しいビルドが生まれる、トップダウンのブレットヘブン・ローグライト。ソロ開発プロジェクト、<strong>2026年6月8日</strong>Steam Bullet Fest 2026にてリリース。',
+    'chip.release': '2026年6月8日リリース',
+    'chip.platform': 'Steam · Windows',
+    'chip.bullet': 'Bullet Heaven',
+    'chip.roguelite': 'ローグライト',
+    'chip.survivors': 'サバイバーズライク',
+    'chip.solo': 'ソロ開発',
+    'qnav.trailer': 'トレーラー',
+    'qnav.factsheet': 'ファクトシート',
+    'qnav.description': '説明',
+    'qnav.store': 'ストアテキスト',
+    'qnav.quotes': '引用',
+    'qnav.screenshots': 'スクリーンショット',
+    'qnav.assets': 'アセット',
+    'qnav.contact': 'お問い合わせ',
+    'sec.01.label': '01 — トレーラー',
+    'sec.01.heading': 'トレーラーを見る',
+    'sec.02.label': '02 — ファクトシート',
+    'sec.02.heading': '一目で',
+    'sec.03.label': '03 — 説明',
+    'sec.03.heading': '3つの長さ、コピペ可能',
+    'sec.04.label': '04 — ストア説明',
+    'sec.04.heading': 'ローカライズ済みストアテキスト',
+    'sec.05.label': '05 — 引用',
+    'sec.05.heading': '開発者の言葉',
+    'sec.06.label': '06 — スクリーンショット',
+    'sec.06.heading': 'ギャラリー',
+    'sec.07.label': '07 — アセット',
+    'sec.07.heading': 'ロゴとカプセルアート',
+    'sec.08.label': '08 — プレス連絡先',
+    'sec.08.heading': 'お問い合わせ',
+    'trailer.placeholder': 'トレーラー埋め込み — TODO: YouTube URLを貼る',
+    'fs.title': 'タイトル',
+    'fs.developer': '開発者',
+    'fs.developer_val': 'Michał JARO Jarosiński（ソロ）',
+    'fs.publisher': 'パブリッシャー',
+    'fs.publisher_val': 'Michał JARO Jarosiński（セルフパブリッシュ）',
+    'fs.based': '拠点',
+    'fs.based_val': 'ポーランド、Wrocław',
+    'fs.release': 'リリース日',
+    'fs.release_val': '2026年6月8日 — <strong>Steam Bullet Fest 2026</strong>（6月8日〜15日）内',
+    'fs.platforms': 'プラットフォーム',
+    'fs.platforms_val': 'Windows (Steam)',
+    'fs.genres': 'ジャンル',
+    'fs.genres_val': 'ブレットヘブン · ローグライト · トップダウンシューター · サバイバーズライク',
+    'fs.price': '価格',
+    'fs.price_val': '$2.99 USD（公式リリース価格）',
+    'fs.languages': '対応言語',
+    'fs.languages_val': '英語（インターフェース＋音声）· ストアページは EN, 简体中文, Русский, Deutsch, 日本語, Português-BR, Español-LatAm, Français, Polski',
+    'fs.engine': 'エンジン',
+    'fs.length': 'プレイ時間',
+    'fs.length_val': '基本ゲーム8〜15時間、コンプリート派は数百時間',
+    'fs.steam': 'Steamページ',
+    'fs.contact': 'プレス連絡先',
+    'desc.tab50': '50語',
+    'desc.tab200': '200語',
+    'desc.tab500': '500語',
+    'desc.meta50': '約50語 · ツイート / 一行紹介',
+    'desc.meta200': '約200語 · 記事イントロ',
+    'desc.meta500': '約500語 · レビュー対応',
+    'copy_btn': 'クリップボードにコピー',
+    'desc.text50': `SPACEFIGHTERはトップダウンのブレットヘブン・ローグライト——ランごとに新しいビルドが生まれる。3つの武器ツリーを壊れたシナジーへと積み上げ、本物のメカニクスを持つボスと戦い、混沌を生き抜け。ソロ開発プロジェクト、6月8日にSteamでリリース——Steam Bullet Fest 2026にて。`,
+    'desc.text200': `SPACEFIGHTER - The Bullet Hellは、2026年6月8日にSteamでリリースされるトップダウン・オートシューター・サバイバルです——Steam Bullet Fest 2026の真っ只中で。ブレットヘブンの構造（『ヴァンパイア・サバイバーズ』、Brotato）と、シューターの作り込み（本物のボスメカニクス、武器シナジー、パイロットのアイデンティティ）を融合しています。
+
+プレイヤーは2D宇宙戦闘機を操り、3つの分岐型武器ツリー——弾道、爆発、エネルギー——にまたがって武器庫を構築し、12分目にゲームを壊すクロスツリーのシナジーへと融合させていく（うまく選べば）。ボスは事前にテレグラフされるパターン、弱点、フェーズ移行を持って登場します。メタプログレッションは、死を重ねるごとに新しい戦闘機、ツリー、モディファイアを解禁します。
+
+ゲームはMichał JARO Jarosiński（ポーランド、Wrocław）が、現代のAIアシスト型開発ワークフローを使ってソロで制作しています——コードはClaude Code、ビジュアルアセットの一部はAI画像ツール、ただしクリエイティブ・ディレクション、バランス、統合はすべて開発者の手によるものです。完全なAI開示はSteamページにあります。
+
+リリースはSteam Bullet Fest 2026（6月8日〜15日）およびSteam Summer Sale（6月25日〜7月9日）と重なります。公式リリース価格：$2.99 USD。`,
+    'desc.text500': `2022年に『ヴァンパイア・サバイバーズ』が登場したとき、小さなエンジンを持つ一人のデベロッパーが、ジャンルそのものを立ち上げた。3年後、「ブレットヘブン」はSteamで最も模倣されているフォーマットの一つになったが、そのほとんどはオリジナルが刺さった理由——メタループ、ビルドのアイデンティティ、自分でシナジーを見つけたという感覚——を取りこぼしている。
+
+SPACEFIGHTER - The Bullet Hellは、ソロデベロッパー一人による「2026年のブレットヘブンはどう感じられるべきか？」への答えだ。2D宇宙戦闘機を操り、それぞれ異なるキットを持つ戦闘機ロスターから選び、3つの武器ツリー——弾道、爆発、エネルギー——にまたがって武器庫を育てていく。各ツリーは独自のスケーリング・アイデンティティを持つ：弾道は精確さと連続ヒットを報い、爆発は連鎖爆発とエリアコントロールを加速させ、エネルギーはビーム、ロックオン、リジェネ・ツールを備えたシナジー構築役だ。本当の楽しさはクロスツリーの組み合わせにある——爆発5＋エネルギー2でエネルギークリットによる連鎖爆発、弾道4＋爆発3で最大射程で爆発する貫通弾。良いランの12分目には、画面は読み取れず、お前は神になっている。
+
+多くのサバイバーズライクが躓くのはボス設計だ。SPACEFIGHTERは、本物のキットを持つボスで応える：テレグラフされるウィンドアップ、弱点、フェーズ移行、学ぶべきパターン。最初のキルは獲得した手応えがある。最初の全滅は何かを教えてくれる。死はデータだ——そしてメタプログレッションは、毎回新しい戦闘機、新しい枝、新しいスタートモディファイアを解禁する。
+
+ゲームはポーランドのWrocławを拠点とするソロ開発者Michał JARO Jarosińskiが、現代のAIアシスト型ワークフローを使って制作している。Claude Code（Anthropic）が彼の指示の下でコードベースを扱う。AI画像ツールはビジュアルアセットの一部をカバーし、ディレクション、編集、バランス、音響、最終統合は開発者自身が行う。Steamページには完全なAI開示が掲載されている。これは、5年前であればフルスタジオを必要としたコンテンツスケールで出荷するソロ開発者たちの新興運動の一部であり——Jarosiński本人の言葉を借りれば「透明性こそが、長期的にこれが機能する唯一の方法だ」——彼はワークフローを公然と記録している。
+
+SPACEFIGHTERは2026年6月8日にリリースされる——ちょうどSteam Bullet Fest 2026（6月8日〜15日）の最中、Valve初のブレットヘル／ブレットヘブン・ジャンル専用ショーケースの中で。第二弾のプッシュはSteam Summer Sale（6月25日〜7月9日）に重なる。公式リリース価格：$2.99 USD。
+
+『ヴァンパイア・サバイバーズ』、Brotato、Halls of Torment、20 Minutes Till Dawnのファンへ——ただし、ちゃんと反撃してくるボスたちと共に。`,
+    'store.lang_label': '言語',
+    'store.short_block_label': '短い説明（300文字以内）',
+    'store.long_block_label': '長い説明（Steam対応）',
+    'store.long_meta': 'BBCode保持',
+    'store.copy_bbcode': 'BBCodeとしてコピー',
+    'store.copy_plain': 'プレーンテキストとしてコピー',
+    'quote1': '2026年に自分が遊びたい<em>『ヴァンパイア・サバイバーズ』</em>を作った——ちゃんと反撃してくるボスと共に。',
+    'quote2': 'ソロ開発＋現代のAIアシスト型ワークフローは、インディーのコンテンツスケールの未来だ。ツールを隠したりはしない——5年前なら一人では出荷できなかったものを、これらは可能にしてくれる。',
+    'quote3': '2026年のSteamで最もエキサイティングなジャンルはブレットヘブンであり、サバイバーズライクのファンはHPスポンジ・ボス以上のものに値する。',
+    'quote_attr': '— Michał JARO Jarosiński、開発者',
+    'screenshots.note': 'クリックでスクリーンショットを原寸表示 · すべての画像は高解像度で、<strong>Michał JARO Jarosiński</strong>のクレジット記載のもと、編集記事での使用は自由です。',
+    'lightbox.download': '原寸でダウンロード ↓',
+    'assets.logo_meta': 'ロゴ',
+    'assets.capsule_meta': 'カプセル',
+    'assets.logo_title': 'ゲームロゴ（透明PNG）',
+    'assets.cap_header': 'Header capsule（Steam）',
+    'assets.cap_small': 'Small capsule',
+    'assets.cap_library': 'Library capsule',
+    'assets.download_png': 'PNGをダウンロード ↓',
+    'assets.dl_all_title': 'すべてをZIPでダウンロード',
+    'assets.dl_all_meta': 'スクリーンショット · ロゴ · カプセル · ファクトシート — 一つのバンドルで',
+    'assets.dl_btn': 'press-kit-bundle.zipをダウンロード ↓',
+    'contact.email_label': 'メール',
+    'contact.dev_label': '開発者',
+    'contact.dev_value': 'Michał JARO Jarosiński<br><span style="font-weight:300;color:var(--text-muted);font-size:0.9rem;">ポーランド、Wrocław · ソロインディー</span>',
+    'contact.keys_label': '取材用Steamキー',
+    'contact.keys_value': 'リクエストで提供可能 — プレス／ストリーマー／キュレーターアクセスはメールでご連絡を。',
+    'contact.follow_label': 'フォロー／繋がる',
+    'contact.steam_label': 'Steamページ',
+    'footer.line': '© 2026 Michał Jarosiński · <a href="index.html">ポートフォリオ</a> · <a href="gra.html">ゲームページ</a>',
+  },
+  'pt-BR': {
+    'lang.label': 'Idioma',
+    'nav.about': 'Sobre',
+    'nav.web': 'Web',
+    'nav.grafika': 'Gráfica',
+    'nav.gra': 'Jogo',
+    'nav.kontakt': 'Contato',
+    'bc.portfolio': 'Portfólio',
+    'bc.presskit': 'Press Kit',
+    'press_label': 'Press Kit',
+    'hero.tag': '<strong>Vampire Survivors encontra bullet hell — no espaço.</strong> Um bullet-heaven roguelite top-down onde cada run é uma build nova. Projeto solo dev, lançamento <strong>8 de junho de 2026</strong> dentro do Steam Bullet Fest 2026.',
+    'chip.release': 'Lançamento 8 de junho de 2026',
+    'chip.platform': 'Steam · Windows',
+    'chip.bullet': 'Bullet Heaven',
+    'chip.roguelite': 'Roguelite',
+    'chip.survivors': 'Survivors-like',
+    'chip.solo': 'Solo Dev',
+    'qnav.trailer': 'Trailer',
+    'qnav.factsheet': 'Ficha',
+    'qnav.description': 'Descrição',
+    'qnav.store': 'Texto da loja',
+    'qnav.quotes': 'Citações',
+    'qnav.screenshots': 'Capturas',
+    'qnav.assets': 'Assets',
+    'qnav.contact': 'Contato',
+    'sec.01.label': '01 — Trailer',
+    'sec.01.heading': 'Assista ao trailer',
+    'sec.02.label': '02 — Ficha',
+    'sec.02.heading': 'Resumo',
+    'sec.03.label': '03 — Descrição',
+    'sec.03.heading': 'Três tamanhos, prontos pra colar',
+    'sec.04.label': '04 — Descrição da loja',
+    'sec.04.heading': 'Texto da loja localizado',
+    'sec.05.label': '05 — Citações',
+    'sec.05.heading': 'Citações do desenvolvedor',
+    'sec.06.label': '06 — Capturas',
+    'sec.06.heading': 'Galeria',
+    'sec.07.label': '07 — Assets',
+    'sec.07.heading': 'Logos e capsule art',
+    'sec.08.label': '08 — Contato de imprensa',
+    'sec.08.heading': 'Entre em contato',
+    'trailer.placeholder': 'Embed do trailer — TODO: cole a URL do YouTube',
+    'fs.title': 'Título',
+    'fs.developer': 'Desenvolvedor',
+    'fs.developer_val': 'Michał JARO Jarosiński (solo)',
+    'fs.publisher': 'Publisher',
+    'fs.publisher_val': 'Michał JARO Jarosiński (self-published)',
+    'fs.based': 'Sede',
+    'fs.based_val': 'Wrocław, Polônia',
+    'fs.release': 'Data de lançamento',
+    'fs.release_val': '8 de junho de 2026 — dentro do <strong>Steam Bullet Fest 2026</strong> (8–15 de junho)',
+    'fs.platforms': 'Plataformas',
+    'fs.platforms_val': 'Windows (Steam)',
+    'fs.genres': 'Gêneros',
+    'fs.genres_val': 'Bullet Heaven · Roguelite · Top-Down Shooter · Survivors-like',
+    'fs.price': 'Preço',
+    'fs.price_val': '$2.99 USD (preço oficial de lançamento)',
+    'fs.languages': 'Idiomas',
+    'fs.languages_val': 'Inglês (interface + áudio) · Página da loja em EN, 简体中文, Русский, Deutsch, 日本語, Português-BR, Español-LatAm, Français, Polski',
+    'fs.engine': 'Engine',
+    'fs.length': 'Duração',
+    'fs.length_val': '8–15h de jogo base, centenas de horas para completionistas',
+    'fs.steam': 'Página Steam',
+    'fs.contact': 'Contato de imprensa',
+    'desc.tab50': '50 palavras',
+    'desc.tab200': '200 palavras',
+    'desc.tab500': '500 palavras',
+    'desc.meta50': '~50 palavras · tweet / one-liner',
+    'desc.meta200': '~200 palavras · intro de artigo',
+    'desc.meta500': '~500 palavras · pronto pra resenha',
+    'copy_btn': 'Copiar para a área de transferência',
+    'desc.text50': `SPACEFIGHTER é um bullet-heaven roguelite top-down onde cada run é uma build nova. Empilhe três árvores de armas em sinergias quebradas, encare chefes com mecânicas reais e sobreviva ao caos. Projeto solo dev, lançamento 8 de junho na Steam — dentro do Steam Bullet Fest 2026.`,
+    'desc.text200': `SPACEFIGHTER - The Bullet Hell é um auto-shooter de sobrevivência top-down que chega em 8 de junho de 2026 na Steam — direto dentro do Steam Bullet Fest 2026. O jogo mistura a estrutura de bullet heaven (Vampire Survivors, Brotato) com a manha de shooter (mecânicas de chefe reais, sinergias de armas, identidade do piloto).
+
+Você pilota uma nave 2D e constrói seu arsenal por três árvores de armas ramificadas — balística, explosiva e energia — fundindo-as em sinergias cross-tree que quebram o jogo no minuto 12 (se você escolher bem). Chefes chegam com padrões telegrafados, pontos fracos e transições de fase. A meta-progressão libera novas naves, ramos e modificadores ao longo das mortes.
+
+O jogo é feito solo por Michał JARO Jarosiński (Wrocław, Polônia) usando um workflow moderno assistido por IA — Claude Code para o código, ferramentas de imagem IA para uma parte dos assets visuais, com direção criativa, balanceamento e integração nas mãos do desenvolvedor. A divulgação completa de IA está na página da Steam.
+
+O lançamento coincide com o Steam Bullet Fest 2026 (8–15 de junho) e o Steam Summer Sale (25 de junho – 9 de julho). Preço oficial de lançamento: $2.99 USD.`,
+    'desc.text500': `Quando Vampire Survivors apareceu em 2022, um dev solo com uma engine miúda inaugurou um gênero inteiro. Três anos depois, "bullet heaven" é um dos formatos mais copiados da Steam — e a maioria das cópias erra o que fez o original engatar: o meta-loop, a identidade da build, a sensação de que foi você que achou a sinergia.
+
+SPACEFIGHTER - The Bullet Hell é a resposta de um dev solo à pergunta "como um bullet heaven deveria se sentir em 2026?". Pilote uma nave 2D, escolha entre um roster de naves com kits distintos, e faça seu arsenal crescer em três árvores de armas — balística, explosiva e energia. Cada árvore tem identidade de scaling própria: balística recompensa precisão e tiros em sequência, explosiva acelera detonações em cadeia e controle de área, energia é a construtora de sinergias com feixes, lock-on e ferramentas de regen. A graça está nas combinações cross-tree — 5 de explosivo mais 2 de energia vira detonações em cadeia no crit de energia; 4 de balístico mais 3 de explosivo vira tiros perfurantes que detonam no alcance máximo. No minuto 12 de uma run boa, a tela tá ilegível e você é um deus.
+
+Onde muitos survivors-like tropeçam é no design de chefe. SPACEFIGHTER responde com chefes com kits de verdade: wind-ups telegrafados, pontos fracos, transições de fase, padrões pra aprender. O primeiro kill se sente conquistado. O primeiro wipe ensina alguma coisa. Morte é dado — e a meta-progressão libera novas naves, novos ramos, novos modificadores iniciais a cada vez.
+
+O jogo é feito por Michał JARO Jarosiński, um desenvolvedor solo de Wrocław, Polônia, usando um workflow moderno assistido por IA. Claude Code (Anthropic) lida com a codebase sob a direção dele. Ferramentas de imagem IA cobrem uma parte dos assets visuais, e o desenvolvedor cuida de direção, edição, balanceamento, áudio e integração final. A página da Steam traz a divulgação completa de IA. É parte de um movimento emergente de devs solo entregando em escala de conteúdo que cinco anos atrás teria exigido estúdios inteiros — e Jarosiński documenta o workflow abertamente porque, como ele coloca, "transparência é o único jeito disso funcionar no longo prazo".
+
+SPACEFIGHTER chega em 8 de junho de 2026 — bem no meio do Steam Bullet Fest 2026 (8–15 de junho), a primeira vitrine dedicada da Valve para o gênero bullet hell / bullet heaven. Um segundo push cai durante o Steam Summer Sale (25 de junho – 9 de julho). Preço oficial de lançamento: $2.99 USD.
+
+Pra fãs de Vampire Survivors, Brotato, Halls of Torment e 20 Minutes Till Dawn — mas com chefes que devolvem o tiro.`,
+    'store.lang_label': 'Idioma',
+    'store.short_block_label': 'Descrição curta (≤ 300 caracteres)',
+    'store.long_block_label': 'Descrição longa (pronta pra Steam)',
+    'store.long_meta': 'BBCode preservado',
+    'store.copy_bbcode': 'Copiar como BBCode',
+    'store.copy_plain': 'Copiar como texto puro',
+    'quote1': 'Eu fiz o <em>Vampire Survivors</em> que eu ia querer jogar em 2026 — com chefes que devolvem o tiro.',
+    'quote2': 'Dev solo mais workflow moderno assistido por IA é o futuro da escala de conteúdo indie. Eu não escondo as ferramentas — elas me deixam entregar coisas que uma pessoa não conseguia entregar cinco anos atrás.',
+    'quote3': 'Bullet heaven é o gênero mais animado da Steam em 2026, e os fãs de survivors-like merecem mais do que chefes esponja de HP.',
+    'quote_attr': '— Michał JARO Jarosiński, desenvolvedor',
+    'screenshots.note': 'Clique em qualquer captura pra ver em tamanho real · todas as imagens são em alta resolução, livres pra uso em cobertura editorial com crédito a <strong>Michał JARO Jarosiński</strong>.',
+    'lightbox.download': 'Baixar em tamanho real ↓',
+    'assets.logo_meta': 'Logo',
+    'assets.capsule_meta': 'Capsule',
+    'assets.logo_title': 'Logo do jogo (PNG transparente)',
+    'assets.cap_header': 'Header capsule (Steam)',
+    'assets.cap_small': 'Small capsule',
+    'assets.cap_library': 'Library capsule',
+    'assets.download_png': 'Baixar PNG ↓',
+    'assets.dl_all_title': 'Baixar tudo em ZIP',
+    'assets.dl_all_meta': 'Capturas · logos · capsules · ficha — um bundle só',
+    'assets.dl_btn': 'Baixar press-kit-bundle.zip ↓',
+    'contact.email_label': 'E-mail',
+    'contact.dev_label': 'Desenvolvedor',
+    'contact.dev_value': 'Michał JARO Jarosiński<br><span style="font-weight:300;color:var(--text-muted);font-size:0.9rem;">Wrocław, Polônia · solo indie</span>',
+    'contact.keys_label': 'Keys da Steam pra cobertura',
+    'contact.keys_value': 'Disponíveis sob pedido — escreva pra acesso de imprensa / streamer / Curador.',
+    'contact.follow_label': 'Siga / conecte',
+    'contact.steam_label': 'Página Steam',
+    'footer.line': '© 2026 Michał Jarosiński · <a href="index.html">Portfólio</a> · <a href="gra.html">Página do jogo</a>',
+  },
+  'ru': {
+    'lang.label': 'Язык',
+    'nav.about': 'Обо мне',
+    'nav.web': 'Web',
+    'nav.grafika': 'Графика',
+    'nav.gra': 'Игра',
+    'nav.kontakt': 'Контакты',
+    'bc.portfolio': 'Портфолио',
+    'bc.presskit': 'Пресс-кит',
+    'press_label': 'Пресс-кит',
+    'hero.tag': '<strong>Vampire Survivors встречает bullet hell — в космосе.</strong> Top-down bullet-heaven roguelite, где каждый ран — это новый билд. Соло-проект, релиз <strong>8 июня 2026</strong> в рамках Steam Bullet Fest 2026.',
+    'chip.release': 'Релиз 8 июня 2026',
+    'chip.platform': 'Steam · Windows',
+    'chip.bullet': 'Bullet Heaven',
+    'chip.roguelite': 'Roguelite',
+    'chip.survivors': 'Survivors-like',
+    'chip.solo': 'Соло-разработчик',
+    'qnav.trailer': 'Трейлер',
+    'qnav.factsheet': 'Факт-лист',
+    'qnav.description': 'Описание',
+    'qnav.store': 'Текст для магазина',
+    'qnav.quotes': 'Цитаты',
+    'qnav.screenshots': 'Скриншоты',
+    'qnav.assets': 'Ассеты',
+    'qnav.contact': 'Контакты',
+    'sec.01.label': '01 — Трейлер',
+    'sec.01.heading': 'Посмотри трейлер',
+    'sec.02.label': '02 — Факт-лист',
+    'sec.02.heading': 'Коротко',
+    'sec.03.label': '03 — Описание',
+    'sec.03.heading': 'Три длины, готовы к вставке',
+    'sec.04.label': '04 — Описание для магазина',
+    'sec.04.heading': 'Локализованный текст для Steam',
+    'sec.05.label': '05 — Цитаты',
+    'sec.05.heading': 'Цитаты разработчика',
+    'sec.06.label': '06 — Скриншоты',
+    'sec.06.heading': 'Галерея',
+    'sec.07.label': '07 — Ассеты',
+    'sec.07.heading': 'Логотипы и капсулы',
+    'sec.08.label': '08 — Пресс-контакт',
+    'sec.08.heading': 'Связаться',
+    'trailer.placeholder': 'Embed трейлера — TODO: вставь URL с YouTube',
+    'fs.title': 'Название',
+    'fs.developer': 'Разработчик',
+    'fs.developer_val': 'Michał JARO Jarosiński (соло)',
+    'fs.publisher': 'Издатель',
+    'fs.publisher_val': 'Michał JARO Jarosiński (self-published)',
+    'fs.based': 'Локация',
+    'fs.based_val': 'Wrocław, Польша',
+    'fs.release': 'Дата релиза',
+    'fs.release_val': '8 июня 2026 — в рамках <strong>Steam Bullet Fest 2026</strong> (8–15 июня)',
+    'fs.platforms': 'Платформы',
+    'fs.platforms_val': 'Windows (Steam)',
+    'fs.genres': 'Жанры',
+    'fs.genres_val': 'Bullet Heaven · Roguelite · Top-Down Shooter · Survivors-like',
+    'fs.price': 'Цена',
+    'fs.price_val': '$2.99 USD (официальная цена релиза)',
+    'fs.languages': 'Языки',
+    'fs.languages_val': 'Английский (интерфейс + аудио) · Страница магазина на EN, 简体中文, Русский, Deutsch, 日本語, Português-BR, Español-LatAm, Français, Polski',
+    'fs.engine': 'Движок',
+    'fs.length': 'Продолжительность',
+    'fs.length_val': '8–15ч основной игры, сотни часов для completionist-ов',
+    'fs.steam': 'Страница Steam',
+    'fs.contact': 'Пресс-контакт',
+    'desc.tab50': '50 слов',
+    'desc.tab200': '200 слов',
+    'desc.tab500': '500 слов',
+    'desc.meta50': '~50 слов · твит / one-liner',
+    'desc.meta200': '~200 слов · вступление к статье',
+    'desc.meta500': '~500 слов · готов под обзор',
+    'copy_btn': 'Скопировать в буфер',
+    'desc.text50': `SPACEFIGHTER — это top-down bullet-heaven roguelite, где каждый ран — новый билд. Складывай три ветки оружия в поломанные синергии, дерись с боссами с настоящими механиками и выживай в хаосе. Соло-проект, релиз 8 июня в Steam — прямо в рамках Steam Bullet Fest 2026.`,
+    'desc.text200': `SPACEFIGHTER - The Bullet Hell — это top-down auto-shooter на выживание, релиз 8 июня 2026 в Steam — прямо внутри Steam Bullet Fest 2026. Игра смешивает структуру bullet heaven (Vampire Survivors, Brotato) с ремеслом классического шутера (настоящие механики боссов, синергии оружия, идентичность пилота).
+
+Игрок управляет 2D-кораблём и строит арсенал через три ветвящиеся ветки оружия — баллистическая, взрывная и энергетическая — сплавляя их в кросс-древесные синергии, ломающие игру к 12-й минуте (если выбрать с умом). Боссы появляются с телеграфированными паттернами, слабыми местами и переходами фаз. Мета-прогрессия открывает новые корабли, ветки и модификаторы через смерти.
+
+Игру в одиночку делает Michał JARO Jarosiński (Wrocław, Польша), используя современный AI-ассистированный воркфлоу — Claude Code для кодовой базы, AI-инструменты изображений для части визуальных ассетов, при этом креативное направление, балансинг и интеграция остаются за разработчиком. Полное раскрытие AI — на странице Steam.
+
+Релиз совпадает со Steam Bullet Fest 2026 (8–15 июня) и Steam Summer Sale (25 июня – 9 июля). Официальная цена релиза: $2.99 USD.`,
+    'desc.text500': `Когда в 2022 появился Vampire Survivors, один разработчик с крошечным движком запустил целый жанр. Через три года «bullet heaven» — один из самых копируемых форматов в Steam, и большинство копий упускают то, что зацепило в оригинале: мета-луп, идентичность билда, чувство, что синергию нашёл ты сам.
+
+SPACEFIGHTER - The Bullet Hell — ответ одного соло-разработчика на вопрос «каким должен быть bullet heaven в 2026?». Управляй 2D-кораблём, выбирай из ростера кораблей с разными китами и наращивай арсенал через три ветки оружия — баллистическая, взрывная и энергетическая. У каждой ветки своя идентичность скейлинга: баллистика поощряет точность и серии попаданий, взрывная раскачивает цепочки детонаций и контроль зоны, энергетическая — строитель синергий с лучами, лок-оном и регеном. Кайф — в кросс-древесных комбинациях: 5 взрывной плюс 2 энергетической превращаются в цепные детонации на крите энергии; 4 баллистической плюс 3 взрывной — в пробивающие снаряды, детонирующие на максимальной дистанции. К 12-й минуте хорошего рана экран нечитаем, а ты — бог.
+
+Там, где многие survivors-like спотыкаются — это дизайн боссов. SPACEFIGHTER отвечает боссами с настоящими китами: телеграфированные wind-up-ы, слабые места, переходы фаз, паттерны, которые надо учить. Первый килл ощущается заслуженным. Первый вайп чему-то учит. Смерть — это данные, а мета-прогрессия каждый раз открывает новые корабли, новые ветки, новые стартовые модификаторы.
+
+Игру делает Michał JARO Jarosiński, соло-разработчик из Wrocław (Польша), используя современный AI-ассистированный воркфлоу. Claude Code (Anthropic) ведёт кодовую базу под его руководством. AI-инструменты изображений покрывают часть визуальных ассетов, а разработчик занимается режиссурой, монтажом, балансингом, аудио и финальной интеграцией. На странице Steam — полное раскрытие AI. Это часть набирающего силу движения соло-разработчиков, которые выпускают контент в масштабах, требовавших пять лет назад целых студий — и Jarosiński открыто документирует свой воркфлоу, потому что, как он говорит: «прозрачность — единственный способ, чтобы это работало в долгую».
+
+SPACEFIGHTER выходит 8 июня 2026 — прямо в самом Steam Bullet Fest 2026 (8–15 июня), первой выделенной витрине Valve для жанра bullet hell / bullet heaven. Второй пуш приходится на Steam Summer Sale (25 июня – 9 июля). Официальная цена релиза: $2.99 USD.
+
+Для фанатов Vampire Survivors, Brotato, Halls of Torment и 20 Minutes Till Dawn — но с боссами, которые реально дают сдачи.`,
+    'store.lang_label': 'Язык',
+    'store.short_block_label': 'Короткое описание (≤ 300 знаков)',
+    'store.long_block_label': 'Длинное описание (готово для Steam)',
+    'store.long_meta': 'BBCode сохранён',
+    'store.copy_bbcode': 'Скопировать как BBCode',
+    'store.copy_plain': 'Скопировать как простой текст',
+    'quote1': 'Я сделал тот <em>Vampire Survivors</em>, в который сам хотел бы поиграть в 2026 — с боссами, которые реально дают сдачи.',
+    'quote2': 'Соло-разработчик плюс современный AI-ассистированный воркфлоу — это будущее масштаба контента в инди. Я не прячу инструменты — они дают мне выпускать вещи, которые один человек не мог выпустить пять лет назад.',
+    'quote3': 'Bullet heaven — самый интересный жанр в Steam в 2026, и фанаты survivors-like заслуживают большего, чем боссы-губки для HP.',
+    'quote_attr': '— Michał JARO Jarosiński, разработчик',
+    'screenshots.note': 'Кликни по любому скриншоту, чтобы посмотреть в полном размере · все изображения в высоком разрешении, свободны для использования в редакционных материалах с указанием автора: <strong>Michał JARO Jarosiński</strong>.',
+    'lightbox.download': 'Скачать в полном размере ↓',
+    'assets.logo_meta': 'Логотип',
+    'assets.capsule_meta': 'Капсула',
+    'assets.logo_title': 'Логотип игры (прозрачный PNG)',
+    'assets.cap_header': 'Header capsule (Steam)',
+    'assets.cap_small': 'Small capsule',
+    'assets.cap_library': 'Library capsule',
+    'assets.download_png': 'Скачать PNG ↓',
+    'assets.dl_all_title': 'Скачать всё одним ZIP',
+    'assets.dl_all_meta': 'Скриншоты · логотипы · капсулы · факт-лист — один пакет',
+    'assets.dl_btn': 'Скачать press-kit-bundle.zip ↓',
+    'contact.email_label': 'E-mail',
+    'contact.dev_label': 'Разработчик',
+    'contact.dev_value': 'Michał JARO Jarosiński<br><span style="font-weight:300;color:var(--text-muted);font-size:0.9rem;">Wrocław, Польша · соло-инди</span>',
+    'contact.keys_label': 'Steam-ключи для прессы',
+    'contact.keys_value': 'Доступны по запросу — пиши для доступа для прессы / стримеров / Curator-ов.',
+    'contact.follow_label': 'Подписаться / связаться',
+    'contact.steam_label': 'Страница Steam',
+    'footer.line': '© 2026 Michał Jarosiński · <a href="index.html">Портфолио</a> · <a href="gra.html">Страница игры</a>',
+  },
+  'zh-CN': {
+    'lang.label': '语言',
+    'nav.about': '关于',
+    'nav.web': '网页',
+    'nav.grafika': '图形',
+    'nav.gra': '游戏',
+    'nav.kontakt': '联系',
+    'bc.portfolio': '作品集',
+    'bc.presskit': '媒体资料包',
+    'press_label': '媒体资料包',
+    'hero.tag': '<strong>《吸血鬼幸存者》遇上弹幕地狱 —— 在太空中。</strong> 一款俯视视角的弹幕天堂 Roguelite，每一局都是全新的构筑。独立开发者作品，<strong>2026年6月8日</strong>在 Steam Bullet Fest 2026 期间发售。',
+    'chip.release': '2026年6月8日发售',
+    'chip.platform': 'Steam · Windows',
+    'chip.bullet': '弹幕天堂',
+    'chip.roguelite': 'Roguelite',
+    'chip.survivors': '类幸存者',
+    'chip.solo': '独立开发',
+    'qnav.trailer': '预告片',
+    'qnav.factsheet': '资料表',
+    'qnav.description': '说明',
+    'qnav.store': '商店文案',
+    'qnav.quotes': '引言',
+    'qnav.screenshots': '截图',
+    'qnav.assets': '素材',
+    'qnav.contact': '联系',
+    'sec.01.label': '01 — 预告片',
+    'sec.01.heading': '观看预告片',
+    'sec.02.label': '02 — 资料表',
+    'sec.02.heading': '速览',
+    'sec.03.label': '03 — 说明',
+    'sec.03.heading': '三种长度，可直接粘贴',
+    'sec.04.label': '04 — 商店说明',
+    'sec.04.heading': '本地化商店文案',
+    'sec.05.label': '05 — 引言',
+    'sec.05.heading': '开发者引言',
+    'sec.06.label': '06 — 截图',
+    'sec.06.heading': '画廊',
+    'sec.07.label': '07 — 素材',
+    'sec.07.heading': 'Logo 与 Capsule 图',
+    'sec.08.label': '08 — 媒体联系',
+    'sec.08.heading': '取得联系',
+    'trailer.placeholder': '预告片嵌入 —— TODO：粘贴 YouTube 链接',
+    'fs.title': '标题',
+    'fs.developer': '开发者',
+    'fs.developer_val': 'Michał JARO Jarosiński（个人）',
+    'fs.publisher': '发行商',
+    'fs.publisher_val': 'Michał JARO Jarosiński（自主发行）',
+    'fs.based': '所在地',
+    'fs.based_val': '波兰，Wrocław',
+    'fs.release': '发售日期',
+    'fs.release_val': '2026年6月8日 —— 在 <strong>Steam Bullet Fest 2026</strong>（6月8日至15日）期间',
+    'fs.platforms': '平台',
+    'fs.platforms_val': 'Windows (Steam)',
+    'fs.genres': '类型',
+    'fs.genres_val': '弹幕天堂 · Roguelite · 俯视射击 · 类幸存者',
+    'fs.price': '价格',
+    'fs.price_val': '$2.99 USD（官方首发价）',
+    'fs.languages': '语言',
+    'fs.languages_val': '英语（界面 + 音频）· 商店页面提供 EN, 简体中文, Русский, Deutsch, 日本語, Português-BR, Español-LatAm, Français, Polski',
+    'fs.engine': '引擎',
+    'fs.length': '游戏时长',
+    'fs.length_val': '主线8–15小时，完美主义者可玩数百小时',
+    'fs.steam': 'Steam 页面',
+    'fs.contact': '媒体联系',
+    'desc.tab50': '50 词',
+    'desc.tab200': '200 词',
+    'desc.tab500': '500 词',
+    'desc.meta50': '约50词 · 推文 / 一句话',
+    'desc.meta200': '约200词 · 文章导言',
+    'desc.meta500': '约500词 · 适合评测',
+    'copy_btn': '复制到剪贴板',
+    'desc.text50': `SPACEFIGHTER 是一款俯视视角的弹幕天堂 Roguelite，每一局都是全新的构筑。把三条武器树叠加成破坏游戏的协同效应，对抗拥有真实机制的 Boss，在混乱中生存下来。独立开发者作品，6月8日在 Steam 发售 —— 正值 Steam Bullet Fest 2026。`,
+    'desc.text200': `SPACEFIGHTER - The Bullet Hell 是一款俯视视角的自动射击生存游戏，2026年6月8日在 Steam 发售 —— 正好处在 Steam Bullet Fest 2026 期间。游戏融合了弹幕天堂的结构（《吸血鬼幸存者》、Brotato）与射击游戏的工艺（真实的 Boss 机制、武器协同、飞行员身份）。
+
+玩家驾驶一艘 2D 战机，通过三条分支武器树 —— 弹道、爆炸和能量 —— 构筑自己的武器库，将它们融合成跨树协同，若选择得当，能在第12分钟时打破游戏。Boss 携带预告动作、弱点和阶段转换登场。元进度通过死亡解锁新战机、分支和修饰符。
+
+游戏由 Michał JARO Jarosiński（波兰 Wrocław）独立开发，使用现代 AI 辅助开发工作流 —— Claude Code 负责代码库，AI 图像工具负责部分视觉素材，创意方向、平衡和整合均由开发者本人掌控。完整的 AI 披露见 Steam 页面。
+
+发售与 Steam Bullet Fest 2026（6月8日至15日）以及 Steam 夏季特卖（6月25日至7月9日）重合。官方首发价：$2.99 USD。`,
+    'desc.text500': `2022年《吸血鬼幸存者》出现时，一位拿着小型引擎的开发者带起了一整个类型。三年后，"弹幕天堂"已成为 Steam 上被复制最多的格式之一 —— 而大多数复制者都没抓住原作打动玩家的关键：那条元循环、那种构筑身份、那种"是我找到了协同"的感觉。
+
+SPACEFIGHTER - The Bullet Hell 是一位独立开发者对"2026年的弹幕天堂应该是什么手感？"的回答。驾驶一艘 2D 战机，从一系列具有独立配装的战机中选择，并通过三条武器树发展你的武器库 —— 弹道、爆炸和能量。每条树都有自己的成长身份：弹道奖励精准与连续命中，爆炸推动连锁引爆与区域控制，能量则是协同构筑者，提供光束、锁定和能量再生工具。乐趣藏在跨树组合中 —— 5点爆炸加2点能量，变成能量暴击触发的连锁引爆；4点弹道加3点爆炸，变成在最大射程引爆的穿透弹。一次好的对局到第12分钟，画面已经无法辨认，而你已是神。
+
+许多类幸存者作品失足的地方，是 Boss 设计。SPACEFIGHTER 用拥有真正配装的 Boss 给出回答：预告动作、弱点、阶段转换、需要学习的招式。第一次击杀让人觉得是凭实力争来的。第一次全灭也能教会你什么。死亡是数据 —— 而元进度每次都会解锁新战机、新分支、新起始修饰符。
+
+游戏由波兰 Wrocław 的独立开发者 Michał JARO Jarosiński 制作，采用现代 AI 辅助工作流。Claude Code（Anthropic）在他的指导下处理代码库。AI 图像工具承担一部分视觉素材，导演、编辑、平衡、音频和最终整合则由开发者本人完成。Steam 页面提供完整的 AI 披露。这是新兴的独立开发者运动的一部分 —— 他们以五年前需要整个工作室才能达到的内容规模出货 —— 而 Jarosiński 公开记录这套工作流，用他自己的话说："透明是这件事能长期成立的唯一方式。"
+
+SPACEFIGHTER 将于2026年6月8日发售 —— 恰好在 Steam Bullet Fest 2026（6月8日至15日）期间，这是 Valve 首次为弹幕地狱 / 弹幕天堂类型设立的专题展。第二波推广将在 Steam 夏季特卖（6月25日至7月9日）期间到来。官方首发价：$2.99 USD。
+
+献给《吸血鬼幸存者》、Brotato、Halls of Torment 和 20 Minutes Till Dawn 的粉丝 —— 但这次的 Boss 会真正还击。`,
+    'store.lang_label': '语言',
+    'store.short_block_label': '简短描述（不超过300字符）',
+    'store.long_block_label': '完整描述（可直接用于 Steam）',
+    'store.long_meta': '保留 BBCode',
+    'store.copy_bbcode': '复制为 BBCode',
+    'store.copy_plain': '复制为纯文本',
+    'quote1': '我做了一款自己在2026年想玩的<em>《吸血鬼幸存者》</em> —— Boss 会真正还击的那种。',
+    'quote2': '独立开发加上现代 AI 辅助工作流，是独立游戏内容规模的未来。我不会隐藏这些工具 —— 它们让我能交付五年前一个人交付不了的东西。',
+    'quote3': '弹幕天堂是2026年 Steam 上最令人兴奋的类型，类幸存者的粉丝值得比 HP 海绵 Boss 更好的体验。',
+    'quote_attr': '—— Michał JARO Jarosiński，开发者',
+    'screenshots.note': '点击任意截图查看原图 · 所有图片均为高分辨率，可在注明 <strong>Michał JARO Jarosiński</strong> 的前提下用于编辑报道。',
+    'lightbox.download': '下载原图 ↓',
+    'assets.logo_meta': 'Logo',
+    'assets.capsule_meta': 'Capsule',
+    'assets.logo_title': '游戏 Logo（透明 PNG）',
+    'assets.cap_header': 'Header capsule (Steam)',
+    'assets.cap_small': 'Small capsule',
+    'assets.cap_library': 'Library capsule',
+    'assets.download_png': '下载 PNG ↓',
+    'assets.dl_all_title': '打包下载 ZIP',
+    'assets.dl_all_meta': '截图 · Logo · Capsule · 资料表 —— 单个压缩包',
+    'assets.dl_btn': '下载 press-kit-bundle.zip ↓',
+    'contact.email_label': '电子邮件',
+    'contact.dev_label': '开发者',
+    'contact.dev_value': 'Michał JARO Jarosiński<br><span style="font-weight:300;color:var(--text-muted);font-size:0.9rem;">波兰 Wrocław · 独立单人</span>',
+    'contact.keys_label': '面向媒体的 Steam Key',
+    'contact.keys_value': '可按需提供 —— 媒体 / 主播 / Curator 访问请发邮件。',
+    'contact.follow_label': '关注 / 联系',
+    'contact.steam_label': 'Steam 页面',
+    'footer.line': '© 2026 Michał Jarosiński · <a href="index.html">作品集</a> · <a href="gra.html">游戏页面</a>',
+  }
+};
+
+        // ── i18n: language metadata for the pill switcher ──
+        const LANG_META = [
+            { code: 'en',    label: 'EN' },
+            { code: 'pl',    label: 'PL' },
+            { code: 'de',    label: 'DE' },
+            { code: 'es-LA', label: 'ES' },
+            { code: 'fr',    label: 'FR' },
+            { code: 'ja',    label: 'JA' },
+            { code: 'pt-BR', label: 'PT' },
+            { code: 'ru',    label: 'RU' },
+            { code: 'zh-CN', label: 'ZH' }
+        ];
+
+        function getInitialLang() {
+            try {
+                const saved = localStorage.getItem('press-lang');
+                if (saved && UI_T[saved]) return saved;
+            } catch (e) { /* localStorage blocked */ }
+            // Browser preference fallback
+            const nav = (navigator.languages || [navigator.language || 'en']).map(s => s.toLowerCase());
+            for (const l of nav) {
+                if (l.startsWith('pl')) return 'pl';
+                if (l.startsWith('de')) return 'de';
+                if (l.startsWith('es')) return 'es-LA';
+                if (l.startsWith('fr')) return 'fr';
+                if (l.startsWith('ja')) return 'ja';
+                if (l.startsWith('pt')) return 'pt-BR';
+                if (l.startsWith('ru')) return 'ru';
+                if (l.startsWith('zh')) return 'zh-CN';
+                if (l.startsWith('en')) return 'en';
+            }
+            return 'en';
+        }
+
+        function applyTranslations(code) {
+            const t = UI_T[code] || UI_T['en'];
+            const fallback = UI_T['en'];
+            // textContent nodes
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.dataset.i18n;
+                const val = (key in t) ? t[key] : fallback[key];
+                if (val !== undefined) el.textContent = val;
+            });
+            // innerHTML nodes (trusted: keys are author-controlled)
+            document.querySelectorAll('[data-i18n-html]').forEach(el => {
+                const key = el.dataset.i18nHtml;
+                const val = (key in t) ? t[key] : fallback[key];
+                if (val !== undefined) el.innerHTML = val;
+            });
+            // <html lang>
+            document.documentElement.lang = code;
+        }
+
+        function buildLangPills(currentCode) {
+            const root = document.getElementById('lang-pills');
+            if (!root) return;
+            root.innerHTML = '';
+            LANG_META.forEach(({ code, label }) => {
+                const b = document.createElement('button');
+                b.type = 'button';
+                b.className = 'lang-pill' + (code === currentCode ? ' active' : '');
+                b.textContent = label;
+                b.setAttribute('aria-pressed', String(code === currentCode));
+                b.setAttribute('lang', code);
+                b.setAttribute('title', code);
+                b.addEventListener('click', () => setLang(code));
+                root.appendChild(b);
+            });
+        }
+
+        function setLang(code) {
+            if (!UI_T[code]) code = 'en';
+            try { localStorage.setItem('press-lang', code); } catch (e) {}
+            applyTranslations(code);
+            // sync the store-description select + redraw store content
+            if (localeSelect.value !== code) localeSelect.value = code;
+            applyLocale(code);
+            // update active pill state
+            document.querySelectorAll('.lang-pill').forEach(p => {
+                const active = p.textContent === LANG_META.find(l => l.code === code).label;
+                p.classList.toggle('active', active);
+                p.setAttribute('aria-pressed', String(active));
+            });
+        }
 
         // ── LOCALE / STORE DESCRIPTION ──
         const LOCALES = {
@@ -1839,8 +3141,16 @@ SPACEFIGHTER 是单人开发者项目。游戏设计、平衡、关卡结构、�
             storeLong.innerHTML = bbcodeToHtml(data.long);
             storeLongRaw.value = data.long;
         }
-        localeSelect.addEventListener('change', e => applyLocale(e.target.value));
-        applyLocale('en');
+        // The inline store-description select still works; we also use it
+        // to drive the page-wide language so the two stay in sync.
+        localeSelect.addEventListener('change', e => setLang(e.target.value));
+
+        // Boot the language system: persisted choice → browser fallback → 'en'.
+        const initialLang = getInitialLang();
+        localeSelect.value = initialLang;
+        buildLangPills(initialLang);
+        applyTranslations(initialLang);
+        applyLocale(initialLang);
 
         // ── SCREENSHOTS GRID GENERATION ──
         // Edit this array to add/remove/reorder screenshots from press/screenshots/.
