@@ -772,18 +772,11 @@
                     <img src="press/logo/LOGOGRY.png" alt="SPACEFIGHTER: The Bullet Hell" class="hero-logo-img" fetchpriority="high">
                 </h1>
 
-                <!-- TRAILER — TODO: replace .hero-trailer-placeholder div with the iframe below
-                     once the trailer is uploaded.
-                     <iframe src="https://www.youtube.com/embed/VIDEO_ID"
-                             title="SPACEFIGHTER — Trailer"
-                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                             allowfullscreen loading="lazy"></iframe>
-                -->
                 <div class="hero-trailer" aria-label="Trailer gry">
-                    <div class="hero-trailer-placeholder" aria-hidden="true">
-                        <div class="play-icon">▶</div>
-                        <span class="label">Trailer wkrótce</span>
-                    </div>
+                    <iframe src="https://www.youtube.com/embed/4am-02hfpb4"
+                            title="SPACEFIGHTER — Trailer"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen loading="lazy"></iframe>
                 </div>
 
                 <p class="hero-desc">
@@ -872,17 +865,17 @@
         // ── SCREENSHOTS GRID ──
         // Generated first so subsequent handlers (cursor, lightbox, reveal) can pick up the items.
         const SCREENSHOTS = [
-            { file: '1wave.png',          alt: 'SPACEFIGHTER — pierwsza fala wrogów' },
-            { file: '11sec.png',          alt: 'SPACEFIGHTER — wczesna runa, 11 sekund' },
-            { file: 'hive1.png',          alt: 'SPACEFIGHTER — rój Hive' },
-            { file: 'hivefleetwave.png',  alt: 'SPACEFIGHTER — fala Hive Fleet' },
-            { file: 'irontidewave.png',   alt: 'SPACEFIGHTER — fala Iron Tide' },
-            { file: 'the hunter.png',     alt: 'SPACEFIGHTER — boss The Hunter' },
-            { file: 'boss2.png',          alt: 'SPACEFIGHTER — walka z bossem' },
-            { file: 'upgrades.png',       alt: 'SPACEFIGHTER — wybór ulepszeń' },
-            { file: 'uworkshop.png',      alt: 'SPACEFIGHTER — warsztat ulepszeń' },
-            { file: 'unlockedweapons.png',alt: 'SPACEFIGHTER — odblokowane bronie' },
-            { file: 'gameoverscreen.png', alt: 'SPACEFIGHTER — ekran game over' }
+            { file: '1wave.webp',          alt: 'SPACEFIGHTER — pierwsza fala wrogów' },
+            { file: '11sec.webp',          alt: 'SPACEFIGHTER — wczesna runa, 11 sekund' },
+            { file: 'hive1.webp',          alt: 'SPACEFIGHTER — rój Hive' },
+            { file: 'hivefleetwave.webp',  alt: 'SPACEFIGHTER — fala Hive Fleet' },
+            { file: 'irontidewave.webp',   alt: 'SPACEFIGHTER — fala Iron Tide' },
+            { file: 'the hunter.webp',     alt: 'SPACEFIGHTER — boss The Hunter' },
+            { file: 'boss2.webp',          alt: 'SPACEFIGHTER — walka z bossem' },
+            { file: 'upgrades.webp',       alt: 'SPACEFIGHTER — wybór ulepszeń' },
+            { file: 'uworkshop.webp',      alt: 'SPACEFIGHTER — warsztat ulepszeń' },
+            { file: 'unlockedweapons.webp',alt: 'SPACEFIGHTER — odblokowane bronie' },
+            { file: 'gameoverscreen.webp', alt: 'SPACEFIGHTER — ekran game over' }
         ];
         const screenshotsGrid = document.getElementById('screenshots-grid');
         SCREENSHOTS.forEach((shot, i) => {
