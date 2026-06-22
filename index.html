@@ -985,11 +985,16 @@
             width: 80%;
         }
 
-        /* SSCAR, R-MAX, AutoFutura, Body Creator Custom Text */
-        #work .project-item:nth-of-type(1) .project-img-wrapper::before,
+        /* Game (01) */
+        #work .project-item:nth-of-type(1) .project-img-wrapper::before {
+            content: 'Kliknij i zagraj';
+        }
+
+        /* Client sites (02–05): SSCAR, Body Creator, R-MAX, AutoFutura */
         #work .project-item:nth-of-type(2) .project-img-wrapper::before,
         #work .project-item:nth-of-type(3) .project-img-wrapper::before,
-        #work .project-item:nth-of-type(4) .project-img-wrapper::before {
+        #work .project-item:nth-of-type(4) .project-img-wrapper::before,
+        #work .project-item:nth-of-type(5) .project-img-wrapper::before {
             content: 'Kliknij i zobacz stronę przygotowaną dla klienta';
         }
 
@@ -1086,6 +1091,131 @@
             border-color: var(--magenta);
             color: var(--magenta);
             transform: translateY(-2px);
+        }
+
+        /* --- Work: contact-sheet index --- */
+        #work .container {
+            counter-reset: work;
+        }
+
+        .work-kicker {
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: #888;
+            margin-bottom: 14px;
+        }
+
+        .project-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 22px;
+        }
+
+        .project-num {
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            color: var(--cyan);
+            font-variant-numeric: tabular-nums;
+            position: relative;
+            padding-right: 16px;
+        }
+
+        .project-num::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            width: 1px;
+            height: 13px;
+            background: #333;
+            transform: translateY(-50%);
+        }
+
+        .project-cat {
+            font-size: 0.78rem;
+            font-weight: 500;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: #888;
+        }
+
+        .project-flag {
+            margin-left: auto;
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--cyan);
+            border: 1px solid rgba(0, 255, 255, 0.4);
+            background: rgba(0, 255, 255, 0.07);
+            padding: 4px 12px;
+            border-radius: 50px;
+        }
+
+        .project-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 4px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--text-color);
+            text-decoration: none;
+            padding-bottom: 6px;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .project-link::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            height: 1px;
+            width: 100%;
+            background: #333;
+            transition: background 0.3s;
+        }
+
+        .project-link span {
+            color: var(--cyan);
+            transition: transform 0.4s var(--ease-out);
+        }
+
+        .project-link:hover {
+            color: var(--cyan);
+        }
+
+        .project-link:hover::after {
+            background: var(--cyan);
+        }
+
+        .project-link:hover span {
+            transform: translateX(7px);
+        }
+
+        /* Featured flagship (the game) */
+        .project-item--featured {
+            grid-template-columns: 1.3fr 1fr;
+        }
+
+        .project-item--featured .project-img-wrapper {
+            border-color: rgba(0, 255, 255, 0.22);
+        }
+
+        .project-item--featured .project-info h3 {
+            font-size: 3rem;
+        }
+
+        .project-item--featured .project-info p {
+            font-size: 1.2rem;
+            color: #b8b8b8;
         }
 
         /* --- Services --- */
@@ -1204,11 +1334,20 @@
             }
 
             .project-item,
+            .project-item--featured,
             .project-item:nth-child(even) {
                 grid-template-columns: 1fr;
                 direction: ltr;
                 margin-bottom: 80px;
                 gap: 30px;
+            }
+
+            .project-item--featured .project-info h3 {
+                font-size: 2.2rem;
+            }
+
+            .project-flag {
+                margin-left: 0;
             }
 
             .project-item:nth-child(even) .project-info {
@@ -1374,18 +1513,61 @@
 
         <section id="work">
             <div class="container">
+                <p class="work-kicker reveal">Portfolio — 2014 / 2025</p>
                 <h2 class="section-title reveal">Wybrane <span>Prace</span></h2>
+
+                <article class="project-item project-item--featured reveal">
+                    <div class="project-img-wrapper link-hover">
+                        <a href="gra.html">
+                            <img src="screenshots/steam1.jpg" alt="SPACEFIGHTER: The Bullet Hell — autorska gra, walka z bossem">
+                        </a>
+                    </div>
+                    <div class="project-info">
+                        <div class="project-meta">
+                            <span class="project-num">01</span>
+                            <span class="project-cat">Game Dev · Steam</span>
+                            <span class="project-flag">Najnowsze</span>
+                        </div>
+                        <h3><a href="gra.html">SPACEFIGHTER</a></h3>
+                        <p>Moja autorska gra typu bullet hell. Roguelite z systemem ulepszeń statku, walkami z bossami i własną oprawą wizualną. Od mechaniki, przez kod, po grafikę i trailer: całość zaprojektowana i zbudowana od zera.</p>
+                        <div class="tags"><span>Game Dev</span><span>Steam</span><span>Design</span></div>
+                        <a class="project-link" href="gra.html">Zobacz grę <span>&rarr;</span></a>
+                    </div>
+                </article>
 
                 <article class="project-item reveal">
                     <div class="project-img-wrapper link-hover">
                         <a href="https://skpolanowice-sourceskp.github.io/sscar/" target="_blank">
-                            <img src="sscar.jpg" alt="SSCAR - strona internetowa dla serwisu samochodowego">
+                            <img src="sscar.jpg" alt="SSCAR - strona internetowa dla serwisu samochodowego" loading="lazy">
                         </a>
                     </div>
                     <div class="project-info">
+                        <div class="project-meta">
+                            <span class="project-num">02</span>
+                            <span class="project-cat">Web · Serwis Auto</span>
+                        </div>
                         <h3><a href="https://skpolanowice-sourceskp.github.io/sscar/" target="_blank">SSCAR</a></h3>
-                        <p>Zaawansowana platforma dla serwisu samochodowego, oferująca dedykowane bazy danych do klimatyzacji oraz systemy dekodowania numerów DAM i VIN. Projekt łączy nowoczesną estetykę z interaktywnymi efektami, takimi jak animacja rozmontowywania samochodu w tle podczas przewijania strony.</p>
-                        <div class="tags"><span>Web Design</span><span>Development</span></div>
+                        <p>Zaawansowana platforma dla serwisu samochodowego. Wbudowany dekoder VIN, własne bazy danych klimatyzacji oraz w pełni autonomiczny, inteligentny system rezerwacji zintegrowany z Google Calendar. Wszystko działa bez żadnych zewnętrznych usług.</p>
+                        <div class="tags"><span>Web Design</span><span>Development</span><span>System rezerwacji</span></div>
+                        <a class="project-link" href="https://skpolanowice-sourceskp.github.io/sscar/" target="_blank">Zobacz stronę <span>&rarr;</span></a>
+                    </div>
+                </article>
+
+                <article class="project-item reveal">
+                    <div class="project-img-wrapper link-hover">
+                        <a href="https://skpolanowice-sourceskp.github.io/BodycreatorTEST/" target="_blank">
+                            <img src="bodycreator.png" alt="Body Creator - strona studia treningowego z autonomicznymi formularzami i kalkulatorem BMI" loading="lazy">
+                        </a>
+                    </div>
+                    <div class="project-info">
+                        <div class="project-meta">
+                            <span class="project-num">03</span>
+                            <span class="project-cat">Web · Studio Treningowe</span>
+                        </div>
+                        <h3><a href="https://skpolanowice-sourceskp.github.io/BodycreatorTEST/" target="_blank">Body Creator</a></h3>
+                        <p>Strona dla studia treningowego z naciskiem na mocną oprawę wizualną i pełną responsywność. Autonomiczne formularze dla właścicieli działają w całości po stronie strony, bez zewnętrznych usług poza hostingiem. Do tego interaktywne zdjęcia przemian klientów i kalkulator BMI/TDEE.</p>
+                        <div class="tags"><span>Web Design</span><span>Development</span><span>UX/UI</span></div>
+                        <a class="project-link" href="https://skpolanowice-sourceskp.github.io/BodycreatorTEST/" target="_blank">Zobacz stronę <span>&rarr;</span></a>
                     </div>
                 </article>
 
@@ -1396,12 +1578,17 @@
                         </a>
                     </div>
                     <div class="project-info">
+                        <div class="project-meta">
+                            <span class="project-num">04</span>
+                            <span class="project-cat">Web · Serwis Auto</span>
+                        </div>
                         <h3><a href="https://michal20000505-sudo.github.io/R-MAX-auto/index.html" target="_blank">R-MAX
                                 Auto</a></h3>
                         <p>Nowoczesna strona internetowa dla serwisu samochodowego R-MAX Auto. Atrakcyjny, ciemny design z
                             wyraźnym wezwaniem do akcji i zoptymalizowanym układem opinii. Projekt nastawiony na wysoką
                             konwersję i budowanie zaufania klientów.</p>
                         <div class="tags"><span>Web Design</span><span>Development</span></div>
+                        <a class="project-link" href="https://michal20000505-sudo.github.io/R-MAX-auto/index.html" target="_blank">Zobacz stronę <span>&rarr;</span></a>
                     </div>
                 </article>
 
@@ -1412,22 +1599,14 @@
                         </a>
                     </div>
                     <div class="project-info">
+                        <div class="project-meta">
+                            <span class="project-num">05</span>
+                            <span class="project-cat">Web · Blacharstwo</span>
+                        </div>
                         <h3><a href="https://skpolanowice-sourceskp.github.io/autofuturatest/#" target="_blank">AutoFutura</a></h3>
                         <p>Strona wizytówka dla serwisu samochodowego ze specjalizacją blacharsko-lakierniczą. Ciemny, dynamiczny design z wyraźną prezentacją usług i zdjęciami realizacji. Projekt skupiony na budowaniu profesjonalnego wizerunku i konwersji odwiedzających w klientów.</p>
                         <div class="tags"><span>Web Design</span><span>Development</span></div>
-                    </div>
-                </article>
-
-                <article class="project-item reveal">
-                    <div class="project-img-wrapper link-hover">
-                        <a href="https://skpolanowice-sourceskp.github.io/BodycreatorTEST/" target="_blank">
-                            <img src="bodycreator.png" alt="Body Creator - strona studia treningowego z systemem zapisów i kalkulatorem BMI" loading="lazy">
-                        </a>
-                    </div>
-                    <div class="project-info">
-                        <h3><a href="https://skpolanowice-sourceskp.github.io/BodycreatorTEST/" target="_blank">Body Creator</a></h3>
-                        <p>Strona dla studia treningowego z naciskiem na wysokie wizualia i pełną responsywność. Projekt wyróżnia się systemem zapisów zintegrowanym z Google Calendar, interaktywnymi zdjęciami przemian klientów oraz kalkulatorem BMI/TDEE. Połączenie efektownego designu z realną funkcjonalnością.</p>
-                        <div class="tags"><span>Web Design</span><span>Development</span><span>UX/UI</span></div>
+                        <a class="project-link" href="https://skpolanowice-sourceskp.github.io/autofuturatest/#" target="_blank">Zobacz stronę <span>&rarr;</span></a>
                     </div>
                 </article>
 
@@ -1438,10 +1617,15 @@
                         </a>
                     </div>
                     <div class="project-info">
+                        <div class="project-meta">
+                            <span class="project-num">06</span>
+                            <span class="project-cat">Branding · Print</span>
+                        </div>
                         <h3><a href="grafika.html">Portfolio Graficzne</a></h3>
                         <p>Pełna kolekcja projektów graficznych: branding, plakaty, DTP oraz materiały reklamowe. Zobacz
                             wyselekcjonowane prace z lat 2014-2025.</p>
                         <div class="tags"><span>Branding</span><span>Print</span><span>Art Direction</span></div>
+                        <a class="project-link" href="grafika.html">Zobacz galerię <span>&rarr;</span></a>
                     </div>
                 </article>
             </div>
