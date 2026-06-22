@@ -502,7 +502,12 @@
             z-index: 1;
             padding: 130px 0;
         }
-        .steam-content { text-align: center; }
+        .steam-content {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
         .steam-heading {
             font-size: clamp(2rem, 4vw, 3.5rem);
@@ -669,6 +674,11 @@
             outline: 2px solid var(--cyan);
             outline-offset: 4px;
         }
+        /* The open lightbox lives in the browser top layer, above the custom
+           cursor element, so the fake cursor can't track it. Restore the real
+           pointer over the modal (overrides the global cursor: none). */
+        #lightbox[open], #lightbox[open] * { cursor: default !important; }
+        #lightbox[open] .lightbox-close { cursor: pointer !important; }
 
         /* ── FOOTER ── */
         footer {
