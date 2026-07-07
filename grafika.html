@@ -17,7 +17,7 @@
     <meta property="og:url" content="https://michal20000505-sudo.github.io/portfolio-site/grafika.html">
     <meta property="og:title" content="Projekty Graficzne - Michał Jarosiński | Branding & Print Design">
     <meta property="og:description" content="Kolekcja projektów graficznych: branding, plakaty, DTP i materiały reklamowe. Prace z lat 2014–2025 dla klientów takich jak AimControllers, Lavazza i Grom Art.">
-    <meta property="og:image" content="https://michal20000505-sudo.github.io/portfolio-site/digicamoblue-powder.jpg">
+    <meta property="og:image" content="https://michal20000505-sudo.github.io/portfolio-site/og-image.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:site_name" content="Michał Jarosiński Portfolio">
@@ -28,7 +28,7 @@
     <meta property="twitter:url" content="https://michal20000505-sudo.github.io/portfolio-site/grafika.html">
     <meta property="twitter:title" content="Projekty Graficzne - Michał Jarosiński | Branding & Print Design">
     <meta property="twitter:description" content="Kolekcja projektów graficznych: branding, plakaty, DTP i materiały reklamowe. Prace z lat 2014–2025.">
-    <meta property="twitter:image" content="https://michal20000505-sudo.github.io/portfolio-site/digicamoblue-powder.jpg">
+    <meta property="twitter:image" content="https://michal20000505-sudo.github.io/portfolio-site/og-image.jpg">
 
     <!-- Additional SEO -->
     <meta name="theme-color" content="#050505">
@@ -129,50 +129,63 @@
             height: auto;
         }
 
+        /* --- View Transitions (progressive enhancement) --- */
+        @view-transition {
+            navigation: auto;
+        }
+
+        /* --- Focus visibility (keyboard users) --- */
+        a:focus-visible,
+        button:focus-visible {
+            outline: 2px solid var(--cyan);
+            outline-offset: 4px;
+        }
+
         /* --- Scroll Progress Bar --- */
         #progress-bar {
             position: fixed;
             top: 0;
             left: 0;
             height: 3px;
+            width: 100%;
             background: linear-gradient(90deg, var(--cyan), var(--magenta), var(--yellow));
-            width: 0%;
+            transform: scaleX(0);
+            transform-origin: left;
             z-index: 10001;
-            transition: width 0.1s;
         }
 
-        /* --- Ambient Background Glows --- */
+        /* --- Ambient Background Glows (pre-blurred gradients, no filter cost) --- */
         .ambient-glow {
             position: fixed;
-            width: 600px;
-            height: 600px;
+            width: 800px;
+            height: 800px;
             border-radius: 50%;
-            filter: blur(100px);
             opacity: 0.15;
             z-index: -2;
             pointer-events: none;
+            will-change: transform;
             animation: floatGlow 15s infinite alternate ease-in-out;
         }
 
         .glow-1 {
-            top: -10%;
-            left: -10%;
-            background: var(--cyan);
+            top: -15%;
+            left: -15%;
+            background: radial-gradient(circle closest-side, var(--cyan), transparent);
         }
 
         .glow-2 {
-            bottom: 10%;
-            right: -10%;
-            background: var(--magenta);
+            bottom: 5%;
+            right: -15%;
+            background: radial-gradient(circle closest-side, var(--magenta), transparent);
             animation-delay: -5s;
         }
 
         .glow-3 {
-            top: 40%;
-            left: 40%;
-            width: 400px;
-            height: 400px;
-            background: var(--yellow);
+            top: 35%;
+            left: 35%;
+            width: 550px;
+            height: 550px;
+            background: radial-gradient(circle closest-side, var(--yellow), transparent);
             opacity: 0.08;
             animation-delay: -10s;
         }
@@ -201,23 +214,30 @@
             pointer-events: none;
         }
 
-        /* --- Cursor --- */
+        /* --- Cursor ---
+           Position rides on transform only (GPU compositor, no layout) and has
+           NO transition, so tracking is 1:1 per frame. Hover grows the circle
+           via width/height, which can transition without touching position. */
         .cursor {
             width: 20px;
             height: 20px;
             border: 2px solid var(--text-color);
             border-radius: 50%;
             position: fixed;
+            top: 0;
+            left: 0;
             pointer-events: none;
             z-index: 9999;
-            transform: translate(-50%, -50%);
-            transition: transform 0.1s ease, background-color 0.2s, width 0.3s, height 0.3s;
+            transform: translate3d(-100px, -100px, 0) translate(-50%, -50%);
+            transition: width 0.25s ease, height 0.25s ease, background-color 0.2s;
             mix-blend-mode: difference;
             display: none;
+            will-change: transform;
         }
 
         .cursor.hovered {
-            transform: translate(-50%, -50%) scale(3);
+            width: 52px;
+            height: 52px;
             background-color: var(--text-color);
             border-color: transparent;
             opacity: 0.8;
@@ -366,6 +386,9 @@
             gap: 6px;
             cursor: pointer;
             z-index: 101;
+            background: transparent;
+            border: none;
+            padding: 4px;
         }
 
         .bar {
@@ -394,7 +417,7 @@
         }
 
         .hero-title {
-            font-size: 8vw;
+            font-size: clamp(3.5rem, 8vw, 8rem);
             font-weight: 700;
             line-height: 0.9;
             text-transform: uppercase;
@@ -640,11 +663,6 @@
             font-weight: 500;
             margin-bottom: 5px;
             color: #fff;
-            transition: color 0.3s;
-        }
-
-        .work-info h3:hover {
-            color: var(--cyan);
         }
 
         .work-info .category {
@@ -710,15 +728,62 @@
             right: 40px;
             font-size: 3rem;
             color: var(--text-color);
+            background: none;
+            border: none;
+            font-family: inherit;
+            line-height: 1;
             cursor: pointer;
-            transition: color 0.3s;
+            transition: color 0.3s, transform 0.3s;
             z-index: 10002;
         }
 
         .lightbox-close:hover {
-            color: var(--magenta);
+            color: var(--cyan);
             transform: rotate(90deg);
-            transition: all 0.3s;
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            font-family: inherit;
+            color: var(--text-color);
+            background: rgba(5, 5, 5, 0.6);
+            border: 1px solid #333;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10002;
+            transition: border-color 0.3s, color 0.3s, background 0.3s;
+        }
+
+        .lightbox-nav:hover {
+            border-color: var(--cyan);
+            color: var(--cyan);
+        }
+
+        .lightbox-prev {
+            left: 30px;
+        }
+
+        .lightbox-next {
+            right: 30px;
+        }
+
+        .lightbox-counter {
+            position: absolute;
+            top: 38px;
+            left: 40px;
+            color: #999;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            font-variant-numeric: tabular-nums;
+            z-index: 10002;
         }
 
         /* --- Mobile --- */
@@ -728,8 +793,8 @@
             }
 
             .masonry-grid {
-                column-count: 3;
-                column-gap: 15px;
+                column-count: 2;
+                column-gap: 20px;
             }
 
             .page-title {
@@ -784,13 +849,26 @@
         }
 
         @media (max-width: 768px) {
+            /* One column: the work deserves the full width of a phone screen */
             .masonry-grid {
-                column-count: 3;
-                column-gap: 10px;
+                column-count: 1;
             }
 
             .masonry-item {
-                margin-bottom: 15px;
+                margin-bottom: 35px;
+            }
+
+            .lightbox-nav {
+                width: 46px;
+                height: 46px;
+            }
+
+            .lightbox-prev {
+                left: 12px;
+            }
+
+            .lightbox-next {
+                right: 12px;
             }
 
             .page-subtitle {
@@ -817,6 +895,32 @@
                 max-width: 95vw;
             }
         }
+
+        /* --- Reduced motion --- */
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            #starfield,
+            .ambient-glow {
+                display: none;
+            }
+
+            .reveal {
+                opacity: 1;
+                transform: none;
+            }
+
+            .hero-subtitle {
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 
@@ -832,11 +936,14 @@
     <div class="cursor"></div>
 
     <div id="preloader">
-        <div class="loader-text">LOADING...</div>
+        <div class="loader-text">ŁADOWANIE...</div>
     </div>
 
-    <div id="lightbox">
-        <div class="lightbox-close">&times;</div>
+    <div id="lightbox" role="dialog" aria-modal="true" aria-label="Podgląd pracy">
+        <button class="lightbox-close" aria-label="Zamknij podgląd">&times;</button>
+        <span class="lightbox-counter" aria-hidden="true"></span>
+        <button class="lightbox-nav lightbox-prev" aria-label="Poprzednia praca">&larr;</button>
+        <button class="lightbox-nav lightbox-next" aria-label="Następna praca">&rarr;</button>
         <img src="" alt="Pełny podgląd">
     </div>
 
@@ -845,11 +952,11 @@
             <nav>
                 <a href="index.html" class="logo link-hover">MJ<span>.</span></a>
 
-                <div class="menu-toggle" id="mobile-menu">
+                <button class="menu-toggle" id="mobile-menu" aria-label="Otwórz menu nawigacyjne" aria-expanded="false">
                     <span class="bar"></span>
                     <span class="bar"></span>
                     <span class="bar"></span>
-                </div>
+                </button>
 
                 <div class="nav-links">
                     <a href="index.html#about" class="link-hover magnet">O mnie</a>
@@ -877,8 +984,8 @@
                 <div class="masonry-item reveal">
                     <a href="#" class="work-card link-hover">
                         <img src="thumbnails/Lipali-koncert-roboczy-PLAKAT-3.jpg"
-                            data-full="Lipali-koncert-roboczy-PLAKAT-3.jpg" alt="Lipali Plakat Koncertowy"
-                            loading="lazy">
+                            data-full="lightbox/Lipali-koncert-roboczy-PLAKAT-3.webp" alt="Lipali Plakat Koncertowy"
+                            width="800" height="400" loading="lazy">
                     </a>
                     <div class="work-info">
                         <span class="category">Poster Art</span>
@@ -891,7 +998,8 @@
                 <div class="masonry-item reveal">
                     <a href="#" class="work-card link-hover">
                         <img src="thumbnails/Food-point-final-ciemne-tlo.jpg"
-                            data-full="Food-point-final-ciemne-tlo.jpg" alt="Food Point" loading="lazy">
+                            data-full="lightbox/Food-point-final-ciemne-tlo.webp" alt="Food Point"
+                            width="800" height="1626" loading="lazy">
                     </a>
                     <div class="work-info">
                         <span class="category">Branding</span>
@@ -903,8 +1011,8 @@
                 <!-- 3. GROM ART ULOTKA -->
                 <div class="masonry-item reveal">
                     <a href="#" class="work-card link-hover">
-                        <img src="thumbnails/Grom-art-b5-front.jpg" data-full="Grom-art-b5-front.jpg"
-                            alt="Grom Art Statuetka" loading="lazy">
+                        <img src="thumbnails/Grom-art-b5-front.jpg" data-full="lightbox/Grom-art-b5-front.webp"
+                            alt="Grom Art Statuetka" width="800" height="1118" loading="lazy">
                     </a>
                     <div class="work-info">
                         <span class="category">Print & 3D</span>
@@ -915,8 +1023,8 @@
                 <!-- 4. DUNAJEWSKA ULOTKA -->
                 <div class="masonry-item reveal">
                     <a href="#" class="work-card link-hover">
-                        <img src="thumbnails/dunajewska-ulotka.jpg" data-full="dunajewska-ulotka.jpg"
-                            alt="Trener Personalny Ulotka" loading="lazy">
+                        <img src="thumbnails/dunajewska-ulotka.jpg" data-full="lightbox/dunajewska-ulotka.webp"
+                            alt="Trener Personalny Ulotka" width="800" height="1135" loading="lazy">
                     </a>
                     <div class="work-info">
                         <span class="category">Print Design</span>
@@ -928,8 +1036,8 @@
                 <!-- 5. KONTROLER -->
                 <div class="masonry-item reveal">
                     <a href="#" class="work-card link-hover">
-                        <img src="thumbnails/digicamoblue-powder.jpg" data-full="digicamoblue-powder.jpg"
-                            alt="Custom PS4 Controller" loading="lazy">
+                        <img src="thumbnails/digicamoblue-powder.jpg" data-full="lightbox/digicamoblue-powder.webp"
+                            alt="Custom PS4 Controller" width="800" height="800" loading="lazy">
                     </a>
                     <div class="work-info">
                         <span class="category">Product Design</span>
@@ -940,8 +1048,8 @@
                 <!-- 6. DUNAJEWSKA VOUCHER -->
                 <div class="masonry-item reveal">
                     <a href="#" class="work-card link-hover">
-                        <img src="thumbnails/Dunajewska-voucher.jpg" data-full="Dunajewska-voucher.jpg"
-                            alt="Voucher Treningowy" loading="lazy">
+                        <img src="thumbnails/Dunajewska-voucher.jpg" data-full="lightbox/Dunajewska-voucher.webp"
+                            alt="Voucher Treningowy" width="800" height="570" loading="lazy">
                     </a>
                     <div class="work-info">
                         <span class="category">Print Design</span>
@@ -952,8 +1060,8 @@
                 <!-- 7. WIZYTÓWKA SUDBAL -->
                 <div class="masonry-item reveal">
                     <a href="#" class="work-card link-hover">
-                        <img src="thumbnails/Wizytówka-9x5-sudbal.jpg" data-full="Wizytówka-9x5-sudbal.jpg"
-                            alt="Sudbal Garage" loading="lazy">
+                        <img src="thumbnails/Wizytówka-9x5-sudbal.jpg" data-full="lightbox/Wizytówka-9x5-sudbal.webp"
+                            alt="Sudbal Garage" width="800" height="600" loading="lazy">
                     </a>
                     <div class="work-info">
                         <span class="category">Branding</span>
@@ -965,8 +1073,8 @@
                 <!-- 8. WIZYTÓWKA TRENER -->
                 <div class="masonry-item reveal">
                     <a href="#" class="work-card link-hover">
-                        <img src="thumbnails/Wizytówka-9x5.jpg" data-full="Wizytówka-9x5.jpg" alt="Wizytówka Trenera"
-                            loading="lazy">
+                        <img src="thumbnails/Wizytówka-9x5.jpg" data-full="lightbox/Wizytówka-9x5.webp" alt="Wizytówka Trenera"
+                            width="800" height="600" loading="lazy">
                     </a>
                     <div class="work-info">
                         <span class="category">Branding</span>
@@ -978,8 +1086,8 @@
                 <!-- 9. GRZEGORZ PIRÓG WIZYTÓWKA -->
                 <div class="masonry-item reveal">
                     <a href="#" class="work-card link-hover">
-                        <img src="thumbnails/Grzegorz-pirog-wizytowka.jpg" data-full="Grzegorz-pirog-wizytowka.jpg"
-                            alt="Usługi Budowlane" loading="lazy">
+                        <img src="thumbnails/Grzegorz-pirog-wizytowka.jpg" data-full="lightbox/Grzegorz-pirog-wizytowka.webp"
+                            alt="Usługi Budowlane" width="800" height="600" loading="lazy">
                     </a>
                     <div class="work-info">
                         <span class="category">Branding</span>
@@ -991,8 +1099,8 @@
                 <!-- 10. WIZYTÓWKI GROM MOCKUP -->
                 <div class="masonry-item reveal">
                     <a href="#" class="work-card link-hover">
-                        <img src="thumbnails/render2.jpg" data-full="render2.jpg" alt="Grom Art Branding"
-                            loading="lazy">
+                        <img src="thumbnails/render2.jpg" data-full="lightbox/render2.webp" alt="Grom Art Branding"
+                            width="800" height="600" loading="lazy">
                     </a>
                     <div class="work-info">
                         <span class="category">Branding</span>
@@ -1003,8 +1111,8 @@
                 <!-- 11. WIZYTÓWKA SCHMIDT -->
                 <div class="masonry-item reveal">
                     <a href="#" class="work-card link-hover">
-                        <img src="thumbnails/wizytówka-max-bucz.jpg" data-full="wizytówka-max-bucz.jpg"
-                            alt="Schmidt Maszyny" loading="lazy">
+                        <img src="thumbnails/wizytówka-max-bucz.jpg" data-full="lightbox/wizytówka-max-bucz.webp"
+                            alt="Schmidt Maszyny" width="800" height="706" loading="lazy">
                     </a>
                     <div class="work-info">
                         <span class="category">Branding</span>
@@ -1017,12 +1125,12 @@
     </section>
     </main>
 
-    <footer style="text-align:center; padding: 40px 20px; color: #444; font-size: 0.85rem; border-top: 1px solid #1a1a1a;">
+    <footer style="text-align:center; padding: 40px 20px; color: #8a8a8a; font-size: 0.85rem; border-top: 1px solid #1a1a1a;">
         <p>&copy; 2025 Michał Jarosiński. Wszelkie prawa zastrzeżone.</p>
     </footer>
 
     <script>
-        // --- Preloader ---
+        // --- Preloader (hide as soon as the DOM is usable; hard cap 1.2s) ---
         const preloader = document.getElementById('preloader');
         function hidePreloader() {
             if (preloader.style.opacity !== '0') {
@@ -1030,22 +1138,31 @@
                 setTimeout(() => { preloader.style.display = 'none' }, 500);
             }
         }
-        window.addEventListener('load', () => { setTimeout(hidePreloader, 500) });
-        setTimeout(hidePreloader, 3000);
+        if (document.readyState !== 'loading') hidePreloader();
+        else document.addEventListener('DOMContentLoaded', hidePreloader);
+        setTimeout(hidePreloader, 1200);
 
-        // --- Header Scroll & Progress Bar ---
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        // --- Header Scroll & Progress Bar (rAF-throttled, transform only) ---
         const header = document.querySelector('header');
         const progressBar = document.getElementById('progress-bar');
+        let scrollTicking = false;
+
+        function onScroll() {
+            header.classList.toggle('scrolled', window.scrollY > 50);
+            const el = document.documentElement;
+            const pct = el.scrollTop / (el.scrollHeight - el.clientHeight) || 0;
+            progressBar.style.transform = `scaleX(${pct})`;
+            scrollTicking = false;
+        }
 
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) header.classList.add('scrolled');
-            else header.classList.remove('scrolled');
-
-            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (winScroll / height) * 100;
-            progressBar.style.width = scrolled + "%";
-        });
+            if (!scrollTicking) {
+                scrollTicking = true;
+                requestAnimationFrame(onScroll);
+            }
+        }, { passive: true });
 
         // --- Scroll Reveal ---
         const revealObserver = new IntersectionObserver((entries) => {
@@ -1097,25 +1214,28 @@
         const menuToggle = document.getElementById('mobile-menu');
         const navLinks = document.querySelector('.nav-links');
         menuToggle.addEventListener('click', () => {
-            menuToggle.classList.toggle('active');
+            const isOpen = menuToggle.classList.toggle('active');
             navLinks.classList.toggle('active');
             header.classList.toggle('menu-open');
+            menuToggle.setAttribute('aria-expanded', isOpen);
+            menuToggle.setAttribute('aria-label', isOpen ? 'Zamknij menu nawigacyjne' : 'Otwórz menu nawigacyjne');
         });
         document.querySelectorAll('.nav-links a').forEach(link => {
             link.addEventListener('click', () => {
                 menuToggle.classList.remove('active');
                 navLinks.classList.remove('active');
                 header.classList.remove('menu-open');
+                menuToggle.setAttribute('aria-expanded', 'false');
+                menuToggle.setAttribute('aria-label', 'Otwórz menu nawigacyjne');
             });
         });
 
-        // --- Cursor & Effects ---
+        // --- Cursor & Effects (GPU transform via custom properties) ---
         const cursor = document.querySelector('.cursor');
         if (window.matchMedia("(pointer: fine)").matches) {
             document.addEventListener('mousemove', e => {
-                cursor.style.left = e.clientX + 'px';
-                cursor.style.top = e.clientY + 'px';
-            });
+                cursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0) translate(-50%, -50%)`;
+            }, { passive: true });
             document.querySelectorAll('.link-hover, a, .work-card').forEach(l => {
                 l.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
                 l.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
@@ -1165,9 +1285,12 @@
             });
         }
 
-        textElements.forEach(el => wrapLetters(el));
+        textElements.forEach(el => {
+            if (!el.hasAttribute('aria-label')) el.setAttribute('aria-label', el.textContent.trim().replace(/\s+/g, ' '));
+            wrapLetters(el);
+        });
 
-        const letters = document.querySelectorAll('.letter');
+        const letters = reducedMotion ? [] : document.querySelectorAll('.letter');
         letters.forEach(letter => {
             letter.addEventListener('mouseenter', () => {
                 letter.classList.remove('animating');
@@ -1208,37 +1331,66 @@
             }
         }
 
-        // --- Lightbox ---
+        // --- Lightbox with prev/next gallery navigation ---
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = lightbox.querySelector('img');
         const closeBtn = lightbox.querySelector('.lightbox-close');
+        const prevBtn = lightbox.querySelector('.lightbox-prev');
+        const nextBtn = lightbox.querySelector('.lightbox-next');
+        const counterEl = lightbox.querySelector('.lightbox-counter');
 
-        document.querySelectorAll('.work-card').forEach(card => {
+        const galleryItems = [...document.querySelectorAll('.masonry-item')].map(item => {
+            const img = item.querySelector('.work-card img');
+            return {
+                full: img.dataset.full,
+                alt: img.alt
+            };
+        });
+        let currentIndex = 0;
+
+        function showItem(index) {
+            currentIndex = (index + galleryItems.length) % galleryItems.length;
+            const item = galleryItems[currentIndex];
+            lightboxImg.src = item.full;
+            lightboxImg.alt = item.alt;
+            counterEl.textContent = `${currentIndex + 1} / ${galleryItems.length}`;
+            // Prefetch neighbours so browsing feels instant
+            [currentIndex + 1, currentIndex - 1].forEach(i => {
+                const n = (i + galleryItems.length) % galleryItems.length;
+                new Image().src = galleryItems[n].full;
+            });
+        }
+
+        document.querySelectorAll('.work-card').forEach((card, i) => {
             card.addEventListener('click', function (e) {
                 e.preventDefault();
-                const img = this.querySelector('img');
-                if (img) {
-                    lightboxImg.src = img.dataset.full;
-                    lightbox.classList.add('active');
-                    document.body.style.overflow = 'hidden';
-                }
+                showItem(i);
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                closeBtn.focus();
             });
         });
+
         function closeLightbox() {
             lightbox.classList.remove('active');
             document.body.style.overflow = '';
             setTimeout(() => { lightboxImg.src = ''; }, 300);
         }
         closeBtn.addEventListener('click', closeLightbox);
+        prevBtn.addEventListener('click', () => showItem(currentIndex - 1));
+        nextBtn.addEventListener('click', () => showItem(currentIndex + 1));
         lightbox.addEventListener('click', function (e) {
             if (e.target === lightbox) closeLightbox();
         });
         document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape' && lightbox.classList.contains('active')) closeLightbox();
+            if (!lightbox.classList.contains('active')) return;
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowLeft') showItem(currentIndex - 1);
+            if (e.key === 'ArrowRight') showItem(currentIndex + 1);
         });
 
         // --- Tab Change Title ---
-        const normalTitle = "Michał Jarosiński - Projekty Graficzne";
+        const normalTitle = document.title;
         const awayTitle = "👋 Wróć do moich projektów!";
 
         document.addEventListener("visibilitychange", () => {
@@ -1246,7 +1398,8 @@
             else document.title = normalTitle;
         });
 
-        resize(); animateStars();
+        // Starfield respects reduced-motion (canvas is hidden by CSS there too)
+        if (!reducedMotion) { resize(); animateStars(); }
     </script>
 </body>
 

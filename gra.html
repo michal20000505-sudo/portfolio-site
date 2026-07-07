@@ -17,7 +17,7 @@
     <meta property="og:url" content="https://michal20000505-sudo.github.io/portfolio-site/gra.html">
     <meta property="og:title" content="SPACEFIGHTER: The Bullet Hell | Michał Jarosiński">
     <meta property="og:description" content="Kosmiczna strzelanka bullet hell dostępna na Steam. Autorska gra indie stworzona przez Michała Jarosińskiego.">
-    <meta property="og:image" content="https://michal20000505-sudo.github.io/portfolio-site/strona-icon.png">
+    <meta property="og:image" content="https://michal20000505-sudo.github.io/portfolio-site/og-gra.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:site_name" content="Michał Jarosiński Portfolio">
@@ -28,7 +28,7 @@
     <meta property="twitter:url" content="https://michal20000505-sudo.github.io/portfolio-site/gra.html">
     <meta property="twitter:title" content="SPACEFIGHTER: The Bullet Hell | Michał Jarosiński">
     <meta property="twitter:description" content="Kosmiczna strzelanka bullet hell dostępna na Steam.">
-    <meta property="twitter:image" content="https://michal20000505-sudo.github.io/portfolio-site/strona-icon.png">
+    <meta property="twitter:image" content="https://michal20000505-sudo.github.io/portfolio-site/og-gra.jpg">
 
     <meta name="theme-color" content="#050505">
     <link rel="canonical" href="https://michal20000505-sudo.github.io/portfolio-site/gra.html">
@@ -37,7 +37,7 @@
     <link rel="dns-prefetch" href="//fonts.googleapis.com">
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link rel="dns-prefetch" href="//store.steampowered.com">
-    <link rel="preload" as="image" href="press/logo/LOGOGRY.png">
+    <link rel="preload" as="image" href="press/logo/LOGOGRY.webp">
 
     <script type="application/ld+json">
     {
@@ -114,43 +114,56 @@
         a { text-decoration: none; color: inherit; }
         ul { list-style: none; }
 
+        /* ── VIEW TRANSITIONS (progressive enhancement) ── */
+        @view-transition {
+            navigation: auto;
+        }
+
+        /* ── FOCUS VISIBILITY ── */
+        a:focus-visible,
+        button:focus-visible {
+            outline: 2px solid var(--cyan);
+            outline-offset: 4px;
+        }
+
         /* ── PROGRESS BAR ── */
         #progress-bar {
             position: fixed;
             top: 0; left: 0;
             height: 3px;
-            width: 0%;
+            width: 100%;
             background: linear-gradient(90deg, var(--cyan), var(--magenta), var(--yellow));
+            transform: scaleX(0);
+            transform-origin: left;
             z-index: 10001;
-            transition: width 0.1s linear;
         }
 
-        /* ── AMBIENT GLOW ── */
+        /* ── AMBIENT GLOW (pre-blurred gradients, no filter cost) ── */
         .ambient {
             position: fixed;
             border-radius: 50%;
-            filter: blur(100px);
             pointer-events: none;
             z-index: 0;
+            will-change: transform;
             animation: floatGlow 15s infinite alternate ease-in-out;
         }
         .ambient-1 {
-            width: 600px; height: 600px;
-            top: -10%; left: -10%;
-            background: var(--cyan);
+            width: 800px; height: 800px;
+            top: -15%; left: -15%;
+            background: radial-gradient(circle closest-side, var(--cyan), transparent);
             opacity: 0.08;
         }
         .ambient-2 {
-            width: 600px; height: 600px;
-            bottom: 5%; right: -10%;
-            background: var(--magenta);
+            width: 800px; height: 800px;
+            bottom: 0%; right: -15%;
+            background: radial-gradient(circle closest-side, var(--magenta), transparent);
             opacity: 0.10;
             animation-delay: -5s;
         }
         .ambient-3 {
-            width: 400px; height: 400px;
-            top: 40%; left: 40%;
-            background: var(--yellow);
+            width: 550px; height: 550px;
+            top: 35%; left: 35%;
+            background: radial-gradient(circle closest-side, var(--yellow), transparent);
             opacity: 0.05;
             animation-delay: -10s;
         }
@@ -168,21 +181,27 @@
             pointer-events: none;
         }
 
-        /* ── CURSOR ── */
+        /* ── CURSOR ──
+           Position rides on transform only (GPU compositor, no layout) and has
+           NO transition, so tracking is 1:1 per frame. Hover grows the circle
+           via width/height, which can transition without touching position. */
         .cursor {
             position: fixed;
+            top: 0; left: 0;
             width: 20px; height: 20px;
             border: 2px solid var(--fg);
             border-radius: 50%;
             pointer-events: none;
             z-index: 9999;
-            transform: translate(-50%, -50%);
-            transition: transform 0.1s ease, background-color 0.2s, width 0.3s, height 0.3s;
+            transform: translate3d(-100px, -100px, 0) translate(-50%, -50%);
+            transition: width 0.25s ease, height 0.25s ease, background-color 0.2s;
             mix-blend-mode: difference;
             display: none;
+            will-change: transform;
         }
         .cursor.hovered {
-            transform: translate(-50%, -50%) scale(3);
+            width: 52px;
+            height: 52px;
             background-color: var(--fg);
             border-color: transparent;
             opacity: 0.8;
@@ -730,6 +749,13 @@
                 animation-duration: 0.01ms !important;
                 transition-duration: 0.01ms !important;
             }
+            #starfield, .ambient {
+                display: none;
+            }
+            .reveal {
+                opacity: 1;
+                transform: none;
+            }
         }
     </style>
 </head>
@@ -747,7 +773,7 @@
     <div class="cursor" role="presentation" aria-hidden="true"></div>
 
     <div id="preloader" aria-hidden="true">
-        <span class="loader-text">LOADING...</span>
+        <span class="loader-text">ŁADOWANIE...</span>
     </div>
 
     <header id="site-header">
@@ -779,7 +805,7 @@
         <section id="hero" aria-label="SPACEFIGHTER: The Bullet Hell">
             <div class="hero-inner">
                 <h1 class="hero-title">
-                    <img src="press/logo/LOGOGRY.png" alt="SPACEFIGHTER: The Bullet Hell" class="hero-logo-img" fetchpriority="high">
+                    <img src="press/logo/LOGOGRY.webp" alt="SPACEFIGHTER: The Bullet Hell" class="hero-logo-img" width="960" height="350" fetchpriority="high">
                 </h1>
 
                 <div class="hero-trailer" aria-label="Trailer gry">
@@ -868,9 +894,11 @@
             preloader.style.opacity = '0';
             setTimeout(() => { preloader.style.display = 'none'; }, 500);
         }
-        window.addEventListener('load', () => setTimeout(hidePreloader, 400));
-        if (document.readyState === 'complete') hidePreloader();
-        setTimeout(hidePreloader, 1500);
+        if (document.readyState !== 'loading') hidePreloader();
+        else document.addEventListener('DOMContentLoaded', hidePreloader);
+        setTimeout(hidePreloader, 1200);
+
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         // ── SCREENSHOTS GRID ──
         // Generated first so subsequent handlers (cursor, lightbox, reveal) can pick up the items.
@@ -887,15 +915,19 @@
         ];
         const screenshotsGrid = document.getElementById('screenshots-grid');
         SCREENSHOTS.forEach((shot, i) => {
-            const src = `screenshots/${encodeURIComponent(shot.file)}`;
+            // Lightweight WebP thumb in the grid; the full JPG loads only in the lightbox
+            const base = shot.file.replace(/\.jpg$/, '');
+            const thumb = `screenshots/thumbs/${encodeURIComponent(base)}.webp`;
+            const full = `screenshots/${encodeURIComponent(shot.file)}`;
             const item = document.createElement('div');
             item.className = 'screenshot-item reveal';
             item.style.transitionDelay = `${(i % 3) * 0.08}s`;
             item.setAttribute('role', 'button');
             item.setAttribute('tabindex', '0');
             item.setAttribute('aria-label', `${shot.alt} — kliknij aby powiększyć`);
+            item.dataset.full = full;
             item.innerHTML = `
-                <img src="${src}" alt="${shot.alt}" loading="lazy">
+                <img src="${thumb}" alt="${shot.alt}" width="900" height="506" loading="lazy">
                 <div class="screenshot-overlay" aria-hidden="true">
                     <div class="zoom-icon">+</div>
                 </div>
@@ -903,14 +935,22 @@
             screenshotsGrid.appendChild(item);
         });
 
-        // ── SCROLL: HEADER + PROGRESS BAR ──
+        // ── SCROLL: HEADER + PROGRESS BAR (rAF-throttled, transform only) ──
         const siteHeader = document.getElementById('site-header');
         const progressBar = document.getElementById('progress-bar');
-        window.addEventListener('scroll', () => {
+        let scrollTicking = false;
+        function onScroll() {
             siteHeader.classList.toggle('scrolled', window.scrollY > 50);
             const el = document.documentElement;
-            const pct = el.scrollTop / (el.scrollHeight - el.clientHeight);
-            progressBar.style.width = (pct * 100) + '%';
+            const pct = el.scrollTop / (el.scrollHeight - el.clientHeight) || 0;
+            progressBar.style.transform = `scaleX(${pct})`;
+            scrollTicking = false;
+        }
+        window.addEventListener('scroll', () => {
+            if (!scrollTicking) {
+                scrollTicking = true;
+                requestAnimationFrame(onScroll);
+            }
         }, { passive: true });
 
         // ── STARFIELD ──
@@ -978,10 +1018,12 @@
             H = canvas.height = window.innerHeight;
             initStars();
         }
-        window.addEventListener('resize', resizeCanvas, { passive: true });
-        window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; }, { passive: true });
-        resizeCanvas();
-        tick();
+        if (!reducedMotion) {
+            window.addEventListener('resize', resizeCanvas, { passive: true });
+            window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; }, { passive: true });
+            resizeCanvas();
+            tick();
+        }
 
         // ── MOBILE MENU ──
         const menuToggle = document.getElementById('menu-toggle');
@@ -1008,8 +1050,7 @@
         const isFinePointer = window.matchMedia('(pointer: fine)').matches;
         if (isFinePointer) {
             document.addEventListener('mousemove', e => {
-                cursor.style.left = e.clientX + 'px';
-                cursor.style.top = e.clientY + 'px';
+                cursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0) translate(-50%, -50%)`;
             }, { passive: true });
             document.querySelectorAll('a, button, .screenshot-item').forEach(el => {
                 el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
@@ -1061,9 +1102,7 @@
         document.querySelectorAll('.screenshot-item').forEach(item => {
             const img = item.querySelector('img');
             const activate = () => {
-                if (img.complete && img.naturalWidth > 0) {
-                    openLightbox(img.src, img.alt);
-                }
+                openLightbox(item.dataset.full || img.src, img.alt);
             };
             item.addEventListener('click', activate);
             item.addEventListener('keydown', e => {

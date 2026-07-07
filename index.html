@@ -18,7 +18,7 @@
     <meta property="og:url" content="https://michal20000505-sudo.github.io/portfolio-site/">
     <meta property="og:title" content="Michał Jarosiński - Portfolio | Web Design & Branding">
     <meta property="og:description" content="Creative designer specjalizujący się w web designie, brandingu i art direction od 2014 roku. Zobacz portfolio projektów dla klientów takich jak Lavazza, AimControllers, PGV.">
-    <meta property="og:image" content="https://michal20000505-sudo.github.io/portfolio-site/strona-icon.png">
+    <meta property="og:image" content="https://michal20000505-sudo.github.io/portfolio-site/og-image.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:site_name" content="Michał Jarosiński Portfolio">
@@ -29,7 +29,7 @@
     <meta property="twitter:url" content="https://michal20000505-sudo.github.io/portfolio-site/">
     <meta property="twitter:title" content="Michał Jarosiński - Portfolio | Web Design & Branding">
     <meta property="twitter:description" content="Creative designer specjalizujący się w web designie, brandingu i art direction od 2014 roku. Zobacz portfolio projektów dla klientów takich jak Lavazza, AimControllers, PGV.">
-    <meta property="twitter:image" content="https://michal20000505-sudo.github.io/portfolio-site/strona-icon.png">
+    <meta property="twitter:image" content="https://michal20000505-sudo.github.io/portfolio-site/og-image.jpg">
     
     <!-- Additional SEO -->
     <meta name="theme-color" content="#050505">
@@ -76,10 +76,6 @@
     <link rel="dns-prefetch" href="//fonts.googleapis.com">
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     
-    <!-- Preload critical resources -->
-    <link rel="preload" href="JAzdj.jpg" as="image">
-    <link rel="preload" href="rentgen.jpg" as="image">
-    <link rel="preload" href="strona-icon.png" as="image">
     
     <style>
         :root {
@@ -128,50 +124,63 @@
             width: 100%;
         }
 
+        /* --- View Transitions (progressive enhancement) --- */
+        @view-transition {
+            navigation: auto;
+        }
+
+        /* --- Focus visibility (keyboard users) --- */
+        a:focus-visible,
+        button:focus-visible {
+            outline: 2px solid var(--cyan);
+            outline-offset: 4px;
+        }
+
         /* --- Scroll Progress Bar --- */
         #progress-bar {
             position: fixed;
             top: 0;
             left: 0;
             height: 3px;
+            width: 100%;
             background: linear-gradient(90deg, var(--cyan), var(--magenta), var(--yellow));
-            width: 0%;
+            transform: scaleX(0);
+            transform-origin: left;
             z-index: 10001;
-            transition: width 0.1s;
         }
 
-        /* --- Ambient Background Glows --- */
+        /* --- Ambient Background Glows (pre-blurred gradients, no filter cost) --- */
         .ambient-glow {
             position: fixed;
-            width: 600px;
-            height: 600px;
+            width: 800px;
+            height: 800px;
             border-radius: 50%;
-            filter: blur(100px);
             opacity: 0.15;
             z-index: -2;
             pointer-events: none;
+            will-change: transform;
             animation: floatGlow 15s infinite alternate ease-in-out;
         }
 
         .glow-1 {
-            top: -10%;
-            left: -10%;
-            background: var(--cyan);
+            top: -15%;
+            left: -15%;
+            background: radial-gradient(circle closest-side, var(--cyan), transparent);
         }
 
         .glow-2 {
-            bottom: 10%;
-            right: -10%;
-            background: var(--magenta);
+            bottom: 5%;
+            right: -15%;
+            background: radial-gradient(circle closest-side, var(--magenta), transparent);
             animation-delay: -5s;
         }
 
         .glow-3 {
-            top: 40%;
-            left: 40%;
-            width: 400px;
-            height: 400px;
-            background: var(--yellow);
+            top: 35%;
+            left: 35%;
+            width: 550px;
+            height: 550px;
+            background: radial-gradient(circle closest-side, var(--yellow), transparent);
             opacity: 0.08;
             animation-delay: -10s;
         }
@@ -200,23 +209,30 @@
             pointer-events: none;
         }
 
-        /* --- Cursor --- */
+        /* --- Cursor ---
+           Position rides on transform only (GPU compositor, no layout) and has
+           NO transition, so tracking is 1:1 per frame. Hover grows the circle
+           via width/height, which can transition without touching position. */
         .cursor {
             width: 20px;
             height: 20px;
             border: 2px solid var(--text-color);
             border-radius: 50%;
             position: fixed;
+            top: 0;
+            left: 0;
             pointer-events: none;
             z-index: 9999;
-            transform: translate(-50%, -50%);
-            transition: transform 0.1s ease, background-color 0.2s, width 0.3s, height 0.3s;
+            transform: translate3d(-100px, -100px, 0) translate(-50%, -50%);
+            transition: width 0.25s ease, height 0.25s ease, background-color 0.2s;
             mix-blend-mode: difference;
             display: none;
+            will-change: transform;
         }
 
         .cursor.hovered {
-            transform: translate(-50%, -50%) scale(3);
+            width: 52px;
+            height: 52px;
             background-color: var(--text-color);
             border-color: transparent;
             opacity: 0.8;
@@ -385,7 +401,7 @@
         }
 
         .hero-title {
-            font-size: 8vw;
+            font-size: clamp(3.5rem, 8vw, 8rem);
             font-weight: 700;
             line-height: 0.9;
             text-transform: uppercase;
@@ -657,13 +673,12 @@
             left: -3px;
             right: -3px;
             bottom: -3px;
-            background: linear-gradient(45deg, var(--cyan), var(--magenta), var(--yellow), var(--cyan));
+            background: linear-gradient(45deg, var(--cyan), rgba(0, 255, 255, 0.12), var(--cyan));
             background-size: 300% 300%;
             border-radius: 8px;
             z-index: -1;
-            opacity: 0.8;
-            animation: borderFlow 4s ease-in-out infinite;
-            border-radius: 8px;
+            opacity: 0.7;
+            animation: borderFlow 6s ease-in-out infinite;
         }
 
         @keyframes borderFlow {
@@ -833,6 +848,7 @@
             margin-bottom: 25px;
         }
 
+        /* Informational labels, not buttons: no hover affordance */
         .clients-list li {
             background: rgba(255, 255, 255, 0.03);
             padding: 15px 10px;
@@ -840,67 +856,10 @@
             font-size: 0.95rem;
             text-align: center;
             border: 1px solid rgba(255, 255, 255, 0.08);
-            transition: all 0.4s var(--ease-out);
-            position: relative;
-            overflow: hidden;
+            color: #bbb;
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 1px;
-        }
-
-        .clients-list li::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transition: left 0.6s;
-        }
-
-        .clients-list li:hover::before {
-            left: 100%;
-        }
-
-        .clients-list li:hover {
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-            border-color: rgba(255, 255, 255, 0.2);
-        }
-
-        .clients-list li:nth-child(3n+1) {
-            background: rgba(0, 255, 255, 0.04);
-            color: #b3ffff;
-            border-color: rgba(0, 255, 255, 0.18);
-        }
-
-        .clients-list li:nth-child(3n+1):hover {
-            background: rgba(0, 255, 255, 0.1);
-            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.15);
-        }
-
-        .clients-list li:nth-child(3n+2) {
-            background: rgba(255, 0, 255, 0.04);
-            color: #ffb3ff;
-            border-color: rgba(255, 0, 255, 0.18);
-        }
-
-        .clients-list li:nth-child(3n+2):hover {
-            background: rgba(255, 0, 255, 0.1);
-            box-shadow: 0 10px 30px rgba(255, 0, 255, 0.15);
-        }
-
-        .clients-list li:nth-child(3n+3) {
-            background: rgba(255, 255, 0, 0.03);
-            color: #ffffb3;
-            border-color: rgba(255, 255, 0, 0.15);
-        }
-
-        .clients-list li:nth-child(3n+3):hover {
-            background: rgba(255, 255, 0, 0.08);
-            box-shadow: 0 10px 30px rgba(255, 255, 0, 0.12);
         }
 
         .clients-footer {
@@ -1088,8 +1047,8 @@
         }
 
         .tags span:hover {
-            border-color: var(--magenta);
-            color: var(--magenta);
+            border-color: var(--cyan);
+            color: var(--cyan);
             transform: translateY(-2px);
         }
 
@@ -1233,11 +1192,41 @@
             transition: transform 0.2s ease-out, background 0.3s;
             perspective: 1000px;
             transform-style: preserve-3d;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Ink blot spreading from the corner, in the card's process color */
+        .service-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 12% 10%, var(--ink, rgba(0, 255, 255, 0.14)), transparent 55%);
+            transform: scale(0);
+            transform-origin: 12% 10%;
+            transition: transform 0.7s var(--ease-out);
+            pointer-events: none;
+        }
+
+        .service-card:nth-child(1) {
+            --ink: rgba(0, 255, 255, 0.14);
+        }
+
+        .service-card:nth-child(2) {
+            --ink: rgba(255, 0, 255, 0.14);
+        }
+
+        .service-card:nth-child(3) {
+            --ink: rgba(255, 255, 0, 0.10);
         }
 
         .service-card:hover {
             background-color: #000;
             z-index: 10;
+        }
+
+        .service-card:hover::before {
+            transform: scale(1);
         }
 
         .service-card h3 {
@@ -1268,7 +1257,7 @@
             text-align: center;
             display: block;
             transition: all 0.4s var(--ease-out);
-            word-break: break-all;
+            word-break: break-word;
             position: relative;
             z-index: 1;
         }
@@ -1283,8 +1272,7 @@
 
         .cta-big:hover {
             transform: scale(1.05) rotate(-2deg);
-            color: var(--bg-color);
-            text-shadow: -2px -2px 0 var(--cyan), 2px -2px 0 var(--cyan), -2px 2px 0 var(--cyan), 2px 2px 0 var(--cyan);
+            text-shadow: 3px 3px 0 rgba(0, 255, 255, 0.55), -3px -3px 0 rgba(255, 0, 255, 0.55);
         }
 
         .cta-small:hover {
@@ -1412,13 +1400,14 @@
                 letter-spacing: 1px;
             }
 
+            /* On touch screens the work speaks for itself: no permanent text
+               overlay covering the image (the "Zobacz →" link sits below). */
             .project-img-wrapper::after {
-                opacity: 0.3;
+                opacity: 0;
             }
 
             .project-img-wrapper::before {
-                opacity: 1;
-                font-size: 1.1rem;
+                display: none;
             }
 
             /* Disable intense 3D tilts on mobile for performance */
@@ -1426,6 +1415,32 @@
             .service-card,
             .simple-zoom-container {
                 transform: none !important;
+            }
+        }
+
+        /* --- Reduced motion --- */
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            #starfield,
+            .ambient-glow {
+                display: none;
+            }
+
+            .reveal {
+                opacity: 1;
+                transform: none;
+            }
+
+            .hero-subtitle {
+                opacity: 1;
             }
         }
     </style>
@@ -1443,7 +1458,7 @@
     <div class="cursor"></div>
 
     <div id="preloader">
-        <div class="loader-text">LOADING...</div>
+        <div class="loader-text">ŁADOWANIE...</div>
     </div>
 
     <header>
@@ -1472,7 +1487,7 @@
         <section id="hero">
             <div class="container hero-content">
                 <div class="glitch-wrapper">
-                    <h1 class="hero-title" title="Creative Designer">CREATIVE<br>DESIGNER</h1>
+                    <h1 class="hero-title" aria-label="Creative Designer">CREATIVE<br>DESIGNER</h1>
                 </div>
                 <p class="hero-subtitle">Web Design / Branding / Art Direction</p>
             </div>
@@ -1485,8 +1500,8 @@
                 <div class="about-grid reveal">
                     <div class="about-image-wrapper">
                         <div class="simple-zoom-container link-hover">
-                            <img src="JAzdj.jpg" alt="Michał Jarosiński - zdjęcie portfolio" class="my-photo" loading="lazy">
-                            <img src="rentgen.jpg" alt="Michał Jarosiński - efekt rentgenowski" class="my-photo-xray" loading="lazy">
+                            <img src="thumbnails/web/JAzdj.webp" alt="Michał Jarosiński - zdjęcie portfolio" class="my-photo" width="800" height="800" loading="lazy">
+                            <img src="thumbnails/web/rentgen.webp" alt="Michał Jarosiński - efekt rentgenowski" class="my-photo-xray" width="800" height="800" loading="lazy" aria-hidden="true">
                         </div>
                     </div>
 
@@ -1498,12 +1513,12 @@
 
                         <p class="clients-intro">Zaufali mi między innymi:</p>
                         <ul class="clients-list">
-                            <li class="link-hover">AimControllers</li>
-                            <li class="link-hover">Lavazza</li>
-                            <li class="link-hover">PGV</li>
-                            <li class="link-hover">Pol-vending</li>
-                            <li class="link-hover">Aora Vending</li>
-                            <li class="link-hover">Grom Art</li>
+                            <li>AimControllers</li>
+                            <li>Lavazza</li>
+                            <li>PGV</li>
+                            <li>Pol-vending</li>
+                            <li>Aora Vending</li>
+                            <li>Grom Art</li>
                         </ul>
                         <p class="clients-footer">...oraz wielu klientów prywatnych.</p>
                     </div>
@@ -1519,7 +1534,7 @@
                 <article class="project-item project-item--featured reveal">
                     <div class="project-img-wrapper link-hover">
                         <a href="gra.html">
-                            <img src="screenshots/steam1.jpg" alt="SPACEFIGHTER: The Bullet Hell — autorska gra, walka z bossem">
+                            <img src="thumbnails/web/steam1.webp" alt="SPACEFIGHTER: The Bullet Hell — autorska gra, walka z bossem" width="1200" height="675">
                         </a>
                     </div>
                     <div class="project-info">
@@ -1538,7 +1553,7 @@
                 <article class="project-item reveal">
                     <div class="project-img-wrapper link-hover">
                         <a href="https://skpolanowice-sourceskp.github.io/sscar/" target="_blank">
-                            <img src="sscar.jpg" alt="SSCAR - strona internetowa dla serwisu samochodowego" loading="lazy">
+                            <img src="thumbnails/web/sscar.webp" alt="SSCAR - strona internetowa dla serwisu samochodowego" width="1200" height="588" loading="lazy">
                         </a>
                     </div>
                     <div class="project-info">
@@ -1556,7 +1571,7 @@
                 <article class="project-item reveal">
                     <div class="project-img-wrapper link-hover">
                         <a href="https://skpolanowice-sourceskp.github.io/BodycreatorTEST/" target="_blank">
-                            <img src="bodycreator.png" alt="Body Creator - strona studia treningowego z autonomicznymi formularzami i kalkulatorem BMI" loading="lazy">
+                            <img src="thumbnails/web/bodycreator.webp" alt="Body Creator - strona studia treningowego z autonomicznymi formularzami i kalkulatorem BMI" width="1200" height="622" loading="lazy">
                         </a>
                     </div>
                     <div class="project-info">
@@ -1574,7 +1589,7 @@
                 <article class="project-item reveal">
                     <div class="project-img-wrapper link-hover">
                         <a href="https://michal20000505-sudo.github.io/R-MAX-auto/index.html" target="_blank">
-                            <img src="rmax.jpg" alt="R-MAX Auto - nowoczesna strona serwisu samochodowego" loading="lazy" onerror="this.src='sscar.jpg'">
+                            <img src="thumbnails/web/rmax.webp" alt="R-MAX Auto - nowoczesna strona serwisu samochodowego" width="1200" height="750" loading="lazy">
                         </a>
                     </div>
                     <div class="project-info">
@@ -1595,7 +1610,7 @@
                 <article class="project-item reveal">
                     <div class="project-img-wrapper link-hover">
                         <a href="https://skpolanowice-sourceskp.github.io/autofuturatest/#" target="_blank">
-                            <img src="autofutura.png" alt="AutoFutura - strona wizytówka serwisu blacharsko-lakierniczego" loading="lazy">
+                            <img src="thumbnails/web/autofutura.webp" alt="AutoFutura - strona wizytówka serwisu blacharsko-lakierniczego" width="1200" height="522" loading="lazy">
                         </a>
                     </div>
                     <div class="project-info">
@@ -1613,7 +1628,7 @@
                 <article class="project-item reveal">
                     <div class="project-img-wrapper link-hover">
                         <a href="grafika.html">
-                            <img src="digicamoblue-powder.jpg" alt="Portfolio graficzne - projektowanie grafiki komputerowej" loading="lazy" onerror="this.src='render2.jpg'">
+                            <img src="thumbnails/web/digicamoblue-powder.webp" alt="Portfolio graficzne - projektowanie grafiki komputerowej" width="1200" height="1200" loading="lazy">
                         </a>
                     </div>
                     <div class="project-info">
@@ -1668,17 +1683,17 @@
         </section>
     </main>
 
-    <footer style="text-align:center; padding: 40px 20px; color: #444; font-size: 0.85rem; border-top: 1px solid #1a1a1a;">
+    <footer style="text-align:center; padding: 40px 20px; color: #8a8a8a; font-size: 0.85rem; border-top: 1px solid #1a1a1a;">
         <p>&copy; 2025 Michał Jarosiński. Wszelkie prawa zastrzeżone.</p>
     </footer>
 
     <script>
-        // --- Preloader ---
+        // --- Preloader (hide as soon as the DOM is usable; hard cap 1.2s) ---
         const preloader = document.getElementById('preloader');
         function hidePreloader() { if (preloader.style.opacity !== '0') { preloader.style.opacity = '0'; setTimeout(() => { preloader.style.display = 'none' }, 500); } }
-        window.addEventListener('load', () => { setTimeout(hidePreloader, 500) });
-        if (document.readyState === 'complete') hidePreloader();
-        setTimeout(hidePreloader, 3000);
+        if (document.readyState !== 'loading') hidePreloader();
+        else document.addEventListener('DOMContentLoaded', hidePreloader);
+        setTimeout(hidePreloader, 1200);
 
         // --- Scroll Reveal ---
         const revealObserver = new IntersectionObserver((entries) => {
@@ -1686,19 +1701,25 @@
         }, { threshold: 0.1 });
         document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-        // --- Header Scroll Effect & Progress Bar ---
+        // --- Header Scroll Effect & Progress Bar (rAF-throttled, transform only) ---
         const header = document.querySelector('header');
         const progressBar = document.getElementById('progress-bar');
+        let scrollTicking = false;
+
+        function onScroll() {
+            header.classList.toggle('scrolled', window.scrollY > 50);
+            const el = document.documentElement;
+            const pct = el.scrollTop / (el.scrollHeight - el.clientHeight) || 0;
+            progressBar.style.transform = `scaleX(${pct})`;
+            scrollTicking = false;
+        }
 
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) header.classList.add('scrolled');
-            else header.classList.remove('scrolled');
-
-            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (winScroll / height) * 100;
-            progressBar.style.width = scrolled + "%";
-        });
+            if (!scrollTicking) {
+                scrollTicking = true;
+                requestAnimationFrame(onScroll);
+            }
+        }, { passive: true });
 
         // --- Starfield ---
         const canvas = document.getElementById('starfield');
@@ -1758,14 +1779,13 @@
             });
         });
 
-        // --- Cursor System ---
+        // --- Cursor System (GPU transform via custom properties) ---
         const cursor = document.querySelector('.cursor');
 
         if (window.matchMedia("(pointer: fine)").matches) {
             document.addEventListener('mousemove', e => {
-                cursor.style.left = e.clientX + 'px';
-                cursor.style.top = e.clientY + 'px';
-            });
+                cursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0) translate(-50%, -50%)`;
+            }, { passive: true });
 
             document.querySelectorAll('.link-hover, a, button, .project-img-wrapper, .simple-zoom-container').forEach(l => {
                 l.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
@@ -1791,7 +1811,7 @@
         }
 
         // --- Visibility Change ---
-        const normalTitle = "Michał Jarosiński - Portfolio";
+        const normalTitle = document.title;
         const awayTitle = "👋 Wróć do moich projektów!";
 
         document.addEventListener("visibilitychange", () => {
@@ -1799,7 +1819,9 @@
             else document.title = normalTitle;
         });
 
-        resize(); animateStars();
+        // Starfield respects reduced-motion (canvas is hidden by CSS there too)
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!reducedMotion) { resize(); animateStars(); }
 
         // --- Rubber Band Text Effect ---
         // Targets: Hero title and Section titles
@@ -1848,13 +1870,14 @@
             });
         }
 
-        // Initialize effect
+        // Initialize effect (screen readers get the intact label, not letter spans)
         textElements.forEach(el => {
+            if (!el.hasAttribute('aria-label')) el.setAttribute('aria-label', el.textContent.trim().replace(/\s+/g, ' '));
             wrapLetters(el);
         });
 
         // Bind events to all .letter elements (global)
-        const letters = document.querySelectorAll('.letter');
+        const letters = reducedMotion ? [] : document.querySelectorAll('.letter');
         letters.forEach(letter => {
             letter.addEventListener('mouseenter', () => {
                 // Force restart animation
