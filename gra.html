@@ -317,6 +317,9 @@
             background: transparent;
             border: none;
             padding: 4px;
+            cursor: pointer;
+            -webkit-appearance: none;
+            appearance: none;
         }
         .bar {
             width: 28px; height: 2px;
@@ -714,7 +717,21 @@
         /* ── RESPONSIVE ── */
         @media (max-width: 1024px) {
             .container { padding: 0 24px; }
-            .menu-toggle { display: flex; }
+
+            /* mix-blend-mode: difference on the fixed header renders unreliably
+               over composited layers (iframe, canvas) on mobile GPUs and can make
+               the nav invisible; the page is uniformly dark, so blend adds nothing here */
+            header {
+                mix-blend-mode: normal;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .menu-toggle .bar {
+                background: #fff;
+            }
             .nav-links {
                 position: fixed;
                 top: 0; right: 0;
