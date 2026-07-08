@@ -68,16 +68,27 @@
     <link rel="icon" type="image/png" sizes="500x500" href="strona-icon.png">
     <link rel="apple-touch-icon" sizes="500x500" href="strona-icon.png">
     <link rel="manifest" href="manifest.json">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
-    
-    <!-- Performance optimizations -->
-    <link rel="dns-prefetch" href="//fonts.googleapis.com">
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    
-    
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="fonts/space-grotesk-latin-ext.woff2">
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="fonts/space-grotesk-latin.woff2">
+
+
     <style>
+        @font-face {
+            font-family: 'Space Grotesk';
+            font-style: normal;
+            font-weight: 300 700;
+            font-display: swap;
+            src: url(fonts/space-grotesk-latin-ext.woff2) format('woff2');
+            unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+        }
+        @font-face {
+            font-family: 'Space Grotesk';
+            font-style: normal;
+            font-weight: 300 700;
+            font-display: swap;
+            src: url(fonts/space-grotesk-latin.woff2) format('woff2');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+        }
         :root {
             --bg-color: #050505;
             --text-color: #ffffff;
@@ -1811,7 +1822,7 @@
                 <article class="project-item project-item--featured reveal">
                     <div class="project-img-wrapper link-hover">
                         <a href="gra.html">
-                            <img src="thumbnails/web/steam1.webp" alt="SPACEFIGHTER: The Bullet Hell — autorska gra, walka z bossem" width="1200" height="675">
+                            <img src="thumbnails/web/steam1.webp" alt="SPACEFIGHTER: The Bullet Hell — autorska gra, walka z bossem" width="1200" height="675" loading="lazy">
                         </a>
                     </div>
                     <div class="project-info">
@@ -2033,8 +2044,14 @@
         function initStars() { stars = []; for (let i = 0; i < (width * height) / 8000; i++)stars.push(new Star()); }
         function animateStars() { ctx.clearRect(0, 0, width, height); stars.forEach(s => { s.draw(); s.update() }); requestAnimationFrame(animateStars); }
 
-        window.addEventListener('resize', resize);
-        window.addEventListener('mousemove', e => { mouse.x = e.x; mouse.y = e.y });
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(resize, 150);
+        });
+        if (!window.matchMedia('(pointer: coarse)').matches) {
+            window.addEventListener('mousemove', e => { mouse.x = e.x; mouse.y = e.y });
+        }
 
         // --- Mobile Menu ---
         const menuToggle = document.getElementById('mobile-menu');
@@ -2242,8 +2259,8 @@
     </script>
     <script type="module">
         const VIEWERS = [
-            { id: 'vizController', src: 'Meshy_AI_Blue_Hexagon_Mosaic_C_0708051901_texture.glb', sizeFactor: 0.5 },
-            { id: 'vizGift', src: 'Meshy_AI_3C_Body_Creator_Gear__0707161747_texture.glb', sizeFactor: 0.7 }
+            { id: 'vizController', src: 'models/controller.glb', sizeFactor: 0.5 },
+            { id: 'vizGift', src: 'models/gift.glb', sizeFactor: 0.7 }
         ];
 
         const CYAN = 0x00ffff;
@@ -2251,7 +2268,7 @@
 
         let THREE, GLTFLoader;
 
-        (async () => {
+        const startViewers = async () => {
             const targets = VIEWERS
                 .map(v => ({ ...v, el: document.getElementById(v.id) }))
                 .filter(v => v.el && window.WebGLRenderingContext);
@@ -2264,7 +2281,18 @@
             } catch (e) { return; }
 
             targets.forEach(initViewer);
-        })();
+        };
+
+        const skillsEl = document.getElementById('skills');
+        if (skillsEl) {
+            const skillsObserver = new IntersectionObserver((entries) => {
+                if (entries.some(entry => entry.isIntersecting)) {
+                    skillsObserver.disconnect();
+                    startViewers();
+                }
+            }, { rootMargin: '600px' });
+            skillsObserver.observe(skillsEl);
+        }
 
         async function initViewer({ el: wrap, src, sizeFactor = 1 }) {
             let renderer;
