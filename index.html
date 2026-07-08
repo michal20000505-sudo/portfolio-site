@@ -880,6 +880,127 @@
             margin-right: 8px;
         }
 
+        /* --- Skills: 3D product viewers --- */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+        }
+
+        .viewer-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .viewer {
+            position: relative;
+            width: 100%;
+            max-width: 480px;
+            aspect-ratio: 1 / 1;
+        }
+
+        .viewer canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            cursor: grab;
+            touch-action: pan-y;
+            opacity: 0;
+            transition: opacity 1.2s var(--ease-out);
+        }
+
+        .viewer canvas:active {
+            cursor: grabbing;
+        }
+
+        .viewer.ready canvas {
+            opacity: 1;
+        }
+
+        .viewer-fallback {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #555;
+            font-size: 0.8rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+
+        .viewer.ready .viewer-fallback {
+            display: none;
+        }
+
+        .viewer-caption h3 {
+            font-size: 1.4rem;
+            font-weight: 500;
+            margin: 24px 0 10px;
+        }
+
+        .viewer-caption p {
+            color: #aaa;
+            font-size: 0.98rem;
+            font-weight: 300;
+            line-height: 1.7;
+            max-width: 38ch;
+            margin: 0 auto;
+        }
+
+        /* --- Automation / systems section --- */
+        .automation-intro {
+            max-width: 70ch;
+            color: #e0e0e0;
+            font-weight: 300;
+            line-height: 1.9;
+            font-size: 1.15rem;
+            margin-bottom: 60px;
+        }
+
+        .automation-shots {
+            display: grid;
+            grid-template-columns: 1.3fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        .automation-shot {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 16px;
+            overflow: hidden;
+            transition: transform 0.4s var(--ease-out), border-color 0.4s, box-shadow 0.4s;
+        }
+
+        .automation-shot:nth-child(2) {
+            margin-top: 70px;
+        }
+
+        .automation-shot:hover {
+            transform: translateY(-4px);
+            border-color: var(--cyan);
+            box-shadow: 0 20px 50px -20px rgba(0, 255, 255, 0.25);
+        }
+
+        .automation-shot img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .automation-shot figcaption {
+            padding: 18px 20px;
+            font-size: 0.85rem;
+            color: #888;
+            border-top: 1px solid #333;
+            font-weight: 300;
+        }
+
         /* --- Projects (3D Tilt) --- */
         .project-item {
             display: grid;
@@ -1305,6 +1426,19 @@
                 text-align: left;
             }
 
+            .skills-grid {
+                grid-template-columns: 1fr;
+                gap: 50px;
+            }
+
+            .automation-shots {
+                grid-template-columns: 1fr;
+            }
+
+            .automation-shot:nth-child(2) {
+                margin-top: 0;
+            }
+
             .clients-list {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 12px;
@@ -1522,6 +1656,55 @@
                         </ul>
                         <p class="clients-footer">...oraz wielu klientów prywatnych.</p>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="skills">
+            <div class="container">
+                <p class="work-kicker reveal">Projektowanie produktowe</p>
+                <h2 class="section-title reveal">Design <span>3D</span></h2>
+
+                <div class="skills-grid reveal">
+                    <div class="viewer-card">
+                        <div class="viewer" id="vizController">
+                            <span class="viewer-fallback">Model 3D</span>
+                        </div>
+                        <div class="viewer-caption">
+                            <h3>Kontroler custom</h3>
+                            <p>Autorski projekt produktowy: pad do gier zaprojektowany i zwizualizowany w 3D od podstaw.</p>
+                        </div>
+                    </div>
+
+                    <div class="viewer-card">
+                        <div class="viewer" id="vizGift">
+                            <span class="viewer-fallback">Model 3D</span>
+                        </div>
+                        <div class="viewer-caption">
+                            <h3>Zestaw prezentowy</h3>
+                            <p>Zestaw zaprojektowany dla studia treningowego Body Creator, od koncepcji po finalną wizualizację.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="automation">
+            <div class="container">
+                <p class="work-kicker reveal">Dla biznesu</p>
+                <h2 class="section-title reveal">Bazy danych <span>i automatyzacje</span></h2>
+
+                <p class="automation-intro reveal">Poza designem buduję też działające systemy dla firm: rezerwacje online, panele administracyjne, bazy danych i integracje, na przykład dekoder VIN czy Google Calendar. Rozwiązania szyte na miarę, bez zbędnych abonamentów.</p>
+
+                <div class="automation-shots reveal">
+                    <figure class="automation-shot">
+                        <img src="screens/system_rezerwacji.webp" alt="System rezerwacji online SSCAR – wybór usługi, dnia i godziny" width="1131" height="850" loading="lazy">
+                        <figcaption>System rezerwacji online – SSCAR</figcaption>
+                    </figure>
+                    <figure class="automation-shot">
+                        <img src="screens/panel_kalendarz.webp" alt="Panel administracyjny z kalendarzem terminów dla serwisu" width="1850" height="954" loading="lazy">
+                        <figcaption>Panel administracyjny – kalendarz terminów</figcaption>
+                    </figure>
                 </div>
             </div>
         </section>
@@ -1943,6 +2126,185 @@
                     dust.remove();
                 }, 4000);
             }
+        }
+    </script>
+
+    <!-- ========================================
+         Viewery 3D (sekcja "Design 3D")
+         Rotujące modele produktowe (Meshy AI) na podeście.
+         Przy braku WebGL / CDN / modelu zostaje statyczny placeholder.
+         ======================================== -->
+    <script type="importmap">
+        { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
+    </script>
+    <script type="module">
+        const VIEWERS = [
+            { id: 'vizController', src: 'Meshy_AI_Blue_Hexagon_Mosaic_C_0708051901_texture.glb', sizeFactor: 0.5 },
+            { id: 'vizGift', src: 'Meshy_AI_3C_Body_Creator_Gear__0707161747_texture.glb', sizeFactor: 0.7 }
+        ];
+
+        const CYAN = 0x00ffff;
+        const MAGENTA = 0xff00ff;
+
+        let THREE, GLTFLoader;
+
+        (async () => {
+            const targets = VIEWERS
+                .map(v => ({ ...v, el: document.getElementById(v.id) }))
+                .filter(v => v.el && window.WebGLRenderingContext);
+
+            if (!targets.length) return;
+
+            try {
+                THREE = await import('three');
+                ({ GLTFLoader } = await import('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/GLTFLoader.js'));
+            } catch (e) { return; }
+
+            targets.forEach(initViewer);
+        })();
+
+        async function initViewer({ el: wrap, src, sizeFactor = 1 }) {
+            let renderer;
+            try {
+                renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            } catch (e) { return; }
+
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            renderer.toneMappingExposure = 1.15;
+
+            const canvas = renderer.domElement;
+            wrap.appendChild(canvas);
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 50);
+            camera.position.set(0, 2.55, 7.6);
+            camera.lookAt(0, 0.65, 0);
+
+            // ---- podest (paleta strony: czerń + cyjanowy rant) ----
+            const matRimGlow = new THREE.MeshStandardMaterial({ color: CYAN, emissive: CYAN, emissiveIntensity: 0.55, metalness: 0.4, roughness: 0.4 });
+            const matPlatform = new THREE.MeshStandardMaterial({ color: 0x151515, roughness: 0.85 });
+
+            const group = new THREE.Group();
+            scene.add(group);
+
+            const platform = new THREE.Mesh(new THREE.CylinderGeometry(2.1, 2.25, 0.16, 64), matPlatform);
+            platform.position.y = -0.08;
+            platform.receiveShadow = true;
+            group.add(platform);
+            const rim = new THREE.Mesh(new THREE.TorusGeometry(2.11, 0.018, 12, 100), matRimGlow);
+            rim.rotation.x = Math.PI / 2;
+            group.add(rim);
+
+            // ---- model (Meshy AI, GLB z wbudowanymi teksturami) ----
+            let gltf;
+            try {
+                gltf = await new GLTFLoader().loadAsync(src);
+            } catch (e) { return; }
+            const model = gltf.scene;
+            model.traverse(o => {
+                if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; }
+            });
+            // normalizacja: model mieści się na podeście i stoi na jego powierzchni
+            let box = new THREE.Box3().setFromObject(model);
+            const size = box.getSize(new THREE.Vector3());
+            const scale = Math.min(3.4 / Math.max(size.x, size.z), 2.6 / size.y) * sizeFactor;
+            model.scale.setScalar(scale);
+            box = new THREE.Box3().setFromObject(model);
+            const center = box.getCenter(new THREE.Vector3());
+            model.position.x -= center.x;
+            model.position.z -= center.z;
+            model.position.y -= box.min.y;
+            group.add(model);
+
+            const markReady = () => wrap.classList.add('ready');
+
+            // ---- światła: neutralny klucz + magentowy kontr (ambient, per design system) ----
+            scene.add(new THREE.HemisphereLight(0xffffff, 0x0a0a0a, 0.85));
+            const key = new THREE.DirectionalLight(0xffffff, 2.4);
+            key.position.set(3.5, 5.5, 4);
+            key.castShadow = true;
+            key.shadow.mapSize.set(1024, 1024);
+            key.shadow.camera.left = -3;
+            key.shadow.camera.right = 3;
+            key.shadow.camera.top = 4;
+            key.shadow.camera.bottom = -2;
+            key.shadow.camera.near = 1;
+            key.shadow.camera.far = 15;
+            key.shadow.bias = -0.0005;
+            scene.add(key);
+            const rimLight = new THREE.PointLight(MAGENTA, 14, 14, 2);
+            rimLight.position.set(-3.2, 2.2, -3.5);
+            scene.add(rimLight);
+            const fill = new THREE.PointLight(0xffffff, 6, 12, 2);
+            fill.position.set(-1.5, 1.5, 4.5);
+            scene.add(fill);
+
+            // ---- rozmiar ----
+            const resize = () => {
+                const w = wrap.clientWidth, h = wrap.clientHeight;
+                if (!w || !h) return;
+                renderer.setSize(w, h, false);
+                camera.aspect = w / h;
+                camera.updateProjectionMatrix();
+            };
+            new ResizeObserver(resize).observe(wrap);
+            resize();
+
+            // ---- powolna rotacja + przeciąganie ----
+            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const AUTO_SPEED = reduceMotion ? 0 : 0.28; // rad/s — pełny obrót ~22 s
+            let rotY = -0.5, vel = AUTO_SPEED, dragging = false, lastX = 0;
+
+            canvas.addEventListener('pointerdown', e => {
+                dragging = true;
+                lastX = e.clientX;
+                canvas.setPointerCapture(e.pointerId);
+            });
+            canvas.addEventListener('pointermove', e => {
+                if (!dragging) return;
+                const dx = e.clientX - lastX;
+                lastX = e.clientX;
+                rotY += dx * 0.0065;
+                vel = dx * 0.0065 * 60;
+            });
+            const endDrag = () => { dragging = false; };
+            canvas.addEventListener('pointerup', endDrag);
+            canvas.addEventListener('pointercancel', endDrag);
+
+            const clock = new THREE.Clock();
+            let raf = 0;
+            const tick = () => {
+                raf = requestAnimationFrame(tick);
+                const dt = Math.min(clock.getDelta(), 0.05);
+                if (!dragging) {
+                    // rozpęd z przeciągnięcia płynnie wraca do powolnego auto-obrotu
+                    vel += (AUTO_SPEED - vel) * Math.min(1, dt * 1.6);
+                    if (reduceMotion && Math.abs(vel) < 0.005) return;
+                    rotY += vel * dt;
+                }
+                group.rotation.y = rotY;
+                renderer.render(scene, camera);
+            };
+
+            // animuj tylko, gdy viewer jest na ekranie
+            const io = new IntersectionObserver(([entry]) => {
+                if (entry.isIntersecting && !raf) {
+                    clock.start();
+                    clock.getDelta();
+                    tick();
+                } else if (!entry.isIntersecting && raf) {
+                    cancelAnimationFrame(raf);
+                    raf = 0;
+                }
+            }, { rootMargin: '80px' });
+            io.observe(wrap);
+
+            group.rotation.y = rotY;
+            renderer.render(scene, camera);
+            markReady();
         }
     </script>
 </body>
