@@ -124,9 +124,11 @@
             width: 100%;
         }
 
-        /* --- View Transitions (progressive enhancement) --- */
+        /* Cross-document view transitions disabled: snapshotting a page with
+           live WebGL canvases (3D viewers, starfield) can freeze the compositor
+           on some GPUs, leaving a black screen mid-navigation. */
         @view-transition {
-            navigation: auto;
+            navigation: none;
         }
 
         /* --- Focus visibility (keyboard users) --- */

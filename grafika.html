@@ -129,9 +129,10 @@
             height: auto;
         }
 
-        /* --- View Transitions (progressive enhancement) --- */
+        /* Cross-document view transitions disabled: snapshotting pages with
+           live canvases froze navigation with a black screen on some GPUs. */
         @view-transition {
-            navigation: auto;
+            navigation: none;
         }
 
         /* --- Focus visibility (keyboard users) --- */

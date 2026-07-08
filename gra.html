@@ -114,9 +114,10 @@
         a { text-decoration: none; color: inherit; }
         ul { list-style: none; }
 
-        /* ── VIEW TRANSITIONS (progressive enhancement) ── */
+        /* Cross-document view transitions disabled: snapshotting pages with
+           live canvases froze navigation with a black screen on some GPUs. */
         @view-transition {
-            navigation: auto;
+            navigation: none;
         }
 
         /* ── FOCUS VISIBILITY ── */
