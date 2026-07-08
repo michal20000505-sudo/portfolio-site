@@ -2,9 +2,10 @@ import os
 from PIL import Image, ImageCms
 import io
 
-# Configuration
-SOURCE_DIR = '.'
-DEST_DIR = 'thumbnails'
+# Configuration (paths anchored to the repo root, one level above tools/)
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SOURCE_DIR = os.path.join(ROOT, 'sources', 'grafika')
+DEST_DIR = os.path.join(ROOT, 'thumbnails')
 MAX_WIDTH = 800
 QUALITY = 85
 

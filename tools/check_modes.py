@@ -1,6 +1,10 @@
 import os
 from PIL import Image
 
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SOURCE_DIR = os.path.join(ROOT, 'sources', 'grafika')
+THUMB_DIR = os.path.join(ROOT, 'thumbnails')
+
 files = [
     "Lipali-koncert-roboczy-PLAKAT-3.jpg",
     "Food-point-final-ciemne-tlo.jpg",
@@ -18,7 +22,7 @@ files = [
 print("Checking source files:")
 for f in files:
     try:
-        with Image.open(f) as img:
+        with Image.open(os.path.join(SOURCE_DIR, f)) as img:
             print(f"{f}: {img.mode}")
     except FileNotFoundError:
         print(f"{f}: Not found")
@@ -26,7 +30,7 @@ for f in files:
 print("\nChecking thumbnails:")
 for f in files:
     try:
-        with Image.open(f"thumbnails/{f}") as img:
+        with Image.open(os.path.join(THUMB_DIR, f)) as img:
             print(f"thumbnails/{f}: {img.mode}")
     except FileNotFoundError:
         print(f"thumbnails/{f}: Not found")
