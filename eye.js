@@ -628,7 +628,9 @@ async function init() {
         // prędkości sprężyn (płynne, krytycznie tłumione ruchy)
         velX: 0, velY: 0, servoVel: 0,
         // lot po ekranie (px, środek oka)
-        fx: 0, fy: 0, fvx: 0, fvy: 0, ftx: 0, fty: 0, flightTimer: 0
+        fx: 0, fy: 0, fvx: 0, fvy: 0, ftx: 0, fty: 0, flightTimer: 0,
+        // reflektor: podświetlany element interaktywny + dobór miejsca lotu
+        spotEl: null, occTimer: 0, followX: 170, followY: 130
     };
 
     // sprężyna: zwraca nową [pozycję, prędkość]; damping <1 daje lekki overshoot
@@ -643,10 +645,43 @@ async function init() {
 
     // ---- lot po ekranie (element w tle, powolny dryf między punktami) ----
     const eyeSize = () => wrap.clientWidth || 140;
+
+    // Czy punkt na ekranie przykrywa treść (tekst/obraz/przycisk)?
+    // elementsFromPoint pomija pointer-events:none, więc oko, kursor
+    // i nakładki reflektora nie liczą się same do wyniku.
+    const CONTENT_SEL = 'img, picture, video, figure, svg, canvas, h1, h2, h3, h4, h5, h6, p, li, a, button, input, textarea, blockquote, table';
+    function contentAt(x, y) {
+        if (x < 0 || y < 0 || x > window.innerWidth || y > window.innerHeight) return true;
+        const els = document.elementsFromPoint(x, y);
+        for (const el of els) {
+            if (el.matches && el.matches(CONTENT_SEL)) return true;
+        }
+        return false;
+    }
+    // im mniej próbek trafia w treść, tym lepsze miejsce dla oka
+    function occlusionScore(cx, cy) {
+        const r = eyeSize() * 0.45;
+        let score = 0;
+        if (contentAt(cx, cy)) score++;
+        if (contentAt(cx - r, cy)) score++;
+        if (contentAt(cx + r, cy)) score++;
+        if (contentAt(cx, cy - r)) score++;
+        if (contentAt(cx, cy + r)) score++;
+        return score;
+    }
+
     function pickFlightTarget() {
         const m = eyeSize() * 0.7;
-        S.ftx = m + Math.random() * (window.innerWidth - m * 2);
-        S.fty = m + Math.random() * (window.innerHeight - m * 2);
+        // kilka losowych kandydatów; wybieramy najmniej zasłonięty
+        let bestX = 0, bestY = 0, bestScore = Infinity;
+        for (let i = 0; i < 6 && bestScore > 0; i++) {
+            const x = m + Math.random() * (window.innerWidth - m * 2);
+            const y = m + Math.random() * (window.innerHeight - m * 2);
+            const sc = occlusionScore(x, y);
+            if (sc < bestScore) { bestScore = sc; bestX = x; bestY = y; }
+        }
+        S.ftx = bestX;
+        S.fty = bestY;
         S.flightTimer = 9 + Math.random() * 10;
     }
     S.fx = window.innerWidth * 0.8;
@@ -654,6 +689,72 @@ async function init() {
     pickFlightTarget();
 
     const LOOK_MAX_X = 0.55, LOOK_MAX_Y = 0.42;
+
+    // ---- nakładki DOM: snop reflektora + plama światła + dymek ----
+    let beamEl = null, spotGlowEl = null, hintEl = null;
+    if (!wrap.dataset.noflight && !reducedMotion) {
+        const style = document.createElement('style');
+        style.textContent = `
+            #eye-beam, #eye-spot-glow {
+                position: fixed; top: 0; left: 0; pointer-events: none; z-index: -1;
+                opacity: 0; transition: opacity 0.45s cubic-bezier(0.23, 1, 0.32, 1);
+            }
+            #eye-beam {
+                height: 90px;
+                transform-origin: left center;
+                background: linear-gradient(90deg, rgba(0,255,255,0.16), rgba(0,255,255,0.05) 65%, transparent);
+                clip-path: polygon(0 42%, 100% 0, 100% 100%, 0 58%);
+            }
+            #eye-spot-glow {
+                border-radius: 50%;
+                background: radial-gradient(circle, rgba(0,255,255,0.14), rgba(0,255,255,0.05) 55%, transparent 70%);
+            }
+            #eye-hint {
+                position: fixed; top: 0; left: 0; z-index: 950; pointer-events: none;
+                background: #101014; border: 1px solid rgba(0,255,255,0.6); border-radius: 10px;
+                padding: 9px 16px; font-family: 'Space Grotesk', system-ui, sans-serif;
+                font-size: 0.85rem; font-weight: 500; letter-spacing: 0.04em; color: #fff;
+                white-space: nowrap; opacity: 0; transform: translateY(6px);
+                transition: opacity 0.5s cubic-bezier(0.23, 1, 0.32, 1), transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            }
+            #eye-hint.show { opacity: 1; transform: translateY(0); }
+            #eye-hint::after {
+                content: ''; position: absolute; left: 50%; bottom: -6px; margin-left: -6px;
+                width: 10px; height: 10px; background: #101014;
+                border-right: 1px solid rgba(0,255,255,0.6); border-bottom: 1px solid rgba(0,255,255,0.6);
+                transform: rotate(45deg);
+            }`;
+        document.head.appendChild(style);
+        beamEl = document.createElement('div');
+        beamEl.id = 'eye-beam';
+        spotGlowEl = document.createElement('div');
+        spotGlowEl.id = 'eye-spot-glow';
+        // przed #mech-eye, żeby snop rysował się pod okiem
+        document.body.insertBefore(beamEl, wrap);
+        document.body.insertBefore(spotGlowEl, wrap);
+    }
+
+    // dymek "kliknij mnie" na stronie głównej, raz na sesję, po 3 s
+    const isIndex = /(?:^|\/)(?:index\.html)?$/.test(location.pathname);
+    if (!wrap.dataset.noflight && !wrap.dataset.nolink && !reducedMotion &&
+        isIndex && !sessionStorage.getItem('eyeHintShown')) {
+        setTimeout(() => {
+            sessionStorage.setItem('eyeHintShown', '1');
+            hintEl = document.createElement('div');
+            hintEl.id = 'eye-hint';
+            hintEl.textContent = 'hej, możesz mnie kliknąć!';
+            document.body.appendChild(hintEl);
+            requestAnimationFrame(() => hintEl.classList.add('show'));
+            const dismiss = () => {
+                if (!hintEl) return;
+                hintEl.classList.remove('show');
+                setTimeout(() => { hintEl && hintEl.remove(); hintEl = null; }, 600);
+                document.removeEventListener('click', dismiss);
+            };
+            setTimeout(dismiss, 8000);
+            document.addEventListener('click', dismiss);
+        }, 3000);
+    }
 
     function setState(s) {
         if (S.state === s) return;
@@ -732,15 +833,19 @@ async function init() {
             S.aperture = Math.max(0.1, S.aperture - 0.25); // skurcz + powrót sprężynowy
         }, { passive: true });
 
-        // fokus na elementach interaktywnych → zoom soczewek, szeroka przysłona
+        // fokus na elementach interaktywnych → zoom soczewek, szeroka przysłona,
+        // szybszy dolot i reflektor na cel
         document.addEventListener('mouseover', e => {
-            if (e.target.closest && e.target.closest('a, button, [role="button"]')) {
+            const el = e.target.closest && e.target.closest('a, button, [role="button"]');
+            if (el) {
                 if (S.state === 'tracking') setState('focused');
+                S.spotEl = el;
             }
         }, { passive: true });
         document.addEventListener('mouseout', e => {
-            if (S.state === 'focused' && e.target.closest && e.target.closest('a, button, [role="button"]')) {
-                setState('tracking');
+            if (e.target.closest && e.target.closest('a, button, [role="button"]')) {
+                if (S.state === 'focused') setState('tracking');
+                S.spotEl = null;
             }
         }, { passive: true });
     }
@@ -907,21 +1012,40 @@ async function init() {
         yoke.rotation.z = Math.sin(t * 0.4) * 0.015;
 
         // --- lot po ekranie: powolna sprężyna do celu + sinusoidalny dryf ---
-        if (finePointer && S.lastPointer && S.state !== 'sleeping') {
-            // dryf za kursorem z zachowaniem dystansu (offset w stronę środka ekranu)
+        let flightFreq = 0.35;
+        if (S.spotEl && !document.contains(S.spotEl)) S.spotEl = null;
+        if (S.spotEl && S.state !== 'sleeping') {
+            // reflektor: szybszy dolot w pobliże elementu, po jego zewnętrznej stronie
+            const r = S.spotEl.getBoundingClientRect();
+            const ecx = r.left + r.width / 2, ecy = r.top + r.height / 2;
+            let dx = S.fx - ecx, dy = S.fy - ecy;
+            const dl = Math.hypot(dx, dy) || 1;
+            const standoff = Math.max(r.width, r.height) / 2 + eyeSize() * 0.85;
+            S.ftx = ecx + (dx / dl) * standoff;
+            S.fty = ecy + (dy / dl) * standoff;
+            flightFreq = 0.95; // "podlatuje nieco szybciej"
+        } else if (finePointer && S.lastPointer && S.state !== 'sleeping') {
+            // dryf za kursorem; okresowo wybieramy ćwiartkę najmniej zasłoniętą treścią
             const p = S.lastPointer;
-            const offX = (p.x < window.innerWidth / 2 ? 1 : -1) * 170;
-            const offY = (p.y < window.innerHeight / 2 ? 1 : -1) * 130;
-            S.ftx = p.x + offX;
-            S.fty = p.y + offY;
+            S.occTimer -= dt;
+            if (S.occTimer <= 0) {
+                S.occTimer = 0.5;
+                let best = Infinity;
+                for (const sx of [1, -1]) for (const sy of [1, -1]) {
+                    const sc = occlusionScore(p.x + sx * 170, p.y + sy * 130);
+                    if (sc < best) { best = sc; S.followX = sx * 170; S.followY = sy * 130; }
+                }
+            }
+            S.ftx = p.x + S.followX;
+            S.fty = p.y + S.followY;
         } else {
             S.flightTimer -= dt;
             if (S.flightTimer <= 0) pickFlightTarget();
         }
         const driftX = Math.sin(t * 0.31) * 24 + Math.sin(t * 0.13 + 2) * 16;
         const driftY = Math.cos(t * 0.23) * 20 + Math.sin(t * 0.17 + 5) * 14;
-        [S.fx, S.fvx] = spring(S.fx, S.fvx, S.ftx + driftX, dt, 0.35, 1);
-        [S.fy, S.fvy] = spring(S.fy, S.fvy, S.fty + driftY, dt, 0.35, 1);
+        [S.fx, S.fvx] = spring(S.fx, S.fvx, S.ftx + driftX, dt, flightFreq, 1);
+        [S.fy, S.fvy] = spring(S.fy, S.fvy, S.fty + driftY, dt, flightFreq, 1);
         const half = eyeSize() / 2;
         S.fx = THREE.MathUtils.clamp(S.fx, half, window.innerWidth - half);
         S.fy = THREE.MathUtils.clamp(S.fy, half, window.innerHeight - half);
@@ -930,6 +1054,37 @@ async function init() {
         rig.rotation.z += (bank - rig.rotation.z) * Math.min(1, dt * 2);
         if (!wrap.dataset.noflight) {
             wrap.style.transform = `translate3d(${(S.fx - half).toFixed(1)}px, ${(S.fy - half).toFixed(1)}px, 0)`;
+        }
+
+        // --- reflektor: snop światła z oka na podświetlany element ---
+        if (beamEl) {
+            if (S.spotEl && S.state !== 'sleeping') {
+                const r = S.spotEl.getBoundingClientRect();
+                const ecx = r.left + r.width / 2, ecy = r.top + r.height / 2;
+                const bdx = ecx - S.fx, bdy = ecy - S.fy;
+                const dist = Math.hypot(bdx, bdy);
+                beamEl.style.width = dist.toFixed(0) + 'px';
+                beamEl.style.transform =
+                    `translate3d(${S.fx.toFixed(1)}px, ${(S.fy - 45).toFixed(1)}px, 0) rotate(${Math.atan2(bdy, bdx)}rad)`;
+                beamEl.style.opacity = '1';
+                const gw = Math.max(r.width, r.height) * 1.5;
+                spotGlowEl.style.width = spotGlowEl.style.height = gw.toFixed(0) + 'px';
+                spotGlowEl.style.transform =
+                    `translate3d(${(ecx - gw / 2).toFixed(1)}px, ${(ecy - gw / 2).toFixed(1)}px, 0)`;
+                spotGlowEl.style.opacity = '1';
+            } else {
+                beamEl.style.opacity = '0';
+                spotGlowEl.style.opacity = '0';
+            }
+        }
+
+        // --- dymek podąża za okiem (nad nim, w granicach ekranu) ---
+        if (hintEl) {
+            const hw = hintEl.offsetWidth || 200;
+            const hx = THREE.MathUtils.clamp(S.fx - hw / 2, 10, window.innerWidth - hw - 10);
+            const hy = Math.max(10, S.fy - half - 52);
+            hintEl.style.transform = `translate3d(${hx.toFixed(1)}px, ${hy.toFixed(1)}px, 0)` +
+                (hintEl.classList.contains('show') ? '' : ' translateY(6px)');
         }
 
         renderer.render(scene, camera);
