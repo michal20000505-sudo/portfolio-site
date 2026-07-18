@@ -14,8 +14,10 @@
 <body>
 <div id="mech-eye" data-noflight="1"></div>
 <script>
-    const v = new URLSearchParams(location.search).get('variant');
+    const q = new URLSearchParams(location.search);
+    const v = q.get('variant');
     if (v) document.getElementById('mech-eye').dataset.variant = v;
+    if (q.get('visor')) document.getElementById('mech-eye').dataset.visoropen = '1';
 </script>
 <script type="module" src="eye.js"></script>
 </body>

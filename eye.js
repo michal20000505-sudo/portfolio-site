@@ -364,6 +364,7 @@ async function init() {
 
     // ---- akcesoria per podstrona (data-variant na #mech-eye) ----
     const variant = wrap.dataset.variant || '';
+    let pilotVisor = null; // pivot przyłbicy (animowana w pętli)
 
     if (variant === 'painter') {
         // czapka malarska (beret) + pędzel za "uchem"
@@ -500,20 +501,58 @@ async function init() {
         vent.rotation.x = -0.6;
         helmet.add(vent);
 
-        // bursztynowy wizjer: półprzezroczysta czasza nad obiektywem
-        const visor = new THREE.Mesh(
-            new THREE.SphereGeometry(1.34, seg2, Math.round(12 * LOD),
-                Math.PI * 0.24, Math.PI * 0.52,   // wycinek frontowy
-                Math.PI * 0.30, Math.PI * 0.16),  // pas nad obiektywem (czoło)
-            matVisor);
-        visor.position.z = 0.40;
-        visor.scale.set(1.06, 1, 1);
-        helmet.add(visor);
-        // ciemna listwa mocowania wizjera przy kopule
-        const visorRail = new THREE.Mesh(new THREE.TorusGeometry(1.18, 0.035, 6, seg, Math.PI * 0.62), matHelmetDark);
-        visorRail.rotation.set(Math.PI * 0.42, 0, Math.PI * 0.19);
-        visorRail.position.z = 0.10;
-        helmet.add(visorRail);
+        // przyłbica na zawiasach: podnosi się, gdy oko świeci reflektorem.
+        // Pivot na wysokości "skroni"; szyba + rama obracają się razem.
+        const HINGE_Y = 0.34;
+        pilotVisor = new THREE.Group();
+        pilotVisor.position.set(0, HINGE_Y, 0.05);
+        helmet.add(pilotVisor);
+
+        // szyba: dwie warstwy dla głębi (zewnętrzna glossy + wewnętrzna przydymiona)
+        const visorGeoArgs = [
+            Math.PI * 0.24, Math.PI * 0.52,   // wycinek frontowy
+            Math.PI * 0.30, Math.PI * 0.17    // pas nad obiektywem (czoło)
+        ];
+        const visorOuter = new THREE.Mesh(
+            new THREE.SphereGeometry(1.36, seg2, Math.round(12 * LOD), ...visorGeoArgs),
+            new THREE.MeshPhysicalMaterial({
+                color: 0xe8b431, metalness: 0.1, roughness: 0.08,
+                clearcoat: 1, clearcoatRoughness: 0.08,
+                transparent: true, opacity: 0.38, side: THREE.DoubleSide, depthWrite: false
+            }));
+        const visorInner = new THREE.Mesh(
+            new THREE.SphereGeometry(1.31, seg2, Math.round(12 * LOD), ...visorGeoArgs),
+            new THREE.MeshStandardMaterial({
+                color: 0x6b4a10, metalness: 0.2, roughness: 0.3,
+                transparent: true, opacity: 0.22, side: THREE.DoubleSide, depthWrite: false
+            }));
+        [visorOuter, visorInner].forEach(v => {
+            v.position.set(0, -HINGE_Y, 0.35);
+            v.scale.set(1.05, 1, 1);
+            pilotVisor.add(v);
+        });
+
+        // rama szyby: górna i dolna listwa jadą razem z przyłbicą
+        const visorTopRail2 = new THREE.Mesh(new THREE.TorusGeometry(1.335, 0.030, 6, seg, Math.PI * 0.50), matHelmetDark);
+        visorTopRail2.rotation.set(Math.PI * 0.275, 0, Math.PI * 0.25);
+        visorTopRail2.position.set(0, -HINGE_Y, 0.33);
+        pilotVisor.add(visorTopRail2);
+        const visorBotRail2 = new THREE.Mesh(new THREE.TorusGeometry(1.325, 0.026, 6, seg, Math.PI * 0.46), matHelmetDark);
+        visorBotRail2.rotation.set(Math.PI * 0.385, 0, Math.PI * 0.27);
+        visorBotRail2.position.set(0, -HINGE_Y, 0.35);
+        pilotVisor.add(visorBotRail2);
+
+        // zawiasy na "skroniach" (widoczne pokrętła, oś obrotu przyłbicy)
+        [1, -1].forEach(sgn => {
+            const hinge = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.09, 0.06, Math.round(14 * LOD)), matHelmetDark);
+            hinge.rotation.z = Math.PI / 2;
+            hinge.position.set(sgn * 1.20, HINGE_Y, 0.30);
+            helmet.add(hinge);
+            const knob = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 0.08, 6), matSteel);
+            knob.rotation.z = Math.PI / 2;
+            knob.position.set(sgn * 1.24, HINGE_Y, 0.30);
+            helmet.add(knob);
+        });
 
         // dekal eskadry na czole kopuły
         const emblem = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.13, 0.03, Math.round(18 * LOD)), matDecal);
@@ -561,16 +600,6 @@ async function init() {
             micPod.position.set(-0.72, -0.92, 0.95);
             helmet.add(micPod);
         }
-
-        // rama wizjera: górna i dolna listwa
-        const visorTopRail = new THREE.Mesh(new THREE.TorusGeometry(1.32, 0.028, 6, seg, Math.PI * 0.54), matHelmetDark);
-        visorTopRail.rotation.set(Math.PI * 0.26, 0, Math.PI * 0.23);
-        visorTopRail.position.z = 0.36;
-        helmet.add(visorTopRail);
-        const visorBotRail = new THREE.Mesh(new THREE.TorusGeometry(1.30, 0.024, 6, seg, Math.PI * 0.50), matHelmetDark);
-        visorBotRail.rotation.set(Math.PI * 0.36, 0, Math.PI * 0.25);
-        visorBotRail.position.z = 0.40;
-        helmet.add(visorBotRail);
 
         // nity wokół dolnego rantu kopuły
         {
@@ -630,7 +659,8 @@ async function init() {
         // lot po ekranie (px, środek oka)
         fx: 0, fy: 0, fvx: 0, fvy: 0, ftx: 0, fty: 0, flightTimer: 0,
         // reflektor: podświetlany element interaktywny + dobór miejsca lotu
-        spotEl: null, occTimer: 0, followX: 170, followY: 130
+        spotEl: null, occTimer: 0, followX: 170, followY: 130,
+        visorOpen: 0
     };
 
     // sprężyna: zwraca nową [pozycję, prędkość]; damping <1 daje lekki overshoot
@@ -1054,6 +1084,13 @@ async function init() {
         rig.rotation.z += (bank - rig.rotation.z) * Math.min(1, dt * 2);
         if (!wrap.dataset.noflight) {
             wrap.style.transform = `translate3d(${(S.fx - half).toFixed(1)}px, ${(S.fy - half).toFixed(1)}px, 0)`;
+        }
+
+        // --- przyłbica pilota: otwiera się, gdy działa reflektor ---
+        if (pilotVisor) {
+            const wantOpen = (wrap.dataset.visoropen || (S.spotEl && S.state !== 'sleeping')) ? 1 : 0;
+            S.visorOpen = lerp(S.visorOpen, wantOpen, 1 - Math.exp(-5 * dt));
+            pilotVisor.rotation.x = -1.05 * S.visorOpen;
         }
 
         // --- reflektor: snop światła z oka na podświetlany element ---
