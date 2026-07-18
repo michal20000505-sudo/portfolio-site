@@ -658,6 +658,7 @@ async function init() {
     function setState(s) {
         if (S.state === s) return;
         S.state = s;
+        wrap.dataset.eyeState = s; // stan czytelny dla strony (np. podgląd na oko.html)
         switch (s) {
             case 'tracking': S.ringSpeedTarget = 1; S.apertureTarget = 0.55; S.focusTarget = 0; S.lookSpeed = 6; break;
             case 'focused': S.ringSpeedTarget = 1.6; S.apertureTarget = 0.85; S.focusTarget = 1; break;
@@ -969,5 +970,32 @@ async function init() {
         setState(finePointer ? 'idle' : 'idle');
         updateRunning();
     }
+    wrap.dataset.eyeState = S.state;
+
+    // ---- klikalne oko: wejście na podgląd (oko.html) ----
+    // Oko jest w tle (pointer-events: none), więc klik łapiemy na dokumencie
+    // i sprawdzamy, czy trafił w prostokąt oka poza elementami interaktywnymi.
+    if (!wrap.dataset.nolink) {
+        const overEye = e => {
+            const r = wrap.getBoundingClientRect();
+            return e.clientX >= r.left && e.clientX <= r.right &&
+                   e.clientY >= r.top && e.clientY <= r.bottom;
+        };
+        const interactive = e => e.target.closest &&
+            e.target.closest('a, button, input, textarea, select, [role="button"], canvas, .viewer');
+        document.addEventListener('click', e => {
+            if (overEye(e) && !interactive(e)) {
+                window.location.href = 'oko.html' + (variant ? '?variant=' + variant : '');
+            }
+        });
+        // afordancja: kursor rośnie nad okiem jak nad linkiem
+        const cursorEl = document.querySelector('.cursor');
+        if (cursorEl && finePointer) {
+            window.addEventListener('mousemove', e => {
+                cursorEl.classList.toggle('eye-link', overEye(e) && !interactive(e));
+            }, { passive: true });
+        }
+    }
+
     wrap.classList.add('ready');
 }

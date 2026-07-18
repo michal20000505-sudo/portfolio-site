@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oko | Michał Jarosiński</title>
+    <meta name="description" content="Proceduralne mechaniczne oko — maskotka portfolio z bliska. Trzy wersje, żywa maszyna stanów, zero gotowych modeli.">
+    <meta name="robots" content="noindex, follow">
+    <meta name="theme-color" content="#050505">
+    <link rel="icon" type="image/png" sizes="500x500" href="strona-icon.png">
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="fonts/space-grotesk-latin-ext.woff2">
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="fonts/space-grotesk-latin.woff2">
+
+    <style>
+        @font-face {
+            font-family: 'Space Grotesk';
+            font-style: normal;
+            font-weight: 300 700;
+            font-display: swap;
+            src: url(fonts/space-grotesk-latin-ext.woff2) format('woff2');
+            unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+        }
+
+        @font-face {
+            font-family: 'Space Grotesk';
+            font-style: normal;
+            font-weight: 300 700;
+            font-display: swap;
+            src: url(fonts/space-grotesk-latin.woff2) format('woff2');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+        }
+
+        :root {
+            --bg-color: #050505;
+            --text-color: #ffffff;
+            --cyan: #00ffff;
+            --magenta: #ff00ff;
+            --yellow: #ffff00;
+            --font-main: 'Space Grotesk', sans-serif;
+            --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            *, *::before, *::after {
+                cursor: none !important;
+            }
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-main);
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        a:focus-visible,
+        button:focus-visible {
+            outline: 2px solid var(--cyan);
+            outline-offset: 4px;
+        }
+
+        /* --- Cursor --- */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--text-color);
+            border-radius: 50%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate3d(-100px, -100px, 0) translate(-50%, -50%);
+            transition: width 0.25s ease, height 0.25s ease, background-color 0.2s;
+            mix-blend-mode: difference;
+            display: none;
+            will-change: transform;
+        }
+
+        .cursor.hovered {
+            width: 52px;
+            height: 52px;
+            background-color: var(--text-color);
+            border-color: transparent;
+            opacity: 0.8;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            .cursor {
+                display: block;
+            }
+        }
+
+        /* --- Ambient glow (atmosfera jak na reszcie strony) --- */
+        .ambient-glow {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: -2;
+        }
+
+        .glow-1 { width: 500px; height: 500px; background: var(--cyan); top: -10%; left: -10%; }
+        .glow-2 { width: 450px; height: 450px; background: var(--magenta); bottom: -15%; right: -10%; }
+
+        /* --- Nagłówek --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 28px 40px;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .logo span { color: var(--cyan); }
+
+        .back-link {
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #888;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover { color: var(--cyan); }
+
+        /* --- Scena --- */
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 34px;
+            padding: 0 20px 40px;
+            text-align: center;
+        }
+
+        .eye-title {
+            font-size: clamp(2.6rem, 6vw, 5rem);
+            font-weight: 700;
+            line-height: 0.9;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+        }
+
+        .eye-sub {
+            max-width: 46ch;
+            font-size: 1.05rem;
+            font-weight: 300;
+            line-height: 1.8;
+            color: #888;
+        }
+
+        /* --- Podgląd oka --- */
+        #mech-eye {
+            width: min(56vmin, 480px);
+            aspect-ratio: 1;
+            opacity: 0;
+            transition: opacity 1.2s var(--ease-out);
+        }
+
+        #mech-eye.ready { opacity: 1; }
+
+        #mech-eye canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* --- Stan mechanizmu --- */
+        .eye-status {
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: #666;
+        }
+
+        .eye-status b {
+            font-weight: 500;
+            color: var(--cyan);
+        }
+
+        /* --- Przełącznik wersji --- */
+        .variants {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .variants a {
+            padding: 12px 28px;
+            border: 1px solid #333;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #888;
+            transition: color 0.3s ease, border-color 0.3s ease, transform 0.4s var(--ease-out);
+        }
+
+        .variants a:hover {
+            color: var(--cyan);
+            border-color: var(--cyan);
+            transform: translateY(-2px);
+        }
+
+        .variants a.active {
+            color: #050505;
+            background: var(--cyan);
+            border-color: var(--cyan);
+        }
+
+        .hint {
+            font-size: 0.9rem;
+            font-weight: 300;
+            line-height: 1.8;
+            color: #666;
+            max-width: 52ch;
+        }
+
+        @media (max-width: 600px) {
+            header { padding: 20px 22px; }
+            main { gap: 26px; }
+            .hint { display: none; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .ambient-glow { display: none; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="cursor"></div>
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+
+    <header>
+        <a href="index.html" class="logo" aria-label="Powrót do strony głównej">MJ<span>.</span></a>
+        <a href="index.html" class="back-link">&larr; Portfolio</a>
+    </header>
+
+    <main>
+        <div>
+            <h1 class="eye-title">Oko</h1>
+            <p class="eye-sub">Proceduralny obserwator tego portfolio z bliska. Każda śrubka, zębatka i listek
+                przysłony jest generowany kodem, bez ani jednego gotowego modelu.</p>
+        </div>
+
+        <div id="mech-eye" aria-hidden="true" data-noflight="1" data-nolink="1"></div>
+
+        <p class="eye-status" aria-live="polite">Stan: <b id="state-label">start</b></p>
+
+        <nav class="variants" aria-label="Wersje oka">
+            <a href="oko.html" data-variant="">Podstawowe</a>
+            <a href="oko.html?variant=painter" data-variant="painter">Malarz</a>
+            <a href="oko.html?variant=pilot" data-variant="pilot">Pilot</a>
+        </nav>
+
+        <p class="hint">Poruszaj kursorem, klikaj, najedź na przycisk, potrząśnij myszką jak szalony
+            albo zostaw je na chwilę w spokoju. Ma swoje humory.</p>
+    </main>
+
+    <script>
+        // wariant z URL -> atrybut przed startem eye.js + podświetlenie przycisku
+        const params = new URLSearchParams(location.search);
+        const variant = params.get('variant') || '';
+        const eyeWrap = document.getElementById('mech-eye');
+        if (variant) eyeWrap.dataset.variant = variant;
+        document.querySelectorAll('.variants a').forEach(a => {
+            if (a.dataset.variant === variant) a.classList.add('active');
+        });
+
+        // kursor (ten sam wzorzec co na stronie głównej)
+        const cursor = document.querySelector('.cursor');
+        if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+            window.addEventListener('mousemove', e => {
+                cursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0) translate(-50%, -50%)`;
+            }, { passive: true });
+            document.querySelectorAll('a').forEach(l => {
+                l.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+                l.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+            });
+        }
+
+        // etykieta stanu mechanizmu (eye.js zapisuje data-eye-state)
+        const STATE_PL = {
+            idle: 'czuwanie',
+            tracking: 'śledzenie',
+            focused: 'ogniskowanie',
+            bored: 'nuda',
+            sleeping: 'uśpienie',
+            startled: 'wzdrygnięcie',
+            recalibrating: 'rekalibracja'
+        };
+        const label = document.getElementById('state-label');
+        new MutationObserver(() => {
+            label.textContent = STATE_PL[eyeWrap.dataset.eyeState] || eyeWrap.dataset.eyeState || 'start';
+        }).observe(eyeWrap, { attributes: true, attributeFilter: ['data-eye-state'] });
+    </script>
+
+    <script type="importmap">
+        { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
+    </script>
+    <script type="module" src="eye.js"></script>
+</body>
+
+</html>
