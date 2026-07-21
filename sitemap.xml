@@ -1,21 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://michal20000505-sudo.github.io/portfolio-site/</loc>
-    <lastmod>2026-04-01</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://michal20000505-sudo.github.io/portfolio-site/og-image.jpg</image:loc>
+      <image:title>Michał Jarosiński - Portfolio Web Design &amp; Branding</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://michal20000505-sudo.github.io/portfolio-site/grafika.html</loc>
-    <lastmod>2026-04-01</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://michal20000505-sudo.github.io/portfolio-site/og-image.jpg</image:loc>
+      <image:title>Projekty graficzne - branding, plakaty, DTP</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://michal20000505-sudo.github.io/portfolio-site/gra.html</loc>
-    <lastmod>2026-04-01</lastmod>
+    <lastmod>2026-07-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://michal20000505-sudo.github.io/portfolio-site/og-gra.jpg</image:loc>
+      <image:title>SPACEFIGHTER: The Bullet Hell</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://michal20000505-sudo.github.io/portfolio-site/gra-press.html</loc>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://michal20000505-sudo.github.io/portfolio-site/og-gra.jpg</image:loc>
+      <image:title>SPACEFIGHTER: The Bullet Hell - Press Kit</image:title>
+    </image:image>
   </url>
 </urlset>

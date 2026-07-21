@@ -1,8 +1,9 @@
 User-agent: *
 Allow: /
 
-# Blokuj pliki skryptów deweloperskich
+# Blokuj pliki skryptów deweloperskich i strony testowe
 Disallow: /*.py$
+Disallow: /eye-test.html
 
 # Sitemap
 Sitemap: https://michal20000505-sudo.github.io/portfolio-site/sitemap.xml
