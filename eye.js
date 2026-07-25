@@ -8,7 +8,10 @@
 // ========================================================================
 
 const wrap = document.getElementById('mech-eye');
-if (wrap && window.WebGLRenderingContext) init().catch(() => wrap.remove());
+if (wrap && window.WebGLRenderingContext) init().catch(err => {
+    console.error('[mech-eye] inicjalizacja nieudana:', err);
+    wrap.remove();
+});
 
 async function init() {
     const THREE = await import('three');
@@ -31,34 +34,89 @@ async function init() {
     renderer.toneMappingExposure = 1.1;
     wrap.appendChild(renderer.domElement);
 
+    const variant = wrap.dataset.variant || '';
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 30);
-    camera.position.set(0, 0, 6.6);
+    // ciasny kadr dla samej gałki, luźniejszy gdy dochodzą akcesoria wariantu
+    camera.position.set(0, 0, variant ? 6.5 : 5.9);
 
-    // ---- światła: neutralny klucz, cyjan od frontu (sygnał), magenta z tyłu (ambient) ----
-    scene.add(new THREE.HemisphereLight(0xffffff, 0x101014, 0.85));
-    const key = new THREE.DirectionalLight(0xffffff, 2.2);
-    key.position.set(2.5, 3, 4);
+    // ---- środowisko odbić (proceduralne) ----
+    // Bez tego metalness > 0.5 renderuje się CZARNO: metal nie ma rozpraszania
+    // Lamberta, odbija wyłącznie otoczenie. Mały equirect (chłodna kopuła +
+    // softbox nad obiektem + kicki CMYK z boków) przepuszczony przez PMREM
+    // daje jednocześnie odbicia i miękkie światło wypełniające.
+    function studioEnvTexture() {
+        const c = document.createElement('canvas');
+        c.width = 256; c.height = 128;
+        const g = c.getContext('2d');
+        const sky = g.createLinearGradient(0, 0, 0, 128);
+        sky.addColorStop(0.00, '#79839a');
+        sky.addColorStop(0.40, '#242832');
+        sky.addColorStop(0.52, '#12141a');
+        sky.addColorStop(1.00, '#06070a');
+        g.fillStyle = sky;
+        g.fillRect(0, 0, 256, 128);
+        // softbox: podłużne źródło nad obiektem — daje ostry pas na chromie
+        const box = g.createRadialGradient(96, 13, 2, 96, 13, 34);
+        box.addColorStop(0, '#ffffff');
+        box.addColorStop(0.5, '#cdd4e0');
+        box.addColorStop(1, 'rgba(205,212,224,0)');
+        g.fillStyle = box;
+        g.fillRect(56, 0, 84, 48);
+        // kicki sygnaturowe: cyjan z prawej, magenta z lewej
+        const kick = (x, y, r, col) => {
+            const gr = g.createRadialGradient(x, y, 2, x, y, r);
+            gr.addColorStop(0, col);
+            gr.addColorStop(1, 'rgba(0,0,0,0)');
+            g.fillStyle = gr;
+            g.fillRect(x - r, y - r, r * 2, r * 2);
+        };
+        kick(208, 70, 62, 'rgba(0,255,255,0.24)');
+        kick(30, 56, 48, 'rgba(255,0,255,0.4)');
+        const tex = new THREE.CanvasTexture(c);
+        tex.mapping = THREE.EquirectangularReflectionMapping;
+        tex.colorSpace = THREE.SRGBColorSpace;
+        return tex;
+    }
+    try {
+        const pmrem = new THREE.PMREMGenerator(renderer);
+        const src = studioEnvTexture();
+        scene.environment = pmrem.fromEquirectangular(src).texture;
+        src.dispose();
+        pmrem.dispose();
+    } catch (e) {
+        // brak env = metale bez odbić; lepiej ciemniejsze oko niż żadne
+        console.warn('[mech-eye] brak mapy środowiska:', e);
+    }
+
+    // ---- światła: env niesie wypełnienie, punktowe tylko modelują ----
+    scene.add(new THREE.HemisphereLight(0xc8d4e8, 0x0a0b0e, 0.30));
+    const key = new THREE.DirectionalLight(0xffffff, 1.7);
+    key.position.set(2.2, 3.2, 3.2);
     scene.add(key);
-    const cyanFill = new THREE.PointLight(CYAN, 3, 10, 2);
-    cyanFill.position.set(0.8, -0.5, 3);
+    const cyanFill = new THREE.PointLight(CYAN, 2.2, 9, 2);
+    cyanFill.position.set(1.3, -0.7, 2.6);
     scene.add(cyanFill);
-    const magentaRim = new THREE.PointLight(MAGENTA, 10, 12, 2);
-    magentaRim.position.set(-2.5, 1.5, -2.5);
+    // kontry zza gałki: odrywają sylwetkę od ciemnego tła strony
+    const magentaRim = new THREE.PointLight(MAGENTA, 13, 9, 2);
+    magentaRim.position.set(-2.3, 1.5, -1.7);
     scene.add(magentaRim);
+    const cyanRim = new THREE.PointLight(CYAN, 9, 8, 2);
+    cyanRim.position.set(2.4, -1.3, -1.5);
+    scene.add(cyanRim);
 
     // ---- proceduralna tekstura: szczotkowany metal + nity + linie paneli ----
     function brushedMetalTexture() {
         const c = document.createElement('canvas');
         c.width = c.height = 512;
         const g = c.getContext('2d');
-        g.fillStyle = '#3a3d42';
+        g.fillStyle = '#8d94a0';
         g.fillRect(0, 0, 512, 512);
         // szczotkowanie: poziome smugi o losowej jasności
         for (let i = 0; i < 1400; i++) {
             const y = Math.random() * 512;
             const l = 40 + Math.random() * 200;
-            const b = 46 + Math.random() * 26;
+            const b = 128 + Math.random() * 52;
             g.strokeStyle = `rgba(${b + 10},${b + 12},${b + 16},${0.25 + Math.random() * 0.3})`;
             g.beginPath();
             g.moveTo(Math.random() * 512, y);
@@ -86,18 +144,108 @@ async function init() {
         }
         const tex = new THREE.CanvasTexture(c);
         tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+        tex.colorSpace = THREE.SRGBColorSpace;
         tex.repeat.set(2, 1);
         return tex;
     }
 
+    // ---- tekstury tęczówki ----
+    // Misa tęczówki jest bryłą obrotową (LatheGeometry): u biegnie po obwodzie,
+    // v wzdłuż profilu (v=0 przy źrenicy, v=1 przy rancie). Pionowe smugi w
+    // canvasie stają się więc PROMIENISTYMI włóknami, a gradient w pionie —
+    // rozjaśnieniem w głąb. Jedna tekstura zastępuje kilkadziesiąt siatek.
+    function irisTextures() {
+        const W = 512, H = 128;
+        // pas włókien w skali szarości (baza dla koloru i emisji)
+        const f = document.createElement('canvas');
+        f.width = W; f.height = H;
+        const gf = f.getContext('2d');
+        gf.fillStyle = '#000';
+        gf.fillRect(0, 0, W, H);
+        for (let i = 0; i < 420; i++) {
+            const x = Math.random() * W;
+            const w = 0.8 + Math.random() * 3.2;
+            const top = Math.random() * 78;          // różna długość włókna
+            const b = Math.round(60 + Math.random() * 195);
+            const grd = gf.createLinearGradient(0, top, 0, H);
+            grd.addColorStop(0, `rgba(${b},${b},${b},0)`);
+            grd.addColorStop(0.35, `rgba(${b},${b},${b},${0.35 + Math.random() * 0.45})`);
+            grd.addColorStop(1, `rgba(${b},${b},${b},${0.5 + Math.random() * 0.5})`);
+            gf.fillStyle = grd;
+            gf.fillRect(x, top, w, H - top);
+        }
+        // kryza wokół źrenicy: jaśniejszy wieniec tuż przy otworze (v≈0 = dół)
+        const coll = gf.createLinearGradient(0, H, 0, H * 0.72);
+        coll.addColorStop(0, 'rgba(255,255,255,0.55)');
+        coll.addColorStop(1, 'rgba(255,255,255,0)');
+        gf.fillStyle = coll;
+        gf.fillRect(0, H * 0.72, W, H * 0.28);
+
+        // MAPA KOLORU: zimna stal podbita turkusem + ciemny pierścień limbalny
+        const c = document.createElement('canvas');
+        c.width = W; c.height = H;
+        const g = c.getContext('2d');
+        g.fillStyle = '#0e161b';
+        g.fillRect(0, 0, W, H);
+        g.globalCompositeOperation = 'lighter';
+        g.globalAlpha = 0.72;
+        g.drawImage(f, 0, 0);
+        g.globalAlpha = 1;
+        g.globalCompositeOperation = 'source-over';
+        const limbal = g.createLinearGradient(0, 0, 0, H * 0.34);   // v=1 = rant
+        limbal.addColorStop(0, 'rgba(3,5,7,0.96)');
+        limbal.addColorStop(1, 'rgba(3,5,7,0)');
+        g.fillStyle = limbal;
+        g.fillRect(0, 0, W, H * 0.34);
+
+        // MAPA EMISJI: świeci od źrenicy w górę, wygaszona przy rancie
+        const e = document.createElement('canvas');
+        e.width = W; e.height = H;
+        const ge = e.getContext('2d');
+        ge.drawImage(f, 0, 0);
+        ge.globalCompositeOperation = 'multiply';
+        const depth = ge.createLinearGradient(0, H, 0, 0);
+        depth.addColorStop(0.00, '#ffffff');
+        depth.addColorStop(0.40, '#8a8a8a');
+        depth.addColorStop(0.78, '#1c1c1c');
+        depth.addColorStop(1.00, '#000000');
+        ge.fillStyle = depth;
+        ge.fillRect(0, 0, W, H);
+
+        const mk = cv => {
+            const t = new THREE.CanvasTexture(cv);
+            t.colorSpace = THREE.SRGBColorSpace;
+            t.wrapS = THREE.RepeatWrapping;
+            return t;
+        };
+        return { map: mk(c), emissiveMap: mk(e) };
+    }
+
     const metalTex = brushedMetalTexture();
-    const matHull = new THREE.MeshStandardMaterial({ map: metalTex, color: 0x9aa0aa, metalness: 0.85, roughness: 0.42 });
-    const matDark = new THREE.MeshStandardMaterial({ color: 0x14151a, metalness: 0.7, roughness: 0.5 });
-    const matSteel = new THREE.MeshStandardMaterial({ color: 0x596070, metalness: 0.9, roughness: 0.32 });
-    const matBlade = new THREE.MeshStandardMaterial({ color: 0x2a2d34, metalness: 0.88, roughness: 0.38, side: THREE.DoubleSide });
-    const matGlowPupil = new THREE.MeshStandardMaterial({ color: 0x001a1a, emissive: CYAN, emissiveIntensity: 2.2 });
+    const irisTex = irisTextures();
+    // Skorupa jaśnieje względem tęczówki — czytelność opiera się na trzech
+    // poziomach walorowych: jasna gałka → ciemna tęczówka → czarna źrenica.
+    const matHull = new THREE.MeshStandardMaterial({ map: metalTex, color: 0xdde2ea, metalness: 0.38, roughness: 0.36, envMapIntensity: 1.15 });
+    const matDark = new THREE.MeshStandardMaterial({ color: 0x1b1d23, metalness: 0.6, roughness: 0.45, envMapIntensity: 0.75 });
+    const matSteel = new THREE.MeshStandardMaterial({ color: 0xaab3c2, metalness: 0.95, roughness: 0.21, envMapIntensity: 1.12 });
+    const matBlade = new THREE.MeshStandardMaterial({ color: 0x1f232a, metalness: 0.45, roughness: 0.5, side: THREE.DoubleSide, envMapIntensity: 0.42 });
+    const matIris = new THREE.MeshStandardMaterial({
+        map: irisTex.map, color: 0x9fb0bd, metalness: 0.5, roughness: 0.45,
+        emissive: CYAN, emissiveMap: irisTex.emissiveMap, emissiveIntensity: 1.05,
+        side: THREE.DoubleSide, envMapIntensity: 0.85
+    });
+    // źrenica: prawdziwa czerń, ale polerowana — łapie ostry refleks z env
+    const matGlowPupil = new THREE.MeshStandardMaterial({ color: 0x02070a, metalness: 0.1, roughness: 0.55, emissive: CYAN, emissiveIntensity: 0.22, envMapIntensity: 0.5 });
     const matGlowSoft = new THREE.MeshStandardMaterial({ color: 0x001111, emissive: CYAN, emissiveIntensity: 0.6, transparent: true, opacity: 0.85 });
     const matLens = new THREE.MeshStandardMaterial({ color: 0x0b2b2e, metalness: 0.3, roughness: 0.1, transparent: true, opacity: 0.28, side: THREE.DoubleSide, depthWrite: false });
+    // rogówka: czarna baza + metalness 1 + blending addytywne renderuje SAMO
+    // odbicie środowiska — mokry refleks, który wędruje po gałce przy obrocie.
+    // To on sprawia, że mechanizm czyta się jako oko, a nie jako obiektyw.
+    const matCornea = new THREE.MeshStandardMaterial({
+        color: 0xa8c0d0, metalness: 1, roughness: 0.145,
+        transparent: true, blending: THREE.AdditiveBlending,
+        depthWrite: false, envMapIntensity: 1.2
+    });
 
     // ================= GAŁKA =================
     const eye = new THREE.Group();      // obraca się (patrzenie)
@@ -106,8 +254,23 @@ async function init() {
     scene.add(rig);
 
     const seg = Math.round(48 * LOD), seg2 = Math.round(32 * LOD);
-    const ball = new THREE.Mesh(new THREE.SphereGeometry(1, seg, seg2), matHull);
+    // Skorupa z WYCIĘTYM przednim biegunem: tęczówka ma siedzieć w oczodole,
+    // wewnątrz bryły, a nie być do niej doklejona od frontu. Dopiero recesja
+    // za rantem daje cień własny i głębię, po której oko czyta się jako oko.
+    // 0.62 promienia gałki: tęczówka zajmuje ~57% szerokości bryły. Szerzej
+    // (pierwotne 0.80) optyka zjada całą kulę i całość czyta się jak obiektyw.
+    const SOCKET_R = 0.62;
+    const socketTheta = Math.asin(SOCKET_R);       // kąt otwarcia oczodołu
+    const ball = new THREE.Mesh(
+        new THREE.SphereGeometry(1, seg, seg2, 0, Math.PI * 2, socketTheta, Math.PI - socketTheta), matHull);
+    ball.rotation.x = Math.PI / 2;                 // biegun geometrii → oś patrzenia
     eye.add(ball);
+    // ciemna wykładzina oczodołu — zasłania tło widziane przez wycięcie
+    const socketLiner = new THREE.Mesh(
+        new THREE.SphereGeometry(0.985, seg, seg2, 0, Math.PI * 2, socketTheta, Math.PI - socketTheta),
+        new THREE.MeshStandardMaterial({ color: 0x0e1014, metalness: 0.5, roughness: 0.6, side: THREE.BackSide }));
+    socketLiner.rotation.x = Math.PI / 2;
+    eye.add(socketLiner);
 
     // tylny "port serwisowy" + przewody
     const port = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.42, 0.25, Math.round(24 * LOD)), matDark);
@@ -156,64 +319,45 @@ async function init() {
         eye.add(fins);
     }
 
-    // ---- przedni zespół optyczny — wysunięty tubus obiektywu ----
+    // ---- przedni zespół optyczny ----
+    // Zasada kompozycji: MECHANIZM WYCHODZI Z OSI PATRZENIA. Pierścienie,
+    // zębatki i podziałki siedzą na kołnierzu wokół tubusa, a nie na wprost
+    // źrenicy — dzięki temu tęczówka zostaje czysta i oko czyta się jako oko,
+    // a nie jako celownik HUD. W głąb: rant (chrom) → misa tęczówki →
+    // przysłona → czarna źrenica, a nad wszystkim wypukła rogówka.
+    // Układ w osi Z (lokalnie): rant 0.00 → misa −0.42 → listki −0.44 →
+    // źrenica −0.60. Rogówka wybrzusza się do +0.32. Kołnierz mechanizmu
+    // siedzi za rantem, na obrzeżu skorupy.
+    const SOCKET_Z = Math.sqrt(1 - SOCKET_R * SOCKET_R);     // płaszczyzna rantu
     const optics = new THREE.Group();
-    optics.position.z = 0.68;
+    optics.position.z = SOCKET_Z;
+    optics.scale.setScalar(SOCKET_R / 0.80);   // geometria optyki liczona dla r=0.80
     eye.add(optics);
 
-    // tubus łączący kulę z mechanizmem
-    const barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.84, 0.92, 0.62, seg, 1, true), matHull);
-    barrel.rotation.x = Math.PI / 2;
-    barrel.position.z = 0.10;
-    optics.add(barrel);
+    // Kołnierz mechanizmu jest OSOBNĄ grupą na skorupie, nie w grupie optyki:
+    // maszyneria ma obrączkować oczodół, a nie leżeć na osi patrzenia.
+    const collar = new THREE.Group();
+    eye.add(collar);
 
-    // szczeliny wentylacyjne na obwodzie tubusa
+    // stożkowa płyta czołowa: przechodzi z obrysu skorupy w rant oczodołu
+    // i domyka szczelinę między maszynerią a kulą
+    const barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.635, 0.845, 0.23, seg, 1, true), matHull);
+    barrel.rotation.x = Math.PI / 2;
+    barrel.position.z = 0.665;
+    collar.add(barrel);
+
+    // szczeliny wentylacyjne na obrzeżu płyty
     {
-        const vents = new THREE.InstancedMesh(new THREE.BoxGeometry(0.03, 0.09, 0.16), matDark, 18);
+        const vents = new THREE.InstancedMesh(new THREE.BoxGeometry(0.028, 0.075, 0.05), matDark, 18);
         const m = new THREE.Matrix4(), e = new THREE.Euler(), q = new THREE.Quaternion(), sc = new THREE.Vector3(1, 1, 1);
         for (let i = 0; i < 18; i++) {
             const a = (i / 18) * Math.PI * 2;
             e.set(0, 0, a); q.setFromEuler(e);
-            m.compose(new THREE.Vector3(Math.cos(a) * 0.89, Math.sin(a) * 0.89, 0.02), q, sc);
+            m.compose(new THREE.Vector3(Math.cos(a) * 0.815, Math.sin(a) * 0.815, 0.585), q, sc);
             vents.setMatrixAt(i, m);
         }
-        optics.add(vents);
+        collar.add(vents);
     }
-
-    // kołnierz zewnętrzny na wylocie tubusa
-    const bezel = new THREE.Mesh(new THREE.TorusGeometry(0.80, 0.10, Math.round(14 * LOD), seg), matSteel);
-    bezel.position.z = 0.40;
-    optics.add(bezel);
-
-    // diody statusowe na kołnierzu (cyjan ×2 + żółta interpunkcja ruchu)
-    const matLedCyan = new THREE.MeshStandardMaterial({ color: 0x002222, emissive: CYAN, emissiveIntensity: 1.5 });
-    const matLedYellow = new THREE.MeshStandardMaterial({ color: 0x222200, emissive: 0xffff00, emissiveIntensity: 1.2 });
-    const leds = [];
-    [[Math.PI * 0.25, matLedCyan], [Math.PI * 0.75, matLedCyan], [Math.PI * 1.5, matLedYellow]].forEach(([a, mat]) => {
-        const led = new THREE.Mesh(new THREE.SphereGeometry(0.028, 10, 8), mat.clone());
-        led.position.set(Math.cos(a) * 0.68, Math.sin(a) * 0.68, 0.50);
-        led.userData.phase = a * 3;
-        optics.add(led);
-        leds.push(led);
-    });
-    // śruby na kołnierzu
-    const boltGeo = new THREE.CylinderGeometry(0.025, 0.025, 0.05, 6);
-    const bolts = new THREE.InstancedMesh(boltGeo, matDark, 8);
-    {
-        const m = new THREE.Matrix4(), q = new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI / 2, 0, 0));
-        for (let i = 0; i < 8; i++) {
-            const a = (i / 8) * Math.PI * 2 + Math.PI / 8;
-            m.compose(new THREE.Vector3(Math.cos(a) * 0.80, Math.sin(a) * 0.80, 0.51), q, new THREE.Vector3(1, 1, 1));
-            bolts.setMatrixAt(i, m);
-        }
-    }
-    optics.add(bolts);
-
-    // czarna misa za mechanizmem
-    const backplate = new THREE.Mesh(new THREE.CylinderGeometry(0.76, 0.6, 0.3, seg), matDark);
-    backplate.rotation.x = Math.PI / 2;
-    backplate.position.z = 0.02;
-    optics.add(backplate);
 
     // pomocnik: pierścień znaczników (instanced boxy po okręgu)
     function tickRing(count, radius, w, h, d, mat, z) {
@@ -228,56 +372,50 @@ async function init() {
         return inst;
     }
 
-    // RING A — podziałka kalibracyjna (wolny obrót + oscylacja)
+    // RING A — podziałka kalibracyjna na kołnierzu (wolny obrót)
     const ringA = new THREE.Group();
-    ringA.add(new THREE.Mesh(new THREE.TorusGeometry(0.66, 0.035, 8, seg), matHull));
-    ringA.add(tickRing(Math.round(48 * LOD), 0.66, 0.012, 0.07, 0.075, matDark, 0));
-    ringA.position.z = 0.30;
-    optics.add(ringA);
+    ringA.add(new THREE.Mesh(new THREE.TorusGeometry(0.775, 0.024, 8, seg), matHull));
+    ringA.add(tickRing(Math.round(56 * LOD), 0.775, 0.012, 0.048, 0.05, matDark, 0));
+    ringA.position.z = 0.628;
+    collar.add(ringA);
 
     // RING B — wieniec zębaty (kontr-rotacja)
     const ringB = new THREE.Group();
-    ringB.add(new THREE.Mesh(new THREE.TorusGeometry(0.545, 0.045, 8, seg), matSteel));
-    ringB.add(tickRing(Math.round(40 * LOD), 0.585, 0.05, 0.045, 0.09, matSteel, 0));
-    ringB.position.z = 0.36;
-    optics.add(ringB);
+    ringB.add(new THREE.Mesh(new THREE.TorusGeometry(0.715, 0.034, 8, seg), matSteel));
+    ringB.add(tickRing(Math.round(44 * LOD), 0.748, 0.042, 0.034, 0.06, matSteel, 0));
+    ringB.position.z = 0.688;
+    collar.add(ringB);
 
     // RING C — pierścień serwo (ruch skokowy, sakkadowy)
     const ringC = new THREE.Group();
     for (let i = 0; i < 6; i++) {
         const arc = new THREE.Mesh(
-            new THREE.CylinderGeometry(0.46, 0.46, 0.07, Math.round(10 * LOD), 1, true, (i / 6) * Math.PI * 2 + 0.09, Math.PI / 3 - 0.18),
+            new THREE.CylinderGeometry(0.678, 0.678, 0.06, Math.round(12 * LOD), 1, true, (i / 6) * Math.PI * 2 + 0.09, Math.PI / 3 - 0.18),
             matBlade
         );
         arc.rotation.x = Math.PI / 2;
         ringC.add(arc);
     }
-    ringC.add(tickRing(12, 0.46, 0.02, 0.02, 0.1, matGlowSoft, 0));
-    ringC.position.z = 0.42;
-    optics.add(ringC);
+    ringC.add(tickRing(12, 0.678, 0.018, 0.018, 0.085, matGlowSoft, 0));
+    ringC.position.z = 0.735;
+    collar.add(ringC);
 
-    // RING D — cienki świetlny pierścień dawkujący (przerywana obwódka)
-    const ringD = new THREE.Group();
-    ringD.add(tickRing(24, 0.74, 0.05, 0.014, 0.02, matGlowSoft, 0));
-    ringD.position.z = 0.34;
-    optics.add(ringD);
-
-    // promieniste szprychy łączące wieniec z pierścieniem serwo
+    // promieniste szprychy między wieńcem a serwo
     const spokes = new THREE.Group();
     {
-        const spokeGeo = new THREE.BoxGeometry(0.10, 0.022, 0.022);
+        const spokeGeo = new THREE.BoxGeometry(0.085, 0.02, 0.02);
         for (let i = 0; i < 6; i++) {
             const a = (i / 6) * Math.PI * 2 + Math.PI / 6;
             const sp = new THREE.Mesh(spokeGeo, matSteel);
-            sp.position.set(Math.cos(a) * 0.505, Math.sin(a) * 0.505, 0);
+            sp.position.set(Math.cos(a) * 0.700, Math.sin(a) * 0.700, 0);
             sp.rotation.z = a;
             spokes.add(sp);
         }
     }
-    spokes.position.z = 0.39;
-    optics.add(spokes);
+    spokes.position.z = 0.712;
+    collar.add(spokes);
 
-    // małe zębatki między pierścieniami (widoczna przekładnia)
+    // małe zębatki zazębione z wieńcem (widoczna przekładnia)
     function smallGear(teeth, r) {
         const gr = new THREE.Group();
         gr.add(new THREE.Mesh(new THREE.CylinderGeometry(r, r, 0.04, Math.round(16 * LOD)), matSteel));
@@ -297,78 +435,161 @@ async function init() {
         return gr;
     }
     const gears = [];
-    [[0.60, 0.25, 1.7], [-0.58, -0.30, -2.2], [0.10, -0.63, 1.3]].forEach(([x, y, speed]) => {
-        const g = smallGear(10, 0.055);
-        g.position.set(x, y, 0.42);
+    [[0.575, 0.500, 1.7], [-0.705, -0.245, -2.2], [0.130, -0.755, 1.3]].forEach(([x, y, speed]) => {
+        const g = smallGear(10, 0.048);
+        g.position.set(x, y, 0.668);
         g.userData.speed = speed;
-        optics.add(g);
+        collar.add(g);
         gears.push(g);
     });
 
-    // ---- PRZYSŁONA IRYSOWA — 12 listków sterujących "źrenicą" ----
-    const IRIS_R = 0.44;       // promień okręgu sworzni
+    // ---- rant: jasny chromowany pierścień obejmujący tęczówkę ----
+    // Najjaśniejszy element bryły — to on rysuje sylwetkę oka na ciemnym tle
+    // i oddziela mechanizm (na zewnątrz) od optyki (wewnątrz).
+    const bezel = new THREE.Mesh(new THREE.TorusGeometry(0.80, 0.072, Math.round(16 * LOD), seg), matSteel);
+    bezel.position.z = 0.0;
+    optics.add(bezel);
+
+    // śruby na rancie
+    const boltGeo = new THREE.CylinderGeometry(0.025, 0.025, 0.05, 6);
+    const bolts = new THREE.InstancedMesh(boltGeo, matDark, 8);
+    {
+        const m = new THREE.Matrix4(), q = new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI / 2, 0, 0));
+        for (let i = 0; i < 8; i++) {
+            const a = (i / 8) * Math.PI * 2 + Math.PI / 8;
+            m.compose(new THREE.Vector3(Math.cos(a) * 0.800, Math.sin(a) * 0.800, 0.618), q, new THREE.Vector3(1, 1, 1));
+            bolts.setMatrixAt(i, m);
+        }
+    }
+    collar.add(bolts);
+
+    // diody statusowe na kołnierzu (cyjan ×2 + żółta interpunkcja ruchu)
+    const matLedCyan = new THREE.MeshStandardMaterial({ color: 0x002222, emissive: CYAN, emissiveIntensity: 1.5 });
+    const matLedYellow = new THREE.MeshStandardMaterial({ color: 0x222200, emissive: 0xffff00, emissiveIntensity: 1.2 });
+    const leds = [];
+    [[Math.PI * 0.25, matLedCyan], [Math.PI * 0.75, matLedCyan], [Math.PI * 1.5, matLedYellow]].forEach(([a, mat]) => {
+        const led = new THREE.Mesh(new THREE.SphereGeometry(0.032, 10, 8), mat.clone());
+        led.position.set(Math.cos(a) * 0.735, Math.sin(a) * 0.735, 0.700);
+        led.userData.phase = a * 3;
+        collar.add(led);
+        leds.push(led);
+    });
+
+    // RING D — jedyny świetlny pierścień: obwódka limbalna tuż pod rantem
+    const ringD = new THREE.Group();
+    ringD.add(tickRing(28, 0.745, 0.055, 0.016, 0.02, matGlowSoft, 0));
+    ringD.position.z = -0.03;
+    optics.add(ringD);
+
+    // ---- MISA TĘCZÓWKI ----
+    // Bryła obrotowa o schodkowym profilu: tarasy zwrócone do kamery łapią
+    // softbox, pionowe ścianki — boczne kicki. Toczony wygląd i realna głębia
+    // (0.42 jednostki) zamiast płaskiego krążka. Jedna siatka, jeden draw call.
+    const IRIS_INNER = 0.42, IRIS_OUTER = 0.735, IRIS_DEPTH = 0.42;
+    {
+        const STEPS = 5;
+        const dr = (IRIS_OUTER - IRIS_INNER) / STEPS, dz = IRIS_DEPTH / STEPS;
+        const prof = [new THREE.Vector2(IRIS_INNER, 0)];
+        let r = IRIS_INNER, z = 0;
+        for (let i = 0; i < STEPS; i++) {
+            r += dr; prof.push(new THREE.Vector2(r, z));          // taras
+            z += dz; prof.push(new THREE.Vector2(r, z));          // podstopnica
+        }
+        const dish = new THREE.Mesh(new THREE.LatheGeometry(prof, seg), matIris);
+        dish.rotation.x = Math.PI / 2;    // profil w Y → oś optyczna w Z
+        dish.position.z = -IRIS_DEPTH;    // rant misy licuje z rantem oczodołu
+        optics.add(dish);
+    }
+    // ścianka komory poniżej tęczówki — zamyka wnętrze i daje cień własny
+    const chamber = new THREE.Mesh(new THREE.CylinderGeometry(IRIS_INNER, IRIS_INNER, 0.18, seg, 1, true), matDark);
+    chamber.rotation.x = Math.PI / 2;
+    chamber.position.z = -0.51;
+    optics.add(chamber);
+
+    // ---- PRZYSŁONA IRYSOWA — 12 listków ----
+    // Pełni obie role naraz: rozwarcie = rozszerzanie źrenicy, pełne domknięcie
+    // = mrugnięcie (migawka). Sworznie tuż za krawędzią misy, więc przy szeroko
+    // otwartej przysłonie listki chowają się za ścianką komory.
+    const IRIS_R = 0.455;      // promień okręgu sworzni
     const blades = [];
     const irisGroup = new THREE.Group();
-    irisGroup.position.z = 0.46;
+    irisGroup.position.z = -0.44;
     optics.add(irisGroup);
     {
         const shape = new THREE.Shape();
         shape.moveTo(0, 0);
-        shape.quadraticCurveTo(0.30, 0.02, 0.58, -0.10);
-        shape.quadraticCurveTo(0.34, 0.16, 0.10, 0.13);
-        shape.quadraticCurveTo(0.02, 0.08, 0, 0);
+        shape.quadraticCurveTo(0.25, 0.035, 0.50, -0.07);   // krawędź natarcia
+        shape.quadraticCurveTo(0.32, 0.22, 0.10, 0.20);     // krawędź spływu
+        shape.quadraticCurveTo(0.02, 0.11, 0, 0);
         const bladeGeo = new THREE.ShapeGeometry(shape, 6);
         for (let i = 0; i < 12; i++) {
             const pivot = new THREE.Group();
             const a = (i / 12) * Math.PI * 2;
-            pivot.position.set(Math.cos(a) * IRIS_R, Math.sin(a) * IRIS_R, (i % 2) * 0.008);
+            pivot.position.set(Math.cos(a) * IRIS_R, Math.sin(a) * IRIS_R, (i % 2) * 0.009);
             pivot.rotation.z = a + Math.PI; // listek celuje do środka
             const blade = new THREE.Mesh(bladeGeo, matBlade);
+            blade.rotation.y = -0.14;   // lekki stożek: płaskie listki nie łapały światła
             pivot.add(blade);
             irisGroup.add(pivot);
             blades.push(pivot);
         }
     }
 
-    // ---- źrenica-sensor + skanujący refleks ----
-    const pupil = new THREE.Mesh(new THREE.CircleGeometry(0.33, seg2), matGlowPupil);
-    pupil.position.z = 0.44;
+    // ---- źrenica: czarne dno komory z gorącą obwódką ----
+    const pupil = new THREE.Mesh(new THREE.CircleGeometry(IRIS_INNER, seg2), matGlowPupil);
+    pupil.position.z = -0.60;
     optics.add(pupil);
-    const pupilRing = new THREE.Mesh(new THREE.RingGeometry(0.33, 0.365, seg2), matGlowSoft);
-    pupilRing.position.z = 0.443;
+    const matPupilRim = matGlowSoft.clone();
+    matPupilRim.emissiveIntensity = 1.4;
+    const pupilRing = new THREE.Mesh(new THREE.RingGeometry(IRIS_INNER * 0.82, IRIS_INNER, seg2), matPupilRim);
+    pupilRing.position.z = -0.593;
     optics.add(pupilRing);
     const pupilLight = new THREE.PointLight(CYAN, 1.6, 3.5, 2);
-    pupilLight.position.z = 1.1;
+    pupilLight.position.z = -0.18;  // wewnątrz komory: rozświetla misę od środka
     optics.add(pupilLight);
-    const scanline = new THREE.Mesh(new THREE.PlaneGeometry(0.6, 0.02),
-        new THREE.MeshBasicMaterial({ color: CYAN, transparent: true, opacity: 0.35, blending: THREE.AdditiveBlending, depthWrite: false }));
-    scanline.position.z = 0.446;
+    const scanline = new THREE.Mesh(new THREE.PlaneGeometry(0.52, 0.012),
+        new THREE.MeshBasicMaterial({ color: CYAN, transparent: true, opacity: 0.12, blending: THREE.AdditiveBlending, depthWrite: false }));
+    scanline.position.z = -0.30;
     optics.add(scanline);
 
-    // ---- stos soczewek (ogniskowanie = przesuw w osi Z) ----
+    // ---- stos soczewek w komorze (ogniskowanie = przesuw w osi Z) ----
     const lensStack = new THREE.Group();
-    lensStack.position.z = 0.54;
+    lensStack.position.z = -0.56;
     optics.add(lensStack);
-    const lens1 = new THREE.Mesh(new THREE.CylinderGeometry(0.38, 0.38, 0.02, seg2), matLens);
+    const lens1 = new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.36, 0.02, seg2), matLens);
     lens1.rotation.x = Math.PI / 2;
     lensStack.add(lens1);
-    const lens2 = new THREE.Mesh(new THREE.CylinderGeometry(0.30, 0.30, 0.02, seg2), matLens);
+    const lens2 = new THREE.Mesh(new THREE.CylinderGeometry(0.27, 0.27, 0.02, seg2), matLens);
     lens2.rotation.x = Math.PI / 2;
     lens2.position.z = 0.10;
     lensStack.add(lens2);
-    const lensRim = new THREE.Mesh(new THREE.TorusGeometry(0.38, 0.018, 8, seg2), matSteel);
+    const lensRim = new THREE.Mesh(new THREE.TorusGeometry(0.36, 0.016, 8, seg2), matSteel);
     lensStack.add(lensRim);
+
+    // ---- ROGÓWKA ----
+    // Wypukła czasza nad całą optyką. Renderuje wyłącznie odbicie środowiska
+    // (patrz matCornea), więc przy obracaniu gałki refleks softboxu wędruje po
+    // niej tak jak po mokrym oku. To najtańszy i najsilniejszy sygnał "to oko".
+    {
+        const R = 1.10, rimR = 0.76, rimZ = 0.02;
+        const cornea = new THREE.Mesh(
+            new THREE.SphereGeometry(R, seg, Math.round(16 * LOD), 0, Math.PI * 2, 0, Math.asin(rimR / R)),
+            matCornea);
+        cornea.rotation.x = Math.PI / 2;                          // biegun → +Z
+        cornea.position.z = rimZ - Math.sqrt(R * R - rimR * rimR); // rant czaszy na rancie optyki
+        cornea.renderOrder = 2;
+        optics.add(cornea);
+    }
 
     // Mrugnięcie = migawka: pełne domknięcie przysłony irysowej (bez powiek —
     // wielkie czasze wyglądały, jakby pojawiały się znikąd i okalały oko).
 
     // ---- akcesoria per podstrona (data-variant na #mech-eye) ----
-    const variant = wrap.dataset.variant || '';
     let pilotVisor = null; // pivot przyłbicy (animowana w pętli)
 
     if (variant === 'painter') {
         // czapka malarska (beret) + pędzel za "uchem"
-        const matFabric = new THREE.MeshStandardMaterial({ color: 0x1d1e24, metalness: 0.05, roughness: 0.95 });
+        const matFabric = new THREE.MeshStandardMaterial({ color: 0x2b2d36, metalness: 0.05, roughness: 0.92, envMapIntensity: 0.4 });
         const beret = new THREE.Group();
         const cap = new THREE.Mesh(new THREE.SphereGeometry(0.82, seg2, Math.round(14 * LOD)), matFabric);
         cap.scale.set(1.15, 0.42, 1.1);
@@ -450,8 +671,8 @@ async function init() {
             tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
             return tex;
         }
-        const matHelmet = new THREE.MeshStandardMaterial({ map: paintedHelmetTexture(), color: 0xf2f3f4, metalness: 0.12, roughness: 0.55 });
-        const matHelmetPlain = new THREE.MeshStandardMaterial({ color: 0xc9ccd0, metalness: 0.15, roughness: 0.55 });
+        const matHelmet = new THREE.MeshStandardMaterial({ map: paintedHelmetTexture(), color: 0xb7bcc4, metalness: 0.1, roughness: 0.62, envMapIntensity: 0.55 });
+        const matHelmetPlain = new THREE.MeshStandardMaterial({ color: 0x9aa0a8, metalness: 0.15, roughness: 0.6, envMapIntensity: 0.5 });
         const matHelmetDark = new THREE.MeshStandardMaterial({ color: 0x23252b, metalness: 0.3, roughness: 0.6 });
         const matDecal = new THREE.MeshStandardMaterial({ color: MAGENTA, emissive: MAGENTA, emissiveIntensity: 0.15, roughness: 0.6 });
         const matVisor = new THREE.MeshStandardMaterial({
@@ -461,32 +682,37 @@ async function init() {
         });
         const helmet = new THREE.Group();
 
-        // kopuła schodząca nisko na boki i tył
+        // Kopuła MUSI kończyć się nad oczodołem. Tęczówka jest teraz cofnięta
+        // w bryłę, więc każda czasza obejmująca gałkę wchodzi w zagłębienie i
+        // zasłania oko od środka — hełm jest czapą na wierzchu, nie skorupą.
+        const DOME_R = 1.16, DOME_THETA = Math.PI * 0.311;
         const dome = new THREE.Mesh(
-            new THREE.SphereGeometry(1.24, seg, Math.round(18 * LOD), 0, Math.PI * 2, 0, Math.PI * 0.55), matHelmet);
+            new THREE.SphereGeometry(DOME_R, seg, Math.round(18 * LOD), 0, Math.PI * 2, 0, DOME_THETA), matHelmet);
         helmet.add(dome);
         // dolny rant kopuły
-        const rim = new THREE.Mesh(new THREE.TorusGeometry(1.235 * Math.sin(Math.PI * 0.55), 0.045, 8, seg), matHelmetDark);
+        const DOME_RIM_R = (DOME_R - 0.005) * Math.sin(DOME_THETA);
+        const DOME_RIM_Y = DOME_R * Math.cos(DOME_THETA);
+        const rim = new THREE.Mesh(new THREE.TorusGeometry(DOME_RIM_R, 0.045, 8, seg), matHelmetDark);
         rim.rotation.x = Math.PI / 2;
-        rim.position.y = 1.24 * Math.cos(Math.PI * 0.55);
+        rim.position.y = DOME_RIM_Y;
         helmet.add(rim);
 
         // osłony uszu (jak w hełmie z referencji)
         [1, -1].forEach(sgn => {
             const ear = new THREE.Mesh(new THREE.SphereGeometry(0.52, Math.round(20 * LOD), Math.round(12 * LOD)), matHelmet);
             ear.scale.set(0.32, 1.0, 0.78);
-            ear.position.set(sgn * 1.10, -0.18, -0.05);
+            ear.position.set(sgn * 1.02, -0.04, -0.14);
             helmet.add(ear);
             // panel na osłonie ucha (dekal eskadry)
             const pad = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.22, 0.14), matDecal);
-            pad.position.set(sgn * 1.27, -0.15, 0.02);
+            pad.position.set(sgn * 1.19, -0.01, -0.07);
             helmet.add(pad);
         });
 
         // grzebień: podłużna listwa przez środek kopuły
-        const crest = new THREE.Mesh(new THREE.TorusGeometry(1.27, 0.07, 8, seg, Math.PI * 0.52), matHelmet);
+        const crest = new THREE.Mesh(new THREE.TorusGeometry(1.19, 0.07, 8, seg, Math.PI * 0.36), matHelmet);
         crest.rotation.y = Math.PI / 2;
-        crest.rotation.z = Math.PI * 0.26;
+        crest.rotation.z = Math.PI * 0.32;
         crest.scale.x = 0.55; // wąska listwa, nie rurka
         helmet.add(crest);
         // blok wlotu powietrza na froncie grzebienia (skośny, z żaluzjami)
@@ -497,67 +723,65 @@ async function init() {
             slat.position.set(0, -0.035 + i * 0.045, 0.15);
             vent.add(slat);
         }
-        vent.position.set(0, 0.98, 0.72);
+        vent.position.set(0, 0.86, 0.74);
         vent.rotation.x = -0.6;
         helmet.add(vent);
 
-        // przyłbica na zawiasach: podnosi się, gdy oko świeci reflektorem.
-        // Pivot na wysokości "skroni"; szyba + rama obracają się razem.
+        // Przyłbica na zawiasach. KLUCZOWE: oś obrotu pokrywa się ze środkiem
+        // sfery szyby, więc podnoszona ślizga się po kopule zamiast odlatywać
+        // nad hełm po długim ramieniu (tak było, gdy pivot siedział na skroni).
         const HINGE_Y = 0.34;
         pilotVisor = new THREE.Group();
-        pilotVisor.position.set(0, HINGE_Y, 0.05);
+        pilotVisor.position.set(0, 0, 0.10);
         helmet.add(pilotVisor);
 
         // szyba: dwie warstwy dla głębi (zewnętrzna glossy + wewnętrzna przydymiona)
         const visorGeoArgs = [
             Math.PI * 0.24, Math.PI * 0.52,   // wycinek frontowy
-            Math.PI * 0.30, Math.PI * 0.17    // pas nad obiektywem (czoło)
+            Math.PI * 0.30, Math.PI * 0.17    // pas na wysokości oczodołu
         ];
         const visorOuter = new THREE.Mesh(
-            new THREE.SphereGeometry(1.36, seg2, Math.round(12 * LOD), ...visorGeoArgs),
+            new THREE.SphereGeometry(1.21, seg2, Math.round(12 * LOD), ...visorGeoArgs),
             new THREE.MeshPhysicalMaterial({
                 color: 0xe8b431, metalness: 0.1, roughness: 0.08,
                 clearcoat: 1, clearcoatRoughness: 0.08,
                 transparent: true, opacity: 0.38, side: THREE.DoubleSide, depthWrite: false
             }));
         const visorInner = new THREE.Mesh(
-            new THREE.SphereGeometry(1.31, seg2, Math.round(12 * LOD), ...visorGeoArgs),
+            new THREE.SphereGeometry(1.17, seg2, Math.round(12 * LOD), ...visorGeoArgs),
             new THREE.MeshStandardMaterial({
                 color: 0x6b4a10, metalness: 0.2, roughness: 0.3,
                 transparent: true, opacity: 0.22, side: THREE.DoubleSide, depthWrite: false
             }));
         [visorOuter, visorInner].forEach(v => {
-            v.position.set(0, -HINGE_Y, 0.35);
             v.scale.set(1.05, 1, 1);
             pilotVisor.add(v);
         });
 
         // rama szyby: górna i dolna listwa jadą razem z przyłbicą
-        const visorTopRail2 = new THREE.Mesh(new THREE.TorusGeometry(1.335, 0.030, 6, seg, Math.PI * 0.50), matHelmetDark);
+        const visorTopRail2 = new THREE.Mesh(new THREE.TorusGeometry(1.192, 0.028, 6, seg, Math.PI * 0.50), matHelmetDark);
         visorTopRail2.rotation.set(Math.PI * 0.275, 0, Math.PI * 0.25);
-        visorTopRail2.position.set(0, -HINGE_Y, 0.33);
         pilotVisor.add(visorTopRail2);
-        const visorBotRail2 = new THREE.Mesh(new THREE.TorusGeometry(1.325, 0.026, 6, seg, Math.PI * 0.46), matHelmetDark);
+        const visorBotRail2 = new THREE.Mesh(new THREE.TorusGeometry(1.184, 0.024, 6, seg, Math.PI * 0.46), matHelmetDark);
         visorBotRail2.rotation.set(Math.PI * 0.385, 0, Math.PI * 0.27);
-        visorBotRail2.position.set(0, -HINGE_Y, 0.35);
         pilotVisor.add(visorBotRail2);
 
         // zawiasy na "skroniach" (widoczne pokrętła, oś obrotu przyłbicy)
         [1, -1].forEach(sgn => {
             const hinge = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.09, 0.06, Math.round(14 * LOD)), matHelmetDark);
             hinge.rotation.z = Math.PI / 2;
-            hinge.position.set(sgn * 1.20, HINGE_Y, 0.30);
+            hinge.position.set(sgn * 1.13, 0.02, 0.10);
             helmet.add(hinge);
             const knob = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 0.08, 6), matSteel);
             knob.rotation.z = Math.PI / 2;
-            knob.position.set(sgn * 1.24, HINGE_Y, 0.30);
+            knob.position.set(sgn * 1.17, 0.02, 0.10);
             helmet.add(knob);
         });
 
         // dekal eskadry na czole kopuły
         const emblem = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.13, 0.03, Math.round(18 * LOD)), matDecal);
         emblem.rotation.x = Math.PI * 0.30;
-        emblem.position.set(-0.42, 0.78, 0.86);
+        emblem.position.set(-0.40, 0.74, 0.79);
         helmet.add(emblem);
 
         // pasek podbródkowy pod gałką
@@ -570,20 +794,20 @@ async function init() {
         [1, -1].forEach(sgn => {
             const pod = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.17, 0.07, Math.round(18 * LOD)), matHelmetDark);
             pod.rotation.z = Math.PI / 2;
-            pod.position.set(sgn * 1.36, -0.18, -0.05);
+            pod.position.set(sgn * 1.28, -0.04, -0.14);
             helmet.add(pod);
             const podLight = new THREE.Mesh(new THREE.SphereGeometry(0.035, 8, 6),
                 new THREE.MeshStandardMaterial({ color: 0x003333, emissive: CYAN, emissiveIntensity: 1.2 }));
-            podLight.position.set(sgn * 1.41, -0.18, -0.05);
+            podLight.position.set(sgn * 1.33, -0.04, -0.14);
             helmet.add(podLight);
         });
         const antenna = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.02, 0.7, 6), matHelmetDark);
-        antenna.position.set(1.28, 0.28, -0.42);
+        antenna.position.set(1.12, 0.42, -0.52);
         antenna.rotation.z = -0.35;
         antenna.rotation.x = 0.25;
         helmet.add(antenna);
         const antennaTip = new THREE.Mesh(new THREE.SphereGeometry(0.03, 8, 6), matDecal);
-        antennaTip.position.set(1.40, 0.60, -0.50);
+        antennaTip.position.set(1.24, 0.74, -0.60);
         helmet.add(antennaTip);
 
         // wysięgnik mikrofonu spod lewej osłony ucha
@@ -603,8 +827,7 @@ async function init() {
 
         // nity wokół dolnego rantu kopuły
         {
-            const rimR = 1.235 * Math.sin(Math.PI * 0.55);
-            const rimY = 1.24 * Math.cos(Math.PI * 0.55);
+            const rimR = DOME_RIM_R, rimY = DOME_RIM_Y;
             const rivets = new THREE.InstancedMesh(new THREE.SphereGeometry(0.026, 6, 5), matHelmetDark, 14);
             const m = new THREE.Matrix4();
             for (let i = 0; i < 14; i++) {
@@ -618,7 +841,7 @@ async function init() {
         // emblemat: biała podkładka + znak eskadry
         const emblemBase = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.17, 0.025, Math.round(18 * LOD)), matHelmetPlain);
         emblemBase.rotation.x = Math.PI * 0.30;
-        emblemBase.position.set(-0.42, 0.77, 0.85);
+        emblemBase.position.set(-0.40, 0.73, 0.78);
         helmet.add(emblemBase);
 
         // klamra na pasku podbródkowym
@@ -627,7 +850,7 @@ async function init() {
         buckle.rotation.x = 0.4;
         helmet.add(buckle);
 
-        helmet.position.set(0, 0.06, -0.26);
+        helmet.position.set(0, -0.05, -0.18);
         eye.add(helmet);
     }
 
@@ -639,7 +862,7 @@ async function init() {
         // cel patrzenia (radiany) i aktualna pozycja
         lookX: 0, lookY: 0, curX: 0, curY: 0,
         lookSpeed: 6,
-        aperture: 0.55, apertureTarget: 0.55,   // 0 = zamknięta, 1 = szeroko
+        aperture: 0.66, apertureTarget: 0.66,   // 0 = zamknięta, 1 = szeroko
         blink: 0, blinkTarget: 0,               // 0 = otwarte powieki, 1 = zamknięte
         focus: 0, focusTarget: 0,               // wysuw soczewek
         recoil: 0, recoilTarget: 0,
@@ -660,7 +883,7 @@ async function init() {
         fx: 0, fy: 0, fvx: 0, fvy: 0, ftx: 0, fty: 0, flightTimer: 0,
         // reflektor: podświetlany element interaktywny + dobór miejsca lotu
         spotEl: null, occTimer: 0, followX: 170, followY: 130,
-        visorOpen: 0
+        visorOpen: 1
     };
 
     // sprężyna: zwraca nową [pozycję, prędkość]; damping <1 daje lekki overshoot
@@ -791,13 +1014,13 @@ async function init() {
         S.state = s;
         wrap.dataset.eyeState = s; // stan czytelny dla strony (np. podgląd na oko.html)
         switch (s) {
-            case 'tracking': S.ringSpeedTarget = 1; S.apertureTarget = 0.55; S.focusTarget = 0; S.lookSpeed = 6; break;
-            case 'focused': S.ringSpeedTarget = 1.6; S.apertureTarget = 0.85; S.focusTarget = 1; break;
-            case 'bored': S.ringSpeedTarget = 0.45; S.apertureTarget = 0.45; S.focusTarget = 0; S.lookSpeed = 2.5; break;
+            case 'tracking': S.ringSpeedTarget = 1; S.apertureTarget = 0.66; S.focusTarget = 0; S.lookSpeed = 6; break;
+            case 'focused': S.ringSpeedTarget = 1.6; S.apertureTarget = 0.92; S.focusTarget = 1; break;
+            case 'bored': S.ringSpeedTarget = 0.45; S.apertureTarget = 0.54; S.focusTarget = 0; S.lookSpeed = 2.5; break;
             case 'sleeping': S.ringSpeedTarget = 0.08; S.apertureTarget = 0.12; S.blinkTarget = 0.8; break;
             case 'startled': S.ringSpeedTarget = 2.4; S.apertureTarget = 0.15; S.recoilTarget = 1; break;
             case 'recalibrating': S.ringSpeedTarget = 5; S.recalTimer = 0.9; S.apertureTarget = 0.3; break;
-            default: S.ringSpeedTarget = 1; S.apertureTarget = 0.55; S.focusTarget = 0; S.lookSpeed = 6;
+            default: S.ringSpeedTarget = 1; S.apertureTarget = 0.66; S.focusTarget = 0; S.lookSpeed = 6;
         }
         if (s !== 'sleeping') S.blinkTarget = 0;
         if (s !== 'startled') S.recoilTarget = 0;
@@ -900,8 +1123,8 @@ async function init() {
             if (S.state === 'sleeping') { setState('idle'); blinkOnce(true); }
             lookAtScreen(t.clientX, t.clientY);
             blinkOnce(false);
-            S.apertureTarget = 0.8;
-            setTimeout(() => { if (S.state === 'idle') S.apertureTarget = 0.55; }, 600);
+            S.apertureTarget = 0.9;
+            setTimeout(() => { if (S.state === 'idle') S.apertureTarget = 0.66; }, 600);
             S.wanderTimer = 1.5;
         }, { passive: true });
 
@@ -991,7 +1214,7 @@ async function init() {
         // --- przysłona (mrugnięcie domyka ją do zera jak migawka) ---
         S.aperture = lerp(S.aperture, S.apertureTarget, 1 - Math.exp(-10 * dt));
         const effAperture = S.aperture * (1 - S.blink);
-        const bladeAngle = -0.10 - effAperture * 0.85;
+        const bladeAngle = -0.05 - effAperture * 1.0;
         blades.forEach((p, i) => {
             p.children[0].rotation.z = bladeAngle + Math.sin(t * 2 + i) * 0.006;
         });
@@ -1023,12 +1246,18 @@ async function init() {
         lens2.position.z = 0.10 + S.focus * 0.09 + Math.sin(t * 1.3) * 0.004;
         lensRim.rotation.z += dt * 0.4 * rs * (1 + S.focus * 2);
 
-        // --- źrenica: puls + refleks skanujący ---
-        matGlowPupil.emissiveIntensity = 1.9 + Math.sin(t * 2.2) * 0.35 + S.focus * 0.8 - S.blink * 1.2;
-        pupilLight.intensity = (1.4 + S.focus) * (1 - S.blink * 0.9);
+        // --- tęczówka i źrenica ---
+        // Nośnikiem "życia" jest teraz świecenie misy, a nie jasność źrenicy:
+        // źrenica ma zostać czarną dziurą, inaczej oko czyta się jako dioda.
+        const pulse = Math.sin(t * 2.2);
+        matIris.emissiveIntensity = 0.95 + pulse * 0.14 + S.focus * 0.8 - S.blink * 0.62;
+        matGlowPupil.emissiveIntensity = Math.max(0, 0.18 + pulse * 0.05 + S.focus * 0.3 - S.blink * 0.18);
+        matPupilRim.emissiveIntensity = 1.1 + pulse * 0.35 + S.focus * 1.2 - S.blink * 0.9;
+        pupilLight.intensity = (0.55 + S.focus * 0.8) * effAperture * 2 * (1 - S.blink * 0.9);
         scanline.rotation.z += dt * (0.7 + S.focus * 2.5) * rs;
-        scanline.material.opacity = 0.25 + Math.sin(t * 3.1) * 0.12;
-        const pupilScale = Math.max(0.06, 0.35 + effAperture * 0.75 - S.blink * 0.32);
+        scanline.material.opacity = (0.09 + Math.sin(t * 3.1) * 0.05) * (1 - S.blink);
+        // źrenica lekko "oddycha" — reszta rozwarcia to praca listków przysłony
+        const pupilScale = 0.86 + effAperture * 0.14;
         pupil.scale.setScalar(pupilScale);
         pupilRing.scale.setScalar(pupilScale);
 
@@ -1086,11 +1315,13 @@ async function init() {
             wrap.style.transform = `translate3d(${(S.fx - half).toFixed(1)}px, ${(S.fy - half).toFixed(1)}px, 0)`;
         }
 
-        // --- przyłbica pilota: otwiera się, gdy działa reflektor ---
+        // --- przyłbica pilota: spoczywa podniesiona, opada we śnie ---
         if (pilotVisor) {
-            const wantOpen = (wrap.dataset.visoropen || (S.spotEl && S.state !== 'sleeping')) ? 1 : 0;
-            S.visorOpen = lerp(S.visorOpen, wantOpen, 1 - Math.exp(-5 * dt));
-            pilotVisor.rotation.x = -1.05 * S.visorOpen;
+            // Pozycja spoczynkowa = PODNIESIONA. Opuszczona zakrywała tęczówkę,
+            // czyli jedyny nośnik wyrazu; teraz opada dopiero na drzemkę.
+            const wantOpen = (S.state === 'sleeping' && !wrap.dataset.visoropen) ? 0 : 1;
+            S.visorOpen = lerp(S.visorOpen, wantOpen, 1 - Math.exp(-4 * dt));
+            pilotVisor.rotation.x = -0.92 * S.visorOpen;
         }
 
         // --- reflektor: snop światła z oka na podświetlany element ---
@@ -1134,6 +1365,7 @@ async function init() {
         renderer.setSize(w, h, false);
         camera.aspect = w / h;
         camera.updateProjectionMatrix();
+        if (!raf) renderer.render(scene, camera);   // stoimy: odrysuj klatkę
     }
     new ResizeObserver(resize).observe(wrap);
     resize();
@@ -1153,10 +1385,17 @@ async function init() {
         updateRunning();
     });
 
-    // reduced-motion: jedna statyczna klatka w rogu, mechanizm zatrzymany
+    // reduced-motion: jedna statyczna klatka, mechanizm zatrzymany
     if (reducedMotion) {
-        wrap.style.transform = `translate3d(${window.innerWidth - eyeSize() - 24}px, ${window.innerHeight - eyeSize() - 24}px, 0)`;
-        blades.forEach(p => { p.children[0].rotation.z = -0.10 - 0.55 * 0.85; });
+        if (!wrap.dataset.noflight) {
+            wrap.style.transform = `translate3d(${window.innerWidth - eyeSize() - 24}px, ${window.innerHeight - eyeSize() - 24}px, 0)`;
+        }
+        // pętla nie ruszy, więc ustawiamy ręcznie to, co normalnie liczy tick()
+        blades.forEach(p => { p.children[0].rotation.z = -0.05 - 0.66; });
+        matIris.emissiveIntensity = 0.95;
+        matGlowPupil.emissiveIntensity = 0.18;
+        matPupilRim.emissiveIntensity = 1.1;
+        pupilLight.intensity = 0.73;
         renderer.render(scene, camera);
     } else {
         setState(finePointer ? 'idle' : 'idle');
