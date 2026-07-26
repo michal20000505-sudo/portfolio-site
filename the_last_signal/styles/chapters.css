@@ -1,0 +1,1095 @@
+/* ===========================================================================
+   THE LAST SIGNAL — chapter layouts
+   ---------------------------------------------------------------------------
+   Each chapter has its own composition. None of them is a centred column with
+   a heading and a paragraph, and no two of them place the eye in the same
+   position — that alternation is what keeps a single-scroll experience from
+   flattening into a list of sections.
+   =========================================================================== */
+
+/* ===========================================================================
+   00 · ACQUISITION
+   =========================================================================== */
+.stage-acquisition {
+  display: grid;
+  grid-template-rows: 1fr auto 1fr;
+  justify-items: center;
+  text-align: center;
+}
+
+.acq-head {
+  grid-row: 1;
+  align-self: end;
+  padding-bottom: clamp(28px, 8vh, 90px);
+  display: grid;
+  gap: 18px;
+  justify-items: center;
+  max-width: min(780px, 86vw);
+}
+
+.acq-declare {
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(1.6rem, 4.4vw, 3.4rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  min-height: 1.1em;
+  text-wrap: balance;
+  transition: opacity var(--slow) var(--ease-out);
+}
+.acq-declare.is-swapping { color: var(--ink); }
+
+.acq-sub {
+  opacity: 0;
+  max-width: 34ch;
+  transition: opacity 1.6s var(--ease-out) 0.3s;
+}
+.acq-sub.is-visible { opacity: 1; }
+
+/* Sits just below frame centre so the point of light is never crossed by it. */
+.acq-wave {
+  position: absolute;
+  left: 50%;
+  top: 56%;
+  transform: translateX(-50%);
+  width: min(340px, 62vw);
+  height: 42px;
+  opacity: 0.7;
+}
+
+.acq-gate {
+  grid-row: 3;
+  align-self: start;
+  padding-top: clamp(96px, 20vh, 210px);
+  display: grid;
+  gap: 16px;
+  justify-items: center;
+  opacity: 0;
+  transition: opacity 1.4s var(--ease-out);
+}
+.acq-gate.is-ready { opacity: 1; }
+.has-entered .acq-gate { opacity: 0; pointer-events: none; }
+
+.acq-hold {
+  position: relative;
+  padding: 14px 30px;
+  font-family: var(--mono);
+  font-size: var(--t-meta);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+  transition: border-color var(--medium) var(--ease-out), color var(--medium) var(--ease-out);
+}
+.acq-hold::after {
+  content: '';
+  position: absolute;
+  inset: -1px auto -1px -1px;
+  width: 1px;
+  background: var(--amber);
+  transition: width 0.2s linear;
+}
+.acq-gate.is-charging .acq-hold { border-color: var(--amber); color: var(--amber); }
+.acq-hold:hover { border-color: var(--ink-faint); }
+
+.acq-prompt {
+  opacity: 0;
+  max-width: 30ch;
+  transition: opacity 1.2s var(--ease-out) 0.4s;
+}
+.acq-prompt.is-visible { opacity: 1; }
+
+.acq-telemetry {
+  --reveal: 0;
+  position: absolute;
+  left: max(var(--gutter), var(--rail));
+  right: var(--gutter);
+  bottom: clamp(48px, 12vh, 120px);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+  gap: 0 clamp(24px, 5vw, 80px);
+  text-align: left;
+  opacity: 0;
+}
+.telemetry-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: baseline;
+  gap: 10px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: var(--t-meta);
+  letter-spacing: var(--track-meta);
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  /* Rows arrive in sequence, driven by --reveal rather than by a CSS delay. */
+  opacity: clamp(0, calc((var(--reveal) * 9) - var(--i)), 1);
+  transform: translate3d(0, calc((1 - clamp(0, calc((var(--reveal) * 9) - var(--i)), 1)) * 12px), 0);
+}
+.telemetry-value { color: var(--ink); font-variant-numeric: tabular-nums; }
+.telemetry-row[data-tone='warn'] .telemetry-value { color: var(--alert); letter-spacing: 0.2em; }
+.telemetry-rule { height: 1px; background: var(--line); align-self: center; }
+
+.acq-hint {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(20px, 5vh, 44px);
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity var(--slow) var(--ease-out);
+}
+
+/* ===========================================================================
+   01 · THE SOURCE
+   =========================================================================== */
+.stage-source { display: block; }
+
+.src-statement {
+  position: absolute;
+  left: max(var(--gutter), var(--rail));
+  right: clamp(var(--gutter), 22vw, 380px);
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(1.9rem, 5vw, 4.8rem);
+  line-height: 1.0;
+  letter-spacing: -0.032em;
+  opacity: 0;
+  /*
+   * The star cuts a hole in the sentence. The mask geometry is written from the
+   * same expressions the shader uses, so the type is genuinely occluded by the
+   * object rather than blended over it.
+   */
+  -webkit-mask-image: radial-gradient(
+    circle at var(--star-x, 50%) var(--star-y, 50%),
+    transparent 0,
+    transparent var(--star-r, 0px),
+    #000 calc(var(--star-r, 0px) + var(--star-feather, 40px))
+  );
+  mask-image: radial-gradient(
+    circle at var(--star-x, 50%) var(--star-y, 50%),
+    transparent 0,
+    transparent var(--star-r, 0px),
+    #000 calc(var(--star-r, 0px) + var(--star-feather, 40px))
+  );
+}
+.src-years { color: var(--amber); font-variant-numeric: tabular-nums; }
+
+.src-captions {
+  position: absolute;
+  left: max(var(--gutter), var(--rail));
+  bottom: clamp(48px, 11vh, 110px);
+  width: min(38ch, 46vw);
+  height: 11em;
+}
+.source-caption {
+  position: absolute;
+  inset: auto 0 0 0;
+  display: grid;
+  gap: 8px;
+  will-change: transform, opacity;
+}
+.caption-index {
+  font-family: var(--mono);
+  font-size: var(--t-meta);
+  letter-spacing: var(--track-meta);
+  color: var(--amber);
+}
+.caption-label {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(1.05rem, 1.7vw, 1.5rem);
+  letter-spacing: -0.01em;
+}
+.caption-note { color: var(--ink-dim); font-size: 0.95em; max-width: 38ch; }
+
+.src-readout {
+  position: absolute;
+  right: var(--gutter);
+  top: 50%;
+  transform: translateY(-50%);
+  display: grid;
+  gap: 0;
+  width: min(240px, 34vw);
+  border-top: 1px solid var(--line);
+}
+.readout-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: var(--t-meta);
+  letter-spacing: var(--track-meta);
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.readout-row dd { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+/* A thin scale that redraws itself as the star changes size. */
+.src-scale {
+  position: absolute;
+  right: var(--gutter);
+  bottom: clamp(104px, 18vh, 176px);
+  width: min(240px, 34vw);
+  display: grid;
+  gap: 8px;
+}
+.src-scale-bar {
+  height: 1px;
+  background: var(--line);
+  position: relative;
+}
+.src-scale-bar::after {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(clamp(0, calc(1 - var(--state, 0) / 3), 1) * 100%);
+  background: var(--ink-faint);
+}
+
+/* ===========================================================================
+   02 · THE TRANSMISSION
+   =========================================================================== */
+.stage-transmission { --ui: 0; display: block; }
+
+.tx-tokens { position: absolute; inset: 0; pointer-events: none; }
+.tx-token {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  font-family: var(--mono);
+  font-size: clamp(0.7rem, 1.05vw, 0.95rem);
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  opacity: 0;
+  will-change: transform, opacity;
+  text-shadow: 0 0 22px rgba(5, 5, 5, 0.9);
+}
+.tx-token[data-kind='translated'] { color: var(--ink); font-family: var(--display); font-size: clamp(0.95rem, 1.7vw, 1.5rem); letter-spacing: -0.01em; }
+.tx-token[data-kind='glyph'] { color: var(--spectral); letter-spacing: 0.4em; }
+.tx-token[data-kind='numeric'] { color: var(--ink-faint); }
+.tx-token[data-kind='corrupt'] { color: var(--alert); }
+.tx-token[data-kind='partial'] { color: var(--amber); }
+
+.tx-panel {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(44px, 11vh, 110px);
+  transform: translateX(-50%) translateY(calc((1 - var(--ui)) * 24px));
+  width: min(940px, calc(100vw - var(--gutter) * 2));
+  opacity: var(--ui);
+  display: grid;
+  gap: 14px;
+  padding: 18px clamp(16px, 2.4vw, 28px) 16px;
+  border: 1px solid var(--line);
+  background: rgba(6, 6, 7, 0.55);
+  backdrop-filter: blur(14px) saturate(0.9);
+  -webkit-backdrop-filter: blur(14px) saturate(0.9);
+}
+
+.tx-transport {
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  align-items: center;
+  gap: clamp(12px, 2vw, 22px);
+}
+
+.tx-play {
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: var(--t-meta);
+  letter-spacing: var(--track-meta);
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  transition: color var(--medium) var(--ease-out);
+}
+.tx-play:hover { color: var(--ink); }
+.tx-play-icon {
+  width: 12px; height: 12px;
+  border-left: 6px solid currentColor;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  transition: border-color var(--medium) var(--ease-out);
+}
+.tx-play.is-playing { color: var(--amber); }
+.tx-play.is-playing .tx-play-icon {
+  border: 0;
+  width: 10px; height: 12px;
+  border-left: 3px solid currentColor;
+  border-right: 3px solid currentColor;
+}
+
+.tx-time { font-family: var(--mono); font-size: var(--t-meta); letter-spacing: var(--track-meta); color: var(--ink-faint); font-variant-numeric: tabular-nums; }
+
+.tx-scrub { position: relative; height: 44px; }
+.tx-wave { position: absolute; inset: 0; width: 100%; height: 100%; }
+.tx-timeline {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+}
+.tx-timeline::-webkit-slider-runnable-track { height: 100%; background: transparent; }
+.tx-timeline::-moz-range-track { height: 100%; background: transparent; }
+.tx-timeline::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 1px; height: 44px;
+  background: var(--amber);
+  border: 0; border-radius: 0;
+  box-shadow: 0 0 0 0 transparent;
+}
+.tx-timeline::-moz-range-thumb {
+  width: 1px; height: 44px;
+  background: var(--amber);
+  border: 0; border-radius: 0;
+}
+
+.tx-meter {
+  --level: 0;
+  width: 46px; height: 3px;
+  background: var(--line);
+  position: relative;
+}
+.tx-meter::after {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(var(--level) * 100%);
+  background: var(--amber);
+}
+
+.tx-bands {
+  display: grid;
+  grid-auto-flow: column;
+  justify-content: start;
+  gap: clamp(10px, 2vw, 26px);
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+}
+.band {
+  display: grid;
+  gap: 3px;
+  text-align: left;
+  font-family: var(--mono);
+  font-size: var(--t-meta);
+  letter-spacing: var(--track-meta);
+  color: var(--ink-ghost);
+  transition: color var(--medium) var(--ease-out);
+}
+.band:hover { color: var(--ink-dim); }
+.band-hz { font-variant-numeric: tabular-nums; }
+.band-label { font-size: 0.85em; opacity: 0.7; }
+.band.is-on { color: var(--amber); }
+
+.tx-freq { justify-self: end; align-self: center; }
+
+.tx-lede {
+  position: absolute;
+  left: max(var(--gutter), var(--rail));
+  top: clamp(80px, 16vh, 160px);
+  width: min(34ch, 42vw);
+  opacity: var(--ui);
+  transition: opacity var(--slow) var(--ease-out);
+}
+
+/* ===========================================================================
+   03 · FRAGMENTS
+   =========================================================================== */
+.stage-fragments { --field-in: 0; display: block; }
+
+.frag-head {
+  position: absolute;
+  left: max(var(--gutter), var(--rail));
+  top: clamp(70px, 13vh, 140px);
+  display: grid;
+  gap: 8px;
+  opacity: var(--field-in);
+  z-index: 20;
+}
+.frag-count { color: var(--amber); font-variant-numeric: tabular-nums; }
+
+.frag-field {
+  position: absolute;
+  inset: 0;
+  opacity: var(--field-in);
+}
+
+.fragment {
+  --tx: 0px; --ty: 0px; --scale: 1; --hover: 0; --near: 0; --skew: 0deg;
+  position: absolute;
+  left: calc(50% + (var(--fx) * 100vw));
+  top: calc(50% + (var(--fy) * 100vh));
+  width: clamp(156px, 17vw, 258px);
+  transform:
+    translate(-50%, -50%)
+    translate3d(var(--tx), var(--ty), 0)
+    rotate(var(--rot))
+    skewY(var(--skew))
+    scale(var(--scale));
+  will-change: transform;
+  z-index: calc(1 + var(--depth) * 10);
+}
+.fragment.is-dragging { z-index: 40; }
+.fragment[data-hidden] { --enter: 0; }
+.fragment.is-arriving { animation: fragment-arrive 1.6s var(--ease-out) both; }
+@keyframes fragment-arrive {
+  from { opacity: 0; filter: blur(8px); }
+  to { opacity: 1; filter: blur(0); }
+}
+
+.fragment-trigger {
+  display: grid;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  /* Distant objects are dimmer. Depth is the only hierarchy in this chapter. */
+  opacity: calc(0.42 + var(--depth) * 0.34 + var(--hover) * 0.24 + var(--near) * 0.1);
+  transition: opacity var(--medium) var(--ease-out);
+}
+
+.fragment-plate {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+  border: 1px solid var(--line);
+  overflow: hidden;
+  background: rgba(9, 9, 10, 0.5);
+}
+.fragment-art { width: 100%; height: 100%; }
+.fragment-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 55%, rgba(5, 5, 5, 0.6));
+  opacity: calc(1 - var(--hover) * 0.6);
+}
+.fragment-marks { position: absolute; inset: 6px; opacity: calc(0.2 + var(--hover) * 0.7); }
+.mark { position: absolute; width: 7px; height: 7px; }
+.mark::before, .mark::after { content: ''; position: absolute; background: var(--amber); }
+.mark::before { width: 7px; height: 1px; top: 0; }
+.mark::after { width: 1px; height: 7px; left: 0; }
+.mark-tl { top: 0; left: 0; }
+.mark-tr { top: 0; right: 0; }
+.mark-tr::after { left: auto; right: 0; }
+.mark-bl { bottom: 0; left: 0; }
+.mark-bl::before { top: auto; bottom: 0; }
+.mark-br { bottom: 0; right: 0; }
+.mark-br::before { top: auto; bottom: 0; }
+.mark-br::after { left: auto; right: 0; }
+
+.fragment-head { display: grid; gap: 3px; }
+.fragment-id {
+  font-family: var(--mono);
+  font-size: var(--t-meta);
+  letter-spacing: var(--track-meta);
+  color: var(--amber);
+}
+.fragment-title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(0.95rem, 1.2vw, 1.1rem);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.fragment-meta {
+  display: grid;
+  gap: 4px;
+  /* Metadata is a reward for approaching, not a permanent label. */
+  max-height: calc(var(--hover) * 70px);
+  opacity: var(--hover);
+  overflow: hidden;
+  transition: max-height var(--medium) var(--ease-out), opacity var(--medium) var(--ease-out);
+}
+.meta-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.meta-rule { height: 1px; background: var(--line); }
+.meta-bar { height: 2px; background: var(--line); position: relative; }
+.meta-bar i { position: absolute; inset: 0 auto 0 0; width: calc(var(--v) * 100%); background: var(--amber); }
+
+/* ── Focus mode ── */
+.frag-focus {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: var(--gutter);
+  background: rgba(4, 4, 5, 0.86);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--medium) var(--ease-out);
+}
+.frag-focus[hidden] { display: none; }
+.has-focus .frag-focus { opacity: 1; pointer-events: auto; }
+
+.focus-plate {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: clamp(20px, 4vw, 56px);
+  align-items: center;
+  width: min(1060px, 100%);
+  max-height: 82vh;
+  padding: clamp(18px, 3vw, 40px);
+  border: 1px solid var(--line-strong);
+  background: rgba(7, 7, 8, 0.72);
+  transform: translateY(calc((1 - var(--in, 0)) * 20px));
+  overflow: auto;
+}
+.has-focus .focus-plate { --in: 1; }
+
+.focus-art { width: 100%; aspect-ratio: 4 / 3; border: 1px solid var(--line); }
+.focus-meta { display: grid; gap: 14px; align-content: start; }
+.focus-id { font-family: var(--mono); font-size: var(--t-meta); letter-spacing: var(--track-meta); color: var(--amber); }
+.focus-title { font-family: var(--display); font-weight: 300; font-size: clamp(1.4rem, 2.6vw, 2.3rem); letter-spacing: -0.02em; line-height: 1.08; }
+.focus-note { color: var(--ink-dim); max-width: 44ch; }
+.focus-data { display: grid; gap: 0; border-top: 1px solid var(--line); margin-top: 4px; }
+.focus-data > div {
+  display: grid;
+  grid-template-columns: 12ch 1fr;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: var(--t-meta);
+  letter-spacing: var(--track-meta);
+  text-transform: uppercase;
+}
+.focus-data dt { color: var(--ink-faint); }
+.focus-data dd { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+.focus-close {
+  position: absolute;
+  top: var(--gutter);
+  right: var(--gutter);
+  padding: 10px 16px;
+  font-family: var(--mono);
+  font-size: var(--t-meta);
+  letter-spacing: var(--track-meta);
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  border: 1px solid var(--line);
+  transition: color var(--medium) var(--ease-out), border-color var(--medium) var(--ease-out);
+}
+.focus-close:hover { color: var(--ink); border-color: var(--line-strong); }
+
+/* ===========================================================================
+   04 · DECODING
+   =========================================================================== */
+.stage-decoding {
+  --ui: 0; --still: 0;
+  display: grid;
+  grid-template-rows: 1fr auto auto 1fr;
+  justify-items: center;
+  align-content: center;
+  gap: clamp(18px, 3.4vh, 44px);
+  text-align: center;
+}
+
+.dec-head {
+  grid-row: 1;
+  align-self: end;
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+  opacity: calc(var(--ui) * (1 - var(--still) * 0.9));
+  transition: opacity var(--medium) var(--ease-out);
+}
+
+.dec-status {
+  font-family: var(--mono);
+  font-size: var(--t-meta);
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.dec-status[data-tone='warn'] { color: var(--amber); }
+.dec-status[data-tone='ok'] { color: var(--ink); }
+
+/* Lock meter: a hairline that fills as the three controls converge. */
+.dec-lock {
+  --lock: 0;
+  position: relative;
+  width: clamp(120px, 20vw, 200px);
+  height: 1px;
+  background: var(--line);
+}
+.dec-lock::after {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(var(--lock) * 100%);
+  background: var(--amber);
+}
+
+.dec-hint {
+  opacity: 0;
+  transition: opacity var(--slow) var(--ease-out);
+}
+.dec-hint.is-visible { opacity: 0.7; }
+
+.dec-wave {
+  grid-row: 2;
+  width: min(760px, calc(100vw - var(--gutter) * 2));
+  height: clamp(60px, 11vh, 108px);
+  opacity: calc(var(--ui) * (1 - var(--still) * 0.85));
+  transition: opacity var(--slow) var(--ease-out);
+}
+
+.dec-message {
+  --lock: 0;
+  grid-row: 3;
+  max-width: min(24ch, calc(100vw - var(--gutter) * 2));
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(1.5rem, 4.6vw, 4.2rem);
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  opacity: var(--ui);
+  text-wrap: balance;
+}
+/* Words are atomic; only the spaces between them are break opportunities. */
+.msg-word { display: inline-block; white-space: nowrap; }
+/*
+ * Each character is a fixed cell sized by its final letter. The scrambling
+ * glyph floats inside it and never contributes to layout, so the sentence
+ * holds its exact position and line breaks from the first frame to the last.
+ */
+.msg-char {
+  --edge: 0;
+  position: relative;
+  display: inline-block;
+  color: rgba(232, 232, 228, calc(0.16 + var(--lock) * 0.3));
+  transform: translateY(calc(var(--edge) * -2px));
+  transition: color 0.24s var(--ease-out);
+  font-variant-ligatures: none;
+}
+.msg-ghost {
+  font-style: normal;
+  visibility: hidden;
+}
+.msg-live {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  font-style: normal;
+  white-space: pre;
+}
+.msg-char.is-resolved { color: var(--ink); }
+.msg-char.is-resolved .msg-ghost { visibility: visible; }
+.msg-char.is-resolved .msg-live { display: none; }
+.is-locked .msg-char.is-resolved { color: var(--ink); }
+.msg-space { display: inline-block; width: 0.32em; }
+
+.dec-controls {
+  grid-row: 4;
+  align-self: start;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(230px, 100%), 1fr));
+  gap: clamp(16px, 3vw, 44px);
+  width: min(880px, calc(100vw - var(--gutter) * 2));
+  padding-top: clamp(14px, 3vh, 34px);
+  opacity: calc(var(--ui) * (1 - var(--still)));
+  transform: translateY(calc(var(--still) * 14px));
+  pointer-events: auto;
+  transition: opacity 1.4s var(--ease-out), transform 1.4s var(--ease-out);
+}
+.is-locked .dec-controls { pointer-events: none; }
+
+.control { --v: 0; --score: 0; display: grid; gap: 8px; text-align: left; }
+.control-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: var(--t-meta);
+  letter-spacing: var(--track-meta);
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.control-value { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+.control-track { position: relative; height: 26px; }
+.control-input {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  margin: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+}
+.control-input::-webkit-slider-runnable-track { height: 100%; background: transparent; }
+.control-input::-moz-range-track { height: 100%; background: transparent; }
+.control-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 2px; height: 26px;
+  background: var(--ink);
+  border: 0; border-radius: 0;
+}
+.control-input::-moz-range-thumb { width: 2px; height: 26px; background: var(--ink); border: 0; border-radius: 0; }
+
+.control-fill {
+  position: absolute;
+  left: 0; right: 0; top: 50%;
+  height: 1px;
+  background: var(--line);
+  pointer-events: none;
+}
+.control-fill::after {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(var(--v) * 100%);
+  /* The rail warms as the control approaches its correct value. */
+  background: var(--ink-faint);
+  background: color-mix(in srgb, var(--amber) calc(var(--score) * 100%), var(--ink-faint));
+}
+.control-ticks {
+  position: absolute;
+  left: 0; right: 0; top: 50%;
+  height: 6px;
+  margin-top: -3px;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(90deg, var(--line) 0 1px, transparent 1px 10%);
+  opacity: 0.6;
+}
+
+.control-hint {
+  font-size: 0.82em;
+  color: var(--ink-faint);
+  max-width: 34ch;
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: opacity var(--slow) var(--ease-out), max-height var(--slow) var(--ease-out);
+}
+.control.show-hint .control-hint { opacity: 1; max-height: 5em; }
+
+.dec-note {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(60px, 13vh, 130px);
+  transform: translateX(-50%);
+  opacity: 0;
+  max-width: 40ch;
+  text-align: center;
+  transition: opacity 2s var(--ease-out);
+}
+
+.dec-unlock {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(24px, 6vh, 60px);
+  transform: translateX(-50%);
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.6s var(--ease-out);
+}
+.dec-unlock.is-visible { opacity: 1; pointer-events: auto; }
+.dec-unlock button {
+  font-family: var(--mono);
+  font-size: var(--t-meta);
+  letter-spacing: var(--track-meta);
+  text-transform: uppercase;
+  color: var(--amber);
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 2px;
+}
+
+/* ===========================================================================
+   05 · AFTERLIGHT
+   =========================================================================== */
+.stage-afterlight {
+  --l1: 0; --l2: 0; --form: 0; --credits: 0;
+  display: grid;
+  grid-template-rows: 1fr auto 1fr;
+  justify-items: center;
+  text-align: center;
+  gap: clamp(16px, 3vh, 40px);
+}
+
+.af-lines {
+  grid-row: 2;
+  display: grid;
+  gap: 6px;
+  justify-items: center;
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(1.5rem, 3.6vw, 3rem);
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+}
+.af-line-1 { opacity: var(--l1); transform: translateY(calc((1 - var(--l1)) * 14px)); }
+.af-line-2 { opacity: var(--l2); transform: translateY(calc((1 - var(--l2)) * 14px)); color: var(--ink-dim); }
+
+.af-outbox {
+  position: absolute;
+  left: 50%;
+  top: 44%;
+  transform: translateX(-50%);
+  width: min(46ch, calc(100vw - var(--gutter) * 2));
+  pointer-events: none;
+}
+.outgoing {
+  position: absolute;
+  left: 0; right: 0;
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(1rem, 1.9vw, 1.5rem);
+  letter-spacing: -0.01em;
+  color: var(--amber);
+  will-change: transform, opacity;
+}
+
+/* Clear of the point of light, which owns the centre of this frame. */
+.af-form {
+  grid-row: 3;
+  align-self: start;
+  padding-top: clamp(64px, 14vh, 170px);
+  display: grid;
+  gap: 12px;
+  width: min(520px, calc(100vw - var(--gutter) * 2));
+  opacity: var(--form);
+  transform: translateY(calc((1 - var(--form)) * 18px));
+}
+.af-field {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 14px;
+  border-bottom: 1px solid var(--line-strong);
+  padding-bottom: 10px;
+}
+.af-input {
+  width: 100%;
+  background: none;
+  border: 0;
+  padding: 4px 0;
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(1rem, 1.6vw, 1.25rem);
+  color: var(--ink);
+}
+.af-input::placeholder { color: var(--ink-ghost); }
+.af-input.is-empty { animation: nudge 0.4s var(--ease-out); }
+@keyframes nudge {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+.af-submit {
+  font-family: var(--mono);
+  font-size: var(--t-meta);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--amber);
+  white-space: nowrap;
+  transition: opacity var(--medium) var(--ease-out);
+}
+.af-submit:disabled { opacity: 0.28; cursor: default; }
+
+.af-arrival {
+  opacity: 0;
+  display: grid;
+  gap: 4px;
+  transition: opacity 2.2s var(--ease-out);
+}
+.af-arrival.is-visible { opacity: 1; }
+.af-years { color: var(--amber); font-variant-numeric: tabular-nums; }
+
+/* Pinned to the frame edge rather than queued in the grid: on a short viewport
+   a flow row would be pushed out of sight by the form above it. */
+.af-footer {
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  bottom: calc(var(--gutter) * 1.1);
+  width: auto;
+  max-width: 920px;
+  margin: 0 auto;
+  display: grid;
+  gap: 10px;
+  opacity: var(--credits);
+  text-align: left;
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+}
+.af-credits {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+  gap: 4px clamp(20px, 4vw, 60px);
+}
+.credit-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: var(--t-meta);
+  letter-spacing: var(--track-meta);
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.credit-row dd { color: var(--ink-dim); text-align: right; }
+.af-colophon {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.af-colophon a { color: var(--ink-dim); text-decoration: none; border-bottom: 1px solid var(--line); }
+.af-colophon a:hover { color: var(--ink); border-color: var(--amber); }
+
+/* ===========================================================================
+   Tablet
+   =========================================================================== */
+@media (max-width: 1080px) {
+  .src-statement { right: var(--gutter); font-size: clamp(1.8rem, 6vw, 3.2rem); }
+  .src-readout {
+    top: auto;
+    bottom: clamp(96px, 20vh, 190px);
+    transform: none;
+    width: min(200px, 40vw);
+  }
+  .src-scale { display: none; }
+  .src-captions { width: min(42ch, 70vw); }
+
+  .tx-lede { display: none; }
+  .tx-transport { grid-template-columns: auto auto 1fr; }
+  .tx-meter { display: none; }
+  .fragment { width: clamp(144px, 25vw, 220px); }
+}
+
+/* ===========================================================================
+   Mobile — deliberately re-composed, not shrunk
+   =========================================================================== */
+@media (max-width: 760px) {
+  .acq-telemetry {
+    grid-template-columns: 1fr;
+    bottom: clamp(70px, 16vh, 140px);
+    max-height: 40vh;
+    overflow: hidden;
+  }
+  /* Drop the least legible rows rather than shrinking every row into noise. */
+  .telemetry-row:nth-child(n + 6) { display: none; }
+
+  .src-statement {
+    top: 30%;
+    transform: none;
+    font-size: clamp(1.7rem, 8vw, 2.6rem);
+  }
+  .src-captions {
+    width: calc(100% - var(--gutter) * 2);
+    bottom: clamp(80px, 18vh, 160px);
+    height: 13em;
+  }
+  .src-readout { display: none; }
+
+  .tx-panel { gap: 10px; padding: 14px 14px 12px; }
+  .tx-transport { grid-template-columns: auto 1fr; row-gap: 8px; }
+  .tx-time[data-tx-total] { display: none; }
+  .tx-bands { grid-auto-flow: row; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .tx-freq { display: none; }
+  .tx-token { font-size: 0.78rem; }
+  .tx-token[data-kind='translated'] { font-size: 1.05rem; }
+
+  /*
+   * The archive field becomes a strip: the same objects, the same behaviour,
+   * re-curated for a column and pulled past the viewport by chapter progress.
+   * No nested scroller — the page gesture is never captured.
+   */
+  .frag-field {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6vh;
+    padding: 30vh var(--gutter) 34vh;
+    transform: translate3d(0, var(--strip, 0px), 0);
+    will-change: transform;
+  }
+  .fragment {
+    position: relative;
+    left: auto; top: auto;
+    width: 100%;
+    max-width: 330px;
+    transform: translate3d(var(--tx), 0, 0) rotate(calc(var(--rot) * 0.4)) scale(var(--scale));
+  }
+  .fragment:nth-child(even) { align-self: flex-end; }
+  .fragment:nth-child(odd) { align-self: flex-start; }
+  /* Touch has no hover to reward, so metadata is simply present. */
+  .fragment-meta { max-height: none; opacity: 0.72; }
+  .fragment-trigger { opacity: calc(0.72 + var(--depth) * 0.28); }
+  /* A scrim so the pinned head stays legible as records travel under it. */
+  .frag-head { left: var(--gutter); right: var(--gutter); }
+  .frag-head::before {
+    content: '';
+    position: absolute;
+    inset: -30vh calc(var(--gutter) * -1) -22px;
+    background: linear-gradient(180deg, var(--void) 62%, transparent);
+    z-index: -1;
+  }
+
+  .focus-plate { grid-template-columns: 1fr; max-height: 86vh; }
+  .focus-close { top: auto; bottom: var(--gutter); right: 50%; transform: translateX(50%); }
+
+  .dec-message { font-size: clamp(1.35rem, 7.6vw, 2.4rem); max-width: 18ch; }
+  .dec-controls {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    max-height: 70vh;
+    overflow: hidden;
+    transition: opacity 1.4s var(--ease-out), max-height 1.4s var(--ease-out),
+                transform 1.4s var(--ease-out);
+  }
+  /*
+   * On a phone there is no room for the instrument and the silence at once.
+   * Once the carrier locks, the controls fold away entirely and the message
+   * has the screen — which is what the moment is for.
+   */
+  .is-locked .dec-controls { max-height: 0; }
+  .dec-note { bottom: clamp(72px, 16vh, 140px); }
+  .dec-wave { height: 64px; }
+  .control-track { height: 34px; }
+  .control-input::-webkit-slider-thumb { height: 34px; width: 3px; }
+  .control-input::-moz-range-thumb { height: 34px; width: 3px; }
+
+  .af-footer { text-align: left; }
+  .credit-row { grid-template-columns: 1fr; gap: 0; }
+  .credit-row dd { text-align: left; }
+}
+
+/* ===========================================================================
+   Reduced motion — the story is preserved, the movement is not
+   =========================================================================== */
+.is-quiet .fragment { --skew: 0deg !important; }
+.is-quiet .tx-token { filter: none !important; }
+.is-quiet .outgoing { filter: none !important; }
