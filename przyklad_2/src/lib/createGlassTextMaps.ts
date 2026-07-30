@@ -22,7 +22,9 @@ export type GlassTextMapOptions = {
 export type GlassTextMaps = {
   displacementUrl: string;
   edgeUrl: string;
+  height: number;
   maskUrl: string;
+  width: number;
 };
 
 const SQRT_TWO = Math.SQRT2;
@@ -446,7 +448,9 @@ async function renderGlassTextMaps(options: GlassTextMapOptions) {
 
   return {
     ...opticalMaps,
+    height: options.height,
     maskUrl: renderedMask.canvas.toDataURL("image/png"),
+    width: options.width,
   };
 }
 

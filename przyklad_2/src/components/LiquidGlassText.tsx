@@ -1,11 +1,11 @@
 import {
   type CSSProperties,
   useEffect,
-  useId,
   useMemo,
   useRef,
   useState,
 } from "react";
+import { createGlassBackdropFilter } from "../lib/createGlassBackdropFilter";
 import {
   createGlassTextMaps,
   type GlassTextMaps,
@@ -29,23 +29,25 @@ type LiquidGlassTextProps = {
 };
 
 const liquidGlassDefaults: LiquidGlassOptions = {
-  refractionStrength: 30,
+  refractionStrength: 100,
   lensStrength: 0.16,
-  dispersion: 0.045,
+  dispersion: 2,
   glassThickness: 0.72,
   edgeHighlight: 0.76,
   distortionAmount: 0.012,
 };
 
 function supportsRefractiveBackdrop() {
-  if (typeof CSS === "undefined") return false;
+  if (typeof document === "undefined") return false;
 
-  const backdropSupported =
-    CSS.supports("backdrop-filter", "blur(1px)") ||
-    CSS.supports("-webkit-backdrop-filter", "blur(1px)");
-  const svgFilterSupported = CSS.supports("filter", "url(#glass-filter)");
+  const probe = document.createElement("div");
 
-  return backdropSupported && svgFilterSupported;
+  probe.style.cssText = "backdrop-filter: url(#test)";
+
+  return (
+    probe.style.backdropFilter === "url(#test)" ||
+    probe.style.backdropFilter === 'url("#test")'
+  );
 }
 
 function toPixels(value: string, fallback: number) {
@@ -61,8 +63,6 @@ export function LiquidGlassText({
   style,
 }: LiquidGlassTextProps) {
   const text = String(children);
-  const instanceId = useId().replaceAll(":", "");
-  const filterId = `liquid-glass-refraction-${instanceId}`;
   const rootRef = useRef<HTMLSpanElement>(null);
   const [maps, setMaps] = useState<GlassTextMaps | null>(null);
   const [mappedText, setMappedText] = useState("");
@@ -212,69 +212,37 @@ export function LiquidGlassText({
 
     if (!root) return;
 
-    let active = true;
-    let frame = 0;
-    let pointerX = 0;
-    let pointerY = 0;
-    const reducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-    const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
     const observer =
       "IntersectionObserver" in window
         ? new IntersectionObserver(
             ([entry]) => {
-              active = entry.isIntersecting;
-              root.dataset.glassActive = String(active);
+              root.dataset.glassActive = String(entry.isIntersecting);
             },
             { rootMargin: "18% 0px" },
           )
         : null;
 
-    const paintLight = () => {
-      frame = 0;
-
-      if (!active) return;
-
-      const bounds = root.getBoundingClientRect();
-      const x = Math.min(
-        1,
-        Math.max(0, (pointerX - bounds.left) / bounds.width),
-      );
-      const y = Math.min(
-        1,
-        Math.max(0, (pointerY - bounds.top) / bounds.height),
-      );
-
-      root.style.setProperty("--glass-light-x", `${(x * 100).toFixed(2)}%`);
-      root.style.setProperty("--glass-light-y", `${(y * 100).toFixed(2)}%`);
-    };
-
-    const onPointerMove = (event: PointerEvent) => {
-      if (!active) return;
-
-      pointerX = event.clientX;
-      pointerY = event.clientY;
-
-      if (!frame) frame = window.requestAnimationFrame(paintLight);
-    };
-
     observer?.observe(root);
-
-    if (!reducedMotion && !coarsePointer) {
-      window.addEventListener("pointermove", onPointerMove, {
-        passive: true,
-      });
-    }
 
     return () => {
       observer?.disconnect();
-      window.removeEventListener("pointermove", onPointerMove);
-      if (frame) window.cancelAnimationFrame(frame);
     };
   }, []);
 
   const activeMaps = mappedText === text ? maps : null;
+  const displacementFilterUrl = useMemo(
+    () =>
+      activeMaps
+        ? createGlassBackdropFilter({
+            width: activeMaps.width,
+            height: activeMaps.height,
+            displacementUrl: activeMaps.displacementUrl,
+            strength: refractionScale,
+            chromaticAberration: resolvedOptions.dispersion,
+          })
+        : null,
+    [activeMaps, refractionScale, resolvedOptions.dispersion],
+  );
   const maskStyle = activeMaps
     ? ({
         maskImage: `url("${activeMaps.maskUrl}")`,
@@ -290,15 +258,16 @@ export function LiquidGlassText({
   const cssVariables = {
     ...style,
     "--glass-highlight": resolvedOptions.edgeHighlight,
-    "--glass-thickness": resolvedOptions.glassThickness,
   } as CSSProperties;
   const mode =
-    activeMaps && pipelineSupported
+    activeMaps && displacementFilterUrl && pipelineSupported
       ? "refracted"
       : activeMaps
         ? "fallback"
         : "loading";
-  const dispersion = resolvedOptions.dispersion;
+  const backdropFilter = displacementFilterUrl
+    ? `blur(0px) url('${displacementFilterUrl}') blur(0px) brightness(1.1) saturate(1.5)`
+    : undefined;
 
   return (
     <span
@@ -316,155 +285,22 @@ export function LiquidGlassText({
             style={maskStyle}
             aria-hidden="true"
           />
-          {pipelineSupported ? (
+          {pipelineSupported && backdropFilter ? (
             <span
               className="liquid-glass-text__lens liquid-glass-text__lens--refracted"
               style={{
                 ...maskStyle,
-                filter: `url(#${filterId})`,
+                WebkitBackdropFilter: backdropFilter,
+                backdropFilter,
               }}
               aria-hidden="true"
             />
           ) : null}
           <span
-            className="liquid-glass-text__surface"
-            style={maskStyle}
-            aria-hidden="true"
-          />
-          <span
-            className="liquid-glass-text__caustic"
-            style={maskStyle}
-            aria-hidden="true"
-          />
-          <span
-            className="liquid-glass-text__depth"
-            style={edgeMaskStyle}
-            aria-hidden="true"
-          />
-          <span
             className="liquid-glass-text__edge"
             style={edgeMaskStyle}
             aria-hidden="true"
           />
-          <svg
-            className="liquid-glass-text__filters"
-            width="0"
-            height="0"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <defs>
-              <filter
-                id={filterId}
-                x="-10%"
-                y="-40%"
-                width="120%"
-                height="180%"
-                colorInterpolationFilters="sRGB"
-              >
-                <feImage
-                  href={activeMaps.displacementUrl}
-                  x="0%"
-                  y="0%"
-                  width="100%"
-                  height="100%"
-                  preserveAspectRatio="none"
-                  result="normal-map"
-                />
-                <feDisplacementMap
-                  in="SourceGraphic"
-                  in2="normal-map"
-                  scale={refractionScale * (1 + dispersion)}
-                  xChannelSelector="R"
-                  yChannelSelector="G"
-                  result="red-shift"
-                />
-                <feColorMatrix
-                  in="red-shift"
-                  values="1 0 0 0 0
-                          0 0 0 0 0
-                          0 0 0 0 0
-                          0 0 0 1 0"
-                  result="red-channel"
-                />
-                <feDisplacementMap
-                  in="SourceGraphic"
-                  in2="normal-map"
-                  scale={refractionScale}
-                  xChannelSelector="R"
-                  yChannelSelector="G"
-                  result="green-shift"
-                />
-                <feColorMatrix
-                  in="green-shift"
-                  values="0 0 0 0 0
-                          0 1 0 0 0
-                          0 0 0 0 0
-                          0 0 0 1 0"
-                  result="green-channel"
-                />
-                <feDisplacementMap
-                  in="SourceGraphic"
-                  in2="normal-map"
-                  scale={refractionScale * (1 - dispersion)}
-                  xChannelSelector="R"
-                  yChannelSelector="G"
-                  result="blue-shift"
-                />
-                <feColorMatrix
-                  in="blue-shift"
-                  values="0 0 0 0 0
-                          0 0 0 0 0
-                          0 0 1 0 0
-                          0 0 0 1 0"
-                  result="blue-channel"
-                />
-                <feBlend
-                  in="red-channel"
-                  in2="green-channel"
-                  mode="screen"
-                  result="red-green"
-                />
-                <feBlend
-                  in="red-green"
-                  in2="blue-channel"
-                  mode="screen"
-                  result="dispersed"
-                />
-                <feColorMatrix
-                  in="dispersed"
-                  type="saturate"
-                  values="1.14"
-                  result="refracted"
-                />
-                <feColorMatrix
-                  in="normal-map"
-                  values="0 0 1 0 0
-                          0 0 1 0 0
-                          0 0 1 0 0
-                          0 0 1 0 0"
-                  result="rim-light"
-                />
-                <feComponentTransfer
-                  in="rim-light"
-                  result="soft-rim-light"
-                >
-                  <feFuncR type="linear" slope="0.34" />
-                  <feFuncG type="linear" slope="0.39" />
-                  <feFuncB type="linear" slope="0.46" />
-                  <feFuncA
-                    type="linear"
-                    slope={resolvedOptions.edgeHighlight * 0.72}
-                  />
-                </feComponentTransfer>
-                <feBlend
-                  in="refracted"
-                  in2="soft-rim-light"
-                  mode="screen"
-                />
-              </filter>
-            </defs>
-          </svg>
         </>
       ) : null}
     </span>
