@@ -1118,9 +1118,12 @@
         /* Client sites (02–04): SSCAR, Body Creator, R-MAX */
         #work .project-item:nth-of-type(2) .project-img-wrapper::before,
         #work .project-item:nth-of-type(3) .project-img-wrapper::before,
-        #work .project-item:nth-of-type(4) .project-img-wrapper::before,
-        #work .project-item:nth-of-type(5) .project-img-wrapper::before {
+        #work .project-item:nth-of-type(4) .project-img-wrapper::before {
             content: 'Kliknij i zobacz stronę przygotowaną dla klienta';
+        }
+
+        #work .project-item--fault .project-img-wrapper::before {
+            content: 'Otwórz eksperyment';
         }
 
         .project-img-wrapper:hover {
@@ -1154,6 +1157,74 @@
             height: 100%;
             cursor: pointer;
             transform-style: preserve-3d;
+        }
+
+        .project-item--fault .project-img-wrapper {
+            aspect-ratio: 16 / 9;
+            background: #e8e4da;
+            border-color: rgba(218, 45, 31, 0.55);
+        }
+
+        .fault-live-preview {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            background: #e8e4da;
+        }
+
+        .fault-live-preview iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1440px;
+            height: 810px;
+            border: 0;
+            background: #e8e4da;
+            pointer-events: none;
+            transform: scale(0.5);
+            transform-origin: 0 0;
+            backface-visibility: hidden;
+            will-change: transform;
+        }
+
+        .project-preview-link {
+            position: absolute !important;
+            z-index: 4;
+            inset: 0;
+            width: auto !important;
+            height: auto !important;
+        }
+
+        .live-preview-status {
+            position: absolute;
+            z-index: 3;
+            right: 14px;
+            bottom: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 6px 9px;
+            color: #e8e4da;
+            background: rgba(23, 23, 20, 0.88);
+            font-size: 0.62rem;
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            line-height: 1;
+            text-transform: uppercase;
+            transition: color 0.3s, background 0.3s;
+        }
+
+        .live-preview-status::before {
+            width: 6px;
+            height: 6px;
+            content: '';
+            background: #da2d1f;
+            border-radius: 50%;
+        }
+
+        .project-item--fault .project-img-wrapper:hover .live-preview-status {
+            color: #171714;
+            background: #e8e4da;
         }
 
         .project-info {
@@ -1938,6 +2009,26 @@
                     </div>
                 </article>
 
+                <article class="project-item project-item--fault reveal">
+                    <div class="project-img-wrapper link-hover" data-live-preview>
+                        <div class="fault-live-preview" aria-hidden="true">
+                            <iframe src="przyklad_1/dist/?preview=1" title="Animowany podgląd projektu FAULT / 08" loading="lazy" tabindex="-1"></iframe>
+                        </div>
+                        <span class="live-preview-status" aria-hidden="true">Live preview</span>
+                        <a class="project-preview-link" href="przyklad_1/dist/" aria-label="Otwórz projekt FAULT / 08"></a>
+                    </div>
+                    <div class="project-info">
+                        <div class="project-meta">
+                            <span class="project-num">05</span>
+                            <span class="project-cat">Creative Dev · Editorial</span>
+                        </div>
+                        <h3><a href="przyklad_1/dist/">FAULT / 08</a></h3>
+                        <p>Eksperymentalny landing page stylizowany na cyfrowe archiwum wystawy. Autorski art direction, fotografia, kinetyczna typografia i narracja budowana ruchem — od koncepcji po responsywny development.</p>
+                        <div class="tags"><span>React</span><span>Art Direction</span><span>Motion</span></div>
+                        <a class="project-link" href="przyklad_1/dist/">Zobacz eksperyment <span>&rarr;</span></a>
+                    </div>
+                </article>
+
                 <article class="project-item reveal">
                     <div class="project-img-wrapper link-hover">
                         <a href="grafika.html">
@@ -2013,6 +2104,123 @@
             entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
         }, { threshold: 0.1 });
         document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+        // --- FAULT / 08 live portfolio preview ---
+        // The iframe is rendered as a 1440 × 810 desktop canvas and scaled to
+        // the card. It moves only while visible and never hijacks page input.
+        const livePreviewReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const livePreviewStates = [];
+
+        document.querySelectorAll('[data-live-preview]').forEach(preview => {
+            const iframe = preview.querySelector('iframe');
+            if (!iframe) return;
+
+            const state = {
+                preview,
+                iframe,
+                loaded: false,
+                ready: false,
+                visible: false,
+                frame: 0,
+                timer: 0,
+                lastTime: 0,
+                position: 0
+            };
+            livePreviewStates.push(state);
+
+            const fitPreview = () => {
+                const scale = preview.clientWidth < 450 ? 0.25 : 0.5;
+                iframe.style.width = `${preview.clientWidth / scale}px`;
+                iframe.style.height = `${preview.clientHeight / scale}px`;
+                iframe.style.transform = `scale(${scale})`;
+            };
+
+            const pausePreview = () => {
+                clearTimeout(state.timer);
+                state.timer = 0;
+                if (state.frame) cancelAnimationFrame(state.frame);
+                state.frame = 0;
+                state.lastTime = 0;
+            };
+
+            const tickPreview = time => {
+                if (!state.visible || !state.loaded || !state.ready || document.hidden) {
+                    pausePreview();
+                    return;
+                }
+
+                if (!state.lastTime) state.lastTime = time;
+                const delta = Math.min(50, time - state.lastTime);
+                state.lastTime = time;
+
+                try {
+                    const previewWindow = iframe.contentWindow;
+                    const previewDocument = iframe.contentDocument?.documentElement;
+                    if (!previewWindow || !previewDocument) throw new Error('Preview unavailable');
+
+                    const maxScroll = Math.max(0, previewDocument.scrollHeight - previewWindow.innerHeight);
+                    state.position += delta * 0.02;
+                    if (state.position >= maxScroll) state.position = 0;
+                    previewWindow.scrollTo(0, state.position);
+                } catch (error) {
+                    pausePreview();
+                    return;
+                }
+
+                state.frame = requestAnimationFrame(tickPreview);
+            };
+
+            const startPreview = () => {
+                if (livePreviewReducedMotion || !state.visible || !state.loaded || !state.ready || document.hidden || state.frame || state.timer) return;
+                state.timer = window.setTimeout(() => {
+                    state.timer = 0;
+                    if (state.visible && state.loaded && state.ready && !document.hidden) {
+                        state.frame = requestAnimationFrame(tickPreview);
+                    }
+                }, 250);
+            };
+
+            state.start = startPreview;
+            state.pause = pausePreview;
+
+            const markPreviewLoaded = () => {
+                state.loaded = true;
+                state.position = 0;
+                try {
+                    iframe.contentDocument.documentElement.style.scrollBehavior = 'auto';
+                    iframe.contentWindow.scrollTo(0, 0);
+                } catch (error) { /* same-origin preview expected */ }
+            };
+            iframe.addEventListener('load', markPreviewLoaded);
+            try {
+                const previewUrl = iframe.contentWindow?.location.href;
+                if (previewUrl && previewUrl !== 'about:blank' && iframe.contentDocument?.readyState === 'complete') markPreviewLoaded();
+            } catch (error) { /* same-origin preview expected */ }
+
+            window.addEventListener('message', event => {
+                if (event.origin !== window.location.origin || event.source !== iframe.contentWindow) return;
+                if (event.data?.type !== 'fault-preview-ready') return;
+                state.ready = true;
+                startPreview();
+            });
+
+            const visibilityObserver = new IntersectionObserver(([entry]) => {
+                state.visible = entry.isIntersecting;
+                if (state.visible) startPreview();
+                else pausePreview();
+            }, { threshold: 0.22, rootMargin: '80px 0px' });
+            visibilityObserver.observe(preview);
+
+            new ResizeObserver(fitPreview).observe(preview);
+            fitPreview();
+        });
+
+        document.addEventListener('visibilitychange', () => {
+            livePreviewStates.forEach(state => {
+                if (document.hidden) state.pause();
+                else state.start();
+            });
+        });
 
         // --- Header Scroll Effect & Progress Bar (rAF-throttled, transform only) ---
         const header = document.querySelector('header');
