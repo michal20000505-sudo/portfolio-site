@@ -17,9 +17,15 @@ export function CampaignHeader() {
         type="button"
         onClick={() => scrollTo("top")}
         data-cursor="TOP"
-        aria-label="SENTRACKER — back to top"
+        aria-label="SENTRACKER, back to top"
       >
-        SEN<span>TR</span>ACKER
+        <img
+          src="/images/sentracker-logo.webp"
+          alt=""
+          width="2640"
+          height="522"
+          decoding="async"
+        />
       </button>
       <nav className="chapter-nav" aria-label="Campaign chapters">
         {chapters.map(([number, label, id]) => (

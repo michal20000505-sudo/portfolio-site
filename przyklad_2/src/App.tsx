@@ -31,7 +31,10 @@ export default function App() {
   }, [ready]);
 
   return (
-    <div ref={appRef} className={ready ? "campaign is-ready" : "campaign"}>
+    <div
+      ref={appRef}
+      className={ready ? "campaign is-ready" : "campaign"}
+    >
       <a className="skip-link" href="#campaign-main">
         Skip to campaign
       </a>

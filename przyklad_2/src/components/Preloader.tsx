@@ -74,11 +74,11 @@ export function Preloader({ onReady }: PreloaderProps) {
       ref={preloaderRef}
       className="preloader"
       role="status"
-      aria-label="Calibrating surface pressure"
+      aria-label="Calibrating the TRC-01 contact map"
     >
       <div className="preloader-topline">
         <span>SENTRACKER / TRC-01</span>
-        <span>Surface calibration</span>
+        <span>Contact-map calibration</span>
       </div>
       <div className="calibration-field" aria-hidden="true">
         {Array.from({ length: 13 }, (_, index) => (
@@ -91,9 +91,9 @@ export function Preloader({ onReady }: PreloaderProps) {
         <span className="calibration-trace" />
       </div>
       <p className="preloader-status">
-        Pressure enters.
+        Reading contact.
         <br />
-        Direction returns.
+        Mapping return.
       </p>
     </div>
   );

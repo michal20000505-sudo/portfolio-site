@@ -1,27 +1,39 @@
+import { useState } from "react";
+
 const callouts = [
   {
     id: "01",
     name: "CONTACT",
-    body: "Independent lugs break the surface into readable points of pressure.",
+    body: "Independent lugs bite at separate points, keeping contact on broken ground.",
+    x: "27%",
+    y: "39%",
   },
   {
     id: "02",
     name: "RETURN",
-    body: "A divided midsole lets heel and forefoot respond as separate zones.",
+    body: "Split cushioning lets heel strike and toe-off compress on their own timing.",
+    x: "52%",
+    y: "58%",
   },
   {
     id: "03",
     name: "STABILIZE",
-    body: "The smoky heel frame holds lateral movement without hiding the textile.",
+    body: "Smoked TPU braces the heel when the trail falls away sideways.",
+    x: "75%",
+    y: "51%",
   },
   {
     id: "04",
-    name: "RECORD",
-    body: "The acid line makes the route through the object visible.",
+    name: "TRACE",
+    body: "The acid sidewall line traces force from impact to release.",
+    x: "40%",
+    y: "47%",
   },
 ];
 
 export function Construction() {
+  const [activeCallout, setActiveCallout] = useState(0);
+
   return (
     <section
       className="construction paper-section"
@@ -31,53 +43,69 @@ export function Construction() {
       <div className="paper-noise" aria-hidden="true" />
       <div className="chapter-heading">
         <span className="chapter-mark" />
-        <p>02 / CONSTRUCTION FIELD</p>
-        <p>Concept object / not laboratory data</p>
+        <p>02 / CONTACT SYSTEM</p>
+        <p>Design prototype / field claims unverified</p>
       </div>
       <header className="construction-heading">
         <h2 id="construction-title">
-          Built as a
-          <em>recording surface.</em>
+          Built to read
+          <em>the ground.</em>
         </h2>
         <p>
-          Four material events. One uninterrupted path through the object.
+          Four working zones carry load from heel strike to toe-off.
         </p>
       </header>
       <div className="construction-board">
         <div className="construction-figure">
           <div className="registration registration--a" aria-hidden="true" />
           <div className="registration registration--b" aria-hidden="true" />
-          <img
-            className="construction-product"
-            src="/images/trc-01-outsole-cutout.webp"
-            alt="Bottom view of the TRC-01 segmented traction system"
-            width="1536"
-            height="1024"
-            loading="lazy"
-          />
-          <svg
-            className="pressure-map"
-            viewBox="0 0 1000 650"
-            aria-hidden="true"
-          >
-            <path
-              className="pressure-line"
-              pathLength="1"
-              d="M72 420C196 322 278 499 398 389s178-212 281-112 102 185 253 85"
+          <div className="construction-product-stage">
+            <img
+              className="construction-product"
+              src="/images/trc-01-outsole-cutout.webp"
+              alt="Bottom view of the TRC-01 segmented traction system"
+              width="1536"
+              height="1024"
+              loading="lazy"
             />
-            <circle cx="72" cy="420" r="9" />
-            <circle cx="398" cy="389" r="9" />
-            <circle cx="679" cy="277" r="9" />
-            <circle cx="932" cy="362" r="9" />
-          </svg>
+            {callouts.map((callout, index) => (
+              <button
+                key={callout.id}
+                type="button"
+                className={
+                  activeCallout === index
+                    ? "construction-hotspot is-active"
+                    : "construction-hotspot"
+                }
+                style={{ left: callout.x, top: callout.y }}
+                aria-label={`${callout.id}. ${callout.name}`}
+                aria-pressed={activeCallout === index}
+                onClick={() => setActiveCallout(index)}
+                onFocus={() => setActiveCallout(index)}
+                onPointerEnter={() => setActiveCallout(index)}
+                data-label={callout.name}
+                data-cursor="INSPECT"
+              >
+                <span>{callout.id}</span>
+              </button>
+            ))}
+          </div>
           <span className="construction-stamp" aria-hidden="true">
             TRC–01
-            <small>OBJECT STUDY</small>
+            <small>TRACTION STUDY</small>
           </span>
         </div>
         <ol className="construction-callouts">
-          {callouts.map((callout) => (
-            <li className="construction-callout" key={callout.id}>
+          {callouts.map((callout, index) => (
+            <li
+              className={
+                activeCallout === index
+                  ? "construction-callout is-active"
+                  : "construction-callout"
+              }
+              key={callout.id}
+              onPointerEnter={() => setActiveCallout(index)}
+            >
               <span>{callout.id}</span>
               <h3>{callout.name}</h3>
               <p>{callout.body}</p>

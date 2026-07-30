@@ -7,8 +7,8 @@ export function ProductFocus() {
     >
       <div className="chapter-heading chapter-heading--focus">
         <span className="chapter-mark" />
-        <p>04 / MATERIAL EVIDENCE</p>
-        <p>Close reading / 1:1</p>
+        <p>04 / MATERIAL UNDER LOAD</p>
+        <p>Macro inspection / 1:1</p>
       </div>
       <div className="focus-layout">
         <figure className="macro-figure">
@@ -26,32 +26,38 @@ export function ProductFocus() {
           </figcaption>
         </figure>
         <div className="focus-display" aria-hidden="true">
-          <span>MATTER</span>
-          <span>KEEPS</span>
-          <span className="focus-serif">score.</span>
+          <span>TEXTILE</span>
+          <span>UNDER</span>
+          <span className="focus-serif">tension.</span>
         </div>
         <div className="focus-copy">
-          <span className="focus-index">04—07 / FRAME JOINT</span>
+          <span className="focus-index">04.07 / HEEL FRAME</span>
           <h2 id="focus-title">
-            Nothing smooth.
+            Ripstop flexes.
             <br />
-            Nothing accidental.
+            TPU holds.
           </h2>
           <p>
-            Woven fields meet hard geometry. The frame stays visible because the
-            transition is the product.
+            Ripstop yields over the forefoot; the TPU frame checks lateral roll
+            at the heel.
           </p>
         </div>
-        <div className="focus-crop">
+        <figure className="focus-exploded">
+          <span className="focus-exploded-axis" aria-hidden="true" />
           <img
-            src="/images/trc-01-cutout.webp"
-            alt="Side profile detail of the TRC-01 forefoot"
+            className="focus-exploded-image"
+            src="/images/trc-01-exploded-view.webp"
+            alt="Exploded view of the TRC-01 upper, heel frame, midsole and lug outsole"
             width="1536"
             height="1024"
             loading="lazy"
+            decoding="async"
           />
-          <span aria-hidden="true">PLATE 04.B / CONTACT EDGE</span>
-        </div>
+          <figcaption>
+            <span>Plate 04.B</span>
+            <span>Upper / brace / cushion / tread</span>
+          </figcaption>
+        </figure>
         <dl className="material-list">
           <div>
             <dt>01</dt>
@@ -63,6 +69,10 @@ export function ProductFocus() {
           </div>
           <div>
             <dt>03</dt>
+            <dd>Split EVA midsole</dd>
+          </div>
+          <div>
+            <dt>04</dt>
             <dd>Acid contact rubber</dd>
           </div>
         </dl>

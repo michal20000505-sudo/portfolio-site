@@ -13,9 +13,12 @@ export function TerrainShift() {
         <div className="terrain-shade" aria-hidden="true" />
         <div className="terrain-scan" aria-hidden="true" />
         <h2 id="terrain-title" className="sr-only">
-          Terrain shift: city becomes field
+          Surface transition: wet asphalt to loose gravel
         </h2>
-        <p className="terrain-word terrain-word--city" aria-hidden="true">
+        <p
+          className="terrain-word terrain-word--city"
+          aria-hidden="true"
+        >
           CITY
         </p>
         <p className="terrain-word terrain-word--field" aria-hidden="true">
@@ -24,9 +27,9 @@ export function TerrainShift() {
         <div className="terrain-copy">
           <span>03 / SURFACE CHANGE</span>
           <p>
-            Asphalt ends.
+            Asphalt breaks into gravel.
             <br />
-            The line does not.
+            The tread keeps reading.
           </p>
         </div>
         <div className="terrain-index" aria-hidden="true">
