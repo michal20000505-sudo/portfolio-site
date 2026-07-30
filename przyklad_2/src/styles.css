@@ -382,6 +382,14 @@ svg {
   isolation: isolate;
 }
 
+.liquid-glass-text__filters {
+  position: fixed;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
 .liquid-glass-text__source {
   display: block;
   width: 100%;

@@ -1,11 +1,11 @@
 import {
   type CSSProperties,
   useEffect,
+  useId,
   useMemo,
   useRef,
   useState,
 } from "react";
-import { createGlassBackdropFilter } from "../lib/createGlassBackdropFilter";
 import {
   createGlassTextMaps,
   type GlassTextMaps,
@@ -63,6 +63,7 @@ export function LiquidGlassText({
   style,
 }: LiquidGlassTextProps) {
   const text = String(children);
+  const filterId = `liquid-glass-${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
   const rootRef = useRef<HTMLSpanElement>(null);
   const [maps, setMaps] = useState<GlassTextMaps | null>(null);
   const [mappedText, setMappedText] = useState("");
@@ -230,19 +231,6 @@ export function LiquidGlassText({
   }, []);
 
   const activeMaps = mappedText === text ? maps : null;
-  const displacementFilterUrl = useMemo(
-    () =>
-      activeMaps
-        ? createGlassBackdropFilter({
-            width: activeMaps.width,
-            height: activeMaps.height,
-            displacementUrl: activeMaps.displacementUrl,
-            strength: refractionScale,
-            chromaticAberration: resolvedOptions.dispersion,
-          })
-        : null,
-    [activeMaps, refractionScale, resolvedOptions.dispersion],
-  );
   const maskStyle = activeMaps
     ? ({
         maskImage: `url("${activeMaps.maskUrl}")`,
@@ -260,14 +248,18 @@ export function LiquidGlassText({
     "--glass-highlight": resolvedOptions.edgeHighlight,
   } as CSSProperties;
   const mode =
-    activeMaps && displacementFilterUrl && pipelineSupported
+    activeMaps && pipelineSupported
       ? "refracted"
       : activeMaps
         ? "fallback"
         : "loading";
-  const backdropFilter = displacementFilterUrl
-    ? `blur(0px) url('${displacementFilterUrl}') blur(0px) brightness(1.1) saturate(1.5)`
+  const backdropFilter = activeMaps
+    ? `url("#${filterId}") saturate(1.7) brightness(1.08)`
     : undefined;
+  const redStrength =
+    refractionScale + resolvedOptions.dispersion * 2;
+  const greenStrength =
+    refractionScale + resolvedOptions.dispersion;
 
   return (
     <span
@@ -277,6 +269,88 @@ export function LiquidGlassText({
       data-glass-mode={mode}
       style={cssVariables}
     >
+      {activeMaps ? (
+        <svg
+          className="liquid-glass-text__filters"
+          width="0"
+          height="0"
+          aria-hidden="true"
+        >
+          <defs>
+            <filter
+              id={filterId}
+              x="-20%"
+              y="-40%"
+              width="140%"
+              height="180%"
+              colorInterpolationFilters="sRGB"
+            >
+              <feImage
+                x="0"
+                y="0"
+                width={activeMaps.width}
+                height={activeMaps.height}
+                href={activeMaps.displacementUrl}
+                preserveAspectRatio="none"
+                result="displacementMap"
+              />
+              <feDisplacementMap
+                in="SourceGraphic"
+                in2="displacementMap"
+                scale={redStrength}
+                xChannelSelector="R"
+                yChannelSelector="G"
+                result="shiftedR"
+              />
+              <feColorMatrix
+                in="shiftedR"
+                type="matrix"
+                values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0"
+                result="displacedR"
+              />
+              <feDisplacementMap
+                in="SourceGraphic"
+                in2="displacementMap"
+                scale={greenStrength}
+                xChannelSelector="R"
+                yChannelSelector="G"
+                result="shiftedG"
+              />
+              <feColorMatrix
+                in="shiftedG"
+                type="matrix"
+                values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0"
+                result="displacedG"
+              />
+              <feDisplacementMap
+                in="SourceGraphic"
+                in2="displacementMap"
+                scale={refractionScale}
+                xChannelSelector="R"
+                yChannelSelector="G"
+                result="shiftedB"
+              />
+              <feColorMatrix
+                in="shiftedB"
+                type="matrix"
+                values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0"
+                result="displacedB"
+              />
+              <feBlend
+                in="displacedR"
+                in2="displacedG"
+                mode="screen"
+                result="displacedRG"
+              />
+              <feBlend
+                in="displacedRG"
+                in2="displacedB"
+                mode="screen"
+              />
+            </filter>
+          </defs>
+        </svg>
+      ) : null}
       <span className="liquid-glass-text__source">{text}</span>
       {activeMaps ? (
         <>
