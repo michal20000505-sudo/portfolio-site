@@ -9,16 +9,17 @@ import { Preloader } from "./components/Preloader";
 import { ProductFocus } from "./components/ProductFocus";
 import { TerrainShift } from "./components/TerrainShift";
 import { TrackerCursor } from "./components/TrackerCursor";
+import { previewMode } from "./lib/previewMode";
 import { useCampaignMotion } from "./lib/useCampaignMotion";
 
 export default function App() {
   const appRef = useRef<HTMLDivElement>(null);
   const [ready, setReady] = useState(false);
 
-  useCampaignMotion(appRef, ready);
+  useCampaignMotion(appRef, ready, previewMode);
 
   useEffect(() => {
-    if (!ready) return;
+    if (!ready || previewMode) return;
 
     const targetId = window.location.hash.slice(1);
     if (!targetId) return;
@@ -39,7 +40,7 @@ export default function App() {
         Skip to campaign
       </a>
       <Preloader onReady={() => setReady(true)} />
-      <TrackerCursor />
+      {previewMode ? null : <TrackerCursor />}
       <CampaignHeader />
       <main id="campaign-main">
         <Hero />

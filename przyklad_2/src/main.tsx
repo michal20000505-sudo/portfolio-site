@@ -6,7 +6,10 @@ import "@fontsource/cormorant-garamond/latin-500-italic.css";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
+import { previewMode } from "./lib/previewMode";
 import "./styles.css";
+
+if (previewMode) document.documentElement.dataset.preview = "true";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

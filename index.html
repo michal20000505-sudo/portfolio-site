@@ -1122,7 +1122,8 @@
             content: 'Kliknij i zobacz stronę przygotowaną dla klienta';
         }
 
-        #work .project-item--fault .project-img-wrapper::before {
+        #work .project-item--fault .project-img-wrapper::before,
+        #work .project-item--sentracker .project-img-wrapper::before {
             content: 'Otwórz eksperyment';
         }
 
@@ -1185,6 +1186,43 @@
             transform-origin: 0 0;
             backface-visibility: hidden;
             will-change: transform;
+        }
+
+        .project-item--sentracker .project-img-wrapper {
+            aspect-ratio: 16 / 9;
+            background: #160b22;
+            border-color: rgba(182, 255, 0, 0.4);
+        }
+
+        .sentracker-live-preview {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            background: #160b22;
+        }
+
+        .sentracker-live-preview iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1440px;
+            height: 810px;
+            border: 0;
+            background: #160b22;
+            pointer-events: none;
+            transform: scale(0.5);
+            transform-origin: 0 0;
+            backface-visibility: hidden;
+            will-change: transform;
+        }
+
+        .project-item--sentracker .live-preview-status::before {
+            background: #b6ff00;
+        }
+
+        .project-item--sentracker .project-img-wrapper:hover .live-preview-status {
+            color: #160b22;
+            background: #b6ff00;
         }
 
         .project-preview-link {
@@ -2010,7 +2048,7 @@
                 </article>
 
                 <article class="project-item project-item--fault reveal">
-                    <div class="project-img-wrapper link-hover" data-live-preview>
+                    <div class="project-img-wrapper link-hover" data-live-preview data-preview-scroll data-preview-ready="fault-preview-ready">
                         <div class="fault-live-preview" aria-hidden="true">
                             <iframe src="przyklad_1/dist/?preview=1" title="Animowany podgląd projektu FAULT / 08" loading="lazy" tabindex="-1"></iframe>
                         </div>
@@ -2029,6 +2067,26 @@
                     </div>
                 </article>
 
+                <article class="project-item project-item--sentracker reveal">
+                    <div class="project-img-wrapper link-hover" data-live-preview data-preview-ready="sentracker-preview-ready">
+                        <div class="sentracker-live-preview" aria-hidden="true">
+                            <iframe data-src="przyklad_2/dist/?preview=1" title="Animowany podgląd projektu SENTRACKER TRC-01" tabindex="-1"></iframe>
+                        </div>
+                        <span class="live-preview-status" aria-hidden="true">Live preview</span>
+                        <a class="project-preview-link" href="przyklad_2/dist/" aria-label="Otwórz projekt SENTRACKER TRC-01"></a>
+                    </div>
+                    <div class="project-info">
+                        <div class="project-meta">
+                            <span class="project-num">06</span>
+                            <span class="project-cat">Creative Dev · Product Campaign</span>
+                        </div>
+                        <h3><a href="przyklad_2/dist/">SENTRACKER TRC-01</a></h3>
+                        <p>Kampanijny landing page prototypu butów trailowych. Refrakcyjna typografia „liquid glass” liczona w czasie rzeczywistym na canvasie i filtrach SVG, sekwencja obrotu produktu sterowana scrollem oraz pełna narracja od hero po zamknięcie.</p>
+                        <div class="tags"><span>React</span><span>WebGL-free FX</span><span>Motion</span></div>
+                        <a class="project-link" href="przyklad_2/dist/">Zobacz eksperyment <span>&rarr;</span></a>
+                    </div>
+                </article>
+
                 <article class="project-item reveal">
                     <div class="project-img-wrapper link-hover">
                         <a href="grafika.html">
@@ -2037,7 +2095,7 @@
                     </div>
                     <div class="project-info">
                         <div class="project-meta">
-                            <span class="project-num">06</span>
+                            <span class="project-num">07</span>
                             <span class="project-cat">Branding · Print</span>
                         </div>
                         <h3><a href="grafika.html">Portfolio Graficzne</a></h3>
@@ -2105,15 +2163,20 @@
         }, { threshold: 0.1 });
         document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-        // --- FAULT / 08 live portfolio preview ---
+        // --- Live portfolio previews ---
         // The iframe is rendered as a 1440 × 810 desktop canvas and scaled to
-        // the card. It moves only while visible and never hijacks page input.
+        // the card. It runs only while visible and never hijacks page input.
+        // `data-preview-scroll` opts a card into the slow auto-scroll loop;
+        // without it the embedded page just plays its own opening animation.
         const livePreviewReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         const livePreviewStates = [];
 
         document.querySelectorAll('[data-live-preview]').forEach(preview => {
             const iframe = preview.querySelector('iframe');
             if (!iframe) return;
+
+            const readyMessage = preview.dataset.previewReady || 'fault-preview-ready';
+            const autoScroll = preview.hasAttribute('data-preview-scroll');
 
             const state = {
                 preview,
@@ -2171,6 +2234,7 @@
             };
 
             const startPreview = () => {
+                if (!autoScroll) return;
                 if (livePreviewReducedMotion || !state.visible || !state.loaded || !state.ready || document.hidden || state.frame || state.timer) return;
                 state.timer = window.setTimeout(() => {
                     state.timer = 0;
@@ -2199,15 +2263,26 @@
 
             window.addEventListener('message', event => {
                 if (event.origin !== window.location.origin || event.source !== iframe.contentWindow) return;
-                if (event.data?.type !== 'fault-preview-ready') return;
+                if (event.data?.type !== readyMessage) return;
                 state.ready = true;
                 startPreview();
             });
 
+            // A card that does not auto-scroll only gets one chance to show its
+            // opening animation, so hold the load until it is nearly in view.
+            const activatePreview = () => {
+                const pending = iframe.dataset.src;
+                if (!pending) return;
+                delete iframe.dataset.src;
+                iframe.src = pending;
+            };
+
             const visibilityObserver = new IntersectionObserver(([entry]) => {
                 state.visible = entry.isIntersecting;
-                if (state.visible) startPreview();
-                else pausePreview();
+                if (state.visible) {
+                    activatePreview();
+                    startPreview();
+                } else pausePreview();
             }, { threshold: 0.22, rootMargin: '80px 0px' });
             visibilityObserver.observe(preview);
 

@@ -1,0 +1,582 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Liquid Glass — test izolacyjny</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+        background: #09020f;
+        color: #f7f3ee;
+        --acid: #b7ff00;
+        --line: rgba(255, 255, 255, 0.16);
+        --feedback-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 1000'%3E%3Ctext x='800' y='825' text-anchor='middle' font-family='Arial Narrow,Arial,sans-serif' font-weight='900' font-size='270' textLength='1510' lengthAdjust='spacingAndGlyphs' fill='white'%3EFEEDBACK%3C/text%3E%3C/svg%3E");
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-width: 320px;
+        min-height: 100vh;
+        margin: 0;
+        background:
+          radial-gradient(circle at 50% 0%, rgba(93, 20, 120, 0.2), transparent 38rem),
+          #09020f;
+      }
+
+      button,
+      a {
+        font: inherit;
+      }
+
+      .page {
+        width: min(1840px, 100%);
+        margin: 0 auto;
+        padding: 24px;
+      }
+
+      .header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 24px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .eyebrow,
+      .test-label,
+      .probe-caption,
+      .status-key {
+        font-family: "Courier New", monospace;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow {
+        margin: 0 0 8px;
+        color: var(--acid);
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(28px, 4vw, 58px);
+        line-height: 0.95;
+        letter-spacing: -0.045em;
+      }
+
+      .intro {
+        max-width: 660px;
+        margin: 0;
+        color: rgba(247, 243, 238, 0.68);
+        font-size: 14px;
+        line-height: 1.55;
+      }
+
+      .tests {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+        margin-top: 18px;
+      }
+
+      .test {
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: #12081c;
+      }
+
+      .test-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        min-height: 50px;
+        padding: 11px 14px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .test-label {
+        margin: 0;
+      }
+
+      .test-purpose {
+        margin: 0;
+        color: rgba(247, 243, 238, 0.5);
+        font-size: 12px;
+        text-align: right;
+      }
+
+      .scene {
+        position: relative;
+        overflow: hidden;
+        aspect-ratio: 16 / 10;
+        isolation: isolate;
+        background:
+          linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+          url("/images/trc-01-hero.webp") center / cover no-repeat;
+        background-size:
+          12.5% 20%,
+          12.5% 20%,
+          cover;
+      }
+
+      .scene::after {
+        position: absolute;
+        inset: 0;
+        z-index: 8;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        content: "";
+        pointer-events: none;
+      }
+
+      .scene-index {
+        position: absolute;
+        top: 3.2%;
+        left: 2.2%;
+        z-index: 10;
+        color: var(--acid);
+        font-family: "Courier New", monospace;
+        font-size: clamp(9px, 0.8vw, 13px);
+        font-weight: 700;
+        letter-spacing: 0.12em;
+      }
+
+      .probe-lens {
+        position: absolute;
+        top: 10%;
+        right: 5%;
+        z-index: 3;
+        width: 27%;
+        aspect-ratio: 2 / 1;
+        border: 1px solid rgba(255, 255, 255, 0.7);
+        border-radius: 999px;
+        background:
+          linear-gradient(115deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.01) 46%),
+          rgba(197, 219, 255, 0.06);
+        -webkit-backdrop-filter: url("#backdrop-displacement") saturate(1.7) brightness(1.08);
+        backdrop-filter: url("#backdrop-displacement") saturate(1.7) brightness(1.08);
+        box-shadow:
+          inset 0 1px 1px rgba(255, 255, 255, 0.9),
+          inset 0 -1px 2px rgba(67, 20, 92, 0.7),
+          0 12px 30px rgba(0, 0, 0, 0.25);
+      }
+
+      .probe-caption {
+        position: absolute;
+        top: 35%;
+        right: 5%;
+        z-index: 10;
+        width: 27%;
+        color: rgba(255, 255, 255, 0.72);
+        text-align: center;
+      }
+
+      .backdrop-word {
+        position: absolute;
+        inset: 0;
+        z-index: 4;
+        background:
+          linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.26),
+            rgba(255, 255, 255, 0.045) 42%,
+            rgba(94, 26, 123, 0.18)
+          );
+        -webkit-backdrop-filter: url("#backdrop-displacement") saturate(1.75) brightness(1.1);
+        backdrop-filter: url("#backdrop-displacement") saturate(1.75) brightness(1.1);
+        -webkit-mask-image: var(--feedback-mask);
+        mask-image: var(--feedback-mask);
+        -webkit-mask-position: center;
+        mask-position: center;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-size: 100% 100%;
+        mask-size: 100% 100%;
+        filter:
+          drop-shadow(0 1px 0 rgba(255, 255, 255, 0.72))
+          drop-shadow(0 -1px 0 rgba(135, 69, 164, 0.62));
+      }
+
+      .backdrop-word-highlight {
+        position: absolute;
+        inset: 0;
+        z-index: 5;
+        background:
+          linear-gradient(
+            118deg,
+            transparent 23%,
+            rgba(255, 255, 255, 0.42) 31%,
+            rgba(175, 229, 255, 0.1) 36%,
+            transparent 43%
+          );
+        -webkit-mask: var(--feedback-mask) center / 100% 100% no-repeat;
+        mask: var(--feedback-mask) center / 100% 100% no-repeat;
+        mix-blend-mode: screen;
+        opacity: 0.75;
+      }
+
+      .direct-svg {
+        position: absolute;
+        inset: 0;
+        z-index: 4;
+        display: block;
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+      }
+
+      .status {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1px;
+        margin-top: 18px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: var(--line);
+      }
+
+      .status-item {
+        min-width: 0;
+        padding: 14px;
+        background: #110817;
+      }
+
+      .status-key {
+        display: block;
+        margin-bottom: 7px;
+        color: rgba(247, 243, 238, 0.45);
+      }
+
+      .status-value {
+        display: block;
+        overflow: hidden;
+        color: #f7f3ee;
+        font-family: "Courier New", monospace;
+        font-size: 12px;
+        line-height: 1.45;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .status-value[data-state="yes"] {
+        color: var(--acid);
+      }
+
+      .status-value[data-state="no"] {
+        color: #ff6e83;
+      }
+
+      .notes {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+        margin-top: 18px;
+      }
+
+      .note {
+        margin: 0;
+        padding: 14px 16px;
+        border-left: 2px solid var(--acid);
+        background: rgba(255, 255, 255, 0.04);
+        color: rgba(247, 243, 238, 0.7);
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .note strong {
+        color: #fff;
+      }
+
+      @media (max-width: 980px) {
+        .header {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .tests,
+        .notes {
+          grid-template-columns: 1fr;
+        }
+
+        .status {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 560px) {
+        .page {
+          padding: 12px;
+        }
+
+        .status {
+          grid-template-columns: 1fr;
+        }
+
+        .test-purpose {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <svg
+      aria-hidden="true"
+      width="0"
+      height="0"
+      style="position: fixed; pointer-events: none"
+    >
+      <defs>
+        <filter
+          id="backdrop-displacement"
+          x="-25%"
+          y="-25%"
+          width="150%"
+          height="150%"
+          color-interpolation-filters="sRGB"
+        >
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.007 0.026"
+            numOctaves="2"
+            seed="17"
+            result="noise"
+          />
+          <feGaussianBlur in="noise" stdDeviation="1.2" result="soft-noise" />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="soft-noise"
+            scale="105"
+            xChannelSelector="R"
+            yChannelSelector="G"
+            result="refracted"
+          />
+          <feColorMatrix
+            in="refracted"
+            type="matrix"
+            values="
+              1.05 0    0    0 0
+              0    1.04 0    0 0
+              0    0    1.10 0 0
+              0    0    0    1 0
+            "
+          />
+        </filter>
+      </defs>
+    </svg>
+
+    <main class="page">
+      <header class="header">
+        <div>
+          <p class="eyebrow">Renderer isolation / 01</p>
+          <h1>Liquid Glass — statyczny test</h1>
+        </div>
+        <p class="intro">
+          Obie plansze korzystają z tego samego obrazu i tego samego rodzaju
+          displacementu. Różni je wyłącznie sposób podania obrazu do filtra.
+        </p>
+      </header>
+
+      <section class="tests" aria-label="Porównanie filtrów">
+        <article class="test">
+          <div class="test-head">
+            <p class="test-label">A / Backdrop + mask</p>
+            <p class="test-purpose">test ścieżki używanej w aplikacji</p>
+          </div>
+          <div class="scene">
+            <span class="scene-index">SVG URL BACKDROP</span>
+            <div class="probe-lens" id="probe-lens"></div>
+            <span class="probe-caption">UNMASKED PROBE</span>
+            <div class="backdrop-word" id="backdrop-word"></div>
+            <div class="backdrop-word-highlight"></div>
+          </div>
+        </article>
+
+        <article class="test">
+          <div class="test-head">
+            <p class="test-label">B / Direct SVG copy</p>
+            <p class="test-purpose">test samego silnika SVG</p>
+          </div>
+          <div class="scene">
+            <span class="scene-index">DIRECT SVG FILTER</span>
+            <svg
+              class="direct-svg"
+              viewBox="0 0 1600 1000"
+              preserveAspectRatio="xMidYMid slice"
+              aria-label="FEEDBACK z bezpośrednią refrakcją SVG"
+            >
+              <defs>
+                <filter
+                  id="direct-displacement"
+                  x="-25%"
+                  y="-25%"
+                  width="150%"
+                  height="150%"
+                  color-interpolation-filters="sRGB"
+                >
+                  <feTurbulence
+                    type="fractalNoise"
+                    baseFrequency="0.007 0.026"
+                    numOctaves="2"
+                    seed="17"
+                    result="noise"
+                  />
+                  <feGaussianBlur in="noise" stdDeviation="1.2" result="soft-noise" />
+                  <feDisplacementMap
+                    in="SourceGraphic"
+                    in2="soft-noise"
+                    scale="105"
+                    xChannelSelector="R"
+                    yChannelSelector="G"
+                    result="refracted"
+                  />
+                  <feColorMatrix
+                    in="refracted"
+                    type="matrix"
+                    values="
+                      1.05 0    0    0 0
+                      0    1.04 0    0 0
+                      0    0    1.10 0 0
+                      0    0    0    1 0
+                    "
+                  />
+                </filter>
+                <mask id="direct-word-mask" maskUnits="userSpaceOnUse">
+                  <rect width="1600" height="1000" fill="black" />
+                  <text
+                    x="800"
+                    y="825"
+                    text-anchor="middle"
+                    font-family="Arial Narrow, Arial, sans-serif"
+                    font-size="270"
+                    font-weight="900"
+                    textLength="1510"
+                    lengthAdjust="spacingAndGlyphs"
+                    fill="white"
+                  >
+                    FEEDBACK
+                  </text>
+                </mask>
+                <linearGradient id="glass-sheen" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0.22" stop-color="white" stop-opacity="0" />
+                  <stop offset="0.34" stop-color="white" stop-opacity="0.48" />
+                  <stop offset="0.43" stop-color="#caecff" stop-opacity="0.08" />
+                  <stop offset="0.55" stop-color="white" stop-opacity="0" />
+                </linearGradient>
+              </defs>
+              <image
+                href="/images/trc-01-hero.webp"
+                width="1600"
+                height="1000"
+                preserveAspectRatio="xMidYMid slice"
+                filter="url(#direct-displacement)"
+                mask="url(#direct-word-mask)"
+              />
+              <text
+                x="800"
+                y="825"
+                text-anchor="middle"
+                font-family="Arial Narrow, Arial, sans-serif"
+                font-size="270"
+                font-weight="900"
+                textLength="1510"
+                lengthAdjust="spacingAndGlyphs"
+                fill="url(#glass-sheen)"
+                stroke="rgba(255,255,255,0.72)"
+                stroke-width="2"
+              >
+                FEEDBACK
+              </text>
+            </svg>
+          </div>
+        </article>
+      </section>
+
+      <section class="status" aria-label="Status API">
+        <div class="status-item">
+          <span class="status-key">CSS.supports</span>
+          <span class="status-value" id="supports-value">checking…</span>
+        </div>
+        <div class="status-item">
+          <span class="status-key">Rectangle computed</span>
+          <span class="status-value" id="probe-value">checking…</span>
+        </div>
+        <div class="status-item">
+          <span class="status-key">Masked computed</span>
+          <span class="status-value" id="masked-value">checking…</span>
+        </div>
+        <div class="status-item">
+          <span class="status-key">Browser</span>
+          <span class="status-value" id="browser-value">checking…</span>
+        </div>
+      </section>
+
+      <section class="notes" aria-label="Interpretacja wyników">
+        <p class="note">
+          <strong>A nie deformuje, B deformuje:</strong> problemem jest
+          <code>backdrop-filter: url(...)</code> lub jego połączenie z maską,
+          a nie filtr SVG.
+        </p>
+        <p class="note">
+          <strong>Prostokąt w A deformuje, ale FEEDBACK nie:</strong> renderer
+          nie obsługuje poprawnie połączenia backdropu z
+          <code>mask-image</code>.
+        </p>
+      </section>
+    </main>
+
+    <script>
+      const readBackdropFilter = (element) => {
+        const style = getComputedStyle(element);
+        return style.backdropFilter || style.webkitBackdropFilter || "none";
+      };
+
+      const supportsStandard = CSS.supports(
+        "backdrop-filter",
+        "url(#backdrop-displacement)",
+      );
+      const supportsWebkit = CSS.supports(
+        "-webkit-backdrop-filter",
+        "url(#backdrop-displacement)",
+      );
+      const supports = supportsStandard || supportsWebkit;
+
+      const supportsValue = document.querySelector("#supports-value");
+      const probeValue = document.querySelector("#probe-value");
+      const maskedValue = document.querySelector("#masked-value");
+      const browserValue = document.querySelector("#browser-value");
+
+      supportsValue.textContent = supports ? "YES / parser accepted" : "NO";
+      supportsValue.dataset.state = supports ? "yes" : "no";
+
+      const probeComputed = readBackdropFilter(
+        document.querySelector("#probe-lens"),
+      );
+      const maskedComputed = readBackdropFilter(
+        document.querySelector("#backdrop-word"),
+      );
+
+      probeValue.textContent = probeComputed;
+      probeValue.title = probeComputed;
+      probeValue.dataset.state = probeComputed === "none" ? "no" : "yes";
+
+      maskedValue.textContent = maskedComputed;
+      maskedValue.title = maskedComputed;
+      maskedValue.dataset.state = maskedComputed === "none" ? "no" : "yes";
+
+      browserValue.textContent = navigator.userAgent;
+      browserValue.title = navigator.userAgent;
+    </script>
+  </body>
+</html>

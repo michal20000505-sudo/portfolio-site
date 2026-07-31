@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { assetUrl } from "../lib/assetUrl";
 
 const callouts = [
   {
@@ -62,7 +63,7 @@ export function Construction() {
           <div className="construction-product-stage">
             <img
               className="construction-product"
-              src="/images/trc-01-outsole-cutout.webp"
+              src={assetUrl("/images/trc-01-outsole-cutout.webp")}
               alt="Bottom view of the TRC-01 segmented traction system"
               width="1536"
               height="1024"

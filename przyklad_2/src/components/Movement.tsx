@@ -1,11 +1,12 @@
+import { assetUrl } from "../lib/assetUrl";
 import { LiquidGlassText } from "./LiquidGlassText";
 
 const rotationFrames = Array.from({ length: 8 }, (_, index) => {
   const frame = String(index + 1).padStart(2, "0");
 
   return {
-    full: `/images/trc-01-turn-${frame}.webp`,
-    small: `/images/trc-01-turn-${frame}-sm.webp`,
+    full: assetUrl(`/images/trc-01-turn-${frame}.webp`),
+    small: assetUrl(`/images/trc-01-turn-${frame}-sm.webp`),
   };
 });
 

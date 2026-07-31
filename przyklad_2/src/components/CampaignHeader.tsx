@@ -1,3 +1,5 @@
+import { assetUrl } from "../lib/assetUrl";
+
 const chapters = [
   ["01", "TRACE", "movement"],
   ["02", "SYSTEM", "construction"],
@@ -20,7 +22,7 @@ export function CampaignHeader() {
         aria-label="SENTRACKER, back to top"
       >
         <img
-          src="/images/sentracker-logo.webp"
+          src={assetUrl("/images/sentracker-logo.webp")}
           alt=""
           width="2640"
           height="522"

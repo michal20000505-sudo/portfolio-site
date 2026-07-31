@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="SENTRACKER TRC-01 is a trail traction prototype tuned for changing ground. The trail writes back."
+    />
+    <meta name="theme-color" content="#160b22" />
+    <meta name="color-scheme" content="dark" />
+    <link rel="icon" href="./signal-mark.svg" type="image/svg+xml" />
+    <link rel="preload" href="./images/trc-01-cutout.webp" as="image" fetchpriority="high" />
+    <title>SENTRACKER / TRC-01</title>
+    <script type="module" crossorigin src="./assets/index-BzoMvY71.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-BgBM_59K.css">
+  </head>
+  <body>
+    <svg
+      aria-hidden='true'
+      focusable='false'
+      width='0'
+      height='0'
+      style='position: fixed; width: 0; height: 0; overflow: hidden; pointer-events: none'
+    >
+      <defs>
+        <filter
+          id='feedback-glass-baseline'
+          x='-25%'
+          y='-25%'
+          width='150%'
+          height='150%'
+          color-interpolation-filters='sRGB'
+        >
+          <feTurbulence
+            type='fractalNoise'
+            baseFrequency='0.007 0.026'
+            numOctaves='2'
+            seed='17'
+            result='noise'
+          />
+          <feGaussianBlur in='noise' stdDeviation='1.2' result='soft-noise' />
+          <feDisplacementMap
+            in='SourceGraphic'
+            in2='soft-noise'
+            scale='105'
+            xChannelSelector='R'
+            yChannelSelector='G'
+            result='refracted'
+          />
+        </filter>
+      </defs>
+    </svg>
+    <div id="root"></div>
+    <noscript>
+      <div class="noscript-message">
+        SENTRACKER TRC-01. Enable JavaScript to inspect the contact system.
+      </div>
+    </noscript>
+  </body>
+</html>

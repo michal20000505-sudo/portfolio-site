@@ -1,4 +1,5 @@
 import shoeVideoSrc from "../../video/shoe-scroll.mp4";
+import { previewMode } from "../lib/previewMode";
 import { LiquidGlassText } from "./LiquidGlassText";
 
 export function TerrainShift() {
@@ -12,7 +13,7 @@ export function TerrainShift() {
           role="img"
           width="1920"
           height="1080"
-          preload="auto"
+          preload={previewMode ? "none" : "auto"}
           muted
           playsInline
           disablePictureInPicture

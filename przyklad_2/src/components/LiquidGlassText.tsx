@@ -29,6 +29,14 @@ type LiquidGlassTextProps = {
   style?: CSSProperties;
 };
 
+// Both feDisplacementMap scales below are absolute pixels, tuned against the
+// desktop FEEDBACK box (792x183). The filter region is expressed in percent, so
+// on small viewports the box shrinks while the displacement does not, and the
+// backdrop gets sampled from outside the region and comes back transparent.
+// Scaling the displacement with the box keeps the refraction inside its region.
+const referenceGlassHeight = 183;
+const baseRefraction = 96;
+
 const liquidGlassDefaults: LiquidGlassOptions = {
   refractionStrength: 100,
   lensStrength: 0.16,
@@ -84,10 +92,30 @@ export function LiquidGlassText({
     let timer = 0;
     let nearViewport = !("IntersectionObserver" in window);
 
+    const fontShorthand = (style: CSSStyleDeclaration) =>
+      [
+        style.fontStyle,
+        style.fontWeight,
+        `${toPixels(style.fontSize, 16)}px`,
+        style.fontFamily,
+      ].join(" ");
+
     const renderMaps = async () => {
       const currentGeneration = ++generation;
 
       if ("fonts" in document) {
+        // document.fonts.ready can resolve before a face that has not started
+        // loading yet is applied. The canvas would then draw the mask in the
+        // fallback family, which is far wider than the display face and makes
+        // the word overrun its box. Force the exact face first.
+        const shorthand = fontShorthand(window.getComputedStyle(root));
+
+        try {
+          await document.fonts.load(shorthand, text);
+        } catch {
+          // A family the shorthand parser rejects must not block the mask.
+        }
+
         await document.fonts.ready;
       }
 
@@ -112,6 +140,18 @@ export function LiquidGlassText({
         bounds.width * 0.05,
         Math.max(4, resolvedOptions.refractionStrength * 1.1),
       );
+      // Keyed into the map cache so a mask drawn while the display face was
+      // still missing is never reused once the face lands.
+      let fontsLoaded = true;
+
+      if ("fonts" in document) {
+        try {
+          fontsLoaded = document.fonts.check(fontShorthand(computed), text);
+        } catch {
+          fontsLoaded = true;
+        }
+      }
+
       try {
         const nextMaps = await createGlassTextMaps({
           text,
@@ -122,6 +162,7 @@ export function LiquidGlassText({
           fontSize,
           fontStyle: computed.fontStyle,
           fontWeight: computed.fontWeight,
+          fontsLoaded,
           letterSpacing,
           lineHeight,
           textAlign: computed.textAlign as CanvasTextAlign,
@@ -170,8 +211,13 @@ export function LiquidGlassText({
           )
         : null;
 
+    const onFontsLoaded = () => {
+      if (nearViewport) scheduleRender();
+    };
+
     resizeObserver?.observe(root);
     intersectionObserver?.observe(root);
+    document.fonts?.addEventListener("loadingdone", onFontsLoaded);
 
     if (!intersectionObserver) scheduleRender();
 
@@ -181,6 +227,7 @@ export function LiquidGlassText({
       window.clearTimeout(timer);
       resizeObserver?.disconnect();
       intersectionObserver?.disconnect();
+      document.fonts?.removeEventListener("loadingdone", onFontsLoaded);
     };
   }, [
     className,
@@ -248,8 +295,12 @@ export function LiquidGlassText({
   const backdropFilter = activeMaps
     ? `url(#${filterId}) saturate(1.72) brightness(1.08)`
     : undefined;
+  const refractionScale = activeMaps
+    ? Math.min(1, activeMaps.height / referenceGlassHeight)
+    : 1;
+  const waveRefractionScale = Math.round(baseRefraction * refractionScale);
   const edgeRefractionScale = Math.round(
-    resolvedOptions.refractionStrength * 1.15,
+    resolvedOptions.refractionStrength * 1.15 * refractionScale,
   );
   const rootStyle = {
     ...cssVariables,
@@ -275,10 +326,10 @@ export function LiquidGlassText({
               <defs>
                 <filter
                   id={filterId}
-                  x="-28%"
-                  y="-50%"
-                  width="156%"
-                  height="200%"
+                  x="-40%"
+                  y="-100%"
+                  width="180%"
+                  height="300%"
                   colorInterpolationFilters="sRGB"
                 >
                   <feTurbulence
@@ -296,7 +347,7 @@ export function LiquidGlassText({
                   <feDisplacementMap
                     in="SourceGraphic"
                     in2="soft-noise"
-                    scale={96}
+                    scale={waveRefractionScale}
                     xChannelSelector="R"
                     yChannelSelector="G"
                     result="liquid-base"

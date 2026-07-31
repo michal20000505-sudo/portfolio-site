@@ -119,6 +119,18 @@ Test referencyjny pozostaje dostępny pod:
 
 ## Strojenie efektu
 
-Aktualna siła bazowej proceduralnej fali to `scale={96}` w `LiquidGlassText.tsx`. Mocniejsza refrakcja przy krawędziach jest liczona jako `refractionStrength * 1.15`, więc opcja `refractionStrength` steruje mapą krawędzi. Żółto-zielone zabarwienie szkła i rozświetlenie krawędzi są wspólne dla wszystkich instancji w `styles.css`.
+Aktualna siła bazowej proceduralnej fali to `baseRefraction = 96` w `LiquidGlassText.tsx`. Mocniejsza refrakcja przy krawędziach jest liczona jako `refractionStrength * 1.15`, więc opcja `refractionStrength` steruje mapą krawędzi. Żółto-zielone zabarwienie szkła i rozświetlenie krawędzi są wspólne dla wszystkich instancji w `styles.css`.
+
+### Skalowanie względem rozmiaru napisu
+
+Obie wartości `scale` w `feDisplacementMap` są w bezwzględnych pikselach, a region filtra jest procentowy. Napis skalowany do mobile kurczy się, przesunięcie nie — i backdrop był próbkowany spoza regionu filtra, wracając jako przezroczysty. Dawało to twarde, poziome ucięcie liter na `FEEDBACK`, `BLIND` i `CITY`.
+
+Dlatego oba `scale` są mnożone przez `refractionScale = min(1, wysokość boxu / referenceGlassHeight)`, gdzie `referenceGlassHeight = 183` to wysokość desktopowego boxu `FEEDBACK` przy 1440 px — punkt, w którym efekt został wizualnie potwierdzony. Na desktopie mnożnik wynosi 1, więc strojenie pozostaje bez zmian.
+
+Region filtra to `x="-40%" y="-100%" width="180%" height="300%"`. Pionowy margines równy wysokości boxu daje ok. 1,7× zapasu ponad maksymalne przesunięcie (`(96 + 115) / 2 * refractionScale`) na każdym breakpoincie.
+
+Przy zmianie `baseRefraction`, `refractionStrength` albo wysokości boxów w `styles.css` sprawdzić, czy zapas nadal jest > 1: `wysokość boxu / ((baseRefraction + refractionStrength * 1.15) / 2 * refractionScale)`.
+
+Boxy napisów szklanych na mobile (`height` w `em`) muszą zostawiać zapas nad wersalikami. Maska liczy `blockHeight` z deskryptora `measureText("Hg")`, więc dla tekstu z samych wersalików rezerwuje puste miejsce na zejście poniżej linii bazowej i przy ciasnym boxie ściska litery w pionie.
 
 Po zmianach zawsze sprawdzić efekt w normalnym oknie Opery GX. Headless Chromium może zwracać poprawny computed style, ale jego zrzuty nie są wiarygodnym testem renderowania `backdrop-filter` z filtrem SVG.

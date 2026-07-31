@@ -1,3 +1,5 @@
+import { assetUrl } from "../lib/assetUrl";
+
 export function ProductFocus() {
   return (
     <section
@@ -14,7 +16,7 @@ export function ProductFocus() {
         <figure className="macro-figure">
           <img
             className="macro-image"
-            src="/images/trc-01-macro.webp"
+            src={assetUrl("/images/trc-01-macro.webp")}
             alt="Macro detail of TRC-01 ripstop, lacing, heel frame and yellow pressure line"
             width="1536"
             height="1024"
@@ -46,7 +48,7 @@ export function ProductFocus() {
           <span className="focus-exploded-axis" aria-hidden="true" />
           <img
             className="focus-exploded-image"
-            src="/images/trc-01-exploded-view.webp"
+            src={assetUrl("/images/trc-01-exploded-view.webp")}
             alt="Exploded view of the TRC-01 upper, heel frame, midsole and lug outsole"
             width="1536"
             height="1024"

@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { assetUrl } from "../lib/assetUrl";
 import { LiquidGlassText } from "./LiquidGlassText";
 
 export function Hero() {
@@ -41,7 +42,7 @@ export function Hero() {
           <div className="hero-product-tilt">
             <div className="hero-orbit" aria-hidden="true" />
             <img
-              src="/images/trc-01-cutout.webp"
+              src={assetUrl("/images/trc-01-cutout.webp")}
               alt="SENTRACKER TRC-01 technical trail sneaker in deep plum and acid yellow"
               width="1536"
               height="1024"

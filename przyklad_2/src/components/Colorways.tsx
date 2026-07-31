@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { assetUrl } from "../lib/assetUrl";
 
 const signals = {
   field: {
@@ -6,7 +7,7 @@ const signals = {
     name: "FIELD SIGNAL",
     palette: "AUBERGINE / ACID",
     note: "The launch build: aubergine ripstop, acid contact rubber.",
-    src: "/images/trc-01-cutout.webp",
+    src: assetUrl("/images/trc-01-cutout.webp"),
     alt: "TRC-01 in aubergine ripstop with an acid-yellow trail outsole",
   },
   dust: {
@@ -14,7 +15,7 @@ const signals = {
     name: "DUST INDEX",
     palette: "MINERAL / OXIDE",
     note: "Mineral upper, oxide tread. A palette pulled from dry ground.",
-    src: "/images/trc-01-dust-lateral-3q-cutout.webp",
+    src: assetUrl("/images/trc-01-dust-lateral-3q-cutout.webp"),
     alt: "TRC-01 in mineral sand with an oxide-orange trail outsole",
   },
   night: {
@@ -22,7 +23,7 @@ const signals = {
     name: "NIGHT RETURN",
     palette: "GRAPHITE / ICE",
     note: "Graphite upper, ice tread. High contrast for the night study.",
-    src: "/images/trc-01-night-lateral-3q-cutout.webp",
+    src: assetUrl("/images/trc-01-night-lateral-3q-cutout.webp"),
     alt: "TRC-01 in graphite black with an ice-blue trail outsole",
   },
 } as const;

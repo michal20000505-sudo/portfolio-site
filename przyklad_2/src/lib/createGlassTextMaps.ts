@@ -7,6 +7,7 @@ export type GlassTextMapOptions = {
   fontSize: number;
   fontStyle: string;
   fontWeight: string;
+  fontsLoaded: boolean;
   letterSpacing: number;
   lineHeight: number;
   textAlign: CanvasTextAlign;
@@ -458,6 +459,7 @@ export function createGlassTextMaps(options: GlassTextMapOptions) {
     options.fontSize.toFixed(2),
     options.fontStyle,
     options.fontWeight,
+    String(options.fontsLoaded),
     options.letterSpacing.toFixed(3),
     options.lineHeight.toFixed(2),
     options.textAlign,

@@ -361,6 +361,18 @@ svg {
   transform: translateX(0);
 }
 
+/* Live preview inside a portfolio card: the frame is never scrolled, so hide
+   the scrollbar and keep the hero pinned to the top of the card. */
+
+html[data-preview],
+html[data-preview] body {
+  overflow: hidden;
+}
+
+html[data-preview] .skip-link {
+  display: none;
+}
+
 /* Refractive liquid glass type */
 
 .liquid-glass-global-filter {
@@ -387,6 +399,16 @@ svg {
   display: block;
   width: 100%;
   height: 100%;
+  /* The root carries the mask itself in refracted mode, so it needs the same
+     sizing as the inner layers. Left at `auto` the PNG paints at its intrinsic
+     size, which is bounds.width * devicePixelRatio, and the word overruns its
+     box by exactly the pixel ratio. */
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
 }
 
 .liquid-glass-text.liquid-glass-shell--feedback {
@@ -582,6 +604,12 @@ svg {
 
 .hero-word .word {
   display: block;
+}
+
+/* The glass word is the filtered element itself, so clipping it to the box
+   also clips the refraction bleed and the edge drop-shadow. */
+.hero-word.liquid-glass-text {
+  overflow: visible;
 }
 
 .hero-word--top {
@@ -2713,7 +2741,7 @@ svg {
     right: auto;
     width: calc(100vw - 1.6rem);
     max-width: calc(100vw - 1.6rem);
-    height: 0.94em;
+    height: 1.15em;
     font-size: clamp(3rem, 14vw, 3.6rem);
   }
 
@@ -2863,7 +2891,7 @@ svg {
     right: auto;
     width: calc(100vw - 2.4rem);
     max-width: calc(100vw - 2.4rem);
-    height: 0.94em;
+    height: 1.15em;
     font-size: clamp(3rem, 14vw, 3.6rem);
   }
 
@@ -3054,7 +3082,7 @@ svg {
     left: 0.8rem;
     width: min(5em, calc(100vw - 1.6rem));
     max-width: calc(100vw - 1.6rem);
-    height: 0.9em;
+    height: 1.1em;
   }
 
   .terrain-word--field {

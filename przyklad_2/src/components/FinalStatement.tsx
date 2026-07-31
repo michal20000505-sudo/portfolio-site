@@ -1,3 +1,5 @@
+import { assetUrl } from "../lib/assetUrl";
+
 export function FinalStatement() {
   return (
     <section
@@ -10,10 +12,10 @@ export function FinalStatement() {
           <picture>
             <source
               media="(max-width: 760px)"
-              srcSet="/images/trc-01-sunset-campaign-mobile.webp"
+              srcSet={assetUrl("/images/trc-01-sunset-campaign-mobile.webp")}
             />
             <img
-              src="/images/trc-01-sunset-campaign.webp"
+              src={assetUrl("/images/trc-01-sunset-campaign.webp")}
               alt=""
               width="1536"
               height="1024"
@@ -40,7 +42,7 @@ export function FinalStatement() {
       <div className="final-lockup">
         <div className="final-wordmark" aria-hidden="true">
           <img
-            src="/images/sentracker-logo.webp"
+            src={assetUrl("/images/sentracker-logo.webp")}
             alt=""
             width="2640"
             height="522"

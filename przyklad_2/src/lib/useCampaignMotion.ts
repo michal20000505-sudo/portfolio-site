@@ -8,6 +8,7 @@ gsap.registerPlugin(ScrollTrigger);
 export function useCampaignMotion(
   scope: RefObject<HTMLDivElement | null>,
   ready: boolean,
+  previewMode = false,
 ) {
   useLayoutEffect(() => {
     if (!ready || !scope.current) return;
@@ -19,8 +20,20 @@ export function useCampaignMotion(
       "(max-width: 760px), (max-width: 950px) and (max-height: 500px)",
     ).matches;
 
+    // Tells the portfolio card the hero has finished its opening beat, so the
+    // card can drop its placeholder. The card never scrolls this frame.
+    const notifyPreviewReady = () => {
+      if (previewMode && window.parent !== window) {
+        window.parent.postMessage(
+          { type: "sentracker-preview-ready" },
+          window.location.origin,
+        );
+      }
+    };
+
     if (reduceMotion) {
       document.documentElement.classList.add("reduced-motion");
+      notifyPreviewReady();
       return () => document.documentElement.classList.remove("reduced-motion");
     }
 
@@ -229,22 +242,28 @@ export function useCampaignMotion(
       }
     };
 
-    const lenis = new Lenis({
-      duration: 0.9,
-      smoothWheel: true,
-      syncTouch: false,
-      wheelMultiplier: 0.82,
-    });
+    // Inside the portfolio card there is nothing to scroll, and smooth-scroll
+    // hijacking would only fight the parent page.
+    const lenis = previewMode
+      ? null
+      : new Lenis({
+          duration: 0.9,
+          smoothWheel: true,
+          syncTouch: false,
+          wheelMultiplier: 0.82,
+        });
 
     const updateScrollTrigger = () => ScrollTrigger.update();
-    const updateLenis = (time: number) => lenis.raf(time * 1000);
+    const updateLenis = (time: number) => lenis?.raf(time * 1000);
 
-    lenis.on("scroll", updateScrollTrigger);
-    gsap.ticker.add(updateLenis);
-    gsap.ticker.lagSmoothing(0);
+    if (lenis) {
+      lenis.on("scroll", updateScrollTrigger);
+      gsap.ticker.add(updateLenis);
+      gsap.ticker.lagSmoothing(0);
+    }
 
     const context = gsap.context(() => {
-      gsap
+      const opening = gsap
         .timeline({ defaults: { ease: "expo.out" } })
         .from(".hero-word .word", {
           yPercent: 115,
@@ -276,6 +295,8 @@ export function useCampaignMotion(
           { autoAlpha: 0, duration: 0.5, stagger: 0.06 },
           0.62,
         );
+
+      opening.eventCallback("onComplete", notifyPreviewReady);
 
       gsap.to(".hero-product-frame", {
         yPercent: isMobile ? 4 : 8,
@@ -618,9 +639,11 @@ export function useCampaignMotion(
         "loadedmetadata",
         syncTerrainVideoMetadata,
       );
-      gsap.ticker.remove(updateLenis);
-      lenis.off("scroll", updateScrollTrigger);
-      lenis.destroy();
+      if (lenis) {
+        gsap.ticker.remove(updateLenis);
+        lenis.off("scroll", updateScrollTrigger);
+        lenis.destroy();
+      }
     };
-  }, [ready, scope]);
+  }, [ready, scope, previewMode]);
 }
