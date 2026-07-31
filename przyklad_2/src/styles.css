@@ -2711,8 +2711,9 @@ svg {
 
   .hero-word--bottom.liquid-glass-text {
     right: auto;
-    width: min(5em, calc(100vw - 1.6rem));
+    width: calc(100vw - 1.6rem);
     max-width: calc(100vw - 1.6rem);
+    height: 0.94em;
     font-size: clamp(3rem, 14vw, 3.6rem);
   }
 
@@ -2860,8 +2861,9 @@ svg {
 
   .movement-title-outline.liquid-glass-text {
     right: auto;
-    width: 4em;
+    width: calc(100vw - 2.4rem);
     max-width: calc(100vw - 2.4rem);
+    height: 0.94em;
     font-size: clamp(3rem, 14vw, 3.6rem);
   }
 
@@ -3050,6 +3052,9 @@ svg {
 
   .terrain-word--city {
     left: 0.8rem;
+    width: min(5em, calc(100vw - 1.6rem));
+    max-width: calc(100vw - 1.6rem);
+    height: 0.9em;
   }
 
   .terrain-word--field {
