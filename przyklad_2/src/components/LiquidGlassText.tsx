@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { createPortal } from "react-dom";
 import {
   createGlassTextMaps,
   type GlassTextMaps,
@@ -63,13 +64,10 @@ export function LiquidGlassText({
   style,
 }: LiquidGlassTextProps) {
   const text = String(children);
-  const filterId = `liquid-glass-${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
+  const filterId = `liquid-glass-edge-${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
   const rootRef = useRef<HTMLSpanElement>(null);
   const [maps, setMaps] = useState<GlassTextMaps | null>(null);
   const [mappedText, setMappedText] = useState("");
-  const [refractionScale, setRefractionScale] = useState(
-    liquidGlassDefaults.refractionStrength,
-  );
   const pipelineSupported = useMemo(supportsRefractiveBackdrop, []);
   const resolvedOptions = {
     ...liquidGlassDefaults,
@@ -114,12 +112,6 @@ export function LiquidGlassText({
         bounds.width * 0.05,
         Math.max(4, resolvedOptions.refractionStrength * 1.1),
       );
-      const responsiveRefraction =
-        resolvedOptions.refractionStrength *
-        Math.min(1, Math.max(0.55, bounds.height / 180));
-
-      setRefractionScale(Number(responsiveRefraction.toFixed(2)));
-
       try {
         const nextMaps = await createGlassTextMaps({
           text,
@@ -254,129 +246,112 @@ export function LiquidGlassText({
         ? "fallback"
         : "loading";
   const backdropFilter = activeMaps
-    ? `url("#${filterId}") saturate(1.7) brightness(1.08)`
+    ? `url(#${filterId}) saturate(1.72) brightness(1.08)`
     : undefined;
-  const redStrength =
-    refractionScale + resolvedOptions.dispersion * 2;
-  const greenStrength =
-    refractionScale + resolvedOptions.dispersion;
+  const edgeRefractionScale = Math.round(
+    resolvedOptions.refractionStrength * 1.15,
+  );
+  const rootStyle = {
+    ...cssVariables,
+    ...(activeMaps && pipelineSupported && backdropFilter
+      ? {
+          ...maskStyle,
+          WebkitBackdropFilter: backdropFilter,
+          backdropFilter,
+        }
+      : {}),
+  } as CSSProperties;
 
   return (
-    <span
-      ref={rootRef}
-      className={`liquid-glass-text${className ? ` ${className}` : ""}`}
-      data-glass-active="true"
-      data-glass-mode={mode}
-      style={cssVariables}
-    >
-      {activeMaps ? (
-        <svg
-          className="liquid-glass-text__filters"
-          width="0"
-          height="0"
-          aria-hidden="true"
-        >
-          <defs>
-            <filter
-              id={filterId}
-              x="-20%"
-              y="-40%"
-              width="140%"
-              height="180%"
-              colorInterpolationFilters="sRGB"
+    <>
+      {activeMaps && typeof document !== "undefined"
+        ? createPortal(
+            <svg
+              className="liquid-glass-global-filter"
+              width="0"
+              height="0"
+              aria-hidden="true"
             >
-              <feImage
-                x="0"
-                y="0"
-                width={activeMaps.width}
-                height={activeMaps.height}
-                href={activeMaps.displacementUrl}
-                preserveAspectRatio="none"
-                result="displacementMap"
-              />
-              <feDisplacementMap
-                in="SourceGraphic"
-                in2="displacementMap"
-                scale={redStrength}
-                xChannelSelector="R"
-                yChannelSelector="G"
-                result="shiftedR"
-              />
-              <feColorMatrix
-                in="shiftedR"
-                type="matrix"
-                values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0"
-                result="displacedR"
-              />
-              <feDisplacementMap
-                in="SourceGraphic"
-                in2="displacementMap"
-                scale={greenStrength}
-                xChannelSelector="R"
-                yChannelSelector="G"
-                result="shiftedG"
-              />
-              <feColorMatrix
-                in="shiftedG"
-                type="matrix"
-                values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0"
-                result="displacedG"
-              />
-              <feDisplacementMap
-                in="SourceGraphic"
-                in2="displacementMap"
-                scale={refractionScale}
-                xChannelSelector="R"
-                yChannelSelector="G"
-                result="shiftedB"
-              />
-              <feColorMatrix
-                in="shiftedB"
-                type="matrix"
-                values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0"
-                result="displacedB"
-              />
-              <feBlend
-                in="displacedR"
-                in2="displacedG"
-                mode="screen"
-                result="displacedRG"
-              />
-              <feBlend
-                in="displacedRG"
-                in2="displacedB"
-                mode="screen"
-              />
-            </filter>
-          </defs>
-        </svg>
-      ) : null}
-      <span className="liquid-glass-text__source">{text}</span>
-      {activeMaps ? (
-        <>
-          <span
-            className="liquid-glass-text__lens liquid-glass-text__lens--base"
-            style={maskStyle}
-            aria-hidden="true"
-          />
-          {pipelineSupported && backdropFilter ? (
+              <defs>
+                <filter
+                  id={filterId}
+                  x="-28%"
+                  y="-50%"
+                  width="156%"
+                  height="200%"
+                  colorInterpolationFilters="sRGB"
+                >
+                  <feTurbulence
+                    type="fractalNoise"
+                    baseFrequency="0.007 0.026"
+                    numOctaves={2}
+                    seed={17}
+                    result="noise"
+                  />
+                  <feGaussianBlur
+                    in="noise"
+                    stdDeviation={1.2}
+                    result="soft-noise"
+                  />
+                  <feDisplacementMap
+                    in="SourceGraphic"
+                    in2="soft-noise"
+                    scale={96}
+                    xChannelSelector="R"
+                    yChannelSelector="G"
+                    result="liquid-base"
+                  />
+                  <feImage
+                    x="0"
+                    y="0"
+                    width={activeMaps.width}
+                    height={activeMaps.height}
+                    href={activeMaps.displacementUrl}
+                    preserveAspectRatio="none"
+                    result="edge-map"
+                  />
+                  <feGaussianBlur
+                    in="edge-map"
+                    stdDeviation={0.45}
+                    result="soft-edge-map"
+                  />
+                  <feDisplacementMap
+                    in="liquid-base"
+                    in2="soft-edge-map"
+                    scale={edgeRefractionScale}
+                    xChannelSelector="R"
+                    yChannelSelector="G"
+                  />
+                </filter>
+              </defs>
+            </svg>,
+            document.body,
+          )
+        : null}
+      <span
+        ref={rootRef}
+        className={`liquid-glass-text${className ? ` ${className}` : ""}`}
+        data-glass-active="true"
+        data-glass-mode={mode}
+        style={rootStyle}
+        aria-hidden="true"
+      >
+        <span className="liquid-glass-text__source">{text}</span>
+        {activeMaps ? (
+          <>
             <span
-              className="liquid-glass-text__lens liquid-glass-text__lens--refracted"
-              style={{
-                ...maskStyle,
-                WebkitBackdropFilter: backdropFilter,
-                backdropFilter,
-              }}
+              className="liquid-glass-text__lens liquid-glass-text__lens--base"
+              style={maskStyle}
               aria-hidden="true"
             />
-          ) : null}
-          <span
-            className="liquid-glass-text__edge"
-            style={edgeMaskStyle}
-            aria-hidden="true"
-          />
-        </>
-      ) : null}
-    </span>
+            <span
+              className="liquid-glass-text__edge"
+              style={edgeMaskStyle}
+              aria-hidden="true"
+            />
+          </>
+        ) : null}
+      </span>
+    </>
   );
 }

@@ -1,3 +1,5 @@
+import { LiquidGlassText } from "./LiquidGlassText";
+
 const rotationFrames = Array.from({ length: 8 }, (_, index) => {
   const frame = String(index + 1).padStart(2, "0");
 
@@ -25,9 +27,12 @@ export function Movement() {
         </div>
         <h2 id="movement-title" className="movement-title">
           <span>NO</span>
-          <span className="movement-title-outline">BLIND</span>
+          <span className="sr-only">BLIND</span>
           <em>side.</em>
         </h2>
+        <LiquidGlassText className="movement-title-outline">
+          BLIND
+        </LiquidGlassText>
         <svg
           className="movement-trajectory"
           viewBox="0 0 1600 900"

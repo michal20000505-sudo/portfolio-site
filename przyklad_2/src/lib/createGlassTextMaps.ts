@@ -170,13 +170,6 @@ function renderTextMask(options: GlassTextMapOptions) {
     (lines.length - 1) * scaledLineHeight + scaledGlyphHeight;
   const firstBaseline =
     (options.height - scaledBlockHeight) / 2 + scaledAscent;
-  const longestLine = Math.max(
-    1,
-    ...lines.map((line) =>
-      measureLine(context, line, options.letterSpacing),
-    ),
-  );
-  const horizontalScale = Math.min(1, availableWidth / longestLine);
   const anchorX =
     options.textAlign === "left" || options.textAlign === "start"
       ? options.refractionPadding
@@ -186,13 +179,14 @@ function renderTextMask(options: GlassTextMapOptions) {
 
   context.save();
   context.translate(anchorX, firstBaseline);
-  context.scale(horizontalScale, verticalScale);
+  context.scale(1, verticalScale);
 
   lines.forEach((line, index) => {
     context.fillText(
       line,
       0,
       (index * scaledLineHeight) / verticalScale,
+      availableWidth,
     );
   });
 

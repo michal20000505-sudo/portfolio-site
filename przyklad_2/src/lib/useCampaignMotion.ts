@@ -15,12 +15,17 @@ export function useCampaignMotion(
     const reduceMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-    const isMobile = window.matchMedia("(max-width: 760px)").matches;
+    const isMobile = window.matchMedia(
+      "(max-width: 760px), (max-width: 950px) and (max-height: 500px)",
+    ).matches;
 
     if (reduceMotion) {
       document.documentElement.classList.add("reduced-motion");
       return () => document.documentElement.classList.remove("reduced-motion");
     }
+
+    const terrainScrollVideo =
+      scope.current.querySelector<HTMLVideoElement>(".terrain-scroll-video");
 
     const movementFrames = Array.from(
       scope.current.querySelectorAll<HTMLImageElement>(
@@ -59,6 +64,48 @@ export function useCampaignMotion(
 
     const clamp = (value: number, minimum: number, maximum: number) =>
       Math.min(maximum, Math.max(minimum, value));
+
+    const terrainVideoDuration = 1;
+    const terrainVideoFrameRate = 24;
+    let pendingTerrainVideoFrame = 0;
+    let renderedTerrainVideoFrame = -1;
+
+    const renderTerrainVideo = (rawProgress: number) => {
+      if (!terrainScrollVideo) return;
+
+      pendingTerrainVideoFrame = Math.round(
+        clamp(rawProgress, 0, 1) * terrainVideoFrameRate,
+      );
+
+      if (
+        terrainScrollVideo.readyState < HTMLMediaElement.HAVE_METADATA ||
+        pendingTerrainVideoFrame === renderedTerrainVideoFrame
+      ) {
+        return;
+      }
+
+      const availableDuration = Number.isFinite(terrainScrollVideo.duration)
+        ? Math.max(0, terrainScrollVideo.duration - 0.001)
+        : terrainVideoDuration;
+      const targetTime = Math.min(
+        pendingTerrainVideoFrame / terrainVideoFrameRate,
+        terrainVideoDuration,
+        availableDuration,
+      );
+
+      renderedTerrainVideoFrame = pendingTerrainVideoFrame;
+      terrainScrollVideo.currentTime = targetTime;
+    };
+
+    const syncTerrainVideoMetadata = () => {
+      renderedTerrainVideoFrame = -1;
+      renderTerrainVideo(pendingTerrainVideoFrame / terrainVideoFrameRate);
+    };
+
+    terrainScrollVideo?.addEventListener(
+      "loadedmetadata",
+      syncTerrainVideoMetadata,
+    );
 
     const smoothstep = (edgeStart: number, edgeEnd: number, value: number) => {
       const progress = clamp(
@@ -394,6 +441,8 @@ export function useCampaignMotion(
             end: "bottom bottom",
             scrub: isMobile ? 0.7 : 0.95,
             invalidateOnRefresh: true,
+            onUpdate: (self) => renderTerrainVideo(self.progress),
+            onRefresh: (self) => renderTerrainVideo(self.progress),
           },
         })
         .fromTo(
@@ -412,7 +461,7 @@ export function useCampaignMotion(
           ".terrain-word--city",
           { xPercent: 0, opacity: 1 },
           {
-            xPercent: isMobile ? -18 : -28,
+            xPercent: isMobile ? -8 : -28,
             opacity: 0.18,
             ease: "power1.in",
           },
@@ -420,7 +469,7 @@ export function useCampaignMotion(
         )
         .fromTo(
           ".terrain-word--field",
-          { xPercent: isMobile ? 24 : 34, opacity: 0 },
+          { xPercent: isMobile ? 8 : 34, opacity: 0 },
           { xPercent: 0, opacity: 1, ease: "power1.out" },
           0.45,
         )
@@ -565,6 +614,10 @@ export function useCampaignMotion(
         movementTrajectoryHead.removeAttribute("transform");
         movementTrajectoryHead.style.removeProperty("opacity");
       }
+      terrainScrollVideo?.removeEventListener(
+        "loadedmetadata",
+        syncTerrainVideoMetadata,
+      );
       gsap.ticker.remove(updateLenis);
       lenis.off("scroll", updateScrollTrigger);
       lenis.destroy();

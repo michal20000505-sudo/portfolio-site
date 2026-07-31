@@ -1,26 +1,30 @@
+import shoeVideoSrc from "../../video/shoe-scroll.mp4";
+import { LiquidGlassText } from "./LiquidGlassText";
+
 export function TerrainShift() {
   return (
     <section className="terrain" id="terrain" aria-labelledby="terrain-title">
       <div className="terrain-stage">
-        <img
-          className="terrain-image"
-          src="/images/trc-01-terrain.webp"
-          alt="TRC-01 crossing from wet asphalt onto loose pale gravel"
-          width="1536"
-          height="1024"
-          loading="lazy"
+        <video
+          className="terrain-image terrain-scroll-video"
+          src={shoeVideoSrc}
+          aria-label="SENTRACKER TRC-01 trail shoe moving across an alpine ridge"
+          role="img"
+          width="1920"
+          height="1080"
+          preload="auto"
+          muted
+          playsInline
+          disablePictureInPicture
         />
         <div className="terrain-shade" aria-hidden="true" />
         <div className="terrain-scan" aria-hidden="true" />
         <h2 id="terrain-title" className="sr-only">
           Surface transition: wet asphalt to loose gravel
         </h2>
-        <p
-          className="terrain-word terrain-word--city"
-          aria-hidden="true"
-        >
+        <LiquidGlassText className="terrain-word terrain-word--city">
           CITY
-        </p>
+        </LiquidGlassText>
         <p className="terrain-word terrain-word--field" aria-hidden="true">
           FIELD
         </p>

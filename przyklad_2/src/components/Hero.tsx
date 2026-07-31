@@ -73,11 +73,9 @@ export function Hero() {
           </div>
         </div>
       </div>
-      <div className="hero-word hero-word--bottom" aria-hidden="true">
-        <span className="word liquid-glass-shell liquid-glass-shell--feedback">
-          <LiquidGlassText>FEEDBACK</LiquidGlassText>
-        </span>
-      </div>
+      <LiquidGlassText className="hero-word hero-word--bottom word liquid-glass-shell liquid-glass-shell--feedback">
+        FEEDBACK
+      </LiquidGlassText>
       <div className="hero-meta">
         <p>Trail traction prototype</p>
         <p>TRC-01 / Field study 01</p>
