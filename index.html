@@ -1161,108 +1161,13 @@
         }
 
         .project-item--fault .project-img-wrapper {
-            aspect-ratio: 16 / 9;
             background: #e8e4da;
             border-color: rgba(218, 45, 31, 0.55);
         }
 
-        .fault-live-preview {
-            position: absolute;
-            inset: 0;
-            overflow: hidden;
-            background: #e8e4da;
-        }
-
-        .fault-live-preview iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 1440px;
-            height: 810px;
-            border: 0;
-            background: #e8e4da;
-            pointer-events: none;
-            transform: scale(0.5);
-            transform-origin: 0 0;
-            backface-visibility: hidden;
-            will-change: transform;
-        }
-
         .project-item--sentracker .project-img-wrapper {
-            aspect-ratio: 16 / 9;
             background: #160b22;
             border-color: rgba(182, 255, 0, 0.4);
-        }
-
-        .sentracker-live-preview {
-            position: absolute;
-            inset: 0;
-            overflow: hidden;
-            background: #160b22;
-        }
-
-        .sentracker-live-preview iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 1440px;
-            height: 810px;
-            border: 0;
-            background: #160b22;
-            pointer-events: none;
-            transform: scale(0.5);
-            transform-origin: 0 0;
-            backface-visibility: hidden;
-            will-change: transform;
-        }
-
-        .project-item--sentracker .live-preview-status::before {
-            background: #b6ff00;
-        }
-
-        .project-item--sentracker .project-img-wrapper:hover .live-preview-status {
-            color: #160b22;
-            background: #b6ff00;
-        }
-
-        .project-preview-link {
-            position: absolute !important;
-            z-index: 4;
-            inset: 0;
-            width: auto !important;
-            height: auto !important;
-        }
-
-        .live-preview-status {
-            position: absolute;
-            z-index: 3;
-            right: 14px;
-            bottom: 12px;
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            padding: 6px 9px;
-            color: #e8e4da;
-            background: rgba(23, 23, 20, 0.88);
-            font-size: 0.62rem;
-            font-weight: 600;
-            letter-spacing: 0.14em;
-            line-height: 1;
-            text-transform: uppercase;
-            transition: color 0.3s, background 0.3s;
-        }
-
-        .live-preview-status::before {
-            width: 6px;
-            height: 6px;
-            content: '';
-            background: #da2d1f;
-            border-radius: 50%;
-        }
-
-        .project-item--fault .project-img-wrapper:hover .live-preview-status {
-            color: #171714;
-            background: #e8e4da;
         }
 
         .project-info {
@@ -2048,12 +1953,10 @@
                 </article>
 
                 <article class="project-item project-item--fault reveal">
-                    <div class="project-img-wrapper link-hover" data-live-preview data-preview-scroll data-preview-ready="fault-preview-ready">
-                        <div class="fault-live-preview" aria-hidden="true">
-                            <iframe src="przyklad_1/dist/?preview=1" title="Animowany podgląd projektu FAULT / 08" loading="lazy" tabindex="-1"></iframe>
-                        </div>
-                        <span class="live-preview-status" aria-hidden="true">Live preview</span>
-                        <a class="project-preview-link" href="przyklad_1/dist/" aria-label="Otwórz projekt FAULT / 08"></a>
+                    <div class="project-img-wrapper link-hover">
+                        <a href="przyklad_1/dist/">
+                            <img src="thumbnails/web/fault-08.webp" alt="FAULT / 08 - eksperymentalny landing page z kinetyczną typografią" width="1600" height="900" loading="lazy">
+                        </a>
                     </div>
                     <div class="project-info">
                         <div class="project-meta">
@@ -2068,12 +1971,10 @@
                 </article>
 
                 <article class="project-item project-item--sentracker reveal">
-                    <div class="project-img-wrapper link-hover" data-live-preview data-preview-ready="sentracker-preview-ready">
-                        <div class="sentracker-live-preview" aria-hidden="true">
-                            <iframe data-src="przyklad_2/dist/?preview=1" title="Animowany podgląd projektu SENTRACKER TRC-01" tabindex="-1"></iframe>
-                        </div>
-                        <span class="live-preview-status" aria-hidden="true">Live preview</span>
-                        <a class="project-preview-link" href="przyklad_2/dist/" aria-label="Otwórz projekt SENTRACKER TRC-01"></a>
+                    <div class="project-img-wrapper link-hover">
+                        <a href="przyklad_2/dist/">
+                            <img src="thumbnails/web/sentracker-trc01.webp" alt="SENTRACKER TRC-01 - kampanijny landing page prototypu butów trailowych" width="1600" height="900" loading="lazy">
+                        </a>
                     </div>
                     <div class="project-info">
                         <div class="project-meta">
@@ -2162,140 +2063,6 @@
             entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
         }, { threshold: 0.1 });
         document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
-
-        // --- Live portfolio previews ---
-        // The iframe is rendered as a 1440 × 810 desktop canvas and scaled to
-        // the card. It runs only while visible and never hijacks page input.
-        // `data-preview-scroll` opts a card into the slow auto-scroll loop;
-        // without it the embedded page just plays its own opening animation.
-        const livePreviewReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const livePreviewStates = [];
-
-        document.querySelectorAll('[data-live-preview]').forEach(preview => {
-            const iframe = preview.querySelector('iframe');
-            if (!iframe) return;
-
-            const readyMessage = preview.dataset.previewReady || 'fault-preview-ready';
-            const autoScroll = preview.hasAttribute('data-preview-scroll');
-
-            const state = {
-                preview,
-                iframe,
-                loaded: false,
-                ready: false,
-                visible: false,
-                frame: 0,
-                timer: 0,
-                lastTime: 0,
-                position: 0
-            };
-            livePreviewStates.push(state);
-
-            const fitPreview = () => {
-                const scale = preview.clientWidth < 450 ? 0.25 : 0.5;
-                iframe.style.width = `${preview.clientWidth / scale}px`;
-                iframe.style.height = `${preview.clientHeight / scale}px`;
-                iframe.style.transform = `scale(${scale})`;
-            };
-
-            const pausePreview = () => {
-                clearTimeout(state.timer);
-                state.timer = 0;
-                if (state.frame) cancelAnimationFrame(state.frame);
-                state.frame = 0;
-                state.lastTime = 0;
-            };
-
-            const tickPreview = time => {
-                if (!state.visible || !state.loaded || !state.ready || document.hidden) {
-                    pausePreview();
-                    return;
-                }
-
-                if (!state.lastTime) state.lastTime = time;
-                const delta = Math.min(50, time - state.lastTime);
-                state.lastTime = time;
-
-                try {
-                    const previewWindow = iframe.contentWindow;
-                    const previewDocument = iframe.contentDocument?.documentElement;
-                    if (!previewWindow || !previewDocument) throw new Error('Preview unavailable');
-
-                    const maxScroll = Math.max(0, previewDocument.scrollHeight - previewWindow.innerHeight);
-                    state.position += delta * 0.02;
-                    if (state.position >= maxScroll) state.position = 0;
-                    previewWindow.scrollTo(0, state.position);
-                } catch (error) {
-                    pausePreview();
-                    return;
-                }
-
-                state.frame = requestAnimationFrame(tickPreview);
-            };
-
-            const startPreview = () => {
-                if (!autoScroll) return;
-                if (livePreviewReducedMotion || !state.visible || !state.loaded || !state.ready || document.hidden || state.frame || state.timer) return;
-                state.timer = window.setTimeout(() => {
-                    state.timer = 0;
-                    if (state.visible && state.loaded && state.ready && !document.hidden) {
-                        state.frame = requestAnimationFrame(tickPreview);
-                    }
-                }, 250);
-            };
-
-            state.start = startPreview;
-            state.pause = pausePreview;
-
-            const markPreviewLoaded = () => {
-                state.loaded = true;
-                state.position = 0;
-                try {
-                    iframe.contentDocument.documentElement.style.scrollBehavior = 'auto';
-                    iframe.contentWindow.scrollTo(0, 0);
-                } catch (error) { /* same-origin preview expected */ }
-            };
-            iframe.addEventListener('load', markPreviewLoaded);
-            try {
-                const previewUrl = iframe.contentWindow?.location.href;
-                if (previewUrl && previewUrl !== 'about:blank' && iframe.contentDocument?.readyState === 'complete') markPreviewLoaded();
-            } catch (error) { /* same-origin preview expected */ }
-
-            window.addEventListener('message', event => {
-                if (event.origin !== window.location.origin || event.source !== iframe.contentWindow) return;
-                if (event.data?.type !== readyMessage) return;
-                state.ready = true;
-                startPreview();
-            });
-
-            // A card that does not auto-scroll only gets one chance to show its
-            // opening animation, so hold the load until it is nearly in view.
-            const activatePreview = () => {
-                const pending = iframe.dataset.src;
-                if (!pending) return;
-                delete iframe.dataset.src;
-                iframe.src = pending;
-            };
-
-            const visibilityObserver = new IntersectionObserver(([entry]) => {
-                state.visible = entry.isIntersecting;
-                if (state.visible) {
-                    activatePreview();
-                    startPreview();
-                } else pausePreview();
-            }, { threshold: 0.22, rootMargin: '80px 0px' });
-            visibilityObserver.observe(preview);
-
-            new ResizeObserver(fitPreview).observe(preview);
-            fitPreview();
-        });
-
-        document.addEventListener('visibilitychange', () => {
-            livePreviewStates.forEach(state => {
-                if (document.hidden) state.pause();
-                else state.start();
-            });
-        });
 
         // --- Header Scroll Effect & Progress Bar (rAF-throttled, transform only) ---
         const header = document.querySelector('header');

@@ -32,14 +32,17 @@ A raw `src="/images/..."` resolves against the portfolio root and 404s once
 deployed, while still working on the dev server — so it will not show up
 locally.
 
-## Live preview mode
+## Preview mode
 
-`?preview=1` embeds the campaign in the portfolio card on the main page. In
-that mode it drops Lenis and the custom cursor, hides the scrollbar, sets the
-terrain video to `preload="none"`, and posts `sentracker-preview-ready` to the
-parent once the hero opening timeline finishes. The card never scrolls the
-frame — only the hero animation is on show. See `previewMode` in
-`src/lib/previewMode.ts`.
+`?preview=1` strips the page down to a clean canvas: no Lenis, no custom
+cursor, no scrollbar, terrain video at `preload="none"`. It also posts
+`sentracker-preview-ready` to a parent frame once the hero opening timeline
+finishes. See `previewMode` in `src/lib/previewMode.ts`.
+
+The portfolio card on the main page used to embed this in an iframe, but the
+two live previews cost too much on the index, so the card is now a still
+(`thumbnails/web/sentracker-trc01.webp`) captured from this mode at 1440×810.
+Re-shoot it through `?preview=1` whenever the hero changes.
 
 ## Interaction notes
 
