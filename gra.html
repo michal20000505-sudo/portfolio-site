@@ -8,16 +8,16 @@
     <meta name="description" content="SPACEFIGHTER: The Bullet Hell — autorska gra indie dostępna na Steam. Kosmiczna strzelanka bullet hell stworzona przez Michała Jarosińskiego.">
     <meta name="keywords" content="SPACEFIGHTER, bullet hell, gra indie, Steam, kosmiczna strzelanka, Michał Jarosiński">
     <meta name="author" content="Michał Jarosiński">
-    <meta name="robots" content="index, follow">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <meta name="language" content="Polish">
     <meta name="geo.region" content="PL">
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://michal20000505-sudo.github.io/portfolio-site/gra.html">
+    <meta property="og:url" content="https://m-jaro.pl/gra.html">
     <meta property="og:title" content="SPACEFIGHTER: The Bullet Hell | Michał Jarosiński">
     <meta property="og:description" content="Kosmiczna strzelanka bullet hell dostępna na Steam. Autorska gra indie stworzona przez Michała Jarosińskiego.">
-    <meta property="og:image" content="https://michal20000505-sudo.github.io/portfolio-site/og-gra.jpg">
+    <meta property="og:image" content="https://m-jaro.pl/og-gra.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="SPACEFIGHTER: The Bullet Hell key art">
@@ -27,14 +27,14 @@
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://michal20000505-sudo.github.io/portfolio-site/gra.html">
+    <meta property="twitter:url" content="https://m-jaro.pl/gra.html">
     <meta property="twitter:title" content="SPACEFIGHTER: The Bullet Hell | Michał Jarosiński">
     <meta property="twitter:description" content="Kosmiczna strzelanka bullet hell dostępna na Steam.">
-    <meta property="twitter:image" content="https://michal20000505-sudo.github.io/portfolio-site/og-gra.jpg">
+    <meta property="twitter:image" content="https://m-jaro.pl/og-gra.jpg">
     <meta property="twitter:image:alt" content="SPACEFIGHTER: The Bullet Hell key art">
 
     <meta name="theme-color" content="#050505">
-    <link rel="canonical" href="https://michal20000505-sudo.github.io/portfolio-site/gra.html">
+    <link rel="canonical" href="https://m-jaro.pl/gra.html">
     <link rel="apple-touch-icon" sizes="500x500" href="strona-icon.png">
     <link rel="manifest" href="manifest.json">
     <link rel="dns-prefetch" href="//store.steampowered.com">
@@ -43,30 +43,54 @@
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
-        "@type": "VideoGame",
-        "name": "SPACEFIGHTER: The Bullet Hell",
-        "description": "Kosmiczna strzelanka bullet hell dostępna na Steam",
-        "url": "https://store.steampowered.com/app/4451950/SPACEFIGHTER__The_Bullet_Hell/",
-        "applicationCategory": "Game",
-        "operatingSystem": "Windows",
-        "genre": ["Bullet Hell", "Space Shooter"],
-        "author": {
-            "@type": "Person",
-            "name": "Michał Jarosiński",
-            "url": "https://michal20000505-sudo.github.io/portfolio-site/"
-        },
-        "isPartOf": {
-            "@type": "WebSite",
-            "name": "Michał Jarosiński Portfolio",
-            "url": "https://michal20000505-sudo.github.io/portfolio-site/"
-        },
-        "breadcrumb": {
-            "@type": "BreadcrumbList",
-            "itemListElement": [
-                {"@type": "ListItem", "position": 1, "name": "Portfolio", "item": "https://michal20000505-sudo.github.io/portfolio-site/"},
-                {"@type": "ListItem", "position": 2, "name": "SPACEFIGHTER", "item": "https://michal20000505-sudo.github.io/portfolio-site/gra.html"}
-            ]
-        }
+        "@graph": [
+            {
+                "@type": "VideoGame",
+                "@id": "https://m-jaro.pl/gra.html#game",
+                "name": "SPACEFIGHTER: The Bullet Hell",
+                "alternateName": "SPACEFIGHTER",
+                "description": "Kosmiczna strzelanka bullet hell dostępna na Steam",
+                "url": "https://store.steampowered.com/app/4451950/SPACEFIGHTER__The_Bullet_Hell/",
+                "image": "https://m-jaro.pl/og-gra.jpg",
+                "applicationCategory": "GameApplication",
+                "operatingSystem": "Windows",
+                "gamePlatform": "PC (Steam)",
+                "genre": ["Bullet Hell", "Bullet Heaven", "Roguelite", "Space Shooter"],
+                "datePublished": "2026-06-08",
+                "author": { "@id": "https://m-jaro.pl/#person" },
+                "publisher": { "@id": "https://m-jaro.pl/#person" },
+                "offers": {
+                    "@type": "Offer",
+                    "price": "2.99",
+                    "priceCurrency": "USD",
+                    "url": "https://store.steampowered.com/app/4451950/SPACEFIGHTER__The_Bullet_Hell/",
+                    "availability": "https://schema.org/PreOrder"
+                }
+            },
+            {
+                "@type": "Person",
+                "@id": "https://m-jaro.pl/#person",
+                "name": "Michał Jarosiński",
+                "url": "https://m-jaro.pl/"
+            },
+            {
+                "@type": "WebPage",
+                "@id": "https://m-jaro.pl/gra.html#webpage",
+                "url": "https://m-jaro.pl/gra.html",
+                "name": "SPACEFIGHTER: The Bullet Hell | Michał Jarosiński",
+                "inLanguage": "pl-PL",
+                "about": { "@id": "https://m-jaro.pl/gra.html#game" },
+                "primaryImageOfPage": "https://m-jaro.pl/og-gra.jpg",
+                "isPartOf": { "@id": "https://m-jaro.pl/#website" },
+                "breadcrumb": {
+                    "@type": "BreadcrumbList",
+                    "itemListElement": [
+                        {"@type": "ListItem", "position": 1, "name": "Portfolio", "item": "https://m-jaro.pl/"},
+                        {"@type": "ListItem", "position": 2, "name": "SPACEFIGHTER", "item": "https://m-jaro.pl/gra.html"}
+                    ]
+                }
+            }
+        ]
     }
     </script>
 
@@ -915,7 +939,7 @@
     <header id="site-header">
         <div class="container">
             <nav aria-label="Nawigacja główna">
-                <a href="index.html" class="logo" aria-label="MJ Portfolio — strona główna">MJ<span>.</span></a>
+                <a href="/" class="logo" aria-label="MJ Portfolio — strona główna">MJ<span>.</span></a>
 
                 <button class="menu-toggle" id="menu-toggle"
                         aria-label="Otwórz menu" aria-expanded="false" aria-controls="nav-links">
@@ -925,11 +949,11 @@
                 </button>
 
                 <ul class="nav-links" id="nav-links" role="list">
-                    <li><a href="index.html#about" class="magnet">O mnie</a></li>
-                    <li><a href="index.html#work" class="magnet">Web</a></li>
+                    <li><a href="/#about" class="magnet">O mnie</a></li>
+                    <li><a href="/#work" class="magnet">Web</a></li>
                     <li><a href="grafika.html" class="magnet">Grafika</a></li>
                     <li><a href="gra.html" class="magnet active" aria-current="page">Gra</a></li>
-                    <li><a href="index.html#contact" class="magnet">Kontakt</a></li>
+                    <li><a href="/#contact" class="magnet">Kontakt</a></li>
                 </ul>
             </nav>
         </div>

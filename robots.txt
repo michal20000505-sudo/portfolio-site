@@ -1,9 +1,21 @@
 User-agent: *
 Allow: /
 
-# Blokuj pliki skryptów deweloperskich i strony testowe
+# Katalogi robocze i skrypty — nie sa czescia serwisu.
+# Uwaga: /sources/, /the_last_signal/ i /eye-test.html celowo NIE sa tu
+# blokowane — maja naglowek "X-Robots-Tag: noindex" (.htaccess), a Google
+# musi je odwiedzic, zeby ten naglowek zobaczyc i usunac je z indeksu.
+Disallow: /tools/
+Disallow: /*.md$
 Disallow: /*.py$
-Disallow: /eye-test.html
 
-# Sitemap
-Sitemap: https://michal20000505-sudo.github.io/portfolio-site/sitemap.xml
+# Zasoby potrzebne Googlebotowi do poprawnego renderowania strony
+Allow: /fonts/
+Allow: /models/
+Allow: /thumbnails/
+Allow: /lightbox/
+Allow: /screens/
+Allow: /screenshots/
+Allow: /press/
+
+Sitemap: https://m-jaro.pl/sitemap.xml

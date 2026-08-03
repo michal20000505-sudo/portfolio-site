@@ -8,17 +8,17 @@
     <meta name="description" content="Michał Jarosiński - creative designer specjalizujący się w web designie, brandingu i art direction od 2014 roku. Zobacz portfolio projektów dla klientów takich jak Lavazza, AimControllers, PGV.">
     <meta name="keywords" content="web design, branding, portfolio, projektowanie stron, identyfikacja wizualna, UX/UI, frontend, grafika komputerowa, Michał Jarosiński">
     <meta name="author" content="Michał Jarosiński">
-    <meta name="robots" content="index, follow">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <meta name="language" content="Polish">
     <meta name="geo.region" content="PL">
-    <meta name="geo.placename" content="Poland">
-    
+    <meta name="geo.placename" content="Wrocław, Poland">
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://michal20000505-sudo.github.io/portfolio-site/">
+    <meta property="og:url" content="https://m-jaro.pl/">
     <meta property="og:title" content="Michał Jarosiński - Portfolio | Web Design & Branding">
     <meta property="og:description" content="Creative designer specjalizujący się w web designie, brandingu i art direction od 2014 roku. Zobacz portfolio projektów dla klientów takich jak Lavazza, AimControllers, PGV.">
-    <meta property="og:image" content="https://michal20000505-sudo.github.io/portfolio-site/og-image.jpg">
+    <meta property="og:image" content="https://m-jaro.pl/og-image.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="Portfolio Michała Jarosińskiego - web design i branding">
@@ -28,43 +28,91 @@
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://michal20000505-sudo.github.io/portfolio-site/">
+    <meta property="twitter:url" content="https://m-jaro.pl/">
     <meta property="twitter:title" content="Michał Jarosiński - Portfolio | Web Design & Branding">
     <meta property="twitter:description" content="Creative designer specjalizujący się w web designie, brandingu i art direction od 2014 roku. Zobacz portfolio projektów dla klientów takich jak Lavazza, AimControllers, PGV.">
-    <meta property="twitter:image" content="https://michal20000505-sudo.github.io/portfolio-site/og-image.jpg">
+    <meta property="twitter:image" content="https://m-jaro.pl/og-image.jpg">
     <meta property="twitter:image:alt" content="Portfolio Michała Jarosińskiego - web design i branding">
 
     <!-- Additional SEO -->
     <meta name="theme-color" content="#050505">
     <meta name="msapplication-TileColor" content="#050505">
-    <link rel="canonical" href="https://michal20000505-sudo.github.io/portfolio-site/">
-    
+    <meta name="color-scheme" content="dark">
+    <link rel="canonical" href="https://m-jaro.pl/">
+
     <!-- Structured Data - JSON-LD -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
-        "@type": "Person",
-        "name": "Michał Jarosiński",
-        "jobTitle": "Creative Designer",
-        "description": "Creative designer specjalizujący się w web designie, brandingu i art direction od 2014 roku",
-        "url": "https://michal20000505-sudo.github.io/portfolio-site/",
-        "email": "graf.m.jar@gmail.com",
-        "telephone": "+48608078802",
-        "address": {
-            "@type": "PostalAddress",
-            "addressCountry": "PL"
-        },
-        "sameAs": [],
-        "knowsAbout": ["Web Design", "Branding", "UX/UI Design", "Graphic Design", "Frontend Development"],
-        "offers": {
-            "@type": "Offer",
-            "serviceType": ["Web Design", "Branding", "Development"],
-            "areaServed": "PL"
-        },
-        "worksFor": {
-            "@type": "Organization",
-            "name": "Freelance"
-        }
+        "@graph": [
+            {
+                "@type": "WebSite",
+                "@id": "https://m-jaro.pl/#website",
+                "url": "https://m-jaro.pl/",
+                "name": "Michał Jarosiński Portfolio",
+                "description": "Portfolio web designu, brandingu i grafiki Michała Jarosińskiego",
+                "inLanguage": "pl-PL",
+                "publisher": { "@id": "https://m-jaro.pl/#person" }
+            },
+            {
+                "@type": "Person",
+                "@id": "https://m-jaro.pl/#person",
+                "name": "Michał Jarosiński",
+                "jobTitle": "Creative Designer",
+                "description": "Creative designer specjalizujący się w web designie, brandingu i art direction od 2014 roku",
+                "url": "https://m-jaro.pl/",
+                "image": "https://m-jaro.pl/og-image.jpg",
+                "email": "graf.m.jar@gmail.com",
+                "telephone": "+48608078802",
+                "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Wrocław",
+                    "addressCountry": "PL"
+                },
+                "knowsAbout": ["Web Design", "Branding", "UX/UI Design", "Graphic Design", "Frontend Development", "Design 3D"],
+                "knowsLanguage": ["pl", "en"],
+                "worksFor": {
+                    "@type": "Organization",
+                    "name": "Freelance"
+                }
+            },
+            {
+                "@type": "ProfilePage",
+                "@id": "https://m-jaro.pl/#webpage",
+                "url": "https://m-jaro.pl/",
+                "name": "Michał Jarosiński - Portfolio | Web Design & Branding",
+                "isPartOf": { "@id": "https://m-jaro.pl/#website" },
+                "about": { "@id": "https://m-jaro.pl/#person" },
+                "mainEntity": { "@id": "https://m-jaro.pl/#person" },
+                "primaryImageOfPage": "https://m-jaro.pl/og-image.jpg",
+                "inLanguage": "pl-PL"
+            },
+            {
+                "@type": "ProfessionalService",
+                "@id": "https://m-jaro.pl/#service",
+                "name": "Michał Jarosiński — web design, branding, development",
+                "url": "https://m-jaro.pl/",
+                "image": "https://m-jaro.pl/og-image.jpg",
+                "email": "graf.m.jar@gmail.com",
+                "telephone": "+48608078802",
+                "areaServed": { "@type": "Country", "name": "Polska" },
+                "provider": { "@id": "https://m-jaro.pl/#person" },
+                "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Wrocław",
+                    "addressCountry": "PL"
+                },
+                "hasOfferCatalog": {
+                    "@type": "OfferCatalog",
+                    "name": "Usługi",
+                    "itemListElement": [
+                        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Web Design" } },
+                        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Branding" } },
+                        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Development" } }
+                    ]
+                }
+            }
+        ]
     }
     </script>
     
@@ -1898,7 +1946,7 @@
 
                 <article class="project-item reveal">
                     <div class="project-img-wrapper link-hover">
-                        <a href="https://sscar.pl" target="_blank">
+                        <a href="https://sscar.pl" target="_blank" rel="noopener">
                             <img src="thumbnails/web/sscar.webp" alt="SSCAR - strona internetowa dla serwisu samochodowego" width="1200" height="588" loading="lazy">
                         </a>
                     </div>
@@ -1907,16 +1955,16 @@
                             <span class="project-num">02</span>
                             <span class="project-cat">Web · Serwis Auto</span>
                         </div>
-                        <h3><a href="https://sscar.pl" target="_blank">SSCAR</a></h3>
+                        <h3><a href="https://sscar.pl" target="_blank" rel="noopener">SSCAR</a></h3>
                         <p>Zaawansowana platforma dla serwisu samochodowego. Wbudowany dekoder VIN, własne bazy danych klimatyzacji oraz w pełni autonomiczny, inteligentny system rezerwacji zintegrowany z Google Calendar. Wszystko działa bez żadnych zewnętrznych usług.</p>
                         <div class="tags"><span>Web Design</span><span>Development</span><span>System rezerwacji</span></div>
-                        <a class="project-link" href="https://sscar.pl" target="_blank">Zobacz stronę <span>&rarr;</span></a>
+                        <a class="project-link" href="https://sscar.pl" target="_blank" rel="noopener">Zobacz stronę <span>&rarr;</span></a>
                     </div>
                 </article>
 
                 <article class="project-item reveal">
                     <div class="project-img-wrapper link-hover">
-                        <a href="https://bodycreator.com.pl" target="_blank">
+                        <a href="https://bodycreator.com.pl" target="_blank" rel="noopener">
                             <img src="thumbnails/web/bodycreator.webp" alt="Body Creator - strona studia treningowego z autonomicznymi formularzami i kalkulatorem BMI" width="1200" height="622" loading="lazy">
                         </a>
                     </div>
@@ -1925,16 +1973,16 @@
                             <span class="project-num">03</span>
                             <span class="project-cat">Web · Studio Treningowe</span>
                         </div>
-                        <h3><a href="https://bodycreator.com.pl" target="_blank">Body Creator</a></h3>
+                        <h3><a href="https://bodycreator.com.pl" target="_blank" rel="noopener">Body Creator</a></h3>
                         <p>Strona dla studia treningowego z naciskiem na mocną oprawę wizualną i pełną responsywność. Autonomiczne formularze dla właścicieli działają w całości po stronie strony, bez zewnętrznych usług poza hostingiem. Do tego interaktywne zdjęcia przemian klientów i kalkulator BMI/TDEE.</p>
                         <div class="tags"><span>Web Design</span><span>Development</span><span>UX/UI</span></div>
-                        <a class="project-link" href="https://bodycreator.com.pl" target="_blank">Zobacz stronę <span>&rarr;</span></a>
+                        <a class="project-link" href="https://bodycreator.com.pl" target="_blank" rel="noopener">Zobacz stronę <span>&rarr;</span></a>
                     </div>
                 </article>
 
                 <article class="project-item reveal">
                     <div class="project-img-wrapper link-hover">
-                        <a href="https://www.handybruk.pl" target="_blank">
+                        <a href="https://www.handybruk.pl" target="_blank" rel="noopener">
                             <img src="thumbnails/web/handybruk.webp" alt="HandyBruk - strona firmy usługowej z Wrocławia: bruk, ogród, przeprowadzki" width="1600" height="827" loading="lazy">
                         </a>
                     </div>
@@ -1943,16 +1991,16 @@
                             <span class="project-num">04</span>
                             <span class="project-cat">Web · Usługi</span>
                         </div>
-                        <h3><a href="https://www.handybruk.pl" target="_blank">HandyBruk</a></h3>
+                        <h3><a href="https://www.handybruk.pl" target="_blank" rel="noopener">HandyBruk</a></h3>
                         <p>Strona dla wrocławskiej firmy usługowej łączącej brukarstwo, prace ogrodowe, porządki i przeprowadzki. Oferta zmienia się razem z sezonem, więc strona pokazuje usługi w podziale na porę roku, a całą narrację prowadzi jeden cel: szybki telefon albo zapytanie o wycenę.</p>
                         <div class="tags"><span>Web Design</span><span>Development</span><span>Konwersja</span></div>
-                        <a class="project-link" href="https://www.handybruk.pl" target="_blank">Zobacz stronę <span>&rarr;</span></a>
+                        <a class="project-link" href="https://www.handybruk.pl" target="_blank" rel="noopener">Zobacz stronę <span>&rarr;</span></a>
                     </div>
                 </article>
 
                 <article class="project-item reveal">
                     <div class="project-img-wrapper link-hover">
-                        <a href="https://michal20000505-sudo.github.io/R-MAX-auto/index.html" target="_blank">
+                        <a href="https://michal20000505-sudo.github.io/R-MAX-auto/index.html" target="_blank" rel="noopener">
                             <img src="thumbnails/web/rmax.webp" alt="R-MAX Auto - nowoczesna strona serwisu samochodowego" width="1200" height="750" loading="lazy">
                         </a>
                     </div>
@@ -1961,13 +2009,13 @@
                             <span class="project-num">05</span>
                             <span class="project-cat">Web · Serwis Auto</span>
                         </div>
-                        <h3><a href="https://michal20000505-sudo.github.io/R-MAX-auto/index.html" target="_blank">R-MAX
+                        <h3><a href="https://michal20000505-sudo.github.io/R-MAX-auto/index.html" target="_blank" rel="noopener">R-MAX
                                 Auto</a></h3>
                         <p>Nowoczesna strona internetowa dla serwisu samochodowego R-MAX Auto. Atrakcyjny, ciemny design z
                             wyraźnym wezwaniem do akcji i zoptymalizowanym układem opinii. Projekt nastawiony na wysoką
                             konwersję i budowanie zaufania klientów.</p>
                         <div class="tags"><span>Web Design</span><span>Development</span></div>
-                        <a class="project-link" href="https://michal20000505-sudo.github.io/R-MAX-auto/index.html" target="_blank">Zobacz stronę <span>&rarr;</span></a>
+                        <a class="project-link" href="https://michal20000505-sudo.github.io/R-MAX-auto/index.html" target="_blank" rel="noopener">Zobacz stronę <span>&rarr;</span></a>
                     </div>
                 </article>
 

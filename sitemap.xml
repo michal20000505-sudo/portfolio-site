@@ -1,44 +1,158 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
   <url>
-    <loc>https://michal20000505-sudo.github.io/portfolio-site/</loc>
-    <lastmod>2026-07-21</lastmod>
+    <loc>https://m-jaro.pl/</loc>
+    <lastmod>2026-08-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
     <image:image>
-      <image:loc>https://michal20000505-sudo.github.io/portfolio-site/og-image.jpg</image:loc>
-      <image:title>Michał Jarosiński - Portfolio Web Design &amp; Branding</image:title>
+      <image:loc>https://m-jaro.pl/og-image.jpg</image:loc>
+      <image:title>Michał Jarosiński — portfolio web design i branding</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://m-jaro.pl/thumbnails/web/sscar.webp</image:loc>
+      <image:title>SSCAR — strona internetowa</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://m-jaro.pl/thumbnails/web/bodycreator.webp</image:loc>
+      <image:title>Body Creator — strona internetowa</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://m-jaro.pl/thumbnails/web/handybruk.webp</image:loc>
+      <image:title>HandyBruk — strona internetowa</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://m-jaro.pl/thumbnails/web/rmax.webp</image:loc>
+      <image:title>R-MAX Auto — strona internetowa</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://m-jaro.pl/screens/system_rezerwacji.webp</image:loc>
+      <image:title>System rezerwacji — panel i automatyzacje</image:title>
     </image:image>
   </url>
+
   <url>
-    <loc>https://michal20000505-sudo.github.io/portfolio-site/grafika.html</loc>
-    <lastmod>2026-07-21</lastmod>
+    <loc>https://m-jaro.pl/grafika.html</loc>
+    <lastmod>2026-08-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://michal20000505-sudo.github.io/portfolio-site/og-image.jpg</image:loc>
-      <image:title>Projekty graficzne - branding, plakaty, DTP</image:title>
+      <image:loc>https://m-jaro.pl/lightbox/Lipali-koncert-roboczy-PLAKAT-3.webp</image:loc>
+      <image:title>Lipali Concert Tour — plakat koncertowy</image:title>
+      <image:caption>Projekt plakatu promującego trasę koncertową zespołu Lipali.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://m-jaro.pl/lightbox/Food-point-final-ciemne-tlo.webp</image:loc>
+      <image:title>Food Point Neon — identyfikacja wizualna</image:title>
+      <image:caption>Branding punktu gastronomicznego w stylistyce neonowej.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://m-jaro.pl/lightbox/Grom-art-b5-front.webp</image:loc>
+      <image:title>Grom Art Operator — ulotka B5</image:title>
+      <image:caption>Ulotka z wizualizacją statuetki dla producenta Grom Art.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://m-jaro.pl/lightbox/dunajewska-ulotka.webp</image:loc>
+      <image:title>Personal Trainer Flyer — ulotka promocyjna</image:title>
+      <image:caption>Ulotka reklamowa dla trenerki personalnej.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://m-jaro.pl/lightbox/digicamoblue-powder.webp</image:loc>
+      <image:title>Digicamo Blue — custom kontroler AIM Controllers</image:title>
+      <image:caption>Projekt graficzny customowego kontrolera i kompozycja reklamowa.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://m-jaro.pl/lightbox/Dunajewska-voucher.webp</image:loc>
+      <image:title>Training Voucher — voucher podarunkowy</image:title>
+      <image:caption>Voucher na darmowy trening personalny.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://m-jaro.pl/lightbox/Wizyt%C3%B3wka-9x5-sudbal.webp</image:loc>
+      <image:title>Sudbal Garage — wizytówka</image:title>
+      <image:caption>Wizytówka dla serwisu detailingowego.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://m-jaro.pl/lightbox/Wizyt%C3%B3wka-9x5.webp</image:loc>
+      <image:title>Personal Trainer — wizytówka</image:title>
+      <image:caption>Identyfikacja wizualna trenera personalnego.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://m-jaro.pl/lightbox/Grzegorz-pirog-wizytowka.webp</image:loc>
+      <image:title>Construction Identity — wizytówka firmy budowlanej</image:title>
+      <image:caption>Wizytówka dla firmy wykończeniowej i budowlanej.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://m-jaro.pl/lightbox/render2.webp</image:loc>
+      <image:title>Grom Art Identity — branding i mockup wizytówek</image:title>
+      <image:caption>Kompleksowy branding dla producenta statuetek militarnych.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://m-jaro.pl/lightbox/wizyt%C3%B3wka-max-bucz.webp</image:loc>
+      <image:title>Schmidt Construction — wizytówka</image:title>
+      <image:caption>Wizytówka dla producenta maszyn budowlanych.</image:caption>
     </image:image>
   </url>
+
   <url>
-    <loc>https://michal20000505-sudo.github.io/portfolio-site/gra.html</loc>
-    <lastmod>2026-07-21</lastmod>
+    <loc>https://m-jaro.pl/gra.html</loc>
+    <lastmod>2026-08-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://michal20000505-sudo.github.io/portfolio-site/og-gra.jpg</image:loc>
+      <image:loc>https://m-jaro.pl/og-gra.jpg</image:loc>
       <image:title>SPACEFIGHTER: The Bullet Hell</image:title>
     </image:image>
+    <image:image>
+      <image:loc>https://m-jaro.pl/press/screenshots/1wave.webp</image:loc>
+      <image:title>SPACEFIGHTER — pierwsza fala wrogów</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://m-jaro.pl/press/screenshots/boss2.webp</image:loc>
+      <image:title>SPACEFIGHTER — walka z bossem</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://m-jaro.pl/press/screenshots/upgrades.webp</image:loc>
+      <image:title>SPACEFIGHTER — ekran ulepszeń</image:title>
+    </image:image>
   </url>
+
   <url>
-    <loc>https://michal20000505-sudo.github.io/portfolio-site/gra-press.html</loc>
-    <lastmod>2026-07-21</lastmod>
+    <loc>https://m-jaro.pl/gra-press.html</loc>
+    <lastmod>2026-08-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <image:image>
-      <image:loc>https://michal20000505-sudo.github.io/portfolio-site/og-gra.jpg</image:loc>
-      <image:title>SPACEFIGHTER: The Bullet Hell - Press Kit</image:title>
+      <image:loc>https://m-jaro.pl/og-gra.jpg</image:loc>
+      <image:title>SPACEFIGHTER: The Bullet Hell — Press Kit</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://m-jaro.pl/press/capsule/store_capsule_header.png</image:loc>
+      <image:title>SPACEFIGHTER — Steam store capsule</image:title>
     </image:image>
   </url>
+
+  <url>
+    <loc>https://m-jaro.pl/przyklad_1/dist/</loc>
+    <lastmod>2026-08-03</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+    <image:image>
+      <image:loc>https://m-jaro.pl/thumbnails/web/fault-08.webp</image:loc>
+      <image:title>FAULT / 08 — koncepcyjna strona edytorska</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://m-jaro.pl/przyklad_2/dist/</loc>
+    <lastmod>2026-08-03</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+    <image:image>
+      <image:loc>https://m-jaro.pl/thumbnails/web/sentracker-trc01.webp</image:loc>
+      <image:title>SENTRACKER TRC-01 — koncepcyjna strona produktowa</image:title>
+    </image:image>
+  </url>
+
 </urlset>

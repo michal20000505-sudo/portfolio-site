@@ -8,15 +8,15 @@
     <meta name="description" content="Official press kit for SPACEFIGHTER: The Bullet Hell — solo-dev bullet heaven launching June 8, 2026 inside Steam Bullet Fest 2026. Factsheet, screenshots, descriptions, assets and contact.">
     <meta name="keywords" content="SPACEFIGHTER, press kit, bullet hell, bullet heaven, indie game, Steam Bullet Fest 2026, Michał Jarosiński">
     <meta name="author" content="Michał Jarosiński">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://michal20000505-sudo.github.io/portfolio-site/gra-press.html">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://m-jaro.pl/gra-press.html">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://michal20000505-sudo.github.io/portfolio-site/gra-press.html">
+    <meta property="og:url" content="https://m-jaro.pl/gra-press.html">
     <meta property="og:title" content="SPACEFIGHTER: The Bullet Hell — Press Kit">
     <meta property="og:description" content="Press kit for SPACEFIGHTER: The Bullet Hell. Factsheet, screenshots, descriptions, assets, contact.">
-    <meta property="og:image" content="https://michal20000505-sudo.github.io/portfolio-site/og-gra.jpg">
+    <meta property="og:image" content="https://m-jaro.pl/og-gra.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="SPACEFIGHTER: The Bullet Hell key art">
@@ -26,14 +26,75 @@
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://michal20000505-sudo.github.io/portfolio-site/gra-press.html">
+    <meta name="twitter:url" content="https://m-jaro.pl/gra-press.html">
     <meta name="twitter:title" content="SPACEFIGHTER: The Bullet Hell — Press Kit">
     <meta name="twitter:description" content="Press kit for SPACEFIGHTER: The Bullet Hell. Factsheet, screenshots, descriptions, assets, contact.">
-    <meta name="twitter:image" content="https://michal20000505-sudo.github.io/portfolio-site/og-gra.jpg">
+    <meta name="twitter:image" content="https://m-jaro.pl/og-gra.jpg">
     <meta name="twitter:image:alt" content="SPACEFIGHTER: The Bullet Hell key art">
 
     <meta name="theme-color" content="#050505">
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "VideoGame",
+                "@id": "https://m-jaro.pl/gra.html#game",
+                "name": "SPACEFIGHTER: The Bullet Hell",
+                "alternateName": "SPACEFIGHTER",
+                "description": "Top-down bullet-heaven roguelite where every run is a new build. Stack three weapon trees into synergies, fight bosses with real mechanics, and survive the chaos.",
+                "url": "https://store.steampowered.com/app/4451950/SPACEFIGHTER__The_Bullet_Hell/",
+                "image": "https://m-jaro.pl/og-gra.jpg",
+                "applicationCategory": "GameApplication",
+                "operatingSystem": "Windows",
+                "gamePlatform": "PC (Steam)",
+                "genre": ["Bullet Heaven", "Roguelite", "Top-Down Shooter", "Survivors-like"],
+                "datePublished": "2026-06-08",
+                "inLanguage": "en",
+                "author": { "@id": "https://m-jaro.pl/#person" },
+                "publisher": { "@id": "https://m-jaro.pl/#person" },
+                "offers": {
+                    "@type": "Offer",
+                    "price": "2.99",
+                    "priceCurrency": "USD",
+                    "url": "https://store.steampowered.com/app/4451950/SPACEFIGHTER__The_Bullet_Hell/",
+                    "availability": "https://schema.org/PreOrder"
+                }
+            },
+            {
+                "@type": "Person",
+                "@id": "https://m-jaro.pl/#person",
+                "name": "Michał Jarosiński",
+                "alternateName": "Michał JARO Jarosiński",
+                "url": "https://m-jaro.pl/"
+            },
+            {
+                "@type": "WebPage",
+                "@id": "https://m-jaro.pl/gra-press.html#webpage",
+                "url": "https://m-jaro.pl/gra-press.html",
+                "name": "SPACEFIGHTER: The Bullet Hell — Press Kit",
+                "description": "Official press kit for SPACEFIGHTER: The Bullet Hell. Factsheet, screenshots, descriptions, assets and contact.",
+                "inLanguage": "en",
+                "about": { "@id": "https://m-jaro.pl/gra.html#game" },
+                "primaryImageOfPage": "https://m-jaro.pl/og-gra.jpg",
+                "isPartOf": { "@id": "https://m-jaro.pl/#website" },
+                "breadcrumb": {
+                    "@type": "BreadcrumbList",
+                    "itemListElement": [
+                        { "@type": "ListItem", "position": 1, "name": "Portfolio", "item": "https://m-jaro.pl/" },
+                        { "@type": "ListItem", "position": 2, "name": "SPACEFIGHTER", "item": "https://m-jaro.pl/gra.html" },
+                        { "@type": "ListItem", "position": 3, "name": "Press Kit", "item": "https://m-jaro.pl/gra-press.html" }
+                    ]
+                }
+            }
+        ]
+    }
+    </script>
+
     <link rel="icon" type="image/png" sizes="500x500" href="strona-icon.png">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" sizes="500x500" href="strona-icon.png">
     <link rel="preload" as="font" type="font/woff2" crossorigin href="fonts/space-grotesk-latin-ext.woff2">
     <link rel="preload" as="font" type="font/woff2" crossorigin href="fonts/space-grotesk-latin.woff2">
     <link rel="preload" as="image" href="press/logo/LOGOGRY.png">
@@ -1147,7 +1208,7 @@
     <header id="site-header">
         <div class="container">
             <nav aria-label="Main navigation">
-                <a href="index.html" class="logo" aria-label="MJ Portfolio — homepage">MJ<span>.</span></a>
+                <a href="/" class="logo" aria-label="MJ Portfolio — homepage">MJ<span>.</span></a>
 
                 <button class="menu-toggle" id="menu-toggle"
                         aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">
@@ -1157,11 +1218,11 @@
                 </button>
 
                 <ul class="nav-links" id="nav-links" role="list">
-                    <li><a href="index.html#about" data-i18n="nav.about">O mnie</a></li>
-                    <li><a href="index.html#work" data-i18n="nav.web">Web</a></li>
+                    <li><a href="/#about" data-i18n="nav.about">O mnie</a></li>
+                    <li><a href="/#work" data-i18n="nav.web">Web</a></li>
                     <li><a href="grafika.html" data-i18n="nav.grafika">Grafika</a></li>
                     <li><a href="gra.html" class="active" data-i18n="nav.gra">Gra</a></li>
-                    <li><a href="index.html#contact" data-i18n="nav.kontakt">Kontakt</a></li>
+                    <li><a href="/#contact" data-i18n="nav.kontakt">Kontakt</a></li>
                 </ul>
             </nav>
         </div>
@@ -1183,7 +1244,7 @@
         <section id="press-hero">
             <div class="container">
                 <nav class="breadcrumb" aria-label="Breadcrumb">
-                    <a href="index.html" data-i18n="bc.portfolio">Portfolio</a>
+                    <a href="/" data-i18n="bc.portfolio">Portfolio</a>
                     <span class="sep">/</span>
                     <a href="gra.html">SPACEFIGHTER</a>
                     <span class="sep">/</span>
@@ -1522,7 +1583,7 @@ For fans of Vampire Survivors, Brotato, Halls of Torment, and 20 Minutes Till Da
     </dialog>
 
     <footer>
-        <p data-i18n-html="footer.line">© 2026 Michał Jarosiński · <a href="index.html">Portfolio</a> · <a href="gra.html">Game page</a></p>
+        <p data-i18n-html="footer.line">© 2026 Michał Jarosiński · <a href="/">Portfolio</a> · <a href="gra.html">Game page</a></p>
     </footer>
 
     <script>
@@ -1726,7 +1787,7 @@ For fans of Vampire Survivors, Brotato, Halls of Torment, and 20 Minutes Till Da
     'contact.keys_value': 'Available on request — email for press / streamer / Curator access.',
     'contact.follow_label': 'Follow / connect',
     'contact.steam_label': 'Steam page',
-    'footer.line': '© 2026 Michał Jarosiński · <a href="index.html">Portfolio</a> · <a href="gra.html">Game page</a>',
+    'footer.line': '© 2026 Michał Jarosiński · <a href="/">Portfolio</a> · <a href="gra.html">Game page</a>',
   },
   'pl': {
     'lang.label': 'Język',
@@ -1847,7 +1908,7 @@ Dla fanów Vampire Survivors, Brotato, Halls of Torment i 20 Minutes Till Dawn �
     'contact.keys_value': 'Dostępne na życzenie — napisz po dostęp dla prasy / streamerów / Curatorów.',
     'contact.follow_label': 'Obserwuj / złap kontakt',
     'contact.steam_label': 'Strona Steam',
-    'footer.line': '© 2026 Michał Jarosiński · <a href="index.html">Portfolio</a> · <a href="gra.html">Strona gry</a>',
+    'footer.line': '© 2026 Michał Jarosiński · <a href="/">Portfolio</a> · <a href="gra.html">Strona gry</a>',
   },
   'de': {
     'lang.label': 'Sprache',
@@ -1968,7 +2029,7 @@ Für Fans von Vampire Survivors, Brotato, Halls of Torment und 20 Minutes Till D
     'contact.keys_value': 'Auf Anfrage verfügbar — E-Mail für Presse- / Streamer- / Curator-Zugang.',
     'contact.follow_label': 'Folgen / vernetzen',
     'contact.steam_label': 'Steam-Seite',
-    'footer.line': '© 2026 Michał Jarosiński · <a href="index.html">Portfolio</a> · <a href="gra.html">Spielseite</a>',
+    'footer.line': '© 2026 Michał Jarosiński · <a href="/">Portfolio</a> · <a href="gra.html">Spielseite</a>',
   },
   'es-LA': {
     'lang.label': 'Idioma',
@@ -2089,7 +2150,7 @@ Para fans de Vampire Survivors, Brotato, Halls of Torment y 20 Minutes Till Dawn
     'contact.keys_value': 'Disponibles bajo pedido — escribe para acceso de prensa / streamer / Curador.',
     'contact.follow_label': 'Sigue / conecta',
     'contact.steam_label': 'Página de Steam',
-    'footer.line': '© 2026 Michał Jarosiński · <a href="index.html">Portfolio</a> · <a href="gra.html">Página del juego</a>',
+    'footer.line': '© 2026 Michał Jarosiński · <a href="/">Portfolio</a> · <a href="gra.html">Página del juego</a>',
   },
   'fr': {
     'lang.label': 'Langue',
@@ -2210,7 +2271,7 @@ Pour les fans de Vampire Survivors, Brotato, Halls of Torment et 20 Minutes Till
     'contact.keys_value': 'Disponibles sur demande — écris pour un accès presse / streamer / Curateur.',
     'contact.follow_label': 'Suivre / se connecter',
     'contact.steam_label': 'Page Steam',
-    'footer.line': '© 2026 Michał Jarosiński · <a href="index.html">Portfolio</a> · <a href="gra.html">Page du jeu</a>',
+    'footer.line': '© 2026 Michał Jarosiński · <a href="/">Portfolio</a> · <a href="gra.html">Page du jeu</a>',
   },
   'ja': {
     'lang.label': '言語',
@@ -2331,7 +2392,7 @@ SPACEFIGHTERは2026年6月8日にリリースされる——ちょうどSteam Bu
     'contact.keys_value': 'リクエストで提供可能 — プレス／ストリーマー／キュレーターアクセスはメールでご連絡を。',
     'contact.follow_label': 'フォロー／繋がる',
     'contact.steam_label': 'Steamページ',
-    'footer.line': '© 2026 Michał Jarosiński · <a href="index.html">ポートフォリオ</a> · <a href="gra.html">ゲームページ</a>',
+    'footer.line': '© 2026 Michał Jarosiński · <a href="/">ポートフォリオ</a> · <a href="gra.html">ゲームページ</a>',
   },
   'pt-BR': {
     'lang.label': 'Idioma',
@@ -2452,7 +2513,7 @@ Pra fãs de Vampire Survivors, Brotato, Halls of Torment e 20 Minutes Till Dawn 
     'contact.keys_value': 'Disponíveis sob pedido — escreva pra acesso de imprensa / streamer / Curador.',
     'contact.follow_label': 'Siga / conecte',
     'contact.steam_label': 'Página Steam',
-    'footer.line': '© 2026 Michał Jarosiński · <a href="index.html">Portfólio</a> · <a href="gra.html">Página do jogo</a>',
+    'footer.line': '© 2026 Michał Jarosiński · <a href="/">Portfólio</a> · <a href="gra.html">Página do jogo</a>',
   },
   'ru': {
     'lang.label': 'Язык',
@@ -2573,7 +2634,7 @@ SPACEFIGHTER выходит 8 июня 2026 — прямо в самом Steam B
     'contact.keys_value': 'Доступны по запросу — пиши для доступа для прессы / стримеров / Curator-ов.',
     'contact.follow_label': 'Подписаться / связаться',
     'contact.steam_label': 'Страница Steam',
-    'footer.line': '© 2026 Michał Jarosiński · <a href="index.html">Портфолио</a> · <a href="gra.html">Страница игры</a>',
+    'footer.line': '© 2026 Michał Jarosiński · <a href="/">Портфолио</a> · <a href="gra.html">Страница игры</a>',
   },
   'zh-CN': {
     'lang.label': '语言',
@@ -2694,7 +2755,7 @@ SPACEFIGHTER 将于2026年6月8日发售 —— 恰好在 Steam Bullet Fest 2026
     'contact.keys_value': '可按需提供 —— 媒体 / 主播 / Curator 访问请发邮件。',
     'contact.follow_label': '关注 / 联系',
     'contact.steam_label': 'Steam 页面',
-    'footer.line': '© 2026 Michał Jarosiński · <a href="index.html">作品集</a> · <a href="gra.html">游戏页面</a>',
+    'footer.line': '© 2026 Michał Jarosiński · <a href="/">作品集</a> · <a href="gra.html">游戏页面</a>',
   }
 };
 
