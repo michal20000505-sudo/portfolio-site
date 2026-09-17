@@ -976,8 +976,8 @@
         /* --- Skills: 3D product viewers --- */
         .skills-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 48px;
         }
 
         .viewer-card {
@@ -1043,6 +1043,10 @@
             line-height: 1.7;
             max-width: 38ch;
             margin: 0 auto;
+        }
+
+        .viewer-link {
+            margin-top: 18px;
         }
 
         /* --- Automation / systems section --- */
@@ -1896,6 +1900,17 @@
                             <p>Zestaw zaprojektowany dla studia treningowego Body Creator, od koncepcji po finalną wizualizację.</p>
                         </div>
                     </div>
+
+                    <div class="viewer-card">
+                        <div class="viewer" id="vizWheel">
+                            <span class="viewer-fallback">Model 3D</span>
+                        </div>
+                        <div class="viewer-caption">
+                            <h3>Symulator geometrii</h3>
+                            <p>Koło i zawieszenie zbudowane kodem, bez gotowych modeli — serce interaktywnego symulatora geometrii dla SSCAR.</p>
+                            <a class="project-link viewer-link" href="https://www.sscar.pl/geometria-3d.html#geo-lab" target="_blank" rel="noopener">Zobacz, jak działa symulator <span>&rarr;</span></a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -2580,6 +2595,12 @@
             markReady();
         }
     </script>
+
+    <!-- ========================================
+         Symulator geometrii SSCAR — proceduralne koło i zawieszenie na podeście.
+         Własny WebGL (bez three.js), bryła budowana kodem, bez modeli i tekstur z sieci.
+         ======================================== -->
+    <script src="wheel.js" defer></script>
 
     <!-- ========================================
          Mechaniczne oko — proceduralny obserwator śledzący kursor.
