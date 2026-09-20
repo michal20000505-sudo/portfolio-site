@@ -1742,8 +1742,8 @@
             top: 0;
             width: clamp(90px, 10vw, 150px);
             aspect-ratio: 1;
-            z-index: -1; /* w tle, nad starfieldem (późniejszy w DOM), pod treścią */
-            pointer-events: none;
+            z-index: 4;
+            pointer-events: auto;
             opacity: 0;
             transition: opacity 1.2s var(--ease-out);
             will-change: transform;
@@ -2604,9 +2604,9 @@
 
     <!-- ========================================
          Mechaniczne oko — proceduralny obserwator śledzący kursor.
-         Cała geometria generowana kodem (eye.js), reużywa importmap 'three'.
+         Cała geometria generowana kodem (eye-native.js), reużywa importmap 'three'.
          ======================================== -->
-    <script type="module" src="eye.js"></script>
+    <script type="module" src="eye-native.js"></script>
 </body>
 
 </html>
