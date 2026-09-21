@@ -1718,7 +1718,7 @@
         if (!reducedMotion) { resize(); animateStars(); }
     </script>
 
-    <!-- Mechaniczne oko: proceduralny obserwator (eye.js) -->
+    <!-- Mechaniczne oko: OBSERVER 01, proceduralny obserwator (eye-observer-mount.js) -->
     <style>
         #mech-eye {
             position: fixed;
@@ -1757,11 +1757,11 @@
         }
 
     </style>
-    <div id="mech-eye" aria-hidden="true" data-variant="painter"></div>
+    <div id="mech-eye" aria-hidden="true"></div>
     <script type="importmap">
         { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
     </script>
-    <script type="module" src="eye.js"></script>
+    <script type="module" src="eye-observer-mount.js"></script>
 </body>
 
 </html>

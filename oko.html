@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Oko | Michał Jarosiński</title>
-    <meta name="description" content="Proceduralne mechaniczne oko — maskotka portfolio z bliska. Trzy wersje, żywa maszyna stanów, zero gotowych modeli.">
+    <meta name="description" content="OBSERVER 01 — proceduralne mechaniczne oko portfolio z bliska. Żywa maszyna stanów, zero gotowych modeli.">
     <meta name="robots" content="noindex, follow">
     <meta name="theme-color" content="#050505">
     <link rel="icon" type="image/png" sizes="500x500" href="strona-icon.png">
@@ -99,6 +99,13 @@
             background-color: var(--text-color);
             border-color: transparent;
             opacity: 0.8;
+        }
+
+        .cursor.eye-link {
+            width: 52px;
+            height: 52px;
+            border-color: var(--cyan);
+            background-color: rgba(0, 255, 255, 0.15);
         }
 
         @media (hover: hover) and (pointer: fine) {
@@ -213,7 +220,10 @@
             justify-content: center;
         }
 
-        .variants a {
+        .variants a,
+        .variants button {
+            font-family: inherit;
+            background: none;
             padding: 12px 28px;
             border: 1px solid #333;
             border-radius: 50px;
@@ -222,19 +232,25 @@
             letter-spacing: 0.1em;
             text-transform: uppercase;
             color: #888;
-            transition: color 0.3s ease, border-color 0.3s ease, transform 0.4s var(--ease-out);
+            transition: color 0.3s ease, border-color 0.3s ease, box-shadow 0.4s ease, transform 0.4s var(--ease-out);
         }
 
-        .variants a:hover {
+        .variants a:hover,
+        .variants button:hover {
             color: var(--cyan);
             border-color: var(--cyan);
             transform: translateY(-2px);
         }
 
-        .variants a.active {
+        .variants .lab-link {
             color: #050505;
             background: var(--cyan);
             border-color: var(--cyan);
+        }
+
+        .variants .lab-link:hover {
+            color: #050505;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
         }
 
         .hint {
@@ -271,33 +287,28 @@
     <main>
         <div>
             <h1 class="eye-title">Oko</h1>
-            <p class="eye-sub">Proceduralny obserwator tego portfolio z bliska. Każda śrubka, zębatka i listek
-                przysłony jest generowany kodem, bez ani jednego gotowego modelu.</p>
+            <p class="eye-sub">OBSERVER 01, proceduralny obserwator tego portfolio z bliska. Każda śrubka, zębatka
+                i listek przysłony jest generowany kodem, bez ani jednego gotowego modelu.</p>
         </div>
 
         <div id="mech-eye" aria-hidden="true" data-noflight="1" data-nolink="1"></div>
 
         <p class="eye-status" aria-live="polite">Stan: <b id="state-label">start</b></p>
 
-        <nav class="variants" aria-label="Wersje oka">
-            <a href="oko.html" data-variant="">Podstawowe</a>
-            <a href="oko.html?variant=painter" data-variant="painter">Malarz</a>
-            <a href="oko.html?variant=pilot" data-variant="pilot">Pilot</a>
-        </nav>
+        <div class="variants">
+            <button type="button" data-eye-reaction="scanning">Skanowanie</button>
+            <button type="button" data-eye-reaction="happy">Radość</button>
+            <button type="button" data-eye-reaction="startled">Zaskoczenie</button>
+            <button type="button" data-eye-reaction="sleeping" data-action="sleeping">Sen</button>
+            <a class="lab-link" href="oko-lab.html">Laboratorium ↗</a>
+        </div>
 
-        <p class="hint">Poruszaj kursorem, klikaj, najedź na przycisk, potrząśnij myszką jak szalony
+        <p class="hint">Poruszaj kursorem, przeciągnij oko, najedź na przycisk, potrząśnij myszką jak szalony
             albo zostaw je na chwilę w spokoju. Ma swoje humory.</p>
     </main>
 
     <script>
-        // wariant z URL -> atrybut przed startem eye.js + podświetlenie przycisku
-        const params = new URLSearchParams(location.search);
-        const variant = params.get('variant') || '';
         const eyeWrap = document.getElementById('mech-eye');
-        if (variant) eyeWrap.dataset.variant = variant;
-        document.querySelectorAll('.variants a').forEach(a => {
-            if (a.dataset.variant === variant) a.classList.add('active');
-        });
 
         // kursor (ten sam wzorzec co na stronie głównej)
         const cursor = document.querySelector('.cursor');
@@ -305,32 +316,21 @@
             window.addEventListener('mousemove', e => {
                 cursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0) translate(-50%, -50%)`;
             }, { passive: true });
-            document.querySelectorAll('a').forEach(l => {
+            document.querySelectorAll('a, button').forEach(l => {
                 l.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
                 l.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
             });
         }
 
-        // etykieta stanu mechanizmu (eye.js zapisuje data-eye-state)
-        const STATE_PL = {
-            idle: 'czuwanie',
-            tracking: 'śledzenie',
-            focused: 'ogniskowanie',
-            bored: 'nuda',
-            sleeping: 'uśpienie',
-            startled: 'wzdrygnięcie',
-            recalibrating: 'rekalibracja'
-        };
+        // etykieta stanu mechanizmu (renderer wysyła gotową nazwę po polsku)
         const label = document.getElementById('state-label');
-        new MutationObserver(() => {
-            label.textContent = STATE_PL[eyeWrap.dataset.eyeState] || eyeWrap.dataset.eyeState || 'start';
-        }).observe(eyeWrap, { attributes: true, attributeFilter: ['data-eye-state'] });
+        eyeWrap.addEventListener('observerstate', e => { label.textContent = e.detail.label.toLowerCase(); });
     </script>
 
     <script type="importmap">
         { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
     </script>
-    <script type="module" src="eye.js"></script>
+    <script type="module" src="eye-observer-mount.js"></script>
 </body>
 
 </html>

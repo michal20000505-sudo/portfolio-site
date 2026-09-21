@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="pl">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, follow">
+    <meta name="theme-color" content="#050505">
+    <meta name="color-scheme" content="dark">
+    <meta name="description" content="OBSERVER 01 — nowy mechaniczny obserwator. Interaktywne laboratorium modelu 3D, animacji i reakcji.">
+    <title>OBSERVER 01 — laboratorium oka | Michał Jarosiński</title>
+    <link rel="icon" type="image/png" sizes="500x500" href="strona-icon.png">
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="fonts/space-grotesk-latin.woff2">
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="fonts/space-grotesk-latin-ext.woff2">
+    <link rel="stylesheet" href="oko-lab.css">
+    <script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }</script>
+</head>
+
+<body>
+    <a class="skip-link" href="#controls">Przejdź do sterowania</a>
+
+    <div id="progress-bar"></div>
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+    <div class="ambient-glow glow-3"></div>
+    <canvas id="starfield"></canvas>
+    <div class="cursor"></div>
+
+    <header>
+        <div class="container">
+            <nav>
+                <a class="logo" href="index.html" aria-label="Wróć do portfolio">MJ<span>.</span></a>
+                <div class="nav-links">
+                    <a href="index.html">Portfolio</a>
+                    <a href="#playground">Testy</a>
+                    <a href="#construction">Budowa</a>
+                    <a href="oko.html">Oko</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <section class="laboratory" aria-labelledby="title">
+                <div class="intro reveal">
+                    <div class="intro-lede">
+                        <p class="eyebrow"><span class="status-dot"></span> Mechanical companion / 001</p>
+                        <h1 id="title">Observer<span>01</span></h1>
+                        <p class="intro-copy">Obserwuje. Uczy się. Reaguje. Trochę maszyna, trochę osobowość.</p>
+                    </div>
+                    <p class="build">Prototype <b>02</b></p>
+                </div>
+
+                <div class="workbench">
+                    <div class="viewport-shell">
+                        <div class="viewport-top"><span><i></i> Live render</span><span id="motion-label">Procedural 3D · WebGL</span></div>
+                        <div id="observer-stage" role="img" tabindex="0" aria-label="Interaktywny model mechanicznego oka. Przeciągnij lub użyj strzałek, aby obrócić. Enter: reakcja, Home: widok wzorcowy." aria-describedby="stage-help"></div>
+                        <div id="loading" class="loading" role="status"><span class="loader-ring"></span>Uruchamiam optykę…</div>
+                        <div id="render-error" class="render-error" role="alert" hidden><strong>Podgląd 3D jest niedostępny.</strong>
+                            <p id="error-message">Sprawdź połączenie i obsługę WebGL w przeglądarce.</p><button type="button" id="retry">Spróbuj ponownie</button>
+                        </div>
+                        <div class="model-caption"><span>Ocular system</span><b>O–01 / Ti–Ceramic</b><span>Cyan optics · servo shell</span></div>
+                        <div class="viewport-bottom">
+                            <p id="stage-help">Przeciągnij, aby obrócić <span>·</span> Kliknij oko, żeby się przywitać</p><button id="capture" class="text-button" type="button" disabled>Zapisz kadr ↗</button>
+                        </div>
+                        <div class="state-strip"><span class="status-dot"></span><span id="state-label" aria-live="polite">Inicjalizacja</span><span id="state-description">Ładowanie modelu i materiałów</span><span class="signal-bars" aria-hidden="true">▂ ▅ ▃ ▆ ▄</span></div>
+                    </div>
+
+                    <aside class="control-panel" id="controls" aria-label="Sterowanie okiem">
+                        <div class="panel-heading">
+                            <h2>Centrum sterowania</h2><span>01—04</span>
+                        </div>
+                        <fieldset disabled id="eye-controls">
+                            <div class="control-section">
+                                <h3><span>01</span> Zachowanie</h3>
+                                <div class="action-grid">
+                                    <button type="button" data-action="blink">◉ <span>Mrugnięcie</span></button><button type="button" data-action="scanning">⌖ <span>Skanowanie</span></button>
+                                    <button type="button" data-action="happy">↗ <span>Radość</span></button><button type="button" data-action="startled">ϟ <span>Zaskoczenie</span></button>
+                                    <button type="button" data-action="confused">? <span>Ciekawość</span></button><button type="button" data-action="sleeping" id="sleep">☾ <span>Uśpij oko</span></button>
+                                </div>
+                            </div>
+                            <div class="control-section">
+                                <h3><span>02</span> Anatomia i światło</h3>
+                                <label class="range-label" for="spread">Rozłożenie mechanizmu <output id="spread-value" for="spread">0%</output></label><input id="spread" type="range" min="0" max="100" value="0">
+                                <label class="range-label" for="light">Energia soczewki <output id="light-value" for="light">100%</output></label><input id="light" type="range" min="20" max="180" value="100">
+                                <label class="range-label" for="zoom">Zbliżenie <output id="zoom-value" for="zoom">100%</output></label><input id="zoom" type="range" min="75" max="130" value="100">
+                            </div>
+                            <div class="control-section">
+                                <h3><span>03</span> Kamera</h3>
+                                <div class="view-buttons" aria-label="Widok kamery"><button type="button" data-view="reference" aria-pressed="true">¾</button><button type="button" data-view="front" aria-pressed="false">Przód</button><button type="button" data-view="side" aria-pressed="false">Bok</button><button type="button" data-view="back" aria-pressed="false">Tył</button></div>
+                                <label class="switch-row" for="turntable">Automatyczny obrót<input id="turntable" type="checkbox" role="switch"></label>
+                            </div>
+                            <div class="control-section">
+                                <h3><span>04</span> Autonomia</h3>
+                                <label class="switch-row" for="tracking">Śledzenie kursora<input id="tracking" type="checkbox" role="switch" checked></label>
+                                <label class="switch-row" for="reactions">Reakcje na stronę<input id="reactions" type="checkbox" role="switch" checked></label>
+                                <label class="switch-row" for="autoBlink">Naturalne mruganie<input id="autoBlink" type="checkbox" role="switch" checked></label>
+                                <label class="range-label" for="sensitivity">Wrażliwość <output id="sensitivity-value" for="sensitivity">100%</output></label><input id="sensitivity" type="range" min="20" max="200" value="100">
+                            </div>
+                            <div class="panel-footer"><button type="button" id="pause" aria-pressed="false">Ⅱ Pauza</button><button type="button" id="reset">↺ Reset</button></div>
+                        </fieldset>
+                    </aside>
+                </div>
+
+                <div class="telemetry" aria-label="Telemetria modelu">
+                    <div><span>Źrenica</span><b id="pupil-meter">—</b></div>
+                    <div><span>Przysłona</span><b id="aperture-meter">—</b></div>
+                    <div><span>Układ</span><b id="assembly-meter">Złożony</b></div>
+                    <div><span>Sygnał</span><b id="last-signal">Oczekiwanie</b></div>
+                    <p>Nie film. Nie animowany obrazek.<br>Każda część istnieje w przestrzeni.</p>
+                </div>
+            </section>
+
+            <section class="playground" id="playground" aria-labelledby="play-title">
+                <div class="section-heading reveal">
+                    <div>
+                        <p class="eyebrow">Input → emotion → motion</p>
+                        <h2 id="play-title" class="section-title">Sprawdź jego charakter</h2>
+                    </div>
+                    <p>Oko pozostaje obok podczas testów. Twoje działania są jego bodźcami.</p>
+                </div>
+                <div class="test-grid reveal">
+                    <article class="test-card"><span class="test-number">A / Uwaga</span>
+                        <h3>Ma oko na szczegóły.</h3>
+                        <p>Najedź na próbkę lub wybierz ją klawiaturą. Obserwator skieruje na nią soczewkę i zawęzi źrenicę.</p>
+                        <div class="samples"><button class="sample sample-cyan" type="button" data-eye-interest data-eye-reaction="scanning" aria-label="Zbadaj próbkę cyjan">C</button><button class="sample sample-magenta" type="button" data-eye-interest data-eye-reaction="confused" aria-label="Zbadaj próbkę magenta">M</button><button class="sample sample-yellow" type="button" data-eye-interest data-eye-reaction="happy" aria-label="Zbadaj próbkę żółtą">Y</button></div>
+                    </article>
+                    <article class="test-card"><span class="test-number">B / Komunikacja</span>
+                        <h3>Czyta razem z Tobą.</h3>
+                        <p>Zareaguje na pisanie, a po wysłaniu przywita się. To lokalny test, niczego nie wysyłamy na serwer.</p>
+                        <form id="hello-form"><label for="hello">Jak ma się do Ciebie zwracać?</label>
+                            <div class="input-line"><input id="hello" name="hello" placeholder="Twoje imię" autocomplete="off" maxlength="32" required><button type="submit" aria-label="Przywitaj się z okiem">↗</button></div>
+                            <p id="hello-result" class="form-result" aria-live="polite"></p>
+                        </form>
+                    </article>
+                    <article class="test-card"><span class="test-number">C / Odruch</span>
+                        <h3>Nie jest obojętne.</h3>
+                        <p>Szybkie ruchy myszy potrafią je zaskoczyć. Możesz też wysłać łagodniejszy impuls przyciskiem.</p><button class="outline-button" type="button" data-eye-reaction="startled">Wyślij impuls <span>ϟ</span></button>
+                    </article>
+                    <article class="test-card"><span class="test-number">D / Rytm</span>
+                        <h3>Potrzebuje chwili ciszy.</h3>
+                        <p>Po 8 sekundach rozgląda się. Po 28 zasypia. Ruch, dotyk lub klawiatura je obudzą. Przewijanie wywołuje odruch orientacji.</p><button class="outline-button" type="button" data-action="sleeping">Zobacz sen i pobudkę <span>☾</span></button>
+                    </article>
+                </div>
+            </section>
+
+            <section class="construction reveal" id="construction" aria-labelledby="construction-title">
+                <div>
+                    <p class="eyebrow">Engineering notes</p>
+                    <h2 id="construction-title" class="section-title">Warstwa po warstwie</h2>
+                    <p>Jasny pancerz z mikrośladami zużycia. Grafitowy szkielet, mosiężne przekładnie i żebrowane przewody. W środku: zagłębiona tęczówka, wypukła źrenica i niezależna przysłona.</p><button class="outline-button" type="button" id="explore">Rozłóż model <span>↗</span></button>
+                </div>
+                <ol>
+                    <li><span>01</span>
+                        <div>
+                            <h3>Optyka</h3>
+                            <p>Włókna światłowodowe, refleksy szkła i 12 listków przysłony.</p>
+                        </div>
+                    </li>
+                    <li><span>02</span>
+                        <div>
+                            <h3>Mechanika</h3>
+                            <p>Współpracujące koła zębate, boczne serwomechanizmy i amortyzowany pancerz.</p>
+                        </div>
+                    </li>
+                    <li><span>03</span>
+                        <div>
+                            <h3>Osobowość</h3>
+                            <p>Płynne przejścia między stanami, mikroruchy i reakcje powiązane z działaniem.</p>
+                        </div>
+                    </li>
+                </ol>
+            </section>
+
+            <section class="event-section" aria-labelledby="events-title">
+                <div class="event-heading">
+                    <h2 id="events-title">Dziennik reakcji</h2><button id="clear-log" class="text-button" type="button">Wyczyść</button>
+                </div>
+                <ol id="event-log" aria-label="Ostatnie reakcje oka">
+                    <li>
+                        <time>00:00</time><span>Oczekiwanie na uruchomienie modelu</span>
+                    </li>
+                </ol>
+            </section>
+        </div>
+    </main>
+
+    <footer class="lab-footer">
+        <div class="container">
+            <a href="index.html">← Portfolio Michała Jarosińskiego</a>
+            <p>Observer / 01 <span>Eksperyment w osobnym module.</span></p>
+        </div>
+    </footer>
+
+    <div id="toast" role="status" class="toast" hidden></div>
+    <noscript>
+        <p class="noscript">Interaktywny model wymaga JavaScript. Włącz go, aby uruchomić laboratorium.</p>
+    </noscript>
+
+    <script>
+        // --- Powłoka strony: te same zachowania co na stronie głównej ---------
+        const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        // Nagłówek + pasek postępu (rAF, wyłącznie transform)
+        const header = document.querySelector('header');
+        const progressBar = document.getElementById('progress-bar');
+        let scrollTicking = false;
+        function onScroll() {
+            header.classList.toggle('scrolled', scrollY > 50);
+            const el = document.documentElement;
+            progressBar.style.transform = `scaleX(${el.scrollTop / (el.scrollHeight - el.clientHeight) || 0})`;
+            scrollTicking = false;
+        }
+        addEventListener('scroll', () => {
+            if (!scrollTicking) { scrollTicking = true; requestAnimationFrame(onScroll); }
+        }, { passive: true });
+        onScroll();
+
+        // Odsłanianie sekcji przy przewijaniu
+        const revealObserver = new IntersectionObserver(entries => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+        // Kursor: powiększa się nad elementami interaktywnymi, świeci nad sceną 3D
+        const cursor = document.querySelector('.cursor');
+        if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+            addEventListener('mousemove', e => {
+                cursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0) translate(-50%, -50%)`;
+            }, { passive: true });
+            document.addEventListener('pointerover', e => {
+                if (!(e.target instanceof Element)) return;
+                cursor.classList.toggle('eye-link', !!e.target.closest('#observer-stage'));
+                cursor.classList.toggle('hovered', !!e.target.closest('a, button, input, label'));
+            });
+        }
+
+        // Gwiazdy: ta sama warstwa atmosfery co na stronie głównej
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas.getContext('2d');
+        const colors = ['#00ffff', '#ff00ff', '#ffff00', '#ffffff', '#ffffff'];
+        const mouse = { x: undefined, y: undefined };
+        let width = 0, height = 0, stars = [];
+        class Star {
+            constructor() {
+                this.x = Math.random() * width; this.y = Math.random() * height;
+                this.size = Math.random() * 2; this.density = Math.random() * 20 + 1;
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.vx = (Math.random() - 0.5) * 0.5; this.vy = (Math.random() - 0.5) * 0.5;
+                this.opacity = Math.random(); this.twinkle = Math.random() * 0.02 + 0.005;
+            }
+            draw() {
+                ctx.fillStyle = this.color; ctx.globalAlpha = this.opacity;
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 1;
+            }
+            update() {
+                this.x += this.vx; this.y += this.vy;
+                if (this.x < 0) this.x = width; if (this.x > width) this.x = 0;
+                if (this.y < 0) this.y = height; if (this.y > height) this.y = 0;
+                if (mouse.x) {
+                    const dx = mouse.x - this.x, dy = mouse.y - this.y, dist = Math.hypot(dx, dy);
+                    if (dist < 150) {
+                        const f = (150 - dist) / 150;
+                        this.x -= (dx / dist) * f * this.density * 2; this.y -= (dy / dist) * f * this.density * 2;
+                    }
+                }
+                this.opacity += this.twinkle;
+                if (this.opacity > 1 || this.opacity < 0.2) this.twinkle = -this.twinkle;
+            }
+        }
+        function resizeStars() {
+            width = innerWidth; height = innerHeight; canvas.width = width; canvas.height = height;
+            stars = []; for (let i = 0; i < (width * height) / 9000; i++) stars.push(new Star());
+        }
+        function animateStars() {
+            ctx.clearRect(0, 0, width, height);
+            stars.forEach(s => { s.draw(); s.update(); });
+            requestAnimationFrame(animateStars);
+        }
+        let resizeTimer;
+        addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(resizeStars, 150); });
+        if (!matchMedia('(pointer: coarse)').matches) {
+            addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; }, { passive: true });
+        }
+        if (!reducedMotion) { resizeStars(); animateStars(); }
+    </script>
+
+    <script type="module" src="oko-lab.js"></script>
+</body>
+
+</html>
