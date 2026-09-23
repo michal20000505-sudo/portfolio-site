@@ -118,6 +118,8 @@ Three process primaries on a printing-plate ground. Each accent color has a spec
 
 **The CMYK Logic Rule.** Cyan leads interactions. Magenta occupies ambience. Yellow punctuates motion. These roles are not interchangeable. Using magenta for a CTA border or cyan for a background glow erodes the visual grammar the eye has already mapped.
 
+**The Plate Rule (price list).** On `cennik.html` each category is a CMYK printing plate: Web = cyan, Grafika = magenta, Motion/3D = yellow, Kampanie = K (paper white #f8f6f4 with a C/M/Y/K control strip). The plate color (`--plate`) carries the card's top color bar, the prices, the swatch in the category chip, the heading's closing dot and a 7% row wash on hover. Pakiet START is the CMY overprint (corner washes of all three inks, price in yellow); the hourly rate block is magenta with a dashed cut line. This is the one deliberate exception to "magenta never on text": there, color encodes category, not interaction. Buttons and links stay cyan.
+
 **The One Darkness Rule.** The background is Studio Black (#050505) everywhere. Do not introduce a second background color for hero sections, overlays, or off-canvas panels. Depth is Surface Raised and Surface Mid, not a second dark value.
 
 ## 3. Typography

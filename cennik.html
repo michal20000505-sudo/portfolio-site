@@ -686,11 +686,15 @@
             transition: transform 0.4s var(--ease-out);
         }
 
+        /* Nadruk CMY: trzy farby nachodzą na siebie w rogach karty */
         .featured-card::after {
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(135deg, rgba(0, 255, 255, 0.08) 0%, transparent 60%);
+            background:
+                radial-gradient(circle at 0% 0%, rgba(0, 255, 255, 0.14), transparent 45%),
+                radial-gradient(circle at 100% 0%, rgba(255, 0, 255, 0.13), transparent 50%),
+                radial-gradient(circle at 85% 100%, rgba(255, 255, 0, 0.09), transparent 45%);
             pointer-events: none;
         }
 
@@ -713,7 +717,7 @@
             font-weight: 500;
             letter-spacing: 0.1em;
             text-transform: uppercase;
-            color: var(--cyan);
+            color: var(--magenta);
         }
 
         .featured-title {
@@ -726,7 +730,7 @@
         .featured-price {
             font-size: 2.6rem;
             font-weight: 700;
-            color: var(--text-color);
+            color: var(--yellow);
             white-space: nowrap;
         }
 
@@ -763,15 +767,71 @@
             z-index: 1;
         }
 
-        /* --- Category cards --- */
+        /* --- Category cards: każda kategoria to osobna "płyta" CMYK ---
+           Kolor płyty (--plate) niesie pasek barwny karty, ceny, próbnik
+           w etykiecie i poświatę wiersza. K = papier (ciepła biel) z paskiem
+           kontrolnym C/M/Y/K, jak na marginesie arkusza drukarskiego. */
         .category {
+            --plate: var(--cyan);
             margin-bottom: 60px;
         }
 
+        .plate-c { --plate: var(--cyan); }
+        .plate-m { --plate: var(--magenta); }
+        .plate-y { --plate: var(--yellow); }
+        .plate-k { --plate: #f8f6f4; }
+
+        .category .section-label {
+            color: var(--plate);
+            border-color: color-mix(in srgb, var(--plate) 45%, transparent);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .plate-chip {
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+            background: var(--plate);
+            flex-shrink: 0;
+        }
+
+        /* K: znak pasera (celownik) zamiast pełnego próbnika */
+        .plate-k .plate-chip {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background:
+                linear-gradient(var(--plate), var(--plate)) center / 1px 100% no-repeat,
+                linear-gradient(var(--plate), var(--plate)) center / 100% 1px no-repeat;
+            border: 1px solid var(--plate);
+        }
+
+        .category .section-heading::after {
+            content: '.';
+            color: var(--plate);
+        }
+
         .price-card {
+            position: relative;
             background: var(--surface-raised);
+            border: 1px solid color-mix(in srgb, var(--plate) 22%, transparent);
             border-radius: 16px;
             overflow: hidden;
+        }
+
+        /* Pasek barwny u góry karty */
+        .price-card::before {
+            content: '';
+            display: block;
+            height: 4px;
+            background: var(--plate);
+        }
+
+        .plate-k .price-card::before {
+            background: linear-gradient(90deg,
+                    var(--cyan) 0 25%, var(--magenta) 25% 50%, var(--yellow) 50% 75%, var(--plate) 75% 100%);
         }
 
         .price-row {
@@ -781,6 +841,15 @@
             gap: 20px;
             padding: 24px 30px;
             border-bottom: 1px solid var(--surface-border);
+            transition: background-color 0.4s var(--ease-out);
+        }
+
+        .price-row:hover {
+            background-color: color-mix(in srgb, var(--plate) 7%, transparent);
+        }
+
+        .category .price-amount {
+            color: var(--plate);
         }
 
         .price-row:last-child {
@@ -831,12 +900,14 @@
             letter-spacing: 0.05em;
             text-transform: uppercase;
             color: var(--text-dim);
-            margin-left: 2px;
+            margin-left: 6px;
         }
 
         /* --- Hourly rate block --- */
+        /* Nietypowe zlecenia: magenta, przerywana linia jak linia cięcia */
         .hourly-block {
-            background: var(--surface-raised);
+            background: color-mix(in srgb, var(--magenta) 5%, var(--surface-raised));
+            border: 1px dashed color-mix(in srgb, var(--magenta) 55%, transparent);
             border-radius: 16px;
             padding: 30px;
             display: flex;
@@ -849,6 +920,10 @@
 
         .hourly-block .price-row-name {
             font-size: 1.15rem;
+        }
+
+        .hourly-block .price-amount {
+            color: var(--magenta);
         }
 
         .hourly-block .price-row-note {
@@ -932,6 +1007,11 @@
             font-size: 0.85rem;
             color: var(--text-dim);
             padding: 0 20px 20px;
+        }
+
+        .note-ink {
+            color: var(--yellow);
+            font-weight: 500;
         }
 
         /* --- Mobile --- */
@@ -1177,8 +1257,8 @@
                     </div>
                 </div>
 
-                <div class="category">
-                    <span class="section-label" data-eye-title="Web — kategoria" data-eye="Wszystkie usługi związane ze stronami internetowymi.">01 — Web</span>
+                <div class="category plate-c">
+                    <span class="section-label" data-eye-title="Web — kategoria" data-eye="Wszystkie usługi związane ze stronami internetowymi."><i class="plate-chip" aria-hidden="true"></i>01 · Web</span>
                     <h2 class="section-heading" data-eye-title="Strony internetowe" data-eye="Tworzę nowoczesne, responsywne strony wizytówki, landing page'i, blogi i sklepy.">Strony internetowe</h2>
                     <div class="price-card">
                         <div class="price-row" data-eye-title="Landing od 900 zł" data-eye="Strona wizytówka lub landing page, responsywna, z podstawowym SEO w cenie. Najprostszy sposób, żeby firma była widoczna w sieci.">
@@ -1231,8 +1311,8 @@
                     </div>
                 </div>
 
-                <div class="category">
-                    <span class="section-label" data-eye-title="Design — kategoria" data-eye="Usługi graficzne, branding i identyfikacja wizualna dla Twojej marki.">02 — Design</span>
+                <div class="category plate-m">
+                    <span class="section-label" data-eye-title="Design — kategoria" data-eye="Usługi graficzne, branding i identyfikacja wizualna dla Twojej marki."><i class="plate-chip" aria-hidden="true"></i>02 · Design</span>
                     <h2 class="section-heading" data-eye-title="Grafika i branding" data-eye="Logotypy, identyfikacje wizualne, grafiki reklamowe i social media.">Grafika i branding</h2>
                     <div class="price-card">
                         <div class="price-row" data-eye-title="Logo od 300 zł" data-eye="Logo w wektorze: ostre na wizytówce i na banerze, gotowe do druku i do internetu.">
@@ -1269,8 +1349,8 @@
                     </div>
                 </div>
 
-                <div class="category">
-                    <span class="section-label" data-eye-title="Motion — kategoria" data-eye="Animacje, 3D i projekty interaktywne.">03 — Motion</span>
+                <div class="category plate-y">
+                    <span class="section-label" data-eye-title="Motion — kategoria" data-eye="Animacje, 3D i projekty interaktywne."><i class="plate-chip" aria-hidden="true"></i>03 · Motion</span>
                     <h2 class="section-heading" data-eye-title="Motion, 3D i interakcja" data-eye="Animacje, rendery 3D i gry przeglądarkowe, czyli wszystko, co się rusza.">Motion, 3D i interakcja</h2>
                     <div class="price-card">
                         <div class="price-row" data-eye-title="Reklama animowana: od 500 zł" data-eye="Animowana reklama na 10–15 sekund. Dobra do social mediów i kampanii, gdzie statyczna grafika ginie w feedzie.">
@@ -1305,8 +1385,8 @@
                     </div>
                 </div>
 
-                <div class="category">
-                    <span class="section-label" data-eye-title="Reklama — kategoria" data-eye="Prowadzenie kampanii Google Ads i Meta Ads z pełnym zarządzaniem i optymalizacją.">04 — Reklama</span>
+                <div class="category plate-k">
+                    <span class="section-label" data-eye-title="Reklama — kategoria" data-eye="Prowadzenie kampanii Google Ads i Meta Ads z pełnym zarządzaniem i optymalizacją."><i class="plate-chip" aria-hidden="true"></i>04 · Reklama</span>
                     <h2 class="section-heading" data-eye-title="Kampanie reklamowe" data-eye="Google Ads i Meta Ads: ustawiam, prowadzę i pilnuję kampanii, żeby budżet nie przeciekał.">Kampanie reklamowe</h2>
                     <div class="price-card">
                         <div class="price-row" data-eye-title="Kampania: od 600 zł/mies." data-eye="Miesięczne prowadzenie kampanii: optymalizacja i pilnowanie wyników. Budżet na reklamy płacisz osobno.">
@@ -1360,7 +1440,7 @@
             </div>
         </section>
 
-        <p class="price-note" data-eye-title="Ceny netto + FV" data-eye="Wszystkie stawki są netto. Mogę wystawić fakturę lub umowę o dzieło.">Wszystkie ceny są cenami netto. Możliwa faktura (FV) lub umowa o dzieło.</p>
+        <p class="price-note" data-eye-title="Ceny netto + FV" data-eye="Wszystkie stawki są netto. Mogę wystawić fakturę lub umowę o dzieło.">Wszystkie ceny są cenami <span class="note-ink">netto</span>. Możliwa faktura (FV) lub umowa o dzieło.</p>
     </main>
 
     <footer style="text-align:center; padding: 40px 20px; color: #8a8a8a; font-size: 0.85rem; border-top: 1px solid #1a1a1a;">
@@ -1501,7 +1581,7 @@
     <script type="importmap">
         { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
     </script>
-    <script type="module" src="eye-observer-mount.js?v=20260923e"></script>
+    <script type="module" src="eye-observer-mount.js?v=20260923f"></script>
 </body>
 
 </html>

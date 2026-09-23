@@ -285,6 +285,11 @@ if (wrap) {
         // Oko (i jego dymek) zawsze nad treścią strony: ponad nagłówkiem (100),
         // pod kursorem (9999) i lightboxem (10001).
         if (commentsEnabled) { wrap.style.zIndex = '9000'; initBubble(); }
+        // Bez lotu (reduced motion) oko stoi w prawym dolnym rogu, a nie na logo
+        // w lewym górnym, gdzie zostawiłby je sam CSS (left/top: 0).
+        if (commentsEnabled && !flight) {
+            Object.assign(wrap.style, { left: 'auto', top: 'auto', right: '16px', bottom: '16px' });
+        }
 
         // Kursor strony głównej sygnalizuje, że oko jest klikalne. Ustawiane zanim
         // intro włączy tymczasowo pointer-events: none na #mech-eye, żeby ten
