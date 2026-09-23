@@ -878,6 +878,7 @@
             .nav-links.open li:nth-child(3) a { transition-delay: 0.44s; }
             .nav-links.open li:nth-child(4) a { transition-delay: 0.51s; }
             .nav-links.open li:nth-child(5) a { transition-delay: 0.58s; }
+            .nav-links.open li:nth-child(6) a { transition-delay: 0.65s; }
 
             body.nav-open {
                 overflow: hidden;
@@ -939,7 +940,7 @@
     <header id="site-header">
         <div class="container">
             <nav aria-label="Nawigacja główna">
-                <a href="/" class="logo" aria-label="MJ Portfolio — strona główna">MJ<span>.</span></a>
+                <a href="/" class="logo" aria-label="MJ Portfolio — strona główna" data-eye-title="Portfolio" data-eye="Powrót do głównej strony twojego portfolio.">MJ<span>.</span></a>
 
                 <button class="menu-toggle" id="menu-toggle"
                         aria-label="Otwórz menu" aria-expanded="false" aria-controls="nav-links">
@@ -949,11 +950,12 @@
                 </button>
 
                 <ul class="nav-links" id="nav-links" role="list">
-                    <li><a href="/#about" class="magnet">O mnie</a></li>
-                    <li><a href="/#work" class="magnet">Web</a></li>
-                    <li><a href="grafika.html" class="magnet">Grafika</a></li>
-                    <li><a href="gra.html" class="magnet active" aria-current="page">Gra</a></li>
-                    <li><a href="/#contact" class="magnet">Kontakt</a></li>
+                    <li><a href="/#about" class="magnet" data-eye-title="O mnie" data-eye="Historia i umiejętności twojego projektanta.">O mnie</a></li>
+                    <li><a href="/#work" class="magnet" data-eye-title="Web" data-eye="Portfolio projektów webdesign i webdev.">Web</a></li>
+                    <li><a href="grafika.html" class="magnet" data-eye-title="Grafika" data-eye="Galeria grafiki i designu.">Grafika</a></li>
+                    <li><a href="gra.html" class="magnet active" aria-current="page" data-eye-title="Gra" data-eye="Bullet hell shooter na Steam — akurat to czytasz.">Gra</a></li>
+                    <li><a href="cennik.html" class="magnet" data-eye-title="Cennik" data-eye="Oferta i ceny usług.">Cennik</a></li>
+                    <li><a href="/#contact" class="magnet" data-eye-title="Kontakt" data-eye="Skontaktuj się z projektantem.">Kontakt</a></li>
                 </ul>
             </nav>
         </div>
@@ -964,12 +966,12 @@
         <!-- HERO -->
         <section id="hero" aria-label="SPACEFIGHTER: The Bullet Hell">
             <div class="hero-inner">
-                <h1 class="hero-title">
+                <h1 class="hero-title" data-eye-title="SPACEFIGHTER" data-eye="Tytuł gry: bullet hell shooter dostępny na Steam.">
                     <img src="press/logo/LOGOGRY.webp" alt="SPACEFIGHTER: The Bullet Hell" class="hero-logo-img" width="960" height="350" fetchpriority="high">
                 </h1>
 
-                <div class="hero-trailer" aria-label="Trailer gry">
-                    <button type="button" class="yt-facade" id="yt-facade" aria-label="Odtwórz trailer"
+                <div class="hero-trailer" aria-label="Trailer gry" data-eye-title="Trailer" data-eye="Obejrzyj zwiastun gry na YouTube.">
+                    <button type="button" class="yt-facade" id="yt-facade" aria-label="Odtwórz trailer" data-eye-title="Odtwórz" data-eye="Kliknij aby zobaczyć zwiastun SPACEFIGHTER."
                             data-src="https://www.youtube.com/embed/YvaGGq1Ct3c"
                             data-title="SPACEFIGHTER — Trailer"
                             data-allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
@@ -992,7 +994,9 @@
                        class="btn btn-hero magnet"
                        target="_blank"
                        rel="noopener noreferrer"
-                       aria-label="Zagraj na Steam — otwiera stronę Steam w nowej karcie">
+                       aria-label="Zagraj na Steam — otwiera stronę Steam w nowej karcie"
+                       data-eye-title="Zagraj na Steam"
+                       data-eye="Przejdź na stronę gry na Steam w nowej karcie.">
                         Zagraj na Steam
                     </a>
                 </div>
@@ -1003,10 +1007,10 @@
         <section id="steam" aria-label="Strona Steam">
             <div class="container">
                 <div class="steam-content">
-                    <p class="section-label reveal">Dostępne na</p>
-                    <h2 class="steam-heading reveal">Steam</h2>
+                    <p class="section-label reveal" data-eye-title="Sekcja" data-eye="Gra jest dostępna na platformie Steam.">Dostępne na</p>
+                    <h2 class="steam-heading reveal" data-eye-title="Steam" data-eye="Klikalna gra na największej platformie PC.">Steam</h2>
 
-                    <div class="steam-wrapper reveal">
+                    <div class="steam-wrapper reveal" data-eye-title="Steam Widget" data-eye="Miniaturowy widget ze strony Steam.">
                         <iframe
                             src="https://store.steampowered.com/widget/4451950/"
                             title="SPACEFIGHTER: The Bullet Hell — Steam Store"
@@ -1018,7 +1022,9 @@
                         <a href="https://store.steampowered.com/app/4451950/SPACEFIGHTER__The_Bullet_Hell/"
                            class="btn magnet"
                            target="_blank"
-                           rel="noopener noreferrer">
+                           rel="noopener noreferrer"
+                           data-eye-title="Otwórz Steam"
+                           data-eye="Przejdź do strony gry na Steam w nowej karcie.">
                             Otwórz stronę Steam ↗
                         </a>
                     </div>
@@ -1030,8 +1036,8 @@
         <section id="screenshots" aria-label="Galeria screenshotów z gry">
             <div class="container">
                 <div class="screenshots-header">
-                    <p class="section-label reveal">Galeria</p>
-                    <h2 class="screenshots-heading reveal">Screenshoty</h2>
+                    <p class="section-label reveal" data-eye-title="Galeria" data-eye="Kolekcja screenshotów z rozgrywki.">Galeria</p>
+                    <h2 class="screenshots-heading reveal" data-eye-title="Screenshoty" data-eye="Spójrz jak wygląda gra w akcji.">Screenshoty</h2>
                 </div>
 
                 <div class="screenshots-grid" id="screenshots-grid"></div>
@@ -1049,7 +1055,7 @@
     </dialog>
 
     <footer>
-        <p>© 2025 Michał Jarosiński. Wszelkie prawa zastrzeżone. · <a href="gra-press.html" style="color: var(--text-muted); border-bottom: 1px solid transparent; transition: color 0.3s, border-color 0.3s;" onmouseover="this.style.color='var(--cyan)';this.style.borderBottomColor='var(--cyan)';" onmouseout="this.style.color='var(--text-muted)';this.style.borderBottomColor='transparent';">Press Kit ↗</a></p>
+        <p>© 2025 Michał Jarosiński. Wszelkie prawa zastrzeżone. · <a href="gra-press.html" style="color: var(--text-muted); border-bottom: 1px solid transparent; transition: color 0.3s, border-color 0.3s;" onmouseover="this.style.color='var(--cyan)';this.style.borderBottomColor='var(--cyan)';" onmouseout="this.style.color='var(--text-muted)';this.style.borderBottomColor='transparent';" data-eye-title="Press Kit" data-eye="Zasoby prasowe i materiały promocyjne gry.">Press Kit ↗</a></p>
     </footer>
 
     <script>
@@ -1069,15 +1075,15 @@
         // ── SCREENSHOTS GRID ──
         // Generated first so subsequent handlers (cursor, lightbox, reveal) can pick up the items.
         const SCREENSHOTS = [
-            { file: 'steam1.jpg', alt: 'SPACEFIGHTER — walka z bossem The Fortress' },
-            { file: 'steam2.jpg', alt: 'SPACEFIGHTER — wybór statku (Ship Selection)' },
-            { file: 'steam3.jpg', alt: 'SPACEFIGHTER — nadciągająca fala The Siege' },
-            { file: 'steam4.jpg', alt: 'SPACEFIGHTER — warsztat ulepszeń (Mothership Workshop)' },
-            { file: 'steam5.jpg', alt: 'SPACEFIGHTER — walka z bossem The Hunter' },
-            { file: 'steam6.jpg', alt: 'SPACEFIGHTER — ulepszenia matki (Mothership Upgrades)' },
-            { file: 'steam7.jpg', alt: 'SPACEFIGHTER — intensywna rozgrywka bullet hell' },
-            { file: 'steam8.jpg', alt: 'SPACEFIGHTER — wybór załogi (Crew)' },
-            { file: 'steam9.jpg', alt: 'SPACEFIGHTER — wczesna runa, kosmiczna arena' }
+            { file: 'steam1.jpg', alt: 'SPACEFIGHTER — walka z bossem The Fortress', eyeTitle: 'The Fortress', eye: 'Epicka walka z pierwszym bossem.' },
+            { file: 'steam2.jpg', alt: 'SPACEFIGHTER — wybór statku (Ship Selection)', eyeTitle: 'Wybór statku', eye: 'Obierz swój statek na początek misji.' },
+            { file: 'steam3.jpg', alt: 'SPACEFIGHTER — nadciągająca fala The Siege', eyeTitle: 'The Siege', eye: 'Kolejna fala wrogów do pokonania.' },
+            { file: 'steam4.jpg', alt: 'SPACEFIGHTER — warsztat ulepszeń (Mothership Workshop)', eyeTitle: 'Warsztat statku', eye: 'Modernizuj i personalizuj swój statek.' },
+            { file: 'steam5.jpg', alt: 'SPACEFIGHTER — walka z bossem The Hunter', eyeTitle: 'The Hunter', eye: 'Zjadliwy boss gotowy do ataku.' },
+            { file: 'steam6.jpg', alt: 'SPACEFIGHTER — ulepszenia matki (Mothership Upgrades)', eyeTitle: 'Ulepszenia', eye: 'System modernizacji statku macierzystego.' },
+            { file: 'steam7.jpg', alt: 'SPACEFIGHTER — intensywna rozgrywka bullet hell', eyeTitle: 'Akcja', eye: 'Intensywna rozgrywka pełna kul i chaosu.' },
+            { file: 'steam8.jpg', alt: 'SPACEFIGHTER — wybór załogi (Crew)', eyeTitle: 'Załoga', eye: 'Wybierz specjalistów do swojej drużyny.' },
+            { file: 'steam9.jpg', alt: 'SPACEFIGHTER — wczesna runa, kosmiczna arena', eyeTitle: 'Arena kosmiczna', eye: 'Walka na wczesnym etapie przygody.' }
         ];
         const screenshotsGrid = document.getElementById('screenshots-grid');
         SCREENSHOTS.forEach((shot, i) => {
@@ -1091,6 +1097,8 @@
             item.setAttribute('role', 'button');
             item.setAttribute('tabindex', '0');
             item.setAttribute('aria-label', `${shot.alt} — kliknij aby powiększyć`);
+            item.setAttribute('data-eye-title', shot.eyeTitle);
+            item.setAttribute('data-eye', shot.eye);
             item.dataset.full = full;
             item.innerHTML = `
                 <img src="${thumb}" alt="${shot.alt}" width="900" height="506" loading="lazy">
@@ -1365,6 +1373,6 @@
     <script type="importmap">
         { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
     </script>
-    <script type="module" src="eye-observer-mount.js?v=20260923"></script>
+    <script type="module" src="eye-observer-mount.js?v=20260923e"></script>
 </body>
 </html>

@@ -200,6 +200,17 @@ The hero display title uses layered CSS glitch: two pseudo-elements (::before, :
 
 **The Glitch-Once Rule.** The glitch effect is reserved for the hero title. Applying it to section headings, hover states, or interactive elements dilutes the signal to noise.
 
+### OBSERVER Commentary (Signature Component)
+
+The flying OBSERVER eye (`eye-observer-mount.js`) sits in the foreground on every page and comments on what the visitor is looking at: on hover (desktop) or on the element closest to the viewport centre (touch). Comments come from two attributes on the element:
+
+- `data-eye-title` — short caption, max ~30 chars (e.g. `Landing za 900 zł`).
+- `data-eye` — comment in Polish, 1–2 sentences, max ~140 chars, first person, addresses the visitor as "Ty".
+
+**The Every-Item-Has-A-Comment Rule.** Anything new added to the portfolio — a project card, a price row, a client name, a link, a section — ships with `data-eye` (and usually `data-eye-title`). An item without a comment is unfinished. Comments describe only what is true on the page; never invent facts about clients.
+
+**The Never-Cover Rule.** Neither the eye nor its bubble may cover page content for more than a moment in flight. The eye always parks beside its target, in the least-occupied space, with the bubble placed where it hides nothing.
+
 ## 6. Do's and Don'ts
 
 ### Do:

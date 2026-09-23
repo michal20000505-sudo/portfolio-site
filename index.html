@@ -1680,6 +1680,7 @@
             .nav-links.active a:nth-child(3) { transition-delay: 0.44s; }
             .nav-links.active a:nth-child(4) { transition-delay: 0.51s; }
             .nav-links.active a:nth-child(5) { transition-delay: 0.58s; }
+            .nav-links.active a:nth-child(6) { transition-delay: 0.65s; }
 
             body.nav-open {
                 overflow: hidden;
@@ -1813,7 +1814,7 @@
     <header>
         <div class="container">
             <nav>
-                <a href="#" class="logo link-hover">MJ<span>.</span></a>
+                <a href="#" class="logo link-hover" data-eye-title="Logo" data-eye="Tu wraca się na górę. Zawsze.">MJ<span>.</span></a>
 
                 <button class="menu-toggle" id="mobile-menu" aria-label="Otwórz menu nawigacyjne" aria-expanded="false">
                     <span class="bar"></span>
@@ -1822,11 +1823,12 @@
                 </button>
 
                 <div class="nav-links">
-                    <a href="#about" class="link-hover magnet">O mnie</a>
-                    <a href="#work" class="link-hover magnet">Web</a>
-                    <a href="grafika.html" class="link-hover magnet">Grafika</a>
-                    <a href="gra.html" class="link-hover magnet">Gra</a>
-                    <a href="#contact" class="link-hover magnet">Kontakt</a>
+                    <a href="#about" class="link-hover magnet" data-eye-title="O mnie" data-eye="Poznaj Michała, projektanta, którego obserwuję na co dzień.">O mnie</a>
+                    <a href="#work" class="link-hover magnet" data-eye-title="Galeria Web" data-eye="Strony, gry i eksperymenty. To moja ulubiona sekcja do obserwowania.">Web</a>
+                    <a href="grafika.html" class="link-hover magnet" data-eye-title="Grafika" data-eye="Tu trzymam logotypy, banery i identyfikacje wizualne. Zapraszam.">Grafika</a>
+                    <a href="gra.html" class="link-hover magnet" data-eye-title="Gra" data-eye="SPACEFIGHTER — moja pierwsza gra na Steam. Spróbuj przejść.">Gra</a>
+                    <a href="cennik.html" class="link-hover magnet" data-eye-title="Cennik" data-eye="Usługi z ceną. Bez zaskoczeń po wysłaniu maila.">Cennik</a>
+                    <a href="#contact" class="link-hover magnet" data-eye-title="Kontakt" data-eye="Tędy najszybciej do Michała. Wpadniesz na moją listę obserwowanych rozmów.">Kontakt</a>
                 </div>
             </nav>
         </div>
@@ -1836,7 +1838,7 @@
         <section id="hero">
             <div class="container hero-content">
                 <div class="glitch-wrapper">
-                    <h1 class="hero-title" aria-label="Creative Designer">CREATIVE<br>DESIGNER</h1>
+                    <h1 class="hero-title" aria-label="Creative Designer" data-eye-title="Hero" data-eye="Projektant web designu, brandingu i grafiki. Słowo na temat tego, czym się zajmuję.">CREATIVE<br>DESIGNER</h1>
                 </div>
                 <p class="hero-subtitle">Web Design / Branding / Art Direction</p>
             </div>
@@ -1844,11 +1846,11 @@
 
         <section id="about">
             <div class="container">
-                <h2 class="section-title reveal">O <span>Mnie</span></h2>
+                <h2 class="section-title reveal" data-eye-title="Sekcja O mnie" data-eye="Historia, doświadczenie, zainteresowania. Wszystko, co musisz wiedzieć o Michale.">O <span>Mnie</span></h2>
 
                 <div class="about-grid reveal">
                     <div class="about-image-wrapper">
-                        <div class="simple-zoom-container link-hover">
+                        <div class="simple-zoom-container link-hover" data-eye-title="Zdjęcie" data-eye="To Michał, autor tego portfolio. Najedź na zdjęcie, a zobaczysz więcej niż na pierwszy rzut oka.">
                             <img src="thumbnails/web/JAzdj.webp" alt="Michał Jarosiński - zdjęcie portfolio" class="my-photo" width="800" height="800" loading="lazy">
                             <img src="thumbnails/web/rentgen.webp" alt="Michał Jarosiński - efekt rentgenowski" class="my-photo-xray" width="800" height="800" loading="lazy" aria-hidden="true">
                         </div>
@@ -1862,12 +1864,12 @@
 
                         <p class="clients-intro">Zaufali mi między innymi:</p>
                         <ul class="clients-list">
-                            <li>AimControllers</li>
-                            <li>Lavazza</li>
-                            <li>PGV</li>
-                            <li>Pol-vending</li>
-                            <li>Aora Vending</li>
-                            <li>Grom Art</li>
+                            <li data-eye-title="AimControllers" data-eye="Customowe kontrolery do gier. Ich pady trafiły też do mojej galerii grafiki i modeli 3D.">AimControllers</li>
+                            <li data-eye-title="Lavazza" data-eye="Włoska marka kawy. Jedna z firm, dla których Michał realizował projekty graficzne.">Lavazza</li>
+                            <li data-eye-title="PGV" data-eye="Jeden z klientów z historii współprac Michała. Szczegóły chętnie opowie przy wycenie.">PGV</li>
+                            <li data-eye-title="Pol-vending" data-eye="Firma z branży vendingowej, kolejny rozdział w historii współprac Michała.">Pol-vending</li>
+                            <li data-eye-title="Aora Vending" data-eye="Kolejna marka z branży vendingowej na liście klientów Michała.">Aora Vending</li>
+                            <li data-eye-title="Grom Art" data-eye="Producent statuetek militarnych. Michał robił dla nich branding, wizytówki i ulotki — są w galerii grafiki.">Grom Art</li>
                         </ul>
                         <p class="clients-footer">...oraz wielu klientów prywatnych.</p>
                     </div>
@@ -1878,10 +1880,10 @@
         <section id="skills">
             <div class="container">
                 <p class="work-kicker reveal">Projektowanie produktowe</p>
-                <h2 class="section-title reveal">Design <span>3D</span></h2>
+                <h2 class="section-title reveal" data-eye-title="Sekcja Design 3D" data-eye="Modele produktów, które stworzyłem od zera. Obracaj je myszą lub palcem.">Design <span>3D</span></h2>
 
                 <div class="skills-grid reveal">
-                    <div class="viewer-card">
+                    <div class="viewer-card" data-eye-title="Kontroler custom" data-eye="Pad do gier, który zaprojektowałem od zera. Obrócić możesz sam &mdash; trzymam.">
                         <div class="viewer" id="vizController">
                             <span class="viewer-fallback">Model 3D</span>
                         </div>
@@ -1891,7 +1893,7 @@
                         </div>
                     </div>
 
-                    <div class="viewer-card">
+                    <div class="viewer-card" data-eye-title="Zestaw prezentowy" data-eye="Gift box dla Body Creator. Opakowanie, które warte jest każdej pochwały.">
                         <div class="viewer" id="vizGift">
                             <span class="viewer-fallback">Model 3D</span>
                         </div>
@@ -1901,14 +1903,14 @@
                         </div>
                     </div>
 
-                    <div class="viewer-card">
+                    <div class="viewer-card" data-eye-title="Symulator geometrii" data-eye="Koło i zawieszenie dla SSCAR. W pełni proceduralne, wygenerowane kodem.">
                         <div class="viewer" id="vizWheel">
                             <span class="viewer-fallback">Model 3D</span>
                         </div>
                         <div class="viewer-caption">
                             <h3>Symulator geometrii</h3>
                             <p>Koło i zawieszenie zbudowane kodem, bez gotowych modeli — serce interaktywnego symulatora geometrii dla SSCAR.</p>
-                            <a class="project-link viewer-link" href="https://www.sscar.pl/geometria-3d.html#geo-lab" target="_blank" rel="noopener">Zobacz, jak działa symulator <span>&rarr;</span></a>
+                            <a class="project-link viewer-link" href="https://www.sscar.pl/geometria-3d.html#geo-lab" target="_blank" rel="noopener" data-eye-title="Linki do symulatora" data-eye="Przejdź do pełnego symulatora na stronie SSCAR.">Zobacz, jak działa symulator <span>&rarr;</span></a>
                         </div>
                     </div>
                 </div>
@@ -1918,16 +1920,16 @@
         <section id="automation">
             <div class="container">
                 <p class="work-kicker reveal">Dla biznesu</p>
-                <h2 class="section-title reveal">Bazy danych <span>i automatyzacje</span></h2>
+                <h2 class="section-title reveal" data-eye-title="Sekcja Automatyzacje" data-eye="Systemy rezerwacji, panele administracyjne, bazy danych. Backend bez abonamentów.">Bazy danych <span>i automatyzacje</span></h2>
 
                 <p class="automation-intro reveal">Poza designem buduję też działające systemy dla firm: rezerwacje online, panele administracyjne, bazy danych i integracje, na przykład dekoder VIN czy Google Calendar. Rozwiązania szyte na miarę, bez zbędnych abonamentów.</p>
 
                 <div class="automation-shots reveal">
-                    <figure class="automation-shot">
+                    <figure class="automation-shot" data-eye-title="System rezerwacji" data-eye="Aplikacja rezerwacyjna SSCAR. Wybór usługi, dnia i godziny — w pełni autonomiczna.">
                         <img src="screens/system_rezerwacji.webp" alt="System rezerwacji online SSCAR – wybór usługi, dnia i godziny" width="1131" height="850" loading="lazy">
                         <figcaption>System rezerwacji online – SSCAR</figcaption>
                     </figure>
-                    <figure class="automation-shot">
+                    <figure class="automation-shot" data-eye-title="Panel administracyjny" data-eye="Dashboard do zarządzania terminami i harmonogramem serwisu. Wszystko w jednym miejscu.">
                         <img src="screens/panel_kalendarz.webp" alt="Panel administracyjny z kalendarzem terminów dla serwisu" width="1850" height="954" loading="lazy">
                         <figcaption>Panel administracyjny – kalendarz terminów</figcaption>
                     </figure>
@@ -1938,11 +1940,11 @@
         <section id="work">
             <div class="container">
                 <p class="work-kicker reveal">Portfolio — 2014 / 2025</p>
-                <h2 class="section-title reveal">Wybrane <span>Prace</span></h2>
+                <h2 class="section-title reveal" data-eye-title="Sekcja Prace" data-eye="Portfolio projektów web, gier i grafiki od 2014 roku. Moje najlepsze prace.">Wybrane <span>Prace</span></h2>
 
-                <article class="project-item project-item--featured reveal">
+                <article class="project-item project-item--featured reveal" data-eye-title="SPACEFIGHTER" data-eye="Moja pierwsza gra na Steam. Bullet hell roguelike z bossami — od mechaniki po grafiki.">
                     <div class="project-img-wrapper link-hover">
-                        <a href="gra.html">
+                        <a href="gra.html" data-eye-title="Link do gry" data-eye="Zagraj w SPACEFIGHTER lub zobacz szczegóły projektu.">
                             <img src="thumbnails/web/steam1.webp" alt="SPACEFIGHTER: The Bullet Hell — autorska gra, walka z bossem" width="1200" height="675" loading="lazy">
                         </a>
                     </div>
@@ -1959,9 +1961,9 @@
                     </div>
                 </article>
 
-                <article class="project-item reveal">
+                <article class="project-item reveal" data-eye-title="SSCAR" data-eye="Platforma dla serwisu. Rezerwacje, dekoder VIN, baza klimatyzacji — wszystko bez opłat.">
                     <div class="project-img-wrapper link-hover">
-                        <a href="https://sscar.pl" target="_blank" rel="noopener">
+                        <a href="https://sscar.pl" target="_blank" rel="noopener" data-eye-title="Link do SSCAR" data-eye="Odwiedź stronę serwisu i zobacz system rezerwacji w działaniu.">
                             <img src="thumbnails/web/sscar.webp" alt="SSCAR - strona internetowa dla serwisu samochodowego" width="1200" height="588" loading="lazy">
                         </a>
                     </div>
@@ -1977,9 +1979,9 @@
                     </div>
                 </article>
 
-                <article class="project-item reveal">
+                <article class="project-item reveal" data-eye-title="Body Creator" data-eye="Studio treningowe. Silny visual, formularze, kalkulator TDEE i galeria metamorfoz klientów.">
                     <div class="project-img-wrapper link-hover">
-                        <a href="https://bodycreator.com.pl" target="_blank" rel="noopener">
+                        <a href="https://bodycreator.com.pl" target="_blank" rel="noopener" data-eye-title="Link do Body Creator" data-eye="Przejdź do strony studia treningowego. Wygląda dobrze.">
                             <img src="thumbnails/web/bodycreator.webp" alt="Body Creator - strona studia treningowego z autonomicznymi formularzami i kalkulatorem BMI" width="1200" height="622" loading="lazy">
                         </a>
                     </div>
@@ -1995,9 +1997,9 @@
                     </div>
                 </article>
 
-                <article class="project-item reveal">
+                <article class="project-item reveal" data-eye-title="HandyBruk" data-eye="Firma usługowa z Wrocławia. Bruk, ogród, przeprowadzki — wszystko pod jednym dachem.">
                     <div class="project-img-wrapper link-hover">
-                        <a href="https://www.handybruk.pl" target="_blank" rel="noopener">
+                        <a href="https://www.handybruk.pl" target="_blank" rel="noopener" data-eye-title="Link do HandyBruk" data-eye="Odwiedź wrocławskie usługi. Wycena przez formularz lub telefon.">
                             <img src="thumbnails/web/handybruk.webp" alt="HandyBruk - strona firmy usługowej z Wrocławia: bruk, ogród, przeprowadzki" width="1600" height="827" loading="lazy">
                         </a>
                     </div>
@@ -2013,9 +2015,9 @@
                     </div>
                 </article>
 
-                <article class="project-item reveal">
+                <article class="project-item reveal" data-eye-title="R-MAX Auto" data-eye="Nowoczesny serwis samochodowy. Dark design, zaufanie i wysoka konwersja to tu norma.">
                     <div class="project-img-wrapper link-hover">
-                        <a href="https://michal20000505-sudo.github.io/R-MAX-auto/index.html" target="_blank" rel="noopener">
+                        <a href="https://michal20000505-sudo.github.io/R-MAX-auto/index.html" target="_blank" rel="noopener" data-eye-title="Link do R-MAX" data-eye="Przejdź do serwisu R-MAX Auto. Jakość, którą widać.">
                             <img src="thumbnails/web/rmax.webp" alt="R-MAX Auto - nowoczesna strona serwisu samochodowego" width="1200" height="750" loading="lazy">
                         </a>
                     </div>
@@ -2034,9 +2036,9 @@
                     </div>
                 </article>
 
-                <article class="project-item project-item--fault reveal">
+                <article class="project-item project-item--fault reveal" data-eye-title="FAULT / 08" data-eye="Eksperymentalny landing page. Kinetyczna typografia, motion art direction — full creative.">
                     <div class="project-img-wrapper link-hover">
-                        <a href="przyklad_1/dist/">
+                        <a href="przyklad_1/dist/" data-eye-title="Link do eksperymentu" data-eye="Wejdź do FAULT / 08. Przygotuj się na ruch i niegrzeczny design.">
                             <img src="thumbnails/web/fault-08.webp" alt="FAULT / 08 - eksperymentalny landing page z kinetyczną typografią" width="1600" height="900" loading="lazy">
                         </a>
                     </div>
@@ -2052,9 +2054,9 @@
                     </div>
                 </article>
 
-                <article class="project-item project-item--sentracker reveal">
+                <article class="project-item project-item--sentracker reveal" data-eye-title="SENTRACKER TRC-01" data-eye="Landing page butów trailowych. Liquid glass, scroll-driven sekwencja, pełna narracja.">
                     <div class="project-img-wrapper link-hover">
-                        <a href="przyklad_2/dist/">
+                        <a href="przyklad_2/dist/" data-eye-title="Link do eksperymentu 2" data-eye="Otwórz SENTRACKER i baw się scrollowaniem. Efekty czekają.">
                             <img src="thumbnails/web/sentracker-trc01.webp" alt="SENTRACKER TRC-01 - kampanijny landing page prototypu butów trailowych" width="1600" height="900" loading="lazy">
                         </a>
                     </div>
@@ -2070,9 +2072,9 @@
                     </div>
                 </article>
 
-                <article class="project-item reveal">
+                <article class="project-item reveal" data-eye-title="Portfolio Graficzne" data-eye="Logotypy, plakaty, branding, DTP. Wszystkie moje prace graficzne od 2014 roku.">
                     <div class="project-img-wrapper link-hover">
-                        <a href="grafika.html">
+                        <a href="grafika.html" data-eye-title="Link do galerii" data-eye="Przejdź do pełnego portfolio grafiki. Tutaj znajdziesz to, co drukujesz.">
                             <img src="thumbnails/web/digicamoblue-powder.webp" alt="Portfolio graficzne - projektowanie grafiki komputerowej" width="1200" height="1200" loading="lazy">
                         </a>
                     </div>
@@ -2093,19 +2095,19 @@
 
         <section id="services">
             <div class="container">
-                <h2 class="section-title reveal">Moje <span>Usługi</span></h2>
+                <h2 class="section-title reveal" data-eye-title="Sekcja Usługi" data-eye="Web Design, Branding, Development. To, co oferuję. Każda usługa robiona z pasją.">Moje <span>Usługi</span></h2>
                 <div class="services-grid reveal">
-                    <div class="service-card">
+                    <div class="service-card" data-eye-title="Web Design" data-eye="Projektuję strony, które działają. Responsywne, szybkie i interaktywne.">
                         <h3 style="color: var(--cyan)">Web Design</h3>
                         <p>Tworzenie stron, które nie tylko wyglądają, ale działają. Responsywność, szybkość i
                             interaktywność to standard.</p>
                     </div>
-                    <div class="service-card">
+                    <div class="service-card" data-eye-title="Branding" data-eye="Tworzę marki od zera. Logo, paleta, identyfikacja — wszystko spójne.">
                         <h3 style="color: var(--magenta)">Branding</h3>
                         <p>Projektowanie logo i identyfikacji wizualnej. Tworzę marki, które krzyczą z ekranu i zapadają w
                             pamięć.</p>
                     </div>
-                    <div class="service-card">
+                    <div class="service-card" data-eye-title="Development" data-eye="Od designu do kodu. HTML, CSS, JS i nowoczesne frameworki bez kompromisów.">
                         <h3 style="color: var(--yellow)">Development</h3>
                         <p>Wdrażanie projektów w życie. HTML5, CSS3, JavaScript oraz nowoczesne frameworki bez kompromisów.
                         </p>
@@ -2119,16 +2121,16 @@
                 <p class="reveal" style="color: #888; text-transform: uppercase; letter-spacing: 2px;">Rozpocznijmy
                     współpracę</p>
                 <div class="cta-container reveal">
-                    <a href="mailto:graf.m.jar@gmail.com" class="cta-big link-hover magnet"><span
+                    <a href="mailto:graf.m.jar@gmail.com" class="cta-big link-hover magnet" data-eye-title="Email" data-eye="Napisz, czego potrzebujesz, a dostaniesz wycenę. Będę pilnował skrzynki."><span
                             style="color: var(--cyan)">graf.m.jar</span><span style="color: var(--magenta)">@</span><span
                             style="color: var(--yellow)">gmail.com</span></a>
-                    <a href="tel:+48608078802" class="cta-small link-hover magnet">+48 608 078 802</a>
+                    <a href="tel:+48608078802" class="cta-small link-hover magnet" data-eye-title="Telefon" data-eye="Wolisz mówić? Zadzwoń. Szybciej wpadniemy na pomysł razem.">+48 608 078 802</a>
                 </div>
             </div>
         </section>
     </main>
 
-    <footer style="text-align:center; padding: 40px 20px; color: #8a8a8a; font-size: 0.85rem; border-top: 1px solid #1a1a1a;">
+    <footer style="text-align:center; padding: 40px 20px; color: #8a8a8a; font-size: 0.85rem; border-top: 1px solid #1a1a1a;" data-eye-title="Stopka" data-eye="Koniec strony. Ale zwykle tutaj zaczyna się współpraca.">
         <p>&copy; 2025 Michał Jarosiński. Wszelkie prawa zastrzeżone.</p>
     </footer>
 
@@ -2607,7 +2609,7 @@
          Geometria i materiały: eye-observer-model.js, renderer: eye-observer.js,
          montaż w rogu strony: eye-observer-mount.js. Reużywa importmap 'three'.
          ======================================== -->
-    <script type="module" src="eye-observer-mount.js?v=20260923"></script>
+    <script type="module" src="eye-observer-mount.js?v=20260923e"></script>
 </body>
 
 </html>

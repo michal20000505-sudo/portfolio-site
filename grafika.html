@@ -1117,6 +1117,7 @@
             .nav-links.active a:nth-child(3) { transition-delay: 0.44s; }
             .nav-links.active a:nth-child(4) { transition-delay: 0.51s; }
             .nav-links.active a:nth-child(5) { transition-delay: 0.58s; }
+            .nav-links.active a:nth-child(6) { transition-delay: 0.65s; }
 
             body.nav-open {
                 overflow: hidden;
@@ -1258,7 +1259,7 @@
     <header>
         <div class="container">
             <nav>
-                <a href="/" class="logo link-hover">MJ<span>.</span></a>
+                <a href="/" class="logo link-hover" data-eye-title="Portfolio" data-eye="Powrót na główną stronę mojego portfolio. Tutaj zaczniesz od nowa.">MJ<span>.</span></a>
 
                 <button class="menu-toggle" id="mobile-menu" aria-label="Otwórz menu nawigacyjne" aria-expanded="false">
                     <span class="bar"></span>
@@ -1267,11 +1268,12 @@
                 </button>
 
                 <div class="nav-links">
-                    <a href="/#about" class="link-hover magnet">O mnie</a>
-                    <a href="/#work" class="link-hover magnet">Web</a>
-                    <a href="#" class="active link-hover magnet">Grafika</a>
-                    <a href="gra.html" class="link-hover magnet">Gra</a>
-                    <a href="/#contact" class="link-hover magnet">Kontakt</a>
+                    <a href="/#about" class="link-hover magnet" data-eye-title="O mnie" data-eye="Poznaj mnie bliżej. Kim jestem i co mnie pasjonuje w designie.">O mnie</a>
+                    <a href="/#work" class="link-hover magnet" data-eye-title="Projekty Web" data-eye="Strony internetowe, które zaprojektowałem i zakodowałem. Tu obserwuję najczęściej.">Web</a>
+                    <a href="#" class="active link-hover magnet" data-eye-title="Projekty graficzne" data-eye="Jesteś tu! Portfolio moich prac graficznych od 2014 roku.">Grafika</a>
+                    <a href="gra.html" class="link-hover magnet" data-eye-title="SPACEFIGHTER" data-eye="Moja gra na Steam — kosmiczny shooter bullet hell. Zajrzyj, jeśli lubisz chaos na ekranie.">Gra</a>
+                    <a href="cennik.html" class="link-hover magnet" data-eye-title="Cennik usług" data-eye="Sprawdź ile kosztuje współpraca ze mną. Przejrzyste ceny i pakiety.">Cennik</a>
+                    <a href="/#contact" class="link-hover magnet" data-eye-title="Napisz do mnie" data-eye="Skontaktuj się ze mną w sprawie współpracy. Czekam na Twoją wiadomość!">Kontakt</a>
                 </div>
             </nav>
         </div>
@@ -1280,8 +1282,8 @@
     <main>
     <section id="hero">
         <div class="container hero-content">
-            <h1 class="hero-title" title="VISUAL WORKS">VISUAL<br>WORKS</h1>
-            <p class="hero-subtitle">Branding / Print / Art Direction</p>
+            <h1 class="hero-title" title="VISUAL WORKS" data-eye-title="Prace Graficzne" data-eye="Portfolio moich projektów graficznych. Branding, plakaty i materiały drukowane od 2014 roku.">VISUAL<br>WORKS</h1>
+            <p class="hero-subtitle" data-eye-title="Specjalizacja" data-eye="Moja specjalizacja: branding, projektowanie druku i art direction dla marek.">Branding / Print / Art Direction</p>
         </div>
     </section>
 
@@ -1290,7 +1292,7 @@
             <div class="masonry-grid">
                 <!-- 1. PLAKAT LIPALI -->
                 <div class="masonry-item reveal">
-                    <a href="#" class="work-card link-hover">
+                    <a href="#" class="work-card link-hover" data-eye-title="Lipali Concert Tour" data-eye="Projekt plakatu dla zespołu Lipali. Minimalistyczna typografia i fotografia zespołu.">
                         <img src="thumbnails/Lipali-koncert-roboczy-PLAKAT-3.webp"
                             data-full="lightbox/Lipali-koncert-roboczy-PLAKAT-3.webp" alt="Lipali Plakat Koncertowy"
                             width="800" height="400" loading="lazy">
@@ -1304,7 +1306,7 @@
                 </div>
                 <!-- 2. FOOD POINT -->
                 <div class="masonry-item reveal">
-                    <a href="#" class="work-card link-hover">
+                    <a href="#" class="work-card link-hover" data-eye-title="Food Point Neon" data-eye="Identyfikacja wizualna punktu gastronomicznego. Neonowy styl na ciemnym tle.">
                         <img src="thumbnails/Food-point-final-ciemne-tlo.webp"
                             data-full="lightbox/Food-point-final-ciemne-tlo.webp" alt="Food Point"
                             width="800" height="1626" loading="lazy">
@@ -1318,7 +1320,7 @@
                 </div>
                 <!-- 3. GROM ART ULOTKA -->
                 <div class="masonry-item reveal">
-                    <a href="#" class="work-card link-hover">
+                    <a href="#" class="work-card link-hover" data-eye-title="Grom Art Operator" data-eye="Ulotka dla producenta statuetek. Wizualizacja produktu 3D na materiałach drukowanych.">
                         <img src="thumbnails/Grom-art-b5-front.webp" data-full="lightbox/Grom-art-b5-front.webp"
                             alt="Grom Art Statuetka" width="800" height="1118" loading="lazy">
                     </a>
@@ -1330,7 +1332,7 @@
                 </div>
                 <!-- 4. DUNAJEWSKA ULOTKA -->
                 <div class="masonry-item reveal">
-                    <a href="#" class="work-card link-hover">
+                    <a href="#" class="work-card link-hover" data-eye-title="Personal Trainer Flyer" data-eye="Ulotka promocyjna dla trenerki personalnej. Nowoczesny layout z dynamiczną typografią.">
                         <img src="thumbnails/dunajewska-ulotka.webp" data-full="lightbox/dunajewska-ulotka.webp"
                             alt="Trener Personalny Ulotka" width="800" height="1135" loading="lazy">
                     </a>
@@ -1343,7 +1345,7 @@
                 </div>
                 <!-- 5. KONTROLER -->
                 <div class="masonry-item reveal">
-                    <a href="#" class="work-card link-hover">
+                    <a href="#" class="work-card link-hover" data-eye-title="Digicamo Blue" data-eye="Projekt graficzny customowego kontrolera dla AIM Controllers. Kompozycja produktu.">
                         <img src="thumbnails/digicamoblue-powder.webp" data-full="lightbox/digicamoblue-powder.webp"
                             alt="Custom PS4 Controller" width="800" height="800" loading="lazy">
                     </a>
@@ -1355,7 +1357,7 @@
                 </div>
                 <!-- 6. DUNAJEWSKA VOUCHER -->
                 <div class="masonry-item reveal">
-                    <a href="#" class="work-card link-hover">
+                    <a href="#" class="work-card link-hover" data-eye-title="Training Voucher" data-eye="Elegancki voucher podarunkowy na darmowy trening. Projekt dla trenera personalnego.">
                         <img src="thumbnails/Dunajewska-voucher.webp" data-full="lightbox/Dunajewska-voucher.webp"
                             alt="Voucher Treningowy" width="800" height="570" loading="lazy">
                     </a>
@@ -1367,7 +1369,7 @@
                 </div>
                 <!-- 7. WIZYTÓWKA SUDBAL -->
                 <div class="masonry-item reveal">
-                    <a href="#" class="work-card link-hover">
+                    <a href="#" class="work-card link-hover" data-eye-title="Sudbal Garage" data-eye="Wizytówka dla serwisu detailingowego. Elegancka czerń z chromowanym logo.">
                         <img src="thumbnails/Wizytówka-9x5-sudbal.webp" data-full="lightbox/Wizytówka-9x5-sudbal.webp"
                             alt="Sudbal Garage" width="800" height="600" loading="lazy">
                     </a>
@@ -1380,7 +1382,7 @@
                 </div>
                 <!-- 8. WIZYTÓWKA TRENER -->
                 <div class="masonry-item reveal">
-                    <a href="#" class="work-card link-hover">
+                    <a href="#" class="work-card link-hover" data-eye-title="Personal Trainer" data-eye="Identyfikacja wizualna trenera personalnego. Energetyczna zieleń i sportowy styl.">
                         <img src="thumbnails/Wizytówka-9x5.webp" data-full="lightbox/Wizytówka-9x5.webp" alt="Wizytówka Trenera"
                             width="800" height="600" loading="lazy">
                     </a>
@@ -1393,7 +1395,7 @@
                 </div>
                 <!-- 9. GRZEGORZ PIRÓG WIZYTÓWKA -->
                 <div class="masonry-item reveal">
-                    <a href="#" class="work-card link-hover">
+                    <a href="#" class="work-card link-hover" data-eye-title="Construction Identity" data-eye="Wizytówka dla firmy budowlanej. Techniczny motyw siatki projektowej i funkcjonalna miarka.">
                         <img src="thumbnails/Grzegorz-pirog-wizytowka.webp" data-full="lightbox/Grzegorz-pirog-wizytowka.webp"
                             alt="Usługi Budowlane" width="800" height="600" loading="lazy">
                     </a>
@@ -1406,7 +1408,7 @@
                 </div>
                 <!-- 10. WIZYTÓWKI GROM MOCKUP -->
                 <div class="masonry-item reveal">
-                    <a href="#" class="work-card link-hover">
+                    <a href="#" class="work-card link-hover" data-eye-title="Grom Art Identity" data-eye="Kompleksowy branding dla producenta statuetek militarnych. Mockup wizytówek premium.">
                         <img src="thumbnails/render2.webp" data-full="lightbox/render2.webp" alt="Grom Art Branding"
                             width="800" height="600" loading="lazy">
                     </a>
@@ -1418,7 +1420,7 @@
                 </div>
                 <!-- 11. WIZYTÓWKA SCHMIDT -->
                 <div class="masonry-item reveal">
-                    <a href="#" class="work-card link-hover">
+                    <a href="#" class="work-card link-hover" data-eye-title="Schmidt Construction" data-eye="Wizytówka dla producenta maszyn. Czytelny układ z wykorzystaniem ilustracji.">
                         <img src="thumbnails/wizytówka-max-bucz.webp" data-full="lightbox/wizytówka-max-bucz.webp"
                             alt="Schmidt Maszyny" width="800" height="706" loading="lazy">
                     </a>
@@ -1761,7 +1763,7 @@
     <script type="importmap">
         { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
     </script>
-    <script type="module" src="eye-observer-mount.js?v=20260923"></script>
+    <script type="module" src="eye-observer-mount.js?v=20260923e"></script>
 </body>
 
 </html>
