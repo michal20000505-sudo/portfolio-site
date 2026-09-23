@@ -42,6 +42,8 @@ export class ObserverEye {
         this.time = 0; this.motionTime = 0; this.lastActivity = 0; this.blinkStart = -10; this.nextBlink = 4.3;
         this.motorTime = 0; this.motorSpeed = 1;
         this.mode = 'idle'; this.signal = null; this.previous = null; this.lastReport = 0;
+        this.framing = null; // { x, y, size } w px hosta: wirtualny kwadrat oka przy pełnoekranowym renderze (intro)
+        this.scatter = null; // stan animacji złożenia z rozproszonych części (playAssembly)
         this.pointer = { x: 0, y: 0, seen: false, lastX: 0, lastY: 0, lastAt: 0, shake: 0 };
         this.orientation = { x: .12, y: .38, z: 0 }; this.view = { x: .12, y: .38 }; this.drag = null;
         this.current = { pupil: 1, spread: 0, excitement: 0, opening: 1 };
@@ -138,10 +140,25 @@ export class ObserverEye {
     resize() {
         if (this.disposed) return;
         const { width, height } = this.host.getBoundingClientRect();
-        this.renderer.setSize(Math.max(1, width), Math.max(1, height), false);
-        this.camera.aspect = Math.max(.1, width / Math.max(1, height));
-        this.camera.position.z = (this.camera.aspect < 1 ? 8.2 / this.camera.aspect : 8.7) / this.options.zoom;
+        const w = Math.max(1, width), h = Math.max(1, height);
+        this.renderer.setSize(w, h, false);
+        if (this.framing) {
+            // Pełnoekranowy host, ale kamera renderuje tak, jakby patrzyła przez mały
+            // kwadrat oka {x,y,size} — używane przy przelocie oka podczas intra (patrz mount).
+            this.camera.aspect = 1;
+            this.camera.position.z = 8.7 / this.options.zoom;
+            this.camera.setViewOffset(this.framing.size, this.framing.size, -this.framing.x, -this.framing.y, w, h);
+        } else {
+            this.camera.clearViewOffset();
+            this.camera.aspect = Math.max(.1, w / h);
+            this.camera.position.z = (this.camera.aspect < 1 ? 8.2 / this.camera.aspect : 8.7) / this.options.zoom;
+        }
         this.camera.updateProjectionMatrix(); this.render(0);
+    }
+    /** frame = { x, y, size } w px hosta (róg i bok wirtualnego kwadratu oka) albo null. */
+    setFraming(frame) {
+        this.framing = frame ? { x: frame.x, y: frame.y, size: Math.max(1, frame.size) } : null;
+        this.resize();
     }
     lookAt(x, y) {
         const rect = this.host.getBoundingClientRect(), radius = this.options.lookRadius;
@@ -191,6 +208,94 @@ export class ObserverEye {
         this.current = { pupil: 1, spread: 0, excitement: 0, opening: 1 };
         this.setOptions({ tracking: true, autoBlink: true, reactions: true, paused: false, turntable: false, spread: 0, light: 1, sensitivity: 1, zoom: 1 });
         this.setView('reference'); this.setState('idle');
+    }
+    /** Animacja złożenia: części rozrzucone po całym viewport magnetycznie zbiegają
+     * do swojego miejsca w modelu. Wymaga wcześniejszego setFraming(). Zwraca Promise
+     * rozwiązywany po wylądowaniu wszystkich części (albo natychmiast przy reduced motion). */
+    playAssembly({ duration = 2.6, pxPerUnit } = {}) {
+        if (this.reduced || this.disposed) return Promise.resolve();
+        if (this.scatter) this.scatter.resolve();
+        const savedTracking = this.options.tracking, savedReactions = this.options.reactions;
+        this.options.tracking = false; this.options.reactions = false;
+
+        const z = this.camera.position.z;
+        const halfFov = THREE.MathUtils.degToRad(this.camera.fov / 2);
+        const frameSize = this.framing?.size || this.host.getBoundingClientRect().width || 120;
+        const worldPerPixel = pxPerUnit ? 1 / pxPerUnit : (2 * z * Math.tan(halfFov)) / frameSize;
+        const originX = (this.framing?.x ?? 0) + frameSize / 2;
+        const originY = (this.framing?.y ?? 0) + frameSize / 2;
+
+        // Rozciąganie części przy krawędziach to perspektywa: przy kamerze z = 8.7 brzeg
+        // ekranu leży ~70° od osi. Intro startuje więc z daleka, wąskim kątem (ten sam rozmiar
+        // oka w płaszczyźnie modelu), i dojeżdża do zwykłej kamery w trakcie składania.
+        const introDistance = 40;
+        const parts = [];
+        for (const child of this.model.root.children) {
+            if (child.isGroup && child.children.length > 3) parts.push(...child.children);
+            else parts.push(child);
+        }
+        const rand = (a, b) => a + Math.random() * (b - a);
+        const startTime = this.time;
+        const items = parts.map(node => {
+            const sx = Math.random() * innerWidth, sy = Math.random() * innerHeight;
+            // Części dryfują za płaszczyzną oka (dalej od widza); x/y skalujemy głębią,
+            // żeby na starcie nadal wypadały w wylosowanym punkcie ekranu.
+            const depth = rand(-9, -2), reach = (introDistance - depth) / introDistance;
+            const offset = new THREE.Vector3((sx - originX) * worldPerPixel * reach, -(sy - originY) * worldPerPixel * reach, depth);
+            const axis = new THREE.Vector3(rand(-1, 1), rand(-1, 1), rand(-1, 1)).normalize();
+            return {
+                node, offset, axis, angle: rand(Math.PI, Math.PI * 3), delay: rand(0, duration * .45), floatPhase: rand(0, Math.PI * 2),
+                savedPos: new THREE.Vector3(), savedQuat: new THREE.Quaternion(),
+            };
+        });
+        return new Promise(resolve => {
+            this.scatter = {
+                items, duration, startTime, worldPerPixel, introDistance, baseDistance: z,
+                resolve: () => {
+                    if (!this.scatter) return;
+                    this.scatter = null;
+                    this.camera.fov = 32; this.camera.far = 50; this.resize(); this.camera.lookAt(0, -.08, 0);
+                    this.options.tracking = savedTracking; this.options.reactions = savedReactions;
+                    this.trigger('greeting', 2);
+                    resolve();
+                },
+            };
+        });
+    }
+    /** Ustawia pozycje/obroty rozrzuconych części na tę klatkę; zwraca true gdy wszystkie wylądowały. */
+    applyScatterFrame() {
+        const s = this.scatter, t = this.time, pullEnd = s.duration * .55, overshootLen = .12;
+        let allDone = true;
+        // Najazd kamery (dolly zoom): rozmiar oka w płaszczyźnie modelu stały, maleje tylko kąt widzenia.
+        const k = clamp((t - s.startTime) / s.duration, 0, 1), ease = k * k * (3 - 2 * k);
+        const distance = THREE.MathUtils.lerp(s.introDistance, s.baseDistance, ease);
+        const planeHeight = 2 * s.baseDistance * Math.tan(THREE.MathUtils.degToRad(16));
+        this.camera.position.z = distance; this.camera.far = distance + 20;
+        this.camera.fov = THREE.MathUtils.radToDeg(2 * Math.atan(planeHeight / (2 * distance)));
+        this.camera.updateProjectionMatrix(); this.camera.lookAt(0, -.08, 0);
+        for (const item of s.items) {
+            item.savedPos.copy(item.node.position); item.savedQuat.copy(item.node.quaternion);
+            const localT = t - s.startTime - item.delay;
+            const p = clamp(localT / pullEnd, 0, 1);
+            const past = localT - pullEnd;
+            if (past < overshootLen) allDone = false;
+            // Magnetyczny dociąg: wolny dryf, potem przyspieszające przyciąganie i lekkie przestrzelenie.
+            let d = 1 - Math.pow(p, 2.6);
+            if (past >= 0 && past < overshootLen) {
+                const op = past / overshootLen;
+                d -= Math.sin(op * Math.PI) * .04 * (1 - op);
+            }
+            const floatAmt = localT <= 0 ? 1 : Math.max(0, 1 - p * 3);
+            const drift = s.worldPerPixel * 4 * floatAmt;
+            item.node.position.addScaledVector(item.offset, d);
+            item.node.position.x += Math.sin(t * 1.3 + item.floatPhase) * drift;
+            item.node.position.y += Math.cos(t * 1.7 + item.floatPhase) * drift;
+            item.node.quaternion.multiply(new THREE.Quaternion().setFromAxisAngle(item.axis, item.angle * clamp(d, 0, 1)));
+        }
+        return allDone;
+    }
+    restoreScatterFrame() {
+        for (const item of this.scatter.items) { item.node.position.copy(item.savedPos); item.node.quaternion.copy(item.savedQuat); }
     }
     syncLoop() {
         cancelAnimationFrame(this.frame); this.frame = null; this.previous = null;
@@ -254,7 +359,17 @@ export class ObserverEye {
         if (!reduced) this.motorTime += dt * this.motorSpeed;
         this.model.pose({ time: t, motorTime: this.motorTime, activity: state === 'scanning' ? 2.6 : 1, opening: this.current.opening, pupilSize: this.current.pupil, spread: this.current.spread,
             excitement: this.current.excitement, scanning: state === 'scanning' ? t : 0, sleeping, light: this.options.light });
-        this.renderer.render(this.scene, this.camera);
+        if (this.scatter) {
+            // pose() dopiero co ustawił część węzłów na miejsce docelowe — teraz nakładamy
+            // rozproszenie na tę klatkę, renderujemy i cofamy, żeby statyczne części (kable,
+            // śruby, etykiety…) nie akumulowały przesunięcia klatka po klatce.
+            const done = this.applyScatterFrame();
+            this.renderer.render(this.scene, this.camera);
+            this.restoreScatterFrame();
+            if (done) this.scatter.resolve();
+        } else {
+            this.renderer.render(this.scene, this.camera);
+        }
     }
     snapshot() {
         return { state: this.mode, label: STATE_LABELS[this.mode], time: this.time, reducedMotion: this.reduced,
@@ -270,6 +385,7 @@ export class ObserverEye {
     }
     dispose() {
         if (this.disposed) return;
+        if (this.scatter) this.scatter.resolve();
         this.disposed = true; cancelAnimationFrame(this.frame); this.frame = null;
         this.abort.abort(); this.resizeObserver.disconnect(); this.visibilityObserver.disconnect();
         this.model.dispose();

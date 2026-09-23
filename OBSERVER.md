@@ -64,8 +64,32 @@ Strony portfolio ładują gotowy moduł montujący:
 <script type="module" src="eye-observer-mount.js"></script>
 ```
 
-`data-noflight` zostawia oko w układzie strony (bez lotu i reflektora),
+`data-noflight` zostawia oko w układzie strony (bez lotu, reflektora i intra),
 `data-nolink` wyłącza przejście na `oko.html` po dwukliku.
+
+### Intro (złożenie z rozproszonych części)
+
+Na stronach z aktywnym lotem (`index.html`, `gra.html`, `grafika.html`) `eye-observer-mount.js`
+odtwarza raz na sesję przeglądarki krótkie intro: części modelu rozlatują się po całym
+viewport, po czym magnetycznie zbiegają w złożone oko dokładnie w miejscu, gdzie mały,
+latający canvas normalnie by się znajdował — bez skoku przy zamianie. Po złożeniu pojawia
+się dymek: „Cześć, jestem obserwatorem tego portfolio, ale będę też obserwował Ciebie.”,
+po ok. 4,5 s zmienia treść na „Kliknij mnie dwa razy, jeśli Ty chcesz poobserwować mnie.”,
+a po kolejnych ok. 6 s znika (albo natychmiast po dwukliku oka).
+
+- Sesja: klucz `sessionStorage` `observerIntroSeen` (odczyt/zapis w `try/catch`; błąd
+  przechowywania po prostu odtwarza intro ponownie).
+- Wymuszenie: parametr URL `?intro`, np. `index.html?intro`.
+- `prefers-reduced-motion` całkowicie wyłącza lot i intro (bez zmian względem dotychczasowego zachowania).
+
+API w `eye-observer.js`, używane przez mount:
+- `eye.setFraming({ x, y, size } | null)` — przełącza kamerę między normalnym kadrem
+  a renderowaniem pełnoekranowego hosta tak, jakby patrzył przez mały kwadrat oka
+  o boku `size` w punkcie `(x, y)` (px hosta), przez `camera.setViewOffset(...)`.
+- `eye.playAssembly({ duration = 2.6, pxPerUnit })` — zwraca `Promise`, rozwiązywany
+  po wylądowaniu wszystkich rozproszonych części (natychmiast przy reduced motion).
+  Podczas animacji tymczasowo wyłącza śledzenie kursora i reakcje, na koniec wywołuje
+  `trigger('greeting', 2)`.
 
 Bezpośrednie użycie renderera:
 

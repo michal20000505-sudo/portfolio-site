@@ -2,19 +2,108 @@
    OBSERVER 01 — montaż oka na stronach portfolio
    Podpina renderer z eye-observer.js pod #mech-eye i odtwarza zachowanie
    dotychczasowej maskotki:
+     · intro: rozproszone części zlatują się magnetycznie w oko na całym ekranie,
+       po czym dymek wita użytkownika (raz na sesję, patrz niżej),
      · lot po ekranie za kursorem, z omijaniem treści,
      · wyraźne odwracanie się w stronę myszy (nie zastygnięte ¾),
      · podlot do najechanego przycisku lub linku, snop światła i łuna na nim,
      · płynne pojawienie się (.ready) i przejście na oko.html po dwukliku.
 
    Atrybuty kontenera:
-     data-noflight — oko zostaje w układzie strony, bez lotu i reflektora,
+     data-noflight — oko zostaje w układzie strony, bez lotu, reflektora i intra,
      data-nolink   — dwuklik nie przenosi na oko.html.
+
+   Intro (złożenie z części) gra tylko przy aktywnym locie, raz na sesję
+   przeglądarki (sessionStorage klucz "observerIntroSeen"). Parametr URL
+   "?intro" wymusza odtworzenie (przydatne do testów), niezależnie od klucza.
 
    Wymaga mapy importów "three" w dokumencie (ta sama wersja co reszta strony).
    ========================================================================== */
 
 const wrap = document.getElementById('mech-eye');
+
+const clamp = (v, min, max) => Math.min(Math.max(v, min), max);
+
+// --- dymek obok oka: tworzony tylko wtedy, gdy faktycznie gra intro ---------
+let bubbleTimers = [];
+function clearBubbleTimers() { bubbleTimers.forEach(clearTimeout); bubbleTimers = []; }
+function initBubble() {
+    if (document.getElementById('eye-bubble')) return;
+    const style = document.createElement('style');
+    style.textContent = `
+        #eye-bubble {
+            position: fixed; top: 0; left: 0; z-index: 5; pointer-events: none;
+            max-width: 260px; padding: 12px 16px; border-radius: 14px;
+            background: rgba(5, 5, 5, .92); border: 1px solid rgba(0, 255, 255, .35);
+            color: #fff; font-family: 'Space Grotesk', sans-serif; font-size: 14px; line-height: 1.4;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .5), 0 0 18px rgba(0, 255, 255, .08);
+            opacity: 0; transform: scale(.92); transform-origin: center;
+            transition: opacity .35s ease, transform .35s cubic-bezier(.23, 1, .32, 1);
+            will-change: transform, opacity;
+        }
+        #eye-bubble.is-visible { opacity: 1; transform: scale(1); }
+        #eye-bubble::after {
+            content: ''; position: absolute; width: 12px; height: 12px; left: var(--tail-left, 20px);
+            margin-left: -6px; background: rgba(5, 5, 5, .92); transform: rotate(45deg);
+        }
+        #eye-bubble[data-tail="bottom"]::after { bottom: -6px; border-right: 1px solid rgba(0, 255, 255, .35); border-bottom: 1px solid rgba(0, 255, 255, .35); }
+        #eye-bubble[data-tail="top"]::after { top: -6px; border-left: 1px solid rgba(0, 255, 255, .35); border-top: 1px solid rgba(0, 255, 255, .35); }
+        #eye-bubble .eb-text { display: block; transition: opacity .25s ease; }
+        @media (max-width: 420px) {
+            #eye-bubble { max-width: calc(100vw - 32px); font-size: 13px; padding: 10px 14px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            #eye-bubble { transition: opacity .3s ease; transform: none !important; }
+        }`;
+    document.head.appendChild(style);
+    const bubble = document.createElement('div');
+    bubble.id = 'eye-bubble';
+    bubble.setAttribute('role', 'status');
+    bubble.setAttribute('aria-live', 'polite');
+    bubble.innerHTML = '<span class="eb-text"></span>';
+    document.body.appendChild(bubble);
+    window.__eyeBubble = bubble;
+}
+function positionBubble(cx, cy, half) {
+    const bubble = window.__eyeBubble;
+    if (!bubble) return;
+    const margin = 16, gap = 14;
+    const w = bubble.offsetWidth || 240, h = bubble.offsetHeight || 70;
+    // Domyślnie: dymek nad-lewo od oka; odwracamy, gdy wypadłby poza ekran.
+    let flipX = false, flipY = false;
+    let left = cx - half - gap - w;
+    let top = cy - half - gap - h;
+    if (left < margin) { flipX = true; left = cx + half + gap; }
+    if (top < margin) { flipY = true; top = cy + half + gap; }
+    left = clamp(left, margin, Math.max(margin, innerWidth - margin - w));
+    top = clamp(top, margin, Math.max(margin, innerHeight - margin - h));
+    bubble.style.left = `${left.toFixed(1)}px`;
+    bubble.style.top = `${top.toFixed(1)}px`;
+    bubble.dataset.tail = flipY ? 'top' : 'bottom';
+    bubble.style.setProperty('--tail-left', `${clamp(cx - left, 16, Math.max(16, w - 16)).toFixed(1)}px`);
+}
+function setBubbleText(text) {
+    const bubble = window.__eyeBubble; if (!bubble) return;
+    const span = bubble.querySelector('.eb-text');
+    span.style.opacity = '0';
+    setTimeout(() => { span.textContent = text; span.style.opacity = '1'; }, 160);
+}
+function showBubble(text) {
+    const bubble = window.__eyeBubble; if (!bubble) return;
+    bubble.querySelector('.eb-text').textContent = text;
+    bubble.querySelector('.eb-text').style.opacity = '1';
+    bubble.classList.add('is-visible');
+}
+function hideBubble() {
+    clearBubbleTimers();
+    window.__eyeBubble?.classList.remove('is-visible');
+}
+function runBubbleSequence() {
+    if (!window.__eyeBubble) return;
+    showBubble('Cześć, jestem obserwatorem tego portfolio, ale będę też obserwował Ciebie.');
+    bubbleTimers.push(setTimeout(() => setBubbleText('Kliknij mnie dwa razy, jeśli Ty chcesz poobserwować mnie.'), 4500));
+    bubbleTimers.push(setTimeout(hideBubble, 4500 + 6000));
+}
 
 if (wrap) {
     try {
@@ -35,7 +124,17 @@ if (wrap) {
         // Uchwyt do podglądu w konsoli; renderer z niego nie korzysta.
         window.observerEye = eye;
 
-        const clamp = (v, min, max) => Math.min(Math.max(v, min), max);
+        // Kursor strony głównej sygnalizuje, że oko jest klikalne. Ustawiane zanim
+        // intro włączy tymczasowo pointer-events: none na #mech-eye, żeby ten
+        // jednorazowy odczyt nie trafił na "none" i nie ominął podpięcia na stałe.
+        const cursor = document.querySelector('.cursor');
+        if (cursor && getComputedStyle(wrap).pointerEvents !== 'none') {
+            wrap.addEventListener('pointerenter', () => cursor.classList.add('eye-link'));
+            wrap.addEventListener('pointerleave', () => cursor.classList.remove('eye-link'));
+        }
+        if (!('nolink' in wrap.dataset)) {
+            wrap.addEventListener('dblclick', () => { hideBubble(); location.href = 'oko.html'; });
+        }
 
         if (flight) {
             wrap.style.touchAction = 'pan-y';
@@ -186,25 +285,54 @@ if (wrap) {
                     beam.style.opacity = '0';
                     spotGlow.style.opacity = '0';
                 }
+
+                if (window.__eyeBubble) positionBubble(state.x, state.y, half);
             }
 
+            // Podczas intra host zajmuje cały ekran — lot rusza dopiero po złożeniu oka.
+            let introRunning = false;
             document.addEventListener('visibilitychange', () => {
                 cancelAnimationFrame(frame); previous = 0;
-                if (!document.hidden) frame = requestAnimationFrame(tick);
+                if (!document.hidden && !introRunning) frame = requestAnimationFrame(tick);
             });
-            frame = requestAnimationFrame(tick);
             addEventListener('pagehide', () => cancelAnimationFrame(frame));
-        }
 
-        // Kursor strony głównej sygnalizuje, że oko jest klikalne.
-        const cursor = document.querySelector('.cursor');
-        if (cursor && getComputedStyle(wrap).pointerEvents !== 'none') {
-            wrap.addEventListener('pointerenter', () => cursor.classList.add('eye-link'));
-            wrap.addEventListener('pointerleave', () => cursor.classList.remove('eye-link'));
-        }
+            // --- intro: rozproszone części zlatują się w oko na całym ekranie ---
+            let playIntro = new URLSearchParams(location.search).has('intro');
+            if (!playIntro) {
+                try { playIntro = !sessionStorage.getItem('observerIntroSeen'); } catch { playIntro = true; }
+            }
+            if (playIntro) { try { sessionStorage.setItem('observerIntroSeen', '1'); } catch { /* prywatne okno itp. — po prostu odtwarzamy ponownie */ } }
 
-        if (!('nolink' in wrap.dataset)) {
-            wrap.addEventListener('dblclick', () => { location.href = 'oko.html'; });
+            (async function startFlight() {
+                if (playIntro) {
+                    introRunning = true;
+                    // Mierzymy normalny rozmiar oka (clamp 90–150px / 78px na telefonie),
+                    // zanim host zajmie cały ekran, żeby zamiana była niewidoczna.
+                    const normalSize = wrap.clientWidth || 120;
+                    wrap.style.width = '100vw'; wrap.style.height = '100vh';
+                    wrap.style.aspectRatio = 'auto'; wrap.style.transform = 'none';
+                    wrap.style.pointerEvents = 'none'; // intro nie może blokować kliknięć w stronę
+                    const half0 = normalSize / 2;
+                    eye.setFraming({ x: state.x - half0, y: state.y - half0, size: normalSize });
+                    wrap.classList.add('ready');
+                    initBubble();
+                    await eye.playAssembly({ duration: 2.6 });
+                    // Zamiana pełnoekranowego kadru na mały, latający canvas — bez skoku:
+                    // najpierw wracamy do normalnego rozmiaru/pozycji, a dopiero potem startuje lot.
+                    wrap.style.width = ''; wrap.style.height = ''; wrap.style.aspectRatio = '';
+                    wrap.style.pointerEvents = '';
+                    eye.setFraming(null); eye.resize();
+                    const half = size() / 2;
+                    wrap.style.transform = `translate3d(${(state.x - half).toFixed(1)}px, ${(state.y - half).toFixed(1)}px, 0)`;
+                    introRunning = false;
+                    positionBubble(state.x, state.y, half);
+                    runBubbleSequence();
+                } else {
+                    wrap.classList.add('ready');
+                }
+                frame = requestAnimationFrame(tick);
+            })();
         }
 
         wrap.classList.add('ready');
