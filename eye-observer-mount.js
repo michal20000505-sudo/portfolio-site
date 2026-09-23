@@ -3,7 +3,7 @@
    Podpina renderer z eye-observer.js pod #mech-eye i odtwarza zachowanie
    dotychczasowej maskotki:
      · intro: rozproszone części zlatują się magnetycznie w oko na całym ekranie,
-       po czym dymek wita użytkownika (raz na sesję, patrz niżej),
+       po czym dymek wita użytkownika (przy wejściu i odświeżeniu, patrz niżej),
      · lot po ekranie za kursorem, z omijaniem treści,
      · wyraźne odwracanie się w stronę myszy (nie zastygnięte ¾),
      · podlot do najechanego przycisku lub linku, snop światła i łuna na nim,
@@ -13,9 +13,9 @@
      data-noflight — oko zostaje w układzie strony, bez lotu, reflektora i intra,
      data-nolink   — dwuklik nie przenosi na oko.html.
 
-   Intro (złożenie z części) gra tylko przy aktywnym locie, raz na sesję
-   przeglądarki (sessionStorage klucz "observerIntroSeen"). Parametr URL
-   "?intro" wymusza odtworzenie (przydatne do testów), niezależnie od klucza.
+   Intro (złożenie z części) gra tylko przy aktywnym locie: przy każdym wejściu
+   z zewnątrz i każdym odświeżeniu, bez przejść linkiem między podstronami.
+   Parametr URL "?intro" wymusza odtworzenie (przydatne do testów).
 
    Wymaga mapy importów "three" w dokumencie (ta sama wersja co reszta strony).
    ========================================================================== */
@@ -107,7 +107,7 @@ function runBubbleSequence() {
 
 if (wrap) {
     try {
-        const { ObserverEye } = await import('./eye-observer.js');
+        const { ObserverEye } = await import('./eye-observer.js?v=20260923');
 
         const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
         const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
@@ -298,11 +298,13 @@ if (wrap) {
             addEventListener('pagehide', () => cancelAnimationFrame(frame));
 
             // --- intro: rozproszone części zlatują się w oko na całym ekranie ---
-            let playIntro = new URLSearchParams(location.search).has('intro');
-            if (!playIntro) {
-                try { playIntro = !sessionStorage.getItem('observerIntroSeen'); } catch { playIntro = true; }
-            }
-            if (playIntro) { try { sessionStorage.setItem('observerIntroSeen', '1'); } catch { /* prywatne okno itp. — po prostu odtwarzamy ponownie */ } }
+            // Intro gra przy każdym wejściu na stronę i każdym odświeżeniu; pomijamy je
+            // tylko przy przejściu linkiem z innej podstrony portfolio (i powrocie wstecz).
+            const navType = performance.getEntriesByType?.('navigation')[0]?.type;
+            let internal = false;
+            try { internal = !!document.referrer && new URL(document.referrer).origin === location.origin; } catch { /* brak referrera */ }
+            const playIntro = new URLSearchParams(location.search).has('intro')
+                || navType === 'reload' || (!internal && navType !== 'back_forward');
 
             (async function startFlight() {
                 if (playIntro) {

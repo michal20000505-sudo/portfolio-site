@@ -70,15 +70,15 @@ Strony portfolio ładują gotowy moduł montujący:
 ### Intro (złożenie z rozproszonych części)
 
 Na stronach z aktywnym lotem (`index.html`, `gra.html`, `grafika.html`) `eye-observer-mount.js`
-odtwarza raz na sesję przeglądarki krótkie intro: części modelu rozlatują się po całym
+odtwarza przy wejściu i odświeżeniu krótkie intro: części modelu rozlatują się po całym
 viewport, po czym magnetycznie zbiegają w złożone oko dokładnie w miejscu, gdzie mały,
 latający canvas normalnie by się znajdował — bez skoku przy zamianie. Po złożeniu pojawia
 się dymek: „Cześć, jestem obserwatorem tego portfolio, ale będę też obserwował Ciebie.”,
 po ok. 4,5 s zmienia treść na „Kliknij mnie dwa razy, jeśli Ty chcesz poobserwować mnie.”,
 a po kolejnych ok. 6 s znika (albo natychmiast po dwukliku oka).
 
-- Sesja: klucz `sessionStorage` `observerIntroSeen` (odczyt/zapis w `try/catch`; błąd
-  przechowywania po prostu odtwarza intro ponownie).
+- Kiedy: przy każdym wejściu z zewnątrz i każdym odświeżeniu (`performance` navigation type
+  `reload`); pomijane przy przejściu linkiem między podstronami portfolio i przy powrocie wstecz.
 - Wymuszenie: parametr URL `?intro`, np. `index.html?intro`.
 - `prefers-reduced-motion` całkowicie wyłącza lot i intro (bez zmian względem dotychczasowego zachowania).
 
