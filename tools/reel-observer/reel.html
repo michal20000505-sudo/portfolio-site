@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Observer Reel</title>
+<style>
+  @font-face {
+    font-family: 'Space Grotesk'; font-style: normal; font-weight: 300 700;
+    src: url(../../fonts/space-grotesk-latin-ext.woff2) format('woff2');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+2020, U+20A0-20AB, U+2C60-2C7F, U+A720-A7FF;
+  }
+  @font-face {
+    font-family: 'Space Grotesk'; font-style: normal; font-weight: 300 700;
+    src: url(../../fonts/space-grotesk-latin.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212;
+  }
+  html, body { margin: 0; height: 100%; background: #050505; overflow: hidden; }
+  canvas { position: absolute; inset: 0; margin: auto; height: min(100vh, 177.78vw); width: min(56.25vh, 100vw); }
+  body.rec canvas { width: 1080px; height: 1920px; margin: 0; }
+  #play {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    font: 500 16px 'Space Grotesk', system-ui, sans-serif; letter-spacing: .1em; text-transform: uppercase;
+    color: #00ffff; background: #050505; border: 1px solid #00ffff; border-radius: 12px; padding: 14px 32px; cursor: pointer;
+  }
+  #play:hover { background: #00ffff; color: #050505; }
+  body.rec #play, body.playing #play { display: none; }
+</style>
+<script type="importmap">
+{ "imports": { "three": "./node_modules/three/build/three.module.js", "three/addons/": "./node_modules/three/examples/jsm/" } }
+</script>
+</head>
+<body>
+<canvas id="c" width="1080" height="1920"></canvas>
+<button id="play">▶ Odtwórz z dźwiękiem</button>
+<audio id="music" src="music.wav" preload="auto"></audio>
+<script type="module" src="src/main.js"></script>
+</body>
+</html>

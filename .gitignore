@@ -1,12 +1,20 @@
 .ftp-credentials.json
 
-# tools/intro, tools/reel — zależności i pliki robocze
+# tools/intro, tools/reel, tools/reel-bodycreator, tools/reel-observer — zależności i pliki robocze
 tools/intro/node_modules/
 tools/intro/stills/
 tools/reel/node_modules/
 tools/reel/stills/
 tools/reel/render.log
 tools/reel/__pycache__/
+tools/reel-bodycreator/node_modules/
+tools/reel-bodycreator/stills/
+tools/reel-bodycreator/render.log
+tools/reel-bodycreator/__pycache__/
+tools/reel-observer/node_modules/
+tools/reel-observer/stills/
+tools/reel-observer/*.log
+tools/reel-observer/__pycache__/
 
 # wyrenderowane wyniki — odtwarzalne z kodu:
 #   python music.py              → music.wav
@@ -16,6 +24,14 @@ tools/intro/music.wav
 tools/reel/*.mp4
 tools/reel/*.jpg
 tools/reel/music.wav
+tools/reel-bodycreator/*.mp4
+tools/reel-bodycreator/*.jpg
+tools/reel-bodycreator/music.wav
+tools/reel-observer/*.mp4
+tools/reel-observer/*.jpg
+tools/reel-observer/music.wav
 
 # kafelki z capture_sites.js (w repo zostają sklejone *.webp ze stitch.py)
 tools/reel/assets/mobile/*.png
+# surowe zrzuty z capture.js (w repo zostają *.webp z pack.py)
+tools/reel-bodycreator/assets/site/*.png

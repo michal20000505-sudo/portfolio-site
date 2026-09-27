@@ -1,0 +1,15 @@
+{
+  "name": "reel-observer",
+  "version": "1.0.0",
+  "description": "Reels 1080x1920 o portfolio z okiem OBSERVER 01 jako narratorem; motion design w HTML/WebGL",
+  "scripts": {
+    "music": "python music.py",
+    "preview": "node serve.js",
+    "render": "node record.js video 60 6 reel.mp4"
+  },
+  "type": "commonjs",
+  "dependencies": {
+    "puppeteer-core": "^23.11.1",
+    "three": "^0.160.0"
+  }
+}

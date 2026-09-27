@@ -1,0 +1,16 @@
+{
+  "name": "reel-bodycreator",
+  "version": "1.0.0",
+  "description": "Reels 8 s (1080x1920) dla Body Creator — strona i zapis na konsultację; motion design w HTML/WebGL",
+  "scripts": {
+    "capture": "node capture.js",
+    "music": "python music.py",
+    "preview": "node serve.js",
+    "render": "node record.js video 60 6 reel.mp4"
+  },
+  "type": "commonjs",
+  "dependencies": {
+    "puppeteer-core": "^23.11.1",
+    "three": "^0.160.0"
+  }
+}
