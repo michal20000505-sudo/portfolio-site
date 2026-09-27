@@ -1,1 +1,21 @@
 .ftp-credentials.json
+
+# tools/intro, tools/reel — zależności i pliki robocze
+tools/intro/node_modules/
+tools/intro/stills/
+tools/reel/node_modules/
+tools/reel/stills/
+tools/reel/render.log
+tools/reel/__pycache__/
+
+# wyrenderowane wyniki — odtwarzalne z kodu:
+#   python music.py              → music.wav
+#   node record.js video ...     → *.mp4 (ffmpeg → okładki *.jpg)
+tools/intro/*.mp4
+tools/intro/music.wav
+tools/reel/*.mp4
+tools/reel/*.jpg
+tools/reel/music.wav
+
+# kafelki z capture_sites.js (w repo zostają sklejone *.webp ze stitch.py)
+tools/reel/assets/mobile/*.png

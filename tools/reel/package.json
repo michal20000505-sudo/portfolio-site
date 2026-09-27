@@ -1,0 +1,17 @@
+{
+  "name": "mj-reel",
+  "version": "1.0.0",
+  "description": "Reels 30 s (1080x1920) — motion design w HTML/WebGL, render przez headless Chrome",
+  "scripts": {
+    "preview": "node serve.js",
+    "music": "python music.py",
+    "stills": "node record.js stills",
+    "render": "node record.js video 60 4 reel.mp4",
+    "draft": "node record.js draft"
+  },
+  "type": "commonjs",
+  "dependencies": {
+    "puppeteer-core": "^23.11.1",
+    "three": "^0.160.0"
+  }
+}
