@@ -1,0 +1,15 @@
+{
+  "name": "reel-sscar",
+  "private": true,
+  "description": "Reels SSCAR.PL (Facebook, 1080x1920): rezerwacja online, laboratorium geometrii 3D, dekoder VIN/DAM, baza klimatyzacji",
+  "scripts": {
+    "music": "python music.py",
+    "preview": "node serve.js",
+    "render": "node record.js video 60 6 reel.mp4"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.6.0",
+    "puppeteer-core": "^23.11.1",
+    "three": "^0.160.0"
+  }
+}

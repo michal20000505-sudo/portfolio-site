@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SSCAR Reel</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+  html, body { margin: 0; height: 100%; background: #090706; overflow: hidden; }
+  canvas { position: absolute; inset: 0; margin: auto; height: min(100vh, 177.78vw); width: min(56.25vh, 100vw); }
+  body.rec canvas { width: 1080px; height: 1920px; margin: 0; }
+  #play {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    font: 800 18px 'Barlow Condensed', sans-serif; letter-spacing: .1em; text-transform: uppercase;
+    color: #f2edec; background: #bd0001; border: 0; border-radius: 8px; padding: 16px 34px; cursor: pointer;
+  }
+  body.rec #play, body.playing #play { display: none; }
+</style>
+<script type="importmap">
+{ "imports": { "three": "./node_modules/three/build/three.module.js", "three/addons/": "./node_modules/three/examples/jsm/" } }
+</script>
+</head>
+<body>
+<canvas id="c" width="1080" height="1920"></canvas>
+<button id="play">▶ Odtwórz z dźwiękiem</button>
+<audio id="music" src="music.wav" preload="auto"></audio>
+<script type="module" src="src/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+// Minimalny serwer statyczny (moduły ES + three.js nie działają z file://).
+// start()      → katalog główny repo portfolio (reel.html sięga do ../../fonts itp.)
+// start(0, d)  → dowolny katalog (capture.js serwuje nim lokalną kopię strony strony klienta)
+const http = require('http'), fs = require('fs'), path = require('path');
+const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.mjs': 'text/javascript', '.json': 'application/json', '.css': 'text/css',
+  '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.woff2': 'font/woff2',
+  '.glb': 'model/gltf-binary', '.wav': 'audio/wav', '.mp4': 'video/mp4', '.ico': 'image/x-icon' };
+function start(port = 0, root = path.resolve(__dirname, '..', '..')) {
+  root = path.resolve(root);
+  return new Promise(res => {
+    const srv = http.createServer((req, resp) => {
+      const p = path.join(root, decodeURIComponent(req.url.split('?')[0]));
+      if (!p.startsWith(root)) { resp.writeHead(403); return resp.end(); }
+      fs.readFile(p, (err, data) => {
+        if (err) { resp.writeHead(404); return resp.end('404'); }
+        resp.writeHead(200, { 'Content-Type': TYPES[path.extname(p).toLowerCase()] || 'application/octet-stream', 'Cache-Control': 'no-store' });
+        resp.end(data);
+      });
+    });
+    srv.listen(port, '127.0.0.1', () => res(srv));
+  });
+}
+module.exports = { start };
+if (require.main === module) {
+  start(parseInt(process.argv[2] || '8140')).then(s => console.log(`http://127.0.0.1:${s.address().port}/tools/reel-sscar/reel.html`));
+}
