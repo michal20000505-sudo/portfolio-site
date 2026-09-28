@@ -1,6 +1,6 @@
 .ftp-credentials.json
 
-# tools/intro, tools/reel, tools/reel-bodycreator, tools/reel-observer, tools/reel-sscar — zależności i pliki robocze
+# tools/intro, tools/reel, tools/reel-bodycreator, tools/reel-observer, tools/reel-sscar, tools/reel-overprint — zależności i pliki robocze
 tools/intro/node_modules/
 tools/intro/stills/
 tools/reel/node_modules/
@@ -19,6 +19,11 @@ tools/reel-sscar/node_modules/
 tools/reel-sscar/stills/
 tools/reel-sscar/*.log
 tools/reel-sscar/__pycache__/
+tools/reel-overprint/node_modules/
+tools/reel-overprint/stills/
+tools/reel-overprint/*.log
+tools/reel-overprint/__pycache__/
+tools/reel-overprint/assets/cap/
 
 # wyrenderowane wyniki — odtwarzalne z kodu:
 #   python music.py              → music.wav
@@ -37,6 +42,9 @@ tools/reel-observer/music.wav
 tools/reel-sscar/*.mp4
 tools/reel-sscar/*.jpg
 tools/reel-sscar/music.wav
+tools/reel-overprint/*.mp4
+tools/reel-overprint/*.jpg
+tools/reel-overprint/music.wav
 
 # kafelki z capture_sites.js (w repo zostają sklejone *.webp ze stitch.py)
 tools/reel/assets/mobile/*.png

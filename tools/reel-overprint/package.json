@@ -1,0 +1,15 @@
+{
+  "name": "reel-overprint",
+  "private": true,
+  "description": "Reels OVERPRINT (Instagram/Facebook, 1080x1920): gra w przeglądarce na silniku gry + strona portfolio",
+  "scripts": {
+    "music": "python music.py",
+    "preview": "node serve.js",
+    "capture": "node capture.js",
+    "render": "node record.js video 60 6 reel.mp4"
+  },
+  "dependencies": {
+    "puppeteer-core": "^23.11.1",
+    "three": "0.160.0"
+  }
+}
