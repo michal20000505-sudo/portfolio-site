@@ -7,7 +7,7 @@
 import {
     ARENA, OBSTACLES, MAX_WEAPONS, INK_SLOTS, INK, WEAPONS, weaponStats, mixOf, CARDS, RARITY,
     ENEMIES, AFFIXES, BOSSES, scaling, waveQuota, waveDuration, aliveCap, xpForLevel, PRICES, levelText,
-} from './data.js?v=20260928b';
+} from './data.js?v=20260928c';
 
 const rand = (a, b) => a + Math.random() * (b - a);
 const pick = arr => arr[Math.random() * arr.length | 0];
@@ -477,7 +477,8 @@ export class Game {
         this.v.ring(x, z, color, r * .3, r, .3);
         this.v.burst(x, .5, z, color, 14, 7, .16, .3);
         this.v.splat(x, z, color, r * .55, .55);
-        this.v.shake(o.big ? .6 : .18);
+        // Wybuchy z broni gracza (rakiety, miny, mieszanka Red) nie trzęsą ekranem: przy wielu naraz nic nie było widać.
+        if (o.big) this.v.shake(.6);
         this.audio.play('explode');
         const list = this.near(x, z, r + 1.5, []);
         for (const e of list) {
@@ -517,7 +518,7 @@ export class Game {
         if (o.weapon && o.weapon.mix.id !== 'none') this.v.splat(e.x + rand(-.4, .4), e.z + rand(-.4, .4), o.weapon.mix.color, e.r * .8, .4);
         this.v.burst(e.x, .6, e.z, def.color, e.boss ? 60 : 9, e.boss ? 12 : 6, e.boss ? .3 : .15, .25);
         this.audio.play('kill');
-        if (this.settings.shake) this.v.shake(e.boss ? 1.2 : e.type === 'walec' ? .25 : .06);
+        if (this.settings.shake && (e.boss || e.type === 'walec')) this.v.shake(e.boss ? 1.2 : .25);
         // efekty śmierci
         const depth = o.depth || 0;
         if (o.weapon?.mix.id === 'blast' && depth < 3) this.timers.push({ t: .05, fn: () => this.explode(e.x, e.z, 2.4 * this.stats.area, o.weapon.stats.dmg * this.stats.dmg * .9 + 10, INK.red, { depth: depth + 1 }) });
@@ -795,7 +796,6 @@ export class Game {
                 this.v.paper.stroke(ox, oz, ox + dx * len, oz + dz * len, col === INK.none ? '#9a9aa0' : col, .12, .35);
                 this.v.burst(ox + dx * len, .6, oz + dz * len, col, 5, 5, .12);
             }
-            if (this.settings.shake) this.v.shake(.12);
             this.audio.play('rail');
             return;
         }
@@ -833,7 +833,6 @@ export class Game {
         }
         this.v.burst(ox, .6, oz, '#ffffff', 1, 2, .08);
         this.audio.play(w.id === 'rozpylacz' ? 'shotgun' : w.id === 'rotograf' ? 'smg' : w.id === 'tuba' ? 'rocket' : 'shoot');
-        if (w.id === 'rozpylacz' && this.settings.shake) this.v.shake(.08);
     }
 
     fireLaser(w, dt) {
@@ -902,7 +901,6 @@ export class Game {
             this.v.ring(p.x, p.z, '#ffffff', .2, r * .7, .22);
             this.v.splat(p.x, p.z, col === '#26262c' ? '#9a9aa2' : col, r * .45, .3);
             this.v.burst(p.x, .2, p.z, col, 10, 7, .14);
-            if (this.settings.shake) this.v.shake(.18);
             this.audio.play('stamp');
             for (const e of this.near(p.x, p.z, r + 1.5)) {
                 const dx = e.x - p.x, dz = e.z - p.z, d = Math.hypot(dx, dz) || 1;

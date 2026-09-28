@@ -5,12 +5,12 @@
    (importy w shooter/*.js i <script> w shooter.html).
    ========================================================================== */
 
-import { View } from './render.js?v=20260928b';
-import { Audio } from './audio.js?v=20260928b';
-import { Input } from './input.js?v=20260928b';
-import { Game } from './game.js?v=20260928b';
-import { UI } from './ui.js?v=20260928b';
-import { Board } from './net.js?v=20260928b';
+import { View } from './render.js?v=20260928c';
+import { Audio } from './audio.js?v=20260928c';
+import { Input } from './input.js?v=20260928c';
+import { Game } from './game.js?v=20260928c';
+import { UI } from './ui.js?v=20260928c';
+import { Board } from './net.js?v=20260928c';
 
 function webglOk() {
     try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch { return false; }
