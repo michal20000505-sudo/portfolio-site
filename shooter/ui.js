@@ -4,7 +4,7 @@
    instrukcja, ranking, koniec gry. Stan strony trzyma klasa body.state-*.
    ========================================================================== */
 
-import { WEAPONS, RARITY, MIXES, mixKey, INK, PRICES, levelText, iconURL, MAX_WEAPONS, INK_SLOTS } from './data.js';
+import { WEAPONS, RARITY, MIXES, mixKey, INK, PRICES, levelText, iconURL, MAX_WEAPONS, INK_SLOTS } from './data.js?v=20260928b';
 
 const $ = id => document.getElementById(id);
 const icons = new Map();
@@ -370,7 +370,7 @@ export class UI {
             const blocked = o.kind === 'weapon' && g.weapons.length >= MAX_WEAPONS;
             b.className = 'offer' + (o.sold ? ' sold' : '') + (!g.canAfford(o.price) ? ' poor' : '');
             b.dataset.eyeTitle = `${o.name}: ${o.price} ml`;
-            b.dataset.eye = o.kind === 'weapon' ? (blocked ? 'Masz już trzy bronie. Sprzedaj jedną, żeby zrobić miejsce.' : o.desc) : o.kind === 'ink' ? 'Po zakupie wskażesz broń i slot. Tusz działa przy każdym trafieniu tej broni.' : o.desc;
+            b.dataset.eye = o.kind === 'weapon' ? (blocked ? 'Masz już cztery bronie. Sprzedaj jedną, żeby zrobić miejsce.' : o.desc) : o.kind === 'ink' ? 'Po zakupie wskażesz broń i slot. Tusz działa przy każdym trafieniu tej broni.' : o.desc;
             const kind = { weapon: 'Broń', ink: 'Tusz', stat: 'Ulepszenie', maxhp: 'Zdrowie' }[o.kind];
             const col = o.kind === 'ink' ? INK_HEX[o.color] : '#161616';
             b.innerHTML = `
@@ -533,7 +533,7 @@ export class UI {
         const q = document.querySelector.bind(document);
         this.set('hp', $('hp-bar').lastElementChild, 'transform', `scaleX(${Math.max(0, p.hp / s.maxHp).toFixed(3)})`);
         this.set('hpT', $('hp-text'), 'text', `${Math.ceil(Math.max(0, p.hp))} / ${s.maxHp}`);
-        if (this.hudCache.maxHp !== s.maxHp) { this.hudCache.maxHp = s.maxHp; $('hp-bar').style.setProperty('--seg', `${(2000 / s.maxHp).toFixed(2)}%`); }
+        if (this.hudCache.maxHp !== s.maxHp) { this.hudCache.maxHp = s.maxHp; const segHp = 20 * Math.ceil(s.maxHp / 300); $('hp-bar').style.setProperty('--seg', `${(segHp * 100 / s.maxHp).toFixed(2)}%`); }
         // opóźniony pasek utraconego zdrowia
         this.lag = Math.max(p.hp / s.maxHp, (this.lag ?? 1) - .008);
         this.set('hpLag', $('hp-bar').firstElementChild, 'transform', `scaleX(${this.lag.toFixed(3)})`);
@@ -551,8 +551,11 @@ export class UI {
         this.set('money', $('money-text'), 'text', fmt(g.money));
 
         // umiejętności
-        const dash = Math.max(0, p.dashCdT / (1.1 * s.dashCd));
+        const dash = p.dashStock > 0 ? 0 : Math.max(0, p.dashCdT / (1.1 * s.dashCd));
         this.set('dash', q('#btn-dash .fill'), 'transform', `scaleY(${dash.toFixed(3)})`);
+        const dashLabel = (s.dashCharges || 1) > 1 ? `DASH ×${p.dashStock}` : 'DASH';
+        if (this.hudCache.dashLabel !== dashLabel) { this.hudCache.dashLabel = dashLabel; q('#btn-dash span').firstChild.textContent = dashLabel; }
+        this.set('shield', $('hp-bar'), 'outline', p.shieldReady ? '2px solid #00ffff' : '');
         const unlocked = g.ultUnlocked;
         const ready = unlocked && g.ult.charge >= g.ult.need;
         const ult = $('btn-ult');

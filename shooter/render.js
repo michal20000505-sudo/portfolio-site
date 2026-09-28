@@ -9,7 +9,7 @@
 
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
-import { ARENA, ENEMIES, INK, OBSTACLES } from './data.js';
+import { ARENA, ENEMIES, INK, OBSTACLES } from './data.js?v=20260928b';
 
 const ELEV = THREE.MathUtils.degToRad(60);
 const SIN_E = Math.sin(ELEV), COS_E = Math.cos(ELEV);
@@ -432,6 +432,22 @@ export class View {
             new THREE.BoxGeometry(1.4, 1.1, .18).translate(0, .1, .5),
         ]);
         P('tarczownik', shield, flat('#ffffff'), 80);
+        P('zszywacz', mergeGeometries([
+            new THREE.BoxGeometry(.72, .24, 1.1).translate(0, -.18, 0),
+            new THREE.BoxGeometry(.62, .22, 1.0).translate(0, .14, -.06),
+            new THREE.BoxGeometry(.5, .12, .16).translate(0, -.02, .5),
+        ]), flat('#ffffff'), 80);
+        P('igla', mergeGeometries([
+            new THREE.CylinderGeometry(.04, .36, 1.3, 6).rotateX(Math.PI / 2),
+            new THREE.CylinderGeometry(.3, .3, .2, 8).rotateX(Math.PI / 2).translate(0, 0, -.62),
+        ]), flat('#ffffff'), 60);
+        P('kopiarka', mergeGeometries([
+            new THREE.BoxGeometry(1.5, .8, 1.2),
+            new THREE.BoxGeometry(1.3, .12, 1.0).translate(0, .46, -.02),
+            new THREE.BoxGeometry(1.0, .06, .6).translate(0, -.12, .82),
+        ]), flat('#ffffff'), 40);
+        P('widmo', new THREE.IcosahedronGeometry(.5, 1), flat('#ffffff'), 60);
+        P('gabka', new THREE.BoxGeometry(1.3, .8, 1.1), flat('#ffffff'), 40);
         // oczy wrogów
         P('eyeW', new THREE.BoxGeometry(.2, .2, .08), basic('#ffffff'), 1600, { shadow: false });
         P('eyeP', new THREE.BoxGeometry(.1, .1, .05), basic('#ffffff'), 1600, { shadow: false });
@@ -440,6 +456,11 @@ export class View {
         P('bullet', new THREE.IcosahedronGeometry(1, 0), basic('#ffffff'), 900);
         P('ebullet', new THREE.IcosahedronGeometry(1, 1), basic('#ffffff'), 700);
         P('rocket', new THREE.BoxGeometry(.22, .22, .6), flat('#ffffff'), 80);
+        P('ruler', new THREE.BoxGeometry(1, .08, .26), flat('#ffffff'), 40);
+        P('mine', mergeGeometries([
+            new THREE.CylinderGeometry(.34, .34, .08, 10),
+            new THREE.CylinderGeometry(.02, .05, .34, 4).translate(0, .2, 0),
+        ]), flat('#ffffff'), 120);
         P('pickup', new THREE.OctahedronGeometry(.2, 0), flat('#ffffff'), 500);
         P('heart', mergeGeometries([new THREE.BoxGeometry(.5, .16, .16), new THREE.BoxGeometry(.16, .5, .16)]), basic('#ffffff'), 20);
         P('roller', new THREE.CylinderGeometry(.42, .42, .8, 10).rotateZ(Math.PI / 2), flat('#ffffff'), 24);
@@ -484,6 +505,11 @@ export class View {
             new THREE.MeshBasicMaterial({ color: '#00aeef', transparent: true, opacity: .9, depthWrite: false }));
         ring.position.y = .03; ring.renderOrder = 2;
         g.add(ring);
+        this.shieldRing = new THREE.Mesh(new THREE.TorusGeometry(.78, .045, 6, 28).rotateX(Math.PI / 2),
+            new THREE.MeshBasicMaterial({ color: '#00ffff' }));
+        this.shieldRing.position.y = .55;
+        this.shieldRing.visible = false;
+        g.add(this.shieldRing);
         this.aimTick = new THREE.Mesh(new THREE.PlaneGeometry(.16, .34).rotateX(-Math.PI / 2),
             new THREE.MeshBasicMaterial({ color: '#00aeef', depthWrite: false, transparent: true }));
         this.aimTick.position.y = .03; this.aimTick.renderOrder = 2;
@@ -506,6 +532,18 @@ export class View {
                 x, y, z, vx: Math.cos(a) * s, vy: 2 + Math.random() * speed * .9, vz: Math.sin(a) * s,
                 life: .5 + Math.random() * .6, size: size * (.6 + Math.random() * .8), color: hex,
                 rx: Math.random() * 6, ry: Math.random() * 6, paint: Math.random() < paint,
+            });
+        }
+    }
+    // Strumień farby w stożku (Aerograf): cząstki lecą płasko przed graczem.
+    spray(x, z, angle, half, range, hex, count) {
+        const room = this.maxParticles - this.particles.length;
+        for (let i = 0; i < Math.min(count, room); i++) {
+            const a = angle + (Math.random() * 2 - 1) * half, sp = range * (2.2 + Math.random() * 1.6);
+            this.particles.push({
+                x, y: .6, z, vx: Math.cos(a) * sp, vy: 1 + Math.random() * 2, vz: Math.sin(a) * sp,
+                life: .28 + Math.random() * .12, size: .09 + Math.random() * .09, color: hex,
+                rx: Math.random() * 6, ry: Math.random() * 6, paint: false,
             });
         }
     }
@@ -602,6 +640,9 @@ export class View {
             const inks = g.inkSet();
             this.cartridges.forEach((m, i) => m.material.color.set(inks.has('CMY'[i]) ? INK['CMY'[i]] : '#55555c'));
             this.player.scale.setScalar(p.dashing ? 1.08 : 1);
+            this.shieldRing.visible = !!p.shieldReady;
+            this.shieldRing.rotation.y = t * 2;
+            this.shieldRing.position.y = .55 + Math.sin(t * 3) * .08;
         }
 
         // wrogowie
@@ -630,12 +671,26 @@ export class View {
                 else if (e.type === 'pecherz') { const b = 1 + Math.sin(ph * (e.fuse > 0 ? 4 : 1)) * (e.fuse > 0 ? .12 : .05) + (e.fuse > 0 ? (.65 - e.fuse) * .5 : 0); sx *= b; sy *= b; sz *= b; }
                 else if (e.type === 'plujka') { y = .4 * sc + Math.abs(Math.sin(ph * .7)) * .1; }
                 else if (e.type === 'tarczownik') { y = .45 * sc; }
+                else if (e.type === 'zszywacz') {
+                    y = .45 * sc;
+                    if (e.st === 'aim') { sy *= 1.12 + Math.sin(t * 60) * .05; }
+                    if (e.st === 'lunge') { sz *= 1.3; sy *= .85; }
+                }
+                else if (e.type === 'igla') { y = .55 * sc + Math.sin(ph * .5) * .06; }
+                else if (e.type === 'kopiarka') { y = .45 * sc; sy *= 1 + Math.max(0, Math.sin(ph * 2)) * .05; }
+                else if (e.type === 'widmo') { y = .8 * sc + Math.sin(ph * .6) * .15; sy *= 1.2; }
+                else if (e.type === 'gabka') { const b = Math.sin(ph * .8); y = .42 * sc; sy *= 1 + b * .08; sx *= 1 - b * .04; sz *= 1 - b * .04; }
+            }
+            if (e.type === 'widmo' && e.phaseOut > 0) {
+                // znikanie: migotanie i kurczenie
+                if (Math.floor(t * 30) % 2 === 0) continue;
+                const k = Math.max(.2, e.phaseOut / .5); sx *= k; sy *= k; sz *= k;
             }
             if (e.spawnT > 0) { const k = 1 - e.spawnT / .25; sx *= k; sy *= k * 1.4; sz *= k; }
             pool.push(e.x, y, e.z, ry, sx, sy, sz, col, rx);
             // oczy (walec ich nie ma, jest walcem)
-            if (e.type !== 'walec') {
-                const eh = e.type === 'plujka' ? .72 : e.type === 'tarczownik' ? .75 : y + def.r * sc * .25;
+            if (e.type !== 'walec' && e.type !== 'igla') {
+                const eh = e.type === 'plujka' ? .72 : e.type === 'tarczownik' ? .75 : e.type === 'zszywacz' ? .72 : y + def.r * sc * .25;
                 const fwd = e.type === 'tarczownik' ? .62 : def.r * sc * .88;
                 const sideOff = def.r * sc * .36;
                 const ex = Math.sin(ry), ez = Math.cos(ry);
@@ -653,6 +708,7 @@ export class View {
         for (const b of g.bullets) {
             const ry = Math.atan2(b.vx, b.vz), s = b.size;
             if (b.kind === 'rocket') P.rocket.push(b.x, .7, b.z, ry, 1, 1, 1, C(b.color));
+            else if (b.kind === 'boomerang') P.ruler.push(b.x, .7, b.z, b.spin, s * 3, 1, 1, C(b.color === INK.none ? '#e8e2d2' : b.color));
             else P.bullet.push(b.x, .62, b.z, ry, s, s, s * 2.4, C(b.color));
         }
         for (const b of g.ebullets) {
@@ -697,6 +753,12 @@ export class View {
                 P.disc.push(m.x, .05, m.z, t, m.r * 2, 1, m.r * 2, col);
                 P.ring.push(m.x, .07, m.z, 0, m.r * 2 * k, 1, m.r * 2 * k, col);
             }
+        }
+        // pinezki
+        for (const m of g.mines || []) {
+            const armed = m.arm <= 0, k = m.small ? .65 : 1;
+            P.mine.push(m.x, .05, m.z, m.id, k, k, k, C(m.color));
+            if (armed && Math.floor(t * 3 + m.id) % 4 === 0) P.ring.push(m.x, .04, m.z, 0, 1.1 * k, 1, 1.1 * k, C(m.color));
         }
         // spadające krople-wrogowie
         for (const d of g.drops) {
@@ -770,6 +832,26 @@ export class View {
             add(new THREE.CylinderGeometry(.5, .5, 1.6, 10), '#8a9099', 0, 2.2, 0);
             add(new THREE.BoxGeometry(3.4, .12, 3.4), '#ffd200', 0, .06, 0, true);
             for (const sx of [-.7, .7]) { add(new THREE.BoxGeometry(.55, .4, .1), '#ffffff', sx, 1.15, 1.32, true); add(new THREE.BoxGeometry(.25, .2, .06), '#161616', sx, 1.1, 1.38, true); }
+        } else if (type === 'ksero') {
+            add(new THREE.BoxGeometry(3.2, 1.5, 2.4), '#50545c', 0, .75, 0);
+            add(new THREE.BoxGeometry(3.0, .2, 2.2), '#23252b', 0, 1.62, -.05);
+            add(new THREE.BoxGeometry(2.4, .1, .9), '#f1ede4', 0, .5, 1.55);
+            g.userData.scanner = add(new THREE.BoxGeometry(2.8, .12, .12), '#00ffff', 0, 1.2, 1.24, true);
+            for (const sx of [-.7, .7]) { add(new THREE.BoxGeometry(.5, .36, .1), '#ffffff', sx, .95, 1.22, true); add(new THREE.BoxGeometry(.2, .2, .06), '#ec008c', sx, .95, 1.28, true); }
+        } else if (type === 'krajarka') {
+            add(new THREE.BoxGeometry(2.4, 1, 2.4), '#2a2c33', 0, .5, 0);
+            add(new THREE.CylinderGeometry(.3, .3, 1.2, 8), '#6d727a', 0, 1.4, 0);
+            const blade = new THREE.Group();
+            blade.position.y = 2.05;
+            const bm = new THREE.MeshToonMaterial({ color: '#c9ced6', gradientMap: this.grad });
+            mats.push(bm);
+            for (const r of [0, Math.PI / 2]) {
+                const m = new THREE.Mesh(new THREE.BoxGeometry(4.4, .08, .5), bm);
+                m.rotation.y = r; m.castShadow = true; blade.add(m);
+            }
+            g.add(blade);
+            g.userData.blade = blade;
+            for (const sx of [-.6, .6]) { add(new THREE.BoxGeometry(.5, .36, .1), '#ffffff', sx, .6, 1.22, true); add(new THREE.BoxGeometry(.2, .2, .06), '#ff1f5a', sx, .6, 1.28, true); }
         } else {
             add(new THREE.IcosahedronGeometry(1.4, 1), '#16161c', 0, 1.5, 0);
             g.userData.eyes = [];
@@ -807,6 +889,11 @@ export class View {
             g.visible = !(e.phaseOut > 0 && Math.floor(t * 30) % 2 === 0);
         }
         if (e.type === 'rakla') g.children[1].scale.y = 1 + Math.sin(t * 8) * .05;
+        if (e.type === 'ksero') {
+            const sc = g.userData.scanner;
+            sc.position.z = 1.24; sc.position.y = 1.2 + Math.sin(t * (e.st === 'scan' ? 12 : 3)) * .4;
+        }
+        if (e.type === 'krajarka') g.userData.blade.rotation.y = e.spin || 0;
     }
 
     // --- nakładka 2D: liczby obrażeń, celownik, wskaźnik bossa ---------------------------------------

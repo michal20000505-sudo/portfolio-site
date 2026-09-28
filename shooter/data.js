@@ -4,7 +4,7 @@
    ========================================================================== */
 
 export const ARENA = 30;           // połowa boku arkusza (świat: -30…30 w X i Z)
-export const MAX_WEAPONS = 3;
+export const MAX_WEAPONS = 4;
 
 // Czcionki drukarskie na arkuszu: przeszkody (środek x/z, połowa boku, litera).
 export const OBSTACLES = [
@@ -97,6 +97,34 @@ export const WEAPONS = {
         evo: 'Pryzmat', evoText: 'Promień rozszczepia się na trzy.',
         desc: 'Ciągła wiązka. Topi wszystko na linii.',
     },
+    stempel: {
+        name: 'Stempel', kind: 'nova', icon: 'stamp', price: 40,
+        dmg: 34, rate: .55, radius: 3.2, knock: 3,
+        l3: { radius: .25 }, l3text: '+25% promienia',
+        evo: 'Pieczęć', evoText: 'Podwójne uderzenie i płonący odcisk na arkuszu.',
+        desc: 'Co chwilę uderza w arkusz wokół Ciebie i odpycha tłum.',
+    },
+    linijka: {
+        name: 'Linijka', kind: 'boomerang', icon: 'ruler', price: 40,
+        dmg: 20, rate: 1.1, count: 1, speed: 17, range: 9, size: .32, spread: .35,
+        l3: { count: 1 }, l3text: '+1 linijka',
+        evo: 'Ekierka', evoText: 'Większe linijki, które wracają dwa razy szybciej.',
+        desc: 'Leci, tnie wszystko po drodze i wraca do ręki.',
+    },
+    aerograf: {
+        name: 'Aerograf', kind: 'cone', icon: 'airbrush', price: 44,
+        dmg: 34, range: 5, angle: .5, // dmg = obrażenia na sekundę
+        l3: { range: 1.5 }, l3text: '+1,5 zasięgu',
+        evo: 'Kompresor', evoText: 'Szerszy strumień i podwójna szansa na efekty tuszu.',
+        desc: 'Strumień farby z bliska. Tusze działają w nim najmocniej.',
+    },
+    pinezki: {
+        name: 'Pinezki', kind: 'mine', icon: 'pin', price: 38,
+        dmg: 42, rate: .9, count: 1, radius: 2.1, max: 8,
+        l3: { count: 1 }, l3text: '+1 pinezka naraz',
+        evo: 'Pole minowe', evoText: 'Wybuch rozrzuca 4 mniejsze pinezki.',
+        desc: 'Zostawiasz za sobą pułapki, które wybuchają pod wrogami.',
+    },
 };
 
 // Statystyki broni na danym poziomie (1–5).
@@ -110,12 +138,15 @@ export function weaponStats(id, level) {
         if (d.l3.pierce) s.pierce = (d.pierce || 0) + d.l3.pierce;
         if (d.l3.dmg) s.dmg *= 1 + d.l3.dmg;
         if (d.l3.range) s.range = d.range + d.l3.range;
+        if (d.l3.radius) s.radius = d.radius * (1 + d.l3.radius);
     }
     if (s.evo) {
         if (id === 'rotograf') { s.pierce = (s.pierce || 0) + 2; s.rate *= 1.25; }
         if (id === 'walki') { s.count += 2; s.radius *= 1.25; s.dmg *= 1.2; }
         if (id === 'dron') { s.count += 2; s.rate *= 1.2; }
         if (id === 'gilotyna') s.count = 3;
+        if (id === 'linijka') { s.size *= 1.4; s.speed *= 1.35; s.dmg *= 1.2; }
+        if (id === 'aerograf') s.angle *= 1.5;
     }
     return s;
 }
@@ -158,6 +189,18 @@ export const CARDS = [
     { id: 'execute', name: 'Cięcie na spad', icon: 'execute', rarity: 2, desc: 'Trafienie dobija wrogów poniżej 12% zdrowia (bez bossów).', max: 1, apply: s => { s.execute = .12; } },
     { id: 'splash', name: 'Rozprysk', icon: 'splash', rarity: 2, desc: 'Zabici wrogowie pryskają farbą i ranią sąsiadów.', max: 1, apply: s => { s.splash = true; } },
     { id: 'bold', name: 'Pogrubienie', icon: 'bold', rarity: 2, desc: '+30% obrażeń i większe pociski.', max: 2, apply: s => { s.dmg += .3; s.size += .25; } },
+    { id: 'thorns', name: 'Kolce', icon: 'thorns', rarity: 0, desc: 'Wróg, który Cię dotknie, dostaje 30 obrażeń (rośnie z falą).', max: 3, apply: s => { s.thorns += 30; } },
+    { id: 'killheal', name: 'Karmienie farbą', icon: 'feed', rarity: 0, desc: 'Każde zabójstwo leczy 1 zdrowia.', max: 3, apply: s => { s.killHeal += 1; } },
+    { id: 'combo', name: 'Seria', icon: 'combo', rarity: 0, desc: '+1% obrażeń za każde 10 combo (maks. +30%) i dłuższe combo.', max: 1, apply: s => { s.comboDmg = true; } },
+    { id: 'shield', name: 'Folia ochronna', icon: 'shield', rarity: 1, desc: 'Folia blokuje jedno trafienie i odnawia się co 14 s (kolejna karta: szybciej).', max: 3, apply: s => { s.shieldCd = s.shieldCd ? s.shieldCd * .7 : 14; } },
+    { id: 'bounty', name: 'Nakład premium', icon: 'bounty', rarity: 1, desc: 'Elity i bossowie zostawiają podwójne krople, +10% farby.', max: 1, apply: s => { s.bounty = true; s.income += .1; } },
+    { id: 'dashnova', name: 'Uderzenie dasha', icon: 'nova', rarity: 1, desc: 'Koniec dasha wywołuje falę uderzeniową.', max: 1, apply: s => { s.dashNova = true; } },
+    { id: 'critbolt', name: 'Iskra', icon: 'bolt', rarity: 1, desc: 'Trafienia krytyczne razią piorunem 2 pobliskich wrogów.', max: 1, apply: s => { s.critBolt = true; } },
+    { id: 'slowaura', name: 'Gęsta farba', icon: 'slow', rarity: 1, desc: 'Wrogowie w promieniu 3,5 wokół Ciebie są wolniejsi o 25%.', max: 1, apply: s => { s.slowAura = true; } },
+    { id: 'adrenaline', name: 'Ostatnia kopia', icon: 'adrenaline', rarity: 1, desc: 'Poniżej 40% zdrowia: +30% obrażeń i szybkostrzelności.', max: 1, apply: s => { s.adrenaline = true; } },
+    { id: 'inkpower', name: 'Pigment', icon: 'pigment', rarity: 1, desc: 'Efekty tuszów są o 35% silniejsze i częstsze.', max: 3, apply: s => { s.inkPower += .35; } },
+    { id: 'revive', name: 'Drugi nakład', icon: 'revive', rarity: 2, desc: 'Raz w przebiegu wracasz do gry z połową zdrowia.', max: 1, apply: s => { s.revive = 1; } },
+    { id: 'dash2', name: 'Podwójny dash', icon: 'dash2', rarity: 2, desc: 'Dwa dashe pod rząd, zanim trzeba czekać.', max: 1, apply: s => { s.dashCharges = 2; } },
 ];
 
 // --- przeciwnicy -------------------------------------------------------------------
@@ -171,6 +214,11 @@ export const ENEMIES = {
     dzielnik:   { name: 'Dzielnik',   hp: 56,  speed: 3.0, r: .7,  dmg: 12, xp: 3, score: 30, from: 8,  weight: 3,  color: '#262630' },
     pecherz:    { name: 'Pęcherz',    hp: 26,  speed: 4.5, r: .55, dmg: 32, xp: 2, score: 25, from: 10, weight: 2.5, color: '#f2c200' },
     tarczownik: { name: 'Tarczownik', hp: 74,  speed: 2.7, r: .65, dmg: 12, xp: 3, score: 35, from: 12, weight: 2,  color: '#22262e' },
+    zszywacz:   { name: 'Zszywacz',   hp: 42,  speed: 3.2, r: .55, dmg: 16, xp: 2, score: 24, from: 5,  weight: 2.6, color: '#2d2f38' },
+    igla:       { name: 'Igła',       hp: 30,  speed: 2.7, r: .42, dmg: 18, xp: 3, score: 30, from: 7,  weight: 2,  color: '#00607f', ranged: true },
+    kopiarka:   { name: 'Kopiarka',   hp: 130, speed: 1.6, r: .85, dmg: 14, xp: 5, score: 45, from: 9,  weight: 1.4, color: '#50545c', heavy: true },
+    widmo:      { name: 'Widmo',      hp: 44,  speed: 4.3, r: .5,  dmg: 15, xp: 3, score: 34, from: 14, weight: 1.8, color: '#8e8e9a' },
+    gabka:      { name: 'Gąbka',      hp: 160, speed: 2.0, r: .8,  dmg: 12, xp: 5, score: 50, from: 16, weight: 1.2, color: '#3a6b2f' },
 };
 
 export const AFFIXES = [
@@ -183,17 +231,19 @@ export const BOSSES = [
     { id: 'rakla', name: 'RAKLA', title: 'Zgarniacz farby', hp: 1500, r: 1.5, speed: 2.1, dmg: 26, score: 1500, xp: 40, color: '#2b2b33' },
     { id: 'prasa', name: 'PRASA', title: 'Sto ton nacisku', hp: 2100, r: 1.7, speed: 1.8, dmg: 30, score: 2200, xp: 55, color: '#34383f' },
     { id: 'rozmaz', name: 'ROZMAZ', title: 'Żywa plama', hp: 2600, r: 1.4, speed: 2.4, dmg: 24, score: 3000, xp: 70, color: '#16161c' },
+    { id: 'ksero', name: 'KSERO', title: 'Kopiuje wszystko', hp: 3000, r: 1.6, speed: 1.9, dmg: 26, score: 3800, xp: 85, color: '#50545c' },
+    { id: 'krajarka', name: 'KRAJARKA', title: 'Cięcie na wymiar', hp: 3400, r: 1.5, speed: 2.6, dmg: 30, score: 4600, xp: 100, color: '#2a2c33' },
 ];
 
 // Mnożniki trudności na fali w.
 export const scaling = w => ({
-    hp: 1 + .19 * (w - 1) + .011 * (w - 1) ** 2,
-    dmg: 1 + .07 * (w - 1),
-    speed: 1 + Math.min(.35, .015 * (w - 1)),
+    hp: 1 + .22 * (w - 1) + .014 * (w - 1) ** 2,
+    dmg: 1 + .085 * (w - 1),
+    speed: 1 + Math.min(.4, .018 * (w - 1)),
 });
-export const waveQuota = w => Math.round(22 + w * 8 + w ** 1.45);
-export const waveDuration = w => Math.min(40, 16 + w * 1.2);
-export const aliveCap = (w, low) => Math.min(low ? 150 : 230, 60 + w * 6);
+export const waveQuota = w => Math.round(26 + w * 9 + w ** 1.5);
+export const waveDuration = w => Math.min(38, 15 + w * 1.1);
+export const aliveCap = (w, low) => Math.min(low ? 160 : 250, 70 + w * 7);
 
 // Poziomy gracza.
 export const xpForLevel = l => Math.round(6 + l * 4.5 + l ** 1.55);
@@ -244,6 +294,22 @@ export const ICONS = {
     ink:      ['....#....', '...###...', '..#####..', '.#######.', '.#######.', '.##+####.', '..#####..', '...###...', '.........'],
     medkit:   ['.........', '.#######.', '.#..+..#.', '.#.+++.#.', '.#..+..#.', '.#######.', '.........', '.........', '.........'],
     reroll:   ['.........', '..####...', '.#....#..', '#......#.', '#...####.', '#....##..', '.#...#...', '..###....', '.........'],
+    stamp:    ['...###...', '...###...', '....#....', '....#....', '.#######.', '.#######.', '.+++++++.', '.........', '+.+.+.+.+'],
+    ruler:    ['........#', '.......##', '......#+#', '.....#+##', '....#+#..', '...#+##..', '..#+#....', '.#+##....', '###......'],
+    airbrush: ['.........', '..##.....', '.####....', '#######++', '.####..+.', '..##...++', '...#.....', '..###....', '.........'],
+    pin:      ['.........', '..#####..', '..#####..', '...###...', '.#######.', '....#....', '....#....', '....+....', '.........'],
+    thorns:   ['#...#...#', '.#.###.#.', '..#####..', '.#######.', '###+#+###', '.#######.', '..#####..', '.#.###.#.', '#...#...#'],
+    feed:     ['.##...##.', '####.####', '#########', '.#######.', '..#####..', '...###...', '....#....', '..+...+..', '.+++.+++.'],
+    combo:    ['.........', '#.#.#.#.#', '#.#.#.#.#', '#.#.#.#.#', '#.#.#.#.#', '#.#.#.#.+', '#.#.#.#++', '#.#.#.+++', '.........'],
+    shield:   ['.#######.', '#+++++++#', '#+#####+#', '#+#...#+#', '#+#...#+#', '.#+#.#+#.', '..#+#+#..', '...#+#...', '....#....'],
+    bounty:   ['...###...', '..#+++#..', '.#+###+#.', '.#+#....', '.#+###+#.', '....#+#..', '.#+###+#.', '..#+++#..', '...###...'],
+    nova:     ['+...+...+', '.+..#..+.', '..+###+..', '..#####..', '+#######+', '..#####..', '..+###+..', '.+..#..+.', '+...+...+'],
+    bolt:     ['.....##..', '....##...', '...##....', '..######.', '....##...', '...##....', '..##.....', '.##......', '.#.......'],
+    slow:     ['.++++++..', '+......+.', '+.####.+.', '+.#..#.+.', '+.####.+.', '+......+.', '.++++++..', '.........', '.........'],
+    adrenaline: ['.........', '.........', '#...#....', '.#.#.#...', '..#...#.#', '.......#.', '.........', '..+++++..', '.........'],
+    pigment:  ['.........', '.##.##.##', '.##.##.##', '.........', '.++.##.++', '.++.##.++', '.........', '.##.++.##', '.##.++.##'],
+    revive:   ['...###...', '..#...#..', '.#.....#.', '.#..+..#.', '.#.+++.#.', '.#..+..#.', '..#...#..', '...###...', '.........'],
+    dash2:    ['.........', '..###.###', '+####+###', '.#####+##', '+####+###', '..###.###', '.........', '.........', '.........'],
 };
 
 export function iconURL(name, color = '#ffffff', accent = '#00ffff', px = 4) {

@@ -197,6 +197,53 @@ export class Audio {
             case 'wave':
                 [0, 7, 12].forEach((n, i) => this.osc('triangle', NOTE(62 + n), NOTE(62 + n), .3, .07, i * .09));
                 break;
+            case 'stamp':
+                if (!this.gate('stamp', 90)) return;
+                this.osc('sine', 120, 45, .22, .28);
+                this.burst(.16, .16, 'lowpass', 900, 120, 1);
+                break;
+            case 'boomerang':
+                if (!this.gate('boomerang', 90)) return;
+                this.burst(.22, .08, 'bandpass', 900, 2400, 4);
+                break;
+            case 'mine':
+                if (!this.gate('mine', 120)) return;
+                this.osc('square', 1800, 1800, .04, .03);
+                this.osc('square', 1300, 1300, .04, .03, .05);
+                break;
+            case 'spray':
+                if (!this.gate('spray', 110)) return;
+                this.burst(.14, .05, 'highpass', 2500, 1800, .7);
+                break;
+            case 'lunge':
+                if (!this.gate('lunge', 80)) return;
+                this.osc('sawtooth', 500, 140, .16, .07);
+                break;
+            case 'snipe':
+                this.osc('square', 2600, 400, .12, .07);
+                this.burst(.1, .08, 'highpass', 5000, 3000);
+                break;
+            case 'teleport':
+                if (!this.gate('teleport', 80)) return;
+                this.osc('sine', 300, 1400, .14, .06);
+                break;
+            case 'heal':
+                if (!this.gate('heal', 300)) return;
+                [0, 5, 9].forEach((n, i) => this.osc('sine', NOTE(72 + n), NOTE(72 + n), .12, .03, i * .05));
+                break;
+            case 'shield':
+                this.osc('triangle', 1200, 2400, .2, .08);
+                this.burst(.2, .08, 'highpass', 6000, 3000);
+                break;
+            case 'cut':
+                if (!this.gate('cut', 60)) return;
+                this.burst(.35, .22, 'highpass', 6000, 1500, 1);
+                this.osc('sawtooth', 900, 60, .3, .08);
+                break;
+            case 'laserBoss':
+                this.osc('sawtooth', 80, 160, 1.2, .1);
+                this.burst(1.2, .1, 'bandpass', 400, 2400, 5);
+                break;
             case 'death':
                 this.osc('sawtooth', 300, 30, 1.6, .2);
                 this.burst(1.4, .25, 'lowpass', 2400, 50);

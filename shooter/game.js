@@ -7,7 +7,7 @@
 import {
     ARENA, OBSTACLES, MAX_WEAPONS, INK_SLOTS, INK, WEAPONS, weaponStats, mixOf, CARDS, RARITY,
     ENEMIES, AFFIXES, BOSSES, scaling, waveQuota, waveDuration, aliveCap, xpForLevel, PRICES, levelText,
-} from './data.js';
+} from './data.js?v=20260928b';
 
 const rand = (a, b) => a + Math.random() * (b - a);
 const pick = arr => arr[Math.random() * arr.length | 0];
@@ -20,6 +20,8 @@ function newStats() {
         crit: .05, critMult: 1.8, speed: 1, magnet: 2.4, armor: 0, regen: 0, lifesteal: 0,
         dashCd: 1, luck: 0, income: 1, doubleShot: 0, trail: false, execute: 0, splash: false,
         size: 1, projSpeed: 1, range: 1,
+        thorns: 0, killHeal: 0, comboDmg: false, shieldCd: 0, bounty: false, dashNova: false,
+        critBolt: false, slowAura: false, adrenaline: false, inkPower: 0, revive: 0, dashCharges: 1,
     };
 }
 
@@ -42,7 +44,7 @@ export class Game {
     clearWorld() {
         this.enemies = []; this.bullets = []; this.ebullets = []; this.pickups = [];
         this.zones = []; this.marks = []; this.drops = []; this.timers = [];
-        this.orbiters = []; this.drones = []; this.lasers = [];
+        this.orbiters = []; this.drones = []; this.lasers = []; this.mines = [];
     }
 
     // --- nowy przebieg -----------------------------------------------------------------------------
@@ -56,7 +58,9 @@ export class Game {
             x: 0, z: 3, vx: 0, vz: 0, r: .45, hp: 100, aimX: 0, aimZ: -1,
             iframes: 0, dashT: 0, dashCdT: 0, dashing: false, dashX: 0, dashZ: 0, trailT: 0,
             recoil: 0, hurtFlash: 0, dead: false, deadT: 0, healAcc: 0, stealWindow: 0,
+            dashStock: 1, shieldReady: false, shieldT: 0,
         };
+        this.dmgBonus = 1;
         this.weapons = [];
         this.addWeapon('rapidograf');
         this.wave = 0; this.score = 0; this.kills = 0; this.time = 0;
@@ -238,7 +242,7 @@ export class Game {
             cz = clamp(p.z + Math.sin(a) * d, -ARENA + 2, ARENA - 2);
             if (Math.hypot(cx - p.x, cz - p.z) > 8 && !this.inObstacle(cx, cz, 1.5)) break;
         }
-        const eliteChance = n >= 6 ? .03 + n * .004 : 0;
+        const eliteChance = n >= 5 ? .04 + n * .005 : 0;
         for (let i = 0; i < size && this.spawned < this.quota; i++) {
             const x = clamp(cx + rand(-1.6, 1.6), -ARENA + 1, ARENA - 1), z = clamp(cz + rand(-1.6, 1.6), -ARENA + 1, ARENA - 1);
             if (this.inObstacle(x, z, .8)) continue;
@@ -274,7 +278,7 @@ export class Game {
         const p = this.player;
         let x = -p.x * .5, z = -p.z * .5 - 6;
         if (Math.hypot(x - p.x, z - p.z) < 9) z = p.z > 0 ? p.z - 12 : p.z + 12;
-        const hp = def.hp * sc.hp * (1 + .5 * cycle);
+        const hp = def.hp * sc.hp * (1 + .5 * cycle) * 1.25;
         const e = {
             id: this.nextId++, boss: true, type: def.id, name: def.name, title: def.title,
             x: clamp(x, -ARENA + 4, ARENA - 4), z: clamp(z, -ARENA + 4, ARENA - 4), y: 12,
@@ -324,11 +328,14 @@ export class Game {
             const cx = clamp(ent.x, o.x - o.hw, o.x + o.hw), cz = clamp(ent.z, o.z - o.hd, o.z + o.hd);
             const dx = ent.x - cx, dz = ent.z - cz, d2 = dx * dx + dz * dz;
             if (d2 < r * r) {
-                if (d2 > 1e-6) { const d = Math.sqrt(d2); ent.x = cx + dx / d * r; ent.z = cz + dz / d * r; }
-                else {
+                if (d2 > 1e-6) {
+                    const d = Math.sqrt(d2);
+                    ent.x = cx + dx / d * r; ent.z = cz + dz / d * r;
+                    ent.bnx = dx / d; ent.bnz = dz / d;
+                } else {
                     const px = o.hw - Math.abs(ent.x - o.x), pz = o.hd - Math.abs(ent.z - o.z);
-                    if (px < pz) ent.x = o.x + Math.sign(ent.x - o.x || 1) * (o.hw + r);
-                    else ent.z = o.z + Math.sign(ent.z - o.z || 1) * (o.hd + r);
+                    if (px < pz) { const sx = Math.sign(ent.x - o.x || 1); ent.x = o.x + sx * (o.hw + r); ent.bnx = sx; ent.bnz = 0; }
+                    else { const sz = Math.sign(ent.z - o.z || 1); ent.z = o.z + sz * (o.hd + r); ent.bnx = 0; ent.bnz = sz; }
                 }
                 ent.blocked = o;
             }
@@ -368,7 +375,7 @@ export class Game {
     // --- obrażenia --------------------------------------------------------------------------------------------
     damage(e, amount, o = {}) {
         if (e.dead || e.phaseOut > 0) return;
-        let dmg = amount;
+        let dmg = amount * this.dmgBonus;
         if (e.elite === 'armored') dmg *= .6;
         let crit = false;
         if (o.canCrit !== false && Math.random() < this.stats.crit) { crit = true; dmg *= this.stats.critMult; }
@@ -390,13 +397,15 @@ export class Game {
         }
         if (o.weapon && !o.noProc) this.applyInk(e, dmg, o.weapon, o.procScale ?? o.weapon.procScale);
         if (crit && o.source !== 'dot') this.audio.play('hit');
+        if (crit && this.stats.critBolt && o.source !== 'chain' && o.source !== 'dot' && !e.dead && Math.random() < .5) this.chain(e, dmg * .4, 2);
         if (e.hp <= 0) this.kill(e, o);
     }
 
     applyInk(e, dmg, w, scale) {
         const mix = w.mix;
         if (!mix || mix.id === 'none' || e.dead) return;
-        const pw = mix.power || 1, area = this.stats.area;
+        const pw = (mix.power || 1) * (1 + this.stats.inkPower), area = this.stats.area;
+        scale *= 1 + this.stats.inkPower * .5;
         switch (mix.id) {
             case 'chill':
                 e.slowT = 2; e.slow = Math.max(e.slow, .28 + .12 * pw);
@@ -490,12 +499,13 @@ export class Game {
         const pts = Math.round(def.score * (1 + .1 * (this.wave - 1)) * mult * (e.elite ? 3 : 1));
         this.score += pts;
         this.kills++;
-        this.combo++; this.comboT = 3.2;
+        this.combo++; this.comboT = this.stats.comboDmg ? 4.5 : 3.2;
+        if (this.stats.killHeal) this.heal(this.stats.killHeal);
         this.bestCombo = Math.max(this.bestCombo, this.combo);
         if (this.ultReady()) this.ult.charge = Math.min(this.ult.need, this.ult.charge + (e.boss ? 30 : e.elite ? 4 : 1));
         // krople
         const xp = def.xp * (e.elite ? 4 : 1);
-        const drops = e.boss ? 14 : e.elite ? 3 : 1;
+        const drops = (e.boss ? 14 : e.elite ? 3 : 1) * (this.stats.bounty && (e.boss || e.elite) ? 2 : 1);
         for (let i = 0; i < drops; i++) {
             const a = Math.random() * Math.PI * 2, s = drops > 1 ? rand(2, 6) : 0;
             this.addPickup(e.x, e.z, Math.max(1, Math.round(xp / drops)), Math.cos(a) * s, Math.sin(a) * s);
@@ -542,9 +552,17 @@ export class Game {
 
     comboMult() { return 1 + Math.min(4, Math.floor(this.combo / 10) * .25); }
 
-    hurt(dmg, sx, sz) {
+    hurt(dmg, sx, sz, src) {
         const p = this.player;
         if (!p || p.dead || p.iframes > 0) return;
+        if (src && this.stats.thorns && !src.dead) this.damage(src, this.stats.thorns * (1 + .12 * (this.wave - 1)), { canCrit: false, source: 'thorns', color: '#ffffff' });
+        if (p.shieldReady) {
+            p.shieldReady = false; p.shieldT = this.stats.shieldCd; p.iframes = .6;
+            this.v.ring(p.x, p.z, '#00ffff', .6, 2.4, .35);
+            this.v.burst(p.x, .8, p.z, '#00ffff', 10, 5, .1);
+            this.audio.play('shield');
+            return;
+        }
         const taken = Math.max(dmg * .3, dmg - this.stats.armor);
         p.hp -= taken;
         p.iframes = .75; p.hurtFlash = .15;
@@ -556,7 +574,18 @@ export class Game {
         this.v.splat(p.x, p.z, '#ec008c', .5, .4);
         this.audio.play('hurt');
         this.hitstop = Math.max(this.hitstop, .07);
-        if (p.hp <= 0) this.die();
+        if (p.hp <= 0) {
+            if (this.stats.revive > 0) {
+                // Drugi nakład: jeden powrót na przebieg
+                this.stats.revive = 0;
+                p.hp = this.stats.maxHp * .5; p.iframes = 2.2;
+                this.ebullets.length = 0;
+                this.explode(p.x, p.z, 6, 120 * scaling(this.wave).hp, '#00ffff', { big: true, depth: 3 });
+                this.v.flash('#ffffff', .7); this.v.misregister(16);
+                this.audio.play('ult');
+                this.hooks.toast?.('Drugi nakład', '#ffffff');
+            } else this.die();
+        }
     }
 
     die() {
@@ -621,6 +650,7 @@ export class Game {
         this.updateEnemies(dt);
         this.updateBullets(dt);
         this.updateZones(dt);
+        this.updateMines(dt);
         this.updateMarks(dt);
         this.updateDrops(dt);
         this.updatePickups(dt);
@@ -645,16 +675,27 @@ export class Game {
         const p = this.player, s = this.stats, inp = this.input;
         inp.poll();
         const mv = inp.move();
-        p.iframes -= dt; p.hurtFlash -= dt; p.dashCdT -= dt; p.recoil = Math.max(0, p.recoil - dt * 6);
+        p.iframes -= dt; p.hurtFlash -= dt; p.recoil = Math.max(0, p.recoil - dt * 6);
+        const low = p.hp < s.maxHp * .4;
+        this.dmgBonus = (s.comboDmg ? 1 + Math.min(.3, Math.floor(this.combo / 10) * .01) : 1) * (s.adrenaline && low ? 1.3 : 1);
+        this.rateBonus = s.adrenaline && low ? 1.3 : 1;
+        if (s.shieldCd && !p.shieldReady) { p.shieldT -= dt; if (p.shieldT <= 0) p.shieldReady = true; }
+        // ładunki dasha
+        const maxDash = s.dashCharges || 1, dashCd = 1.1 * s.dashCd;
+        if (p.dashStock < maxDash) {
+            p.dashCdT -= dt;
+            if (p.dashCdT <= 0) { p.dashStock++; p.dashCdT = p.dashStock < maxDash ? dashCd : 0; }
+        }
         p.stealWindow = Math.max(0, p.stealWindow - dt * 6);
         if (s.regen) this.heal(s.regen * dt);
 
-        if (inp.consume('dash') && p.dashCdT <= 0) {
+        if (inp.consume('dash') && p.dashStock > 0) {
             let dx = mv.x, dz = mv.z;
             if (Math.hypot(dx, dz) < .1) { dx = p.aimX; dz = p.aimZ; }
             const l = Math.hypot(dx, dz) || 1;
             p.dashX = dx / l; p.dashZ = dz / l;
-            p.dashT = .17; p.dashing = true; p.dashCdT = 1.1 * s.dashCd;
+            p.dashT = .17; p.dashing = true;
+            p.dashStock--; if (p.dashCdT <= 0) p.dashCdT = dashCd;
             p.iframes = Math.max(p.iframes, .3);
             this.audio.play('dash');
             this.v.burst(p.x, .3, p.z, '#cfcfcf', 6, 3, .12);
@@ -670,7 +711,10 @@ export class Game {
                 p.trailT -= dt;
                 if (p.trailT <= 0) { p.trailT = .05; this.addZone({ kind: 'fire', x: p.x, z: p.z, r: .9 * s.area, life: 2.4, dps: 18 + this.wave * 4, color: INK.M, burn: true }); }
             }
-            if (p.dashT <= 0) p.dashing = false;
+            if (p.dashT <= 0) {
+                p.dashing = false;
+                if (s.dashNova) this.explode(p.x, p.z, 2.6 * s.area, 22 + this.wave * 6, '#ffffff', { depth: 3 });
+            }
         } else {
             const k = 1 - Math.exp(-dt * 16);
             p.vx += (mv.x * speed - p.vx) * k;
@@ -715,9 +759,12 @@ export class Game {
             if (st.kind === 'orbit') { this.updateOrbit(w, dt); continue; }
             if (st.kind === 'drone') { this.updateDrones(w, dt); continue; }
             if (st.kind === 'laser') { if (this.firing) this.fireLaser(w, dt); continue; }
+            if (st.kind === 'cone') { if (this.firing) this.fireCone(w, dt); continue; }
+            if (st.kind === 'nova') { this.updateNova(w, dt); continue; }
+            if (st.kind === 'mine') { this.updateMinelayer(w, dt); continue; }
             w.cd -= dt;
             if (!this.firing) { w.cd = Math.max(w.cd, 0); continue; }
-            const rate = st.rate * s.rate;
+            const rate = st.rate * s.rate * this.rateBonus;
             let guard = 0;
             while (w.cd <= 0 && guard++ < 4) {
                 w.cd += 1 / rate;
@@ -750,6 +797,20 @@ export class Game {
             }
             if (this.settings.shake) this.v.shake(.12);
             this.audio.play('rail');
+            return;
+        }
+        if (st.kind === 'boomerang') {
+            const n = st.count + Math.floor(s.projectiles / 2);
+            const sp = st.speed * s.projSpeed, out = (st.range * s.range) / sp;
+            for (let i = 0; i < n; i++) {
+                const a = base + (i - (n - 1) / 2) * st.spread;
+                this.bullets.push({
+                    id: this.nextId++, x: ox, z: oz, vx: Math.cos(a) * sp, vz: Math.sin(a) * sp, life: out * 2 + 2.5,
+                    dmg: st.dmg * s.dmg, size: st.size * s.size, color: col, w, hit: [], kind: 'boomerang', knock: .8,
+                    t: 0, outT: out, speed: sp, back: false, spin: 0,
+                });
+            }
+            this.audio.play('boomerang');
             return;
         }
         let n = st.count + s.projectiles * (w.id === 'rozpylacz' ? 2 : 1);
@@ -797,6 +858,96 @@ export class Game {
         }
         p.recoil = Math.max(p.recoil, .4);
         this.audio.play('laser');
+    }
+
+    // Aerograf: stożek farby przed graczem
+    fireCone(w, dt) {
+        const p = this.player, s = this.stats, st = w.stats;
+        const range = st.range * s.range, half = st.angle / 2;
+        const col = w.mix.id === 'none' ? '#3a3a42' : w.mix.color;
+        const base = Math.atan2(p.aimZ, p.aimX);
+        this.v.spray(p.x + p.aimX * .6, p.z + p.aimZ * .6, base, half, range, col, 3);
+        w.laserTick -= dt;
+        if (w.laserTick <= 0) {
+            w.laserTick = .1;
+            const dmg = st.dmg * s.dmg * .1;
+            for (const e of this.near(p.x, p.z, range + 1.5)) {
+                const dx = e.x - p.x, dz = e.z - p.z, d = Math.hypot(dx, dz);
+                if (d > range + e.r) continue;
+                let da = Math.atan2(dz, dx) - base;
+                da = Math.atan2(Math.sin(da), Math.cos(da));
+                if (Math.abs(da) > half + e.r / Math.max(d, .5)) continue;
+                this.damage(e, dmg, { weapon: w, source: 'cone', color: col, procScale: st.evo ? .7 : .35, knock: .25, kx: dx / (d || 1), kz: dz / (d || 1) });
+            }
+            if (Math.random() < .6) {
+                const a = base + rand(-half, half), d = rand(1, range);
+                this.v.splat(p.x + Math.cos(a) * d, p.z + Math.sin(a) * d, col === '#3a3a42' ? '#8a8a92' : col, rand(.2, .5), .35);
+            }
+        }
+        p.recoil = Math.max(p.recoil, .3);
+        this.audio.play('spray');
+    }
+
+    // Stempel: rytmiczne uderzenie wokół gracza, gdy ktoś jest w zasięgu
+    updateNova(w, dt) {
+        const p = this.player, s = this.stats, st = w.stats;
+        w.cd -= dt * this.rateBonus;
+        if (w.cd > 0) return;
+        const R = st.radius * s.area;
+        if (!this.nearest(p.x, p.z, R + 1.2)) { w.cd = .15; return; }
+        w.cd = 1 / (st.rate * s.rate);
+        const slam = (r, mult) => {
+            const col = w.mix.id === 'none' ? '#26262c' : w.mix.color;
+            this.v.ring(p.x, p.z, col, .4, r, .3);
+            this.v.ring(p.x, p.z, '#ffffff', .2, r * .7, .22);
+            this.v.splat(p.x, p.z, col === '#26262c' ? '#9a9aa2' : col, r * .45, .3);
+            this.v.burst(p.x, .2, p.z, col, 10, 7, .14);
+            if (this.settings.shake) this.v.shake(.18);
+            this.audio.play('stamp');
+            for (const e of this.near(p.x, p.z, r + 1.5)) {
+                const dx = e.x - p.x, dz = e.z - p.z, d = Math.hypot(dx, dz) || 1;
+                if (d > r + e.r) continue;
+                this.damage(e, st.dmg * s.dmg * mult, { weapon: w, source: 'nova', knock: st.knock, kx: dx / d, kz: dz / d });
+            }
+        };
+        slam(R, 1);
+        if (st.evo) {
+            this.timers.push({ t: .22, fn: () => { if (!this.player.dead) slam(R * 1.35, .7); } });
+            this.addZone({ kind: 'fire', x: p.x, z: p.z, r: R * .6, life: 2.2, dps: st.dmg * s.dmg * .6, color: INK.M, burn: true });
+        }
+    }
+
+    // Pinezki: pułapki zostawiane za graczem
+    updateMinelayer(w, dt) {
+        const p = this.player, s = this.stats, st = w.stats;
+        w.cd -= dt * this.rateBonus;
+        if (w.cd > 0) return;
+        const mine = this.mines.filter(m => m.w === w).length;
+        if (mine >= st.max * st.count) { w.cd = .2; return; }
+        w.cd = 1 / (st.rate * s.rate);
+        for (let i = 0; i < st.count; i++) {
+            const a = Math.random() * Math.PI * 2, d = st.count > 1 ? rand(.4, 1.2) : 0;
+            this.mines.push({ id: this.nextId++, x: p.x - p.aimX * .6 + Math.cos(a) * d, z: p.z - p.aimZ * .6 + Math.sin(a) * d, w, arm: .45, life: 24, color: w.mix.id === 'none' ? '#26262c' : w.mix.color, small: false });
+        }
+        this.audio.play('mine');
+    }
+    updateMines(dt) {
+        const s = this.stats;
+        for (let i = this.mines.length - 1; i >= 0; i--) {
+            const m = this.mines[i];
+            m.arm -= dt; m.life -= dt;
+            let boom = m.life <= 0;
+            if (!boom && m.arm <= 0) for (const e of this.near(m.x, m.z, 1.8)) if (Math.hypot(e.x - m.x, e.z - m.z) < e.r + .6) { boom = true; break; }
+            if (!boom) continue;
+            this.mines.splice(i, 1);
+            const st = m.w.stats, r = st.radius * s.area * (m.small ? .6 : 1), dmg = st.dmg * s.dmg * (m.small ? .45 : 1);
+            this.explode(m.x, m.z, r, dmg, m.color, { weapon: m.w, depth: 1 });
+            if (m.w.mix.id !== 'none') for (const e of this.near(m.x, m.z, r + 1)) if (Math.hypot(e.x - m.x, e.z - m.z) < r + e.r) this.applyInk(e, dmg, m.w, 1);
+            if (st.evo && !m.small) for (let k = 0; k < 4; k++) {
+                const a = k / 4 * Math.PI * 2 + rand(-.3, .3), d = rand(1.4, 2.4);
+                this.mines.push({ id: this.nextId++, x: clamp(m.x + Math.cos(a) * d, -ARENA + 1, ARENA - 1), z: clamp(m.z + Math.sin(a) * d, -ARENA + 1, ARENA - 1), w: m.w, arm: .3, life: 10, color: m.color, small: true });
+            }
+        }
     }
 
     updateOrbit(w, dt) {
@@ -892,7 +1043,7 @@ export class Game {
                         }
                         this.audio.play('enemyShot');
                     }
-                } else if (e.cd <= 0 && dist < 13) { e.cd = rand(2, 2.8); e.windup = .35; }
+                } else if (e.cd <= 0 && dist < 13) { e.cd = rand(1.6, 2.3); e.windup = .35; }
             } else if (T === 'walec') {
                 const want = Math.atan2(nx, nz);
                 let d = want - e.heading;
@@ -905,7 +1056,80 @@ export class Game {
                     mul = 0; e.fuse -= dt;
                     if (e.fuse <= 0) { this.kill(e, {}); continue; }
                 } else if (dist < 1.9) { e.fuse = .65; this.audio.play('spawn'); }
+            } else if (T === 'zszywacz') {
+                // podchodzi, celuje (widoczna linia) i wystrzeliwuje się prosto
+                e.cd -= dt;
+                if (e.st === 'aim') {
+                    mul = 0; e.stT -= dt; e.fx = e.lx; e.fz = e.lz;
+                    if (e.stT <= 0) { e.st = 'lunge'; e.stT = .42; this.audio.play('lunge'); }
+                } else if (e.st === 'lunge') {
+                    mx = e.lx; mz = e.lz; mul = 5.2 * (e.freezeT > 0 ? 0 : 1); e.stT -= dt;
+                    if (Math.random() < .5) this.v.burst(e.x, .3, e.z, '#8a8a92', 1, 2, .1);
+                    if (e.stT <= 0) { e.st = ''; e.cd = rand(1.8, 2.6); }
+                } else if (e.cd <= 0 && dist < 7.5 && e.freezeT <= 0) {
+                    e.st = 'aim'; e.stT = .6; e.lx = nx; e.lz = nz;
+                    this.marks.push({ kind: 'rect', x: e.x + nx * 4.5, z: e.z + nz * 4.5, ry: Math.atan2(nx, nz), w: 1.2, len: 9, t: 0, dur: .6, color: '#ff1f5a' });
+                }
+            } else if (T === 'igla') {
+                // snajper: trzyma dystans, celuje laserem, strzela szybką igłą
+                if (dist < 9) { mx = -nx; mz = -nz; } else if (dist < 13) { const sd = e.id % 2 ? 1 : -1; mx = -nz * sd * .5; mz = nx * sd * .5; }
+                e.cd -= dt * (e.freezeT > 0 ? 0 : 1);
+                if (e.windup > 0) {
+                    e.windup -= dt; mul *= .05; e.fx = e.lx; e.fz = e.lz;
+                    if (e.windup <= 0) {
+                        const sp = 21;
+                        this.ebullets.push({ id: this.nextId++, x: e.x + e.lx * .6, z: e.z + e.lz * .6, vx: e.lx * sp, vz: e.lz * sp, r: .2, dmg: e.dmg, life: 2.2, color: '#00607f' });
+                        this.audio.play('snipe');
+                    }
+                } else if (e.cd <= 0 && dist < 18) {
+                    e.cd = rand(3, 3.8); e.windup = .85; e.lx = nx; e.lz = nz;
+                    this.marks.push({ kind: 'rect', x: e.x + nx * 10, z: e.z + nz * 10, ry: Math.atan2(nx, nz), w: .22, len: 20, t: 0, dur: .85, color: '#00aeef' });
+                }
+            } else if (T === 'kopiarka') {
+                // powoli idzie i drukuje krople
+                e.cd -= dt;
+                if (e.cd <= 0 && this.enemies.length < aliveCap(this.wave, this.v.quality === 'low')) {
+                    e.cd = rand(4, 5.5);
+                    for (const sd of [-1, 1]) {
+                        const k = this.spawnEnemy('kropla', e.x - e.fz * sd * .9, e.z + e.fx * sd * .9);
+                        k.spawnT = .15;
+                    }
+                    e.flash = .12;
+                    this.v.burst(e.x, 1, e.z, '#ffffff', 6, 4, .12);
+                    this.audio.play('spawn');
+                }
+            } else if (T === 'widmo') {
+                // znika i pojawia się tuż obok gracza
+                e.cd -= dt;
+                if (e.phaseOut > 0) {
+                    mul = 0; e.phaseOut -= dt;
+                    if (e.phaseOut <= 0) { e.x = e.tx; e.z = e.tz; this.v.ring(e.x, e.z, '#8e8e9a', .3, 2, .3); this.audio.play('teleport'); e.spawnT = .12; }
+                } else if (e.cd <= 0 && dist > 3 && e.freezeT <= 0) {
+                    e.cd = rand(3.5, 5);
+                    for (let tries = 0; tries < 8; tries++) {
+                        const a = Math.random() * Math.PI * 2;
+                        e.tx = clamp(p.x + Math.cos(a) * 3.6, -ARENA + 1, ARENA - 1); e.tz = clamp(p.z + Math.sin(a) * 3.6, -ARENA + 1, ARENA - 1);
+                        if (!this.inObstacle(e.tx, e.tz, .8)) break;
+                    }
+                    e.phaseOut = .5;
+                    this.marks.push({ kind: 'disc', x: e.tx, z: e.tz, r: .9, t: 0, dur: .5, color: '#8e8e9a' });
+                    this.v.splat(e.x, e.z, '#b8b8c2', .6, .3);
+                }
+            } else if (T === 'gabka') {
+                // leczy wrogów wokół siebie
+                e.cd -= dt;
+                if (e.cd <= 0) {
+                    e.cd = 1.2;
+                    let healed = false;
+                    for (const o of this.near(e.x, e.z, 4.5)) {
+                        if (o.boss || o.hp >= o.maxHp || Math.hypot(o.x - e.x, o.z - e.z) > 4.2) continue;
+                        o.hp = Math.min(o.maxHp, o.hp + o.maxHp * (o === e ? .03 : .07));
+                        healed = true;
+                    }
+                    if (healed) { this.v.ring(e.x, e.z, INK.green, .5, 4.2, .45); this.audio.play('heal'); }
+                }
             }
+            if (this.stats.slowAura && dist < 3.5) mul *= .75;
             if (this.straggle && T !== 'walec') { mx = nx; mz = nz; }
             e.kx *= Math.exp(-dt * 8); e.kz *= Math.exp(-dt * 8);
             e.x += (mx * e.speed * mul + e.kx) * dt;
@@ -926,13 +1150,17 @@ export class Game {
             }
             e.blocked = null;
             this.collide(e, e.r);
-            // omijanie przeszkody: ślizg wzdłuż krawędzi
+            // Omijanie przeszkody: ślizg wzdłuż ściany (styczna do normalnej odepchnięcia).
+            // Kierunek jest "lepki", dopóki wróg nie wyjdzie zza czcionki; bez tego wróg ustawiony
+            // dokładnie na linii z graczem drgał w miejscu i blokował koniec fali.
             if (e.blocked && mul > 0) {
-                const o = e.blocked, side = Math.sign((e.x - o.x) * nz - (e.z - o.z) * nx) || 1;
-                e.x += -nz * side * e.speed * mul * dt * .8; e.z += nx * side * e.speed * mul * dt * .8;
-            }
+                const tx = -e.bnz, tz = e.bnx;
+                if (!e.slide) e.slide = Math.sign(tx * nx + tz * nz) || (e.id % 2 ? 1 : -1);
+                e.x += tx * e.slide * e.speed * mul * dt; e.z += tz * e.slide * e.speed * mul * dt;
+                e.slideT = .6;
+            } else if (e.slide && (e.slideT -= dt) <= 0) e.slide = 0;
             // kontakt z graczem
-            if (!p.dead && dist < e.r + p.r && e.spawnT <= 0 && T !== 'pecherz') this.hurt(e.dmg, e.x, e.z);
+            if (!p.dead && dist < e.r + p.r && e.spawnT <= 0 && T !== 'pecherz' && !(e.phaseOut > 0)) this.hurt(e.dmg, e.x, e.z, e);
         }
         // sprzątanie
         let j = 0;
@@ -1025,7 +1253,7 @@ export class Game {
                     this.v.shake(1); this.audio.play('slam');
                     this.v.ring(e.x, e.z, '#ffd200', 1, 5, .4);
                     this.v.splat(e.x, e.z, '#34383f', 3.4, .5);
-                    if (Math.hypot(p.x - e.x, p.z - e.z) < 3.6 + p.r) this.hurt(e.dmg * 1.3, e.x, e.z);
+                    if (Math.hypot(p.x - e.x, p.z - e.z) < 3.6 + p.r) this.hurt(e.dmg * 1.1, e.x, e.z);
                     const k2 = enraged ? 24 : 18;
                     for (let i = 0; i < k2; i++) shoot(i / k2 * Math.PI * 2 + e.n * .1, 6.5);
                     for (const o of this.near(e.x, e.z, 5)) if (!o.boss) { const d = Math.hypot(o.x - e.x, o.z - e.z) || 1; o.kx += (o.x - e.x) / d * 14; o.kz += (o.z - e.z) / d * 14; }
@@ -1081,10 +1309,132 @@ export class Game {
                 }
             }
         }
+        if (e.type === 'ksero') this.updateKsero(e, dt, { nx, nz, dist, slow, enraged, shoot, face, walk });
+        if (e.type === 'krajarka') this.updateKrajarka(e, dt, { nx, nz, dist, slow, enraged, shoot, face, walk });
         e.kx *= Math.exp(-dt * 8); e.kz *= Math.exp(-dt * 8);
         this.collide(e, Math.min(e.r, 1.3));
         // kontakt
-        if (!p.dead && e.phaseOut <= 0 && (e.y || 0) < 1 && dist < e.r + p.r) this.hurt(e.dmg, e.x, e.z);
+        if (!p.dead && e.phaseOut <= 0 && (e.y || 0) < 1 && dist < e.r + p.r) this.hurt(e.dmg, e.x, e.z, e);
+    }
+
+    // KSERO: wachlarze kartek, obracający się laser skanera, klony
+    updateKsero(e, dt, { nx, nz, slow, enraged, shoot, face, walk }) {
+        const p = this.player;
+        if (e.st === 'walk') {
+            walk(e.speed);
+            if (e.t > (enraged ? 1.6 : 2.4)) {
+                e.n++;
+                e.st = e.n % 3 === 0 ? 'clone' : e.n % 3 === 1 ? 'sheets' : 'scanAim';
+                e.t = 0; e.k = 0;
+                if (e.st === 'scanAim') {
+                    e.a = Math.atan2(nz, nx) - 1.1;
+                    e.dir = Math.random() < .5 ? 1 : -1;
+                    if (e.dir < 0) e.a += 2.2;
+                }
+            }
+        } else if (e.st === 'sheets') {
+            face();
+            if (e.t > .4 * e.k) {
+                const k = enraged ? 11 : 9, base = Math.atan2(nz, nx);
+                for (let i = 0; i < k; i++) shoot(base + (i / (k - 1) - .5) * 1.6 + (e.k % 2 ? .09 : 0), 5.5, .45);
+                this.audio.play('enemyShot');
+                e.k++;
+                if (e.k >= 3) { e.st = 'walk'; e.t = 0; }
+            }
+        } else if (e.st === 'scanAim' || e.st === 'scan') {
+            const beams = enraged ? 2 : 1, len = 15;
+            if (e.st === 'scan') e.a += e.dir * dt * (enraged ? 1.5 : 1.15);
+            for (let b = 0; b < beams; b++) {
+                const a = e.a + b * Math.PI, dx = Math.cos(a), dz = Math.sin(a);
+                const x2 = e.x + dx * len, z2 = e.z + dz * len;
+                if (e.st === 'scanAim') this.lasers.push({ x1: e.x, z1: e.z, x2, z2, width: .08, color: '#ec008c' });
+                else {
+                    this.lasers.push({ x1: e.x, z1: e.z, x2, z2, width: .5, color: '#ec008c' });
+                    const rx = p.x - e.x, rz = p.z - e.z, t = rx * dx + rz * dz;
+                    if (t > 0 && t < len && Math.abs(rx * -dz + rz * dx) < .55 + p.r) this.hurt(e.dmg, e.x + dx * t, e.z + dz * t);
+                    if (Math.random() < .3) this.v.paper.stroke(e.x, e.z, x2, z2, '#ec008c', .08, .05);
+                }
+            }
+            if (e.st === 'scanAim' && e.t > .9) { e.st = 'scan'; e.t = 0; this.audio.play('laserBoss'); }
+            if (e.st === 'scan' && e.t > 3.6) { e.st = 'walk'; e.t = 0; }
+        } else if (e.st === 'clone') {
+            if (e.t < .01) {
+                e.flash = .2;
+                const n = enraged ? 3 : 2;
+                for (let i = 0; i < n; i++) {
+                    const a = i / n * Math.PI * 2 + rand(0, 1);
+                    this.drops.push({ x: clamp(e.x + Math.cos(a) * 3.5, -ARENA + 2, ARENA - 2), z: clamp(e.z + Math.sin(a) * 3.5, -ARENA + 2, ARENA - 2), t: -i * .12, dur: .7, type: 'kopiarka' });
+                }
+                this.v.ring(e.x, e.z, '#ffffff', 1, 5, .5);
+                this.audio.play('spawn');
+            }
+            if (e.t > 1) { e.st = 'walk'; e.t = 0; }
+        }
+    }
+
+    // KRAJARKA: cięcia przez cały arkusz z ostrzeżeniem, potem szarże
+    updateKrajarka(e, dt, { nx, nz, slow, enraged, shoot, face, walk }) {
+        const p = this.player;
+        if (e.st === 'walk') {
+            walk(e.speed);
+            e.spin = (e.spin || 0) + dt * 3;
+            if (e.t > (enraged ? 1.2 : 1.8)) {
+                e.n++;
+                e.t = 0;
+                if (e.n % 2 === 1) {
+                    e.st = 'cuts';
+                    e.cuts = [];
+                    const k = enraged ? 5 : 3;
+                    for (let i = 0; i < k; i++) {
+                        const ry = pick([0, Math.PI / 2, Math.PI / 4, -Math.PI / 4]);
+                        const x = i === 0 ? p.x : clamp(p.x + rand(-9, 9), -ARENA + 2, ARENA - 2);
+                        const z = i === 0 ? p.z : clamp(p.z + rand(-9, 9), -ARENA + 2, ARENA - 2);
+                        const cut = { x, z, ry, len: 70, w: 1.5, delay: i * .18 };
+                        e.cuts.push(cut);
+                        this.marks.push({ kind: 'rect', x, z, ry, w: 1.5, len: 70, t: -cut.delay, dur: 1.05 + cut.delay, color: '#ff1f5a' });
+                    }
+                } else { e.st = 'dash'; e.k = 0; }
+            }
+        } else if (e.st === 'cuts') {
+            e.spin += dt * 10;
+            for (const c of e.cuts) {
+                if (c.done || e.t < 1.05 + c.delay) continue;
+                c.done = true;
+                const sx = Math.sin(c.ry), cz = Math.cos(c.ry);
+                this.v.paper.stroke(c.x - sx * 35, c.z - cz * 35, c.x + sx * 35, c.z + cz * 35, '#2a2c33', .18, .6);
+                this.v.beam(c.x - sx * 35, c.z - cz * 35, c.x + sx * 35, c.z + cz * 35, '#ffffff', .5, .18, .4);
+                for (let i = 0; i < 8; i++) { const t = rand(-20, 20); this.v.burst(c.x + sx * t, .3, c.z + cz * t, '#c9c9cf', 3, 5, .1); }
+                const dx = p.x - c.x, dz = p.z - c.z;
+                if (Math.abs(dx * cz - dz * sx) < c.w / 2 + p.r) this.hurt(e.dmg * 1.1, p.x - cz, p.z + sx);
+                if (this.settings.shake) this.v.shake(.35);
+                this.audio.play('cut');
+            }
+            if (e.cuts.every(c => c.done) && e.t > 1.5) { e.st = 'walk'; e.t = 0; }
+        } else if (e.st === 'dash') {
+            e.spin += dt * 14;
+            if (!e.dashing) {
+                if (e.t > .15) {
+                    e.cx = nx; e.cz = nz;
+                    e.dashing = true; e.t = 0;
+                    const len = this.rayLength(e.x, e.z, nx, nz, 16);
+                    e.chargeLen = len;
+                    this.marks.push({ kind: 'rect', x: e.x + nx * len / 2, z: e.z + nz * len / 2, ry: Math.atan2(nx, nz), w: 3, len, t: 0, dur: .6 });
+                }
+            } else if (e.t > .6) {
+                const sp = 22 * slow, px = e.x, pz = e.z;
+                e.x += e.cx * sp * dt; e.z += e.cz * sp * dt;
+                this.v.paper.stroke(px, pz, e.x, e.z, '#8a8a92', 2.2, .06);
+                const rx = p.x - e.x, rz = p.z - e.z;
+                if (Math.hypot(rx, rz) < e.r + p.r + .4) this.hurt(e.dmg, e.x, e.z, e);
+                if (e.t > .6 + e.chargeLen / 22 || this.inObstacle(e.x + e.cx * 1.6, e.z + e.cz * 1.6, 0)) {
+                    e.dashing = false; e.k++; e.t = 0;
+                    this.audio.play('slam'); this.v.shake(.4);
+                    const k = enraged ? 16 : 10;
+                    for (let i = 0; i < k; i++) shoot(i / k * Math.PI * 2, 6);
+                    if (e.k >= (enraged ? 3 : 2)) { e.st = 'walk'; e.t = 0; }
+                }
+            }
+        }
     }
 
     // --- pociski ----------------------------------------------------------------------------------------------
@@ -1095,10 +1445,20 @@ export class Game {
             const b = bl[i];
             b.x += b.vx * dt; b.z += b.vz * dt; b.life -= dt;
             let dead = false;
+            if (b.kind === 'boomerang') {
+                b.t += dt; b.spin += dt * 16;
+                if (!b.back && b.t >= b.outT) { b.back = true; b.hit.length = 0; }
+                if (b.back) {
+                    const p = this.player, dx = p.x - b.x, dz = p.z - b.z, l = Math.hypot(dx, dz) || 1;
+                    const k = Math.min(1, dt * 9);
+                    b.vx += (dx / l * b.speed * 1.15 - b.vx) * k; b.vz += (dz / l * b.speed * 1.15 - b.vz) * k;
+                    if (l < .9) b.life = 0;
+                }
+            }
             if (b.life <= 0) {
                 if (b.kind === 'rocket') this.rocketBoom(b);
                 dead = true;
-            } else if (Math.abs(b.x) > ARENA || Math.abs(b.z) > ARENA || this.inObstacle(b.x, b.z, 0)) {
+            } else if (b.kind !== 'boomerang' && (Math.abs(b.x) > ARENA || Math.abs(b.z) > ARENA || this.inObstacle(b.x, b.z, 0))) {
                 if (b.kind === 'rocket') this.rocketBoom(b);
                 else { this.v.splat(b.x - b.vx * dt, b.z - b.vz * dt, b.color === INK.none ? '#8a8a90' : b.color, .18, .5); this.v.burst(b.x, .6, b.z, b.color, 2, 3, .07); }
                 dead = true;
@@ -1114,12 +1474,14 @@ export class Game {
                         this.damage(e, b.dmg * .12, { canCrit: false, source: 'bullet' });
                         this.v.burst(b.x, .7, b.z, '#ffffff', 3, 4, .08);
                         this.audio.play('hit');
+                        if (b.kind === 'boomerang') continue;
                         dead = true; break;
                     }
                     if (b.kind === 'rocket') { this.rocketBoom(b); dead = true; break; }
                     this.damage(e, b.dmg, { weapon: b.w, knock: b.knock, kx, kz, source: 'bullet' });
                     this.v.burst(b.x, .6, b.z, b.color, 2, 3, .08);
                     if (Math.random() < .5) this.v.splat(e.x + kx * e.r, e.z + kz * e.r, b.color === INK.none ? '#8a8a90' : b.color, .22, .45, kx, kz);
+                    if (b.kind === 'boomerang') continue;
                     if (b.flak) this.explode(b.x, b.z, 1.1 * this.stats.area, b.dmg * .4, '#ffffff', { depth: 2 });
                     if (b.pierce > 0) { b.pierce--; continue; }
                     if (b.ric > 0) {
