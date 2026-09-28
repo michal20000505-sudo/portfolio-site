@@ -193,7 +193,8 @@ export function ring(g, types, n, r0, r1, { wave, elite = 0 } = {}) {
 export function arm(g, list) {
   g.weapons.length = 0;
   for (const [id, lvl = 1, inks = ''] of list) {
-    g.addWeapon(id);
+    // bez limitu slotów z gry (reels był kręcony przy 4 slotach; gra ma teraz 3)
+    g.weapons.push({ id, level: 1, inks: [], cd: 0, shots: 0, voidCd: 0, toxCd: 0, orbitA: 0, drones: [], spent: 0, laserTick: 0 });
     const w = g.weapons[g.weapons.length - 1];
     w.level = lvl; w.inks = [...inks];
     g.refreshWeapon(w);

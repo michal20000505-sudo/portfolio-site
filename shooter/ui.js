@@ -4,7 +4,7 @@
    instrukcja, ranking, koniec gry. Stan strony trzyma klasa body.state-*.
    ========================================================================== */
 
-import { WEAPONS, RARITY, MIXES, mixKey, INK, PRICES, levelText, iconURL, MAX_WEAPONS, INK_SLOTS } from './data.js?v=20260928c';
+import { WEAPONS, RARITY, MIXES, mixKey, INK, PRICES, levelText, iconURL, MAX_WEAPONS, INK_SLOTS } from './data.js?v=20260928d';
 
 const $ = id => document.getElementById(id);
 const icons = new Map();
@@ -17,6 +17,22 @@ const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;'
 const fmt = n => Math.floor(n).toLocaleString('pl-PL');
 const fmtTime = s => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 const INK_HEX = { C: INK.C, M: INK.M, Y: INK.Y };
+// Ściąga tuszy (pauza i sklep): pojedyncze farby, mieszanki w jednej broni i K z trzech farb.
+const INK_GUIDE = [
+    ['C', 'Chłód', 'spowalnia, 4 ładunki zamrażają'],
+    ['CM', 'Próżnia', 'wiry wciągają i mielą wrogów'],
+    ['M', 'Ogień', 'podpala: obrażenia w czasie'],
+    ['MY', 'Wybuch', 'zabici wrogowie wybuchają'],
+    ['Y', 'Pioruny', 'przeskakują na kolejnych wrogów'],
+    ['CY', 'Toksyna', 'trujące chmury przechodzą dalej'],
+];
+function inkLegend() {
+    const sw = key => `<span class="sw${key.length === 2 ? ' two' : key.length === 3 ? ' three' : ''}" aria-hidden="true">${[...key].map(k => `<i style="background:${INK_HEX[k]}"></i>`).join('')}</span>`;
+    // --o: w szerokiej ściądze (sklep) najpierw rząd pojedynczych farb, pod nim mieszanki
+    const rows = INK_GUIDE.map(([key, name, desc], i) => `<li style="--o:${i % 2 ? 3 + (i >> 1) : i >> 1}">${sw(key)}<span><b>${[...key].join(' + ')} · ${name}</b>${desc}</span></li>`).join('');
+    return `<span class="label">Mieszanie tuszy</span><ul>${rows}<li class="k" style="--o:6">${sw('CMY')}<span><b>C, M i Y w broniach · OVERPRINT</b>Trzy farby naraz (w różnych broniach) odblokowują ultimate pod Q.</span></li></ul>`
+        + '<p class="note">Dwa razy ten sam tusz w jednej broni daje mocniejszy efekt.</p>';
+}
 const SCREENS = ['menu', 'levelup', 'inkpick', 'shop', 'pause', 'help', 'board', 'over'];
 
 // Komentarze oka do kart (co karta naprawdę robi w grze, własnymi słowami).
@@ -32,6 +48,7 @@ export class UI {
         this.g = game; this.v = view; this.audio = audio; this.input = input; this.board = board;
         this.state = 'menu';
         this.hudCache = {};
+        for (const id of ['ink-legend-pause', 'ink-legend-shop']) $(id).innerHTML = inkLegend();
         this.best = 0;
         try { this.best = +localStorage.getItem('overprint-best') || 0; } catch { /* ok */ }
         $('best').querySelector('strong').textContent = fmt(this.best);
@@ -176,6 +193,7 @@ export class UI {
     openSettings(fromMenu) {
         this.settingsFromMenu = fromMenu;
         $('pause-actions').style.display = fromMenu ? 'none' : '';
+        $('ink-legend-pause').style.display = fromMenu ? 'none' : '';
         $('pause-title').textContent = fromMenu ? 'Ustawienia' : 'Pauza';
         $('btn-settings-close').style.display = fromMenu ? '' : 'none';
         this.syncSettings();
@@ -370,7 +388,7 @@ export class UI {
             const blocked = o.kind === 'weapon' && g.weapons.length >= MAX_WEAPONS;
             b.className = 'offer' + (o.sold ? ' sold' : '') + (!g.canAfford(o.price) ? ' poor' : '');
             b.dataset.eyeTitle = `${o.name}: ${o.price} ml`;
-            b.dataset.eye = o.kind === 'weapon' ? (blocked ? 'Masz już cztery bronie. Sprzedaj jedną, żeby zrobić miejsce.' : o.desc) : o.kind === 'ink' ? 'Po zakupie wskażesz broń i slot. Tusz działa przy każdym trafieniu tej broni.' : o.desc;
+            b.dataset.eye = o.kind === 'weapon' ? (blocked ? 'Masz już trzy bronie. Sprzedaj jedną, żeby zrobić miejsce.' : o.desc) : o.kind === 'ink' ? 'Po zakupie wskażesz broń i slot. Tusz działa przy każdym trafieniu tej broni.' : o.desc;
             const kind = { weapon: 'Broń', ink: 'Tusz', stat: 'Ulepszenie', maxhp: 'Zdrowie' }[o.kind];
             const col = o.kind === 'ink' ? INK_HEX[o.color] : '#161616';
             b.innerHTML = `

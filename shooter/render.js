@@ -9,7 +9,7 @@
 
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
-import { ARENA, ENEMIES, INK, OBSTACLES } from './data.js?v=20260928c';
+import { ARENA, ENEMIES, INK, OBSTACLES } from './data.js?v=20260928d';
 
 const ELEV = THREE.MathUtils.degToRad(60);
 const SIN_E = Math.sin(ELEV), COS_E = Math.cos(ELEV);

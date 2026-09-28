@@ -4,7 +4,7 @@
    ========================================================================== */
 
 export const ARENA = 30;           // połowa boku arkusza (świat: -30…30 w X i Z)
-export const MAX_WEAPONS = 4;
+export const MAX_WEAPONS = 3;
 
 // Czcionki drukarskie na arkuszu: przeszkody (środek x/z, połowa boku, litera).
 export const OBSTACLES = [
@@ -248,15 +248,16 @@ export const aliveCap = (w, low) => Math.min(low ? 160 : 250, 70 + w * 7);
 // Poziomy gracza.
 export const xpForLevel = l => Math.round(6 + l * 4.5 + l ** 1.55);
 
-// Ceny w sklepie (farba, ml).
+// Ceny w sklepie (farba, ml). Farby z fali przybywa szybciej niż fal, więc ceny rosną z falą mocniej
+// niż na starcie: na początku drożej o kilka ml, od ok. 10. fali wyraźnie drożej.
 export const PRICES = {
-    weapon: (id, w) => WEAPONS[id].price + w * 5,
-    upgrade: (level, w) => 16 * level + w * 3,
-    ink: w => 22 + w * 4,
-    heal: w => 12 + w * 2,
-    maxhp: w => 26 + w * 4,
-    reroll: n => 3 + n * 3,
-    stat: w => 20 + w * 4,
+    weapon: (id, w) => WEAPONS[id].price + w * 9,
+    upgrade: (level, w) => 18 * level + w * 6,
+    ink: w => 24 + w * 7,
+    heal: w => 14 + w * 3,
+    maxhp: w => 30 + w * 7,
+    reroll: n => 4 + n * 4,
+    stat: w => 22 + w * 7,
 };
 
 // --- ikony pikselowe (9×9): # kolor główny, + akcent, . puste ---------------------

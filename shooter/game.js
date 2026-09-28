@@ -7,7 +7,7 @@
 import {
     ARENA, OBSTACLES, MAX_WEAPONS, INK_SLOTS, INK, WEAPONS, weaponStats, mixOf, CARDS, RARITY,
     ENEMIES, AFFIXES, BOSSES, scaling, waveQuota, waveDuration, aliveCap, xpForLevel, PRICES, levelText,
-} from './data.js?v=20260928c';
+} from './data.js?v=20260928d';
 
 const rand = (a, b) => a + Math.random() * (b - a);
 const pick = arr => arr[Math.random() * arr.length | 0];
