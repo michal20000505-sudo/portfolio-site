@@ -162,4 +162,22 @@
     </image:image>
   </url>
 
+  <url>
+    <loc>https://m-jaro.pl/gry.html</loc>
+    <lastmod>2026-09-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://m-jaro.pl/shooter.html</loc>
+    <lastmod>2026-09-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://m-jaro.pl/og-shooter.jpg</image:loc>
+      <image:title>OVERPRINT: arenowy shooter w przeglądarce</image:title>
+    </image:image>
+  </url>
+
 </urlset>

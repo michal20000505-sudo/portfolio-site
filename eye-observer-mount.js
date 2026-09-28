@@ -16,6 +16,10 @@
                      i bez komentarzy,
      data-nolink   — dwuklik nie przenosi na oko.html.
 
+   Zdarzenia na window (np. gra w shooter.html chowa oko na czas walki):
+     observer:suspend — oko znika, komentarze i obie pętle renderu stają,
+     observer:resume  — oko wraca i lata dalej.
+
    Atrybuty komentarza (na dowolnym elemencie treści, może być zagnieżdżony —
    wygrywa najbardziej wewnętrzny [data-eye] wg closest()):
      data-eye="Tekst komentarza"       — wymagany, 1–2 krótkie zdania po polsku,
@@ -318,6 +322,7 @@ if (wrap) {
         };
         let comment = null; // { el, text, title, polite, park }
         let introRunning = false;
+        let suspended = false;
         let greetingTimers = [];
         const clearGreeting = () => { greetingTimers.forEach(clearTimeout); greetingTimers = []; };
 
@@ -346,7 +351,7 @@ if (wrap) {
             }
         }
         function commentOn(el, force) {
-            if (!commentsEnabled || introRunning) return;
+            if (!commentsEnabled || introRunning || suspended) return;
             if (!force && comment?.el === el) return;
             clearGreeting();
             startComment({ el, text: el.dataset.eye || '', title: el.dataset.eyeTitle || '' });
@@ -583,6 +588,22 @@ if (wrap) {
             // Podczas intra host zajmuje cały ekran — lot rusza dopiero po złożeniu oka.
             document.addEventListener('visibilitychange', () => {
                 cancelAnimationFrame(frame); previous = 0;
+                if (!document.hidden && !introRunning && !suspended) frame = requestAnimationFrame(tick);
+            });
+            addEventListener('observer:suspend', () => {
+                if (suspended) return;
+                suspended = true;
+                endComment();
+                cancelAnimationFrame(frame); previous = 0;
+                beam.style.opacity = '0'; spotGlow.style.opacity = '0';
+                wrap.style.visibility = 'hidden';
+                eye.setOptions({ paused: true });
+            });
+            addEventListener('observer:resume', () => {
+                if (!suspended) return;
+                suspended = false;
+                wrap.style.visibility = '';
+                eye.setOptions({ paused: false });
                 if (!document.hidden && !introRunning) frame = requestAnimationFrame(tick);
             });
             addEventListener('pagehide', () => cancelAnimationFrame(frame));

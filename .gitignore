@@ -42,3 +42,6 @@ tools/reel-sscar/music.wav
 tools/reel/assets/mobile/*.png
 # surowe zrzuty z capture.js (w repo zostają *.webp z pack.py)
 tools/reel-bodycreator/assets/site/*.png
+
+# ranking OVERPRINT: dane i sekret tworzone na serwerze
+api/data/

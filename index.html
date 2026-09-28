@@ -1167,11 +1167,16 @@
             content: 'Kliknij i zagraj';
         }
 
-        /* Client sites (02–05): SSCAR, Body Creator, HandyBruk, R-MAX */
-        #work .project-item:nth-of-type(2) .project-img-wrapper::before,
+        /* Free browser game (02) */
+        #work .project-item--overprint .project-img-wrapper::before {
+            content: 'Kliknij i zagraj za darmo';
+        }
+
+        /* Client sites (03–06): SSCAR, Body Creator, HandyBruk, R-MAX */
         #work .project-item:nth-of-type(3) .project-img-wrapper::before,
         #work .project-item:nth-of-type(4) .project-img-wrapper::before,
-        #work .project-item:nth-of-type(5) .project-img-wrapper::before {
+        #work .project-item:nth-of-type(5) .project-img-wrapper::before,
+        #work .project-item:nth-of-type(6) .project-img-wrapper::before {
             content: 'Kliknij i zobacz stronę przygotowaną dla klienta';
         }
 
@@ -1336,6 +1341,7 @@
         }
 
         .project-flag {
+            white-space: nowrap;
             margin-left: auto;
             font-size: 0.68rem;
             font-weight: 700;
@@ -1408,6 +1414,142 @@
         .project-item--featured .project-info p {
             font-size: 1.2rem;
             color: #b8b8b8;
+        }
+
+        /* OVERPRINT: darmowa gra w przeglądarce. Arkusz papieru i trzy płyty CMY,
+           tak jak w samej grze; interakcja zostaje cyan. */
+        .project-item--overprint .project-img-wrapper {
+            background: #f1ede4;
+            border-color: rgba(0, 255, 255, 0.22);
+        }
+
+        .project-item--overprint .project-img-wrapper img {
+            image-rendering: pixelated;
+        }
+
+        .overprint-title a {
+            letter-spacing: -0.01em;
+            text-shadow: -3px 1px 0 rgba(0, 174, 239, 0.9), 3px -1px 0 rgba(236, 0, 140, 0.85), 1px 3px 0 rgba(255, 210, 0, 0.85);
+            transition: color 0.3s, text-shadow 0.5s var(--ease-out);
+        }
+
+        .overprint-title a:hover {
+            text-shadow: -1px 0 0 rgba(0, 174, 239, 0.9), 1px 0 0 rgba(236, 0, 140, 0.85), 0 1px 0 rgba(255, 210, 0, 0.85);
+        }
+
+        .op-board {
+            margin: 6px 0 30px;
+            padding: 16px 18px;
+            border: 1px solid #333;
+            border-radius: 12px;
+            background: #0d0d0d;
+            max-width: 440px;
+        }
+
+        .op-board[hidden] {
+            display: none;
+        }
+
+        .op-board-label {
+            display: block;
+            font-size: 0.72rem;
+            font-weight: 500;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: #888;
+            margin-bottom: 10px;
+        }
+
+        .op-top {
+            list-style: none;
+            display: grid;
+            gap: 8px;
+        }
+
+        .op-top li {
+            display: grid;
+            grid-template-columns: 22px 1fr auto;
+            gap: 12px;
+            align-items: baseline;
+            font-size: 0.95rem;
+        }
+
+        .op-top .rk {
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .op-top li:nth-child(1) .rk { color: #ffd200; }
+        .op-top li:nth-child(2) .rk { color: #00aeef; }
+        .op-top li:nth-child(3) .rk { color: #ec008c; }
+
+        .op-top .who {
+            font-weight: 500;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .op-top .pts {
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            text-align: right;
+        }
+
+        .op-top .pts small {
+            font-weight: 300;
+            color: #888;
+            margin-left: 8px;
+        }
+
+        .op-top .op-empty {
+            display: block;
+            color: #888;
+            font-weight: 300;
+        }
+
+        .play-free {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 28px;
+            border: 1px solid var(--cyan);
+            border-radius: 12px;
+            color: var(--cyan);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            transition: background-color 0.4s var(--ease-out), color 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out);
+        }
+
+        .play-free span {
+            transition: transform 0.4s var(--ease-out);
+        }
+
+        .play-free:hover {
+            background: var(--cyan);
+            color: #050505;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        }
+
+        .play-free:hover span {
+            transform: translateX(6px);
+        }
+
+        .play-free:focus-visible {
+            outline: 2px solid var(--cyan);
+            outline-offset: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .play-free {
+                display: flex;
+                justify-content: center;
+                text-align: center;
+                padding: 16px 20px;
+            }
         }
 
         /* --- Services --- */
@@ -1826,7 +1968,7 @@
                     <a href="#about" class="link-hover magnet" data-eye-title="O mnie" data-eye="Poznaj Michała, projektanta, którego obserwuję na co dzień.">O mnie</a>
                     <a href="#work" class="link-hover magnet" data-eye-title="Galeria Web" data-eye="Strony, gry i eksperymenty. To moja ulubiona sekcja do obserwowania.">Web</a>
                     <a href="grafika.html" class="link-hover magnet" data-eye-title="Grafika" data-eye="Tu trzymam logotypy, banery i identyfikacje wizualne. Zapraszam.">Grafika</a>
-                    <a href="gra.html" class="link-hover magnet" data-eye-title="Gra" data-eye="SPACEFIGHTER — moja pierwsza gra na Steam. Spróbuj przejść.">Gra</a>
+                    <a href="gry.html" class="link-hover magnet" data-eye-title="Gry" data-eye="Moje gry: SPACEFIGHTER na Steam i darmowy OVERPRINT, w który zagrasz od razu w przeglądarce.">Gry</a>
                     <a href="cennik.html" class="link-hover magnet" data-eye-title="Cennik" data-eye="Usługi z ceną. Bez zaskoczeń po wysłaniu maila.">Cennik</a>
                     <a href="#contact" class="link-hover magnet" data-eye-title="Kontakt" data-eye="Tędy najszybciej do Michała. Wpadniesz na moją listę obserwowanych rozmów.">Kontakt</a>
                 </div>
@@ -1961,6 +2103,29 @@
                     </div>
                 </article>
 
+                <article class="project-item project-item--overprint reveal" data-eye-title="OVERPRINT" data-eye="Moja darmowa gra w przeglądarce. Arenowy shooter w farbie drukarskiej, w który zagrasz od razu, bez instalowania czegokolwiek.">
+                    <div class="project-img-wrapper link-hover">
+                        <a href="shooter.html" data-eye-title="Zagraj w OVERPRINT" data-eye="Gra rusza w tej karcie przeglądarki. Na telefonie sterujesz kciukami, na komputerze myszą i WASD.">
+                            <img src="thumbnails/web/overprint.webp" alt="OVERPRINT: arena na arkuszu papieru poplamiona tuszami CMYK, gracz ostrzeliwuje nadciągające kleksy" width="1200" height="675" loading="lazy">
+                        </a>
+                    </div>
+                    <div class="project-info">
+                        <div class="project-meta">
+                            <span class="project-num">02</span>
+                            <span class="project-cat">Game Dev · Przeglądarka</span>
+                            <span class="project-flag" data-eye-title="Za darmo" data-eye="Bez rejestracji, bez reklam, bez płacenia. Klikasz i grasz.">Za darmo</span>
+                        </div>
+                        <h3 class="overprint-title"><a href="shooter.html">OVERPRINT</a></h3>
+                        <p>Arenowy shooter 3D w pixel arcie, który napisałem od zera. Kleksy spadają bez końca, a Ty zbierasz farbę, kupujesz bronie i mieszasz tusze CMYK w nowe efekty: cyan mrozi, magenta pali, yellow razi piorunem. Działa na komputerze i telefonie.</p>
+                        <div class="tags"><span>Game Dev</span><span>Three.js</span><span>WebGL</span></div>
+                        <div class="op-board" id="op-board" data-eye-title="Ranking na żywo" data-eye="Trzy najlepsze wyniki graczy. Po przegranej wpisujesz nick i Twój wynik trafia na tę samą tablicę.">
+                            <span class="op-board-label">Top 3 rankingu</span>
+                            <ol class="op-top" id="op-top"><li class="op-empty">Ładuję ranking…</li></ol>
+                        </div>
+                        <a class="play-free magnet" href="shooter.html" data-eye-title="Zagraj za darmo" data-eye="Jedno kliknięcie i jesteś na arenie. Po grze zapiszesz się w rankingu i sprawdzisz, kto jest lepszy.">Zagraj za darmo i zapisz się w rankingu <span aria-hidden="true">&rarr;</span></a>
+                    </div>
+                </article>
+
                 <article class="project-item reveal" data-eye-title="SSCAR" data-eye="Platforma dla serwisu. Rezerwacje, dekoder VIN, baza klimatyzacji — wszystko bez opłat.">
                     <div class="project-img-wrapper link-hover">
                         <a href="https://sscar.pl" target="_blank" rel="noopener" data-eye-title="Link do SSCAR" data-eye="Odwiedź stronę serwisu i zobacz system rezerwacji w działaniu.">
@@ -1969,7 +2134,7 @@
                     </div>
                     <div class="project-info">
                         <div class="project-meta">
-                            <span class="project-num">02</span>
+                            <span class="project-num">03</span>
                             <span class="project-cat">Web · Serwis Auto</span>
                         </div>
                         <h3><a href="https://sscar.pl" target="_blank" rel="noopener">SSCAR</a></h3>
@@ -1987,7 +2152,7 @@
                     </div>
                     <div class="project-info">
                         <div class="project-meta">
-                            <span class="project-num">03</span>
+                            <span class="project-num">04</span>
                             <span class="project-cat">Web · Studio Treningowe</span>
                         </div>
                         <h3><a href="https://bodycreator.com.pl" target="_blank" rel="noopener">Body Creator</a></h3>
@@ -2005,7 +2170,7 @@
                     </div>
                     <div class="project-info">
                         <div class="project-meta">
-                            <span class="project-num">04</span>
+                            <span class="project-num">05</span>
                             <span class="project-cat">Web · Usługi</span>
                         </div>
                         <h3><a href="https://www.handybruk.pl" target="_blank" rel="noopener">HandyBruk</a></h3>
@@ -2023,7 +2188,7 @@
                     </div>
                     <div class="project-info">
                         <div class="project-meta">
-                            <span class="project-num">05</span>
+                            <span class="project-num">06</span>
                             <span class="project-cat">Web · Serwis Auto</span>
                         </div>
                         <h3><a href="https://michal20000505-sudo.github.io/R-MAX-auto/index.html" target="_blank" rel="noopener">R-MAX
@@ -2044,7 +2209,7 @@
                     </div>
                     <div class="project-info">
                         <div class="project-meta">
-                            <span class="project-num">06</span>
+                            <span class="project-num">07</span>
                             <span class="project-cat">Creative Dev · Editorial</span>
                         </div>
                         <h3><a href="przyklad_1/dist/">FAULT / 08</a></h3>
@@ -2062,7 +2227,7 @@
                     </div>
                     <div class="project-info">
                         <div class="project-meta">
-                            <span class="project-num">07</span>
+                            <span class="project-num">08</span>
                             <span class="project-cat">Creative Dev · Product Campaign</span>
                         </div>
                         <h3><a href="przyklad_2/dist/">SENTRACKER TRC-01</a></h3>
@@ -2080,7 +2245,7 @@
                     </div>
                     <div class="project-info">
                         <div class="project-meta">
-                            <span class="project-num">08</span>
+                            <span class="project-num">09</span>
                             <span class="project-cat">Branding · Print</span>
                         </div>
                         <h3><a href="grafika.html">Portfolio Graficzne</a></h3>
@@ -2413,6 +2578,41 @@
          Rotujące modele produktowe (Meshy AI) na podeście.
          Przy braku WebGL / CDN / modelu zostaje statyczny placeholder.
          ======================================== -->
+    <script>
+        // OVERPRINT: trzy najlepsze wyniki z rankingu gry (api/scores.php); bez serwera tablica się chowa
+        (async () => {
+            const board = document.getElementById('op-board');
+            const list = document.getElementById('op-top');
+            if (!board || !list) return;
+            try {
+                const res = await fetch('api/scores.php?period=all&limit=3', { cache: 'no-store' });
+                if (!res.ok) throw new Error(res.status);
+                const { entries = [] } = await res.json();
+                list.textContent = '';
+                if (!entries.length) {
+                    const li = document.createElement('li');
+                    li.className = 'op-empty';
+                    li.textContent = 'Tablica czeka na pierwszy wynik. Może Twój?';
+                    list.append(li);
+                    return;
+                }
+                entries.forEach((e, i) => {
+                    const li = document.createElement('li');
+                    const rk = document.createElement('span'); rk.className = 'rk'; rk.textContent = i + 1;
+                    const who = document.createElement('span'); who.className = 'who'; who.textContent = e.name;
+                    const pts = document.createElement('span'); pts.className = 'pts';
+                    pts.textContent = Number(e.score).toLocaleString('pl-PL');
+                    const wave = document.createElement('small'); wave.textContent = 'fala ' + e.wave;
+                    pts.append(wave);
+                    li.append(rk, who, pts);
+                    list.append(li);
+                });
+            } catch {
+                board.hidden = true;
+            }
+        })();
+    </script>
+
     <script type="importmap">
         { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
     </script>
