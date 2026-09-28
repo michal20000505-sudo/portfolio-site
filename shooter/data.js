@@ -158,7 +158,9 @@ export function levelText(id, nextLevel) {
 }
 
 // --- karty poziomu --------------------------------------------------------------
-// rarity: 0 zwykła, 1 rzadka, 2 epicka. max: ile razy można wziąć.
+// rarity: 0 zwykła, 1 rzadka, 2 epicka. max: ile razy można wziąć (sklep liczy się do tego samego limitu).
+// Każda karta statystyk ma limit: bez niego obrażenia i szybkostrzelność rosły bez końca i późne fale
+// robiły się łatwiejsze od wczesnych. filler: karty na zapchanie puli, gdy limity się wyczerpią (bez sklepu).
 // apply(g) dostaje obiekt gry; dla kart broni/tuszu logika jest w game.js.
 export const RARITY = [
     { name: 'Zwykła', color: '#e8e8e8' },
@@ -167,30 +169,30 @@ export const RARITY = [
 ];
 
 export const CARDS = [
-    { id: 'dmg', name: 'Ostre pióro', icon: 'dmg', rarity: 0, desc: '+12% obrażeń wszystkich broni.', apply: s => { s.dmg += .12; } },
-    { id: 'rate', name: 'Szybki druk', icon: 'rate', rarity: 0, desc: '+10% szybkostrzelności.', apply: s => { s.rate += .1; } },
-    { id: 'hp', name: 'Gruby karton', icon: 'heart', rarity: 0, desc: '+20 maks. zdrowia i leczenie o 20.', apply: (s, g) => { s.maxHp += 20; g.heal(20); } },
-    { id: 'speed', name: 'Lekki papier', icon: 'boot', rarity: 0, desc: '+8% szybkości ruchu.', max: 6, apply: s => { s.speed += .08; } },
-    { id: 'magnet', name: 'Chłonny papier', icon: 'magnet', rarity: 0, desc: '+35% zasięgu zbierania kropli.', max: 5, apply: s => { s.magnet *= 1.35; } },
-    { id: 'crit', name: 'Precyzja', icon: 'crit', rarity: 0, desc: '+6% szansy na trafienie krytyczne.', max: 8, apply: s => { s.crit += .06; } },
-    { id: 'regen', name: 'Schnięcie', icon: 'regen', rarity: 0, desc: '+0,5 zdrowia na sekundę.', max: 6, apply: s => { s.regen += .5; } },
-    { id: 'armor', name: 'Laminat', icon: 'armor', rarity: 0, desc: '+2 pancerza (mniej obrażeń od każdego trafienia).', max: 6, apply: s => { s.armor += 2; } },
-    { id: 'area', name: 'Rozlew', icon: 'area', rarity: 0, desc: '+15% obszaru wybuchów, chmur, wirów i wałków.', max: 6, apply: s => { s.area += .15; } },
-    { id: 'velocity', name: 'Ciśnienie', icon: 'velocity', rarity: 0, desc: '+15% prędkości pocisków i +10% zasięgu.', max: 4, apply: s => { s.projSpeed += .15; s.range += .1; } },
-    { id: 'multi', name: 'Druga głowica', icon: 'multi', rarity: 1, desc: '+1 pocisk dla broni strzelających.', max: 4, apply: s => { s.projectiles += 1; } },
-    { id: 'pierce', name: 'Przebitka', icon: 'pierce', rarity: 1, desc: 'Pociski przebijają +1 wroga.', max: 4, apply: s => { s.pierce += 1; } },
-    { id: 'ricochet', name: 'Rykoszet', icon: 'ricochet', rarity: 1, desc: 'Pociski odbijają się do kolejnego wroga.', max: 3, apply: s => { s.ricochet += 1; } },
-    { id: 'critdmg', name: 'Pełne krycie', icon: 'critdmg', rarity: 1, desc: '+40% obrażeń krytycznych.', max: 5, apply: s => { s.critMult += .4; } },
-    { id: 'lifesteal', name: 'Wsiąkanie', icon: 'drop', rarity: 1, desc: '2% zadanych obrażeń wraca jako zdrowie (maks. 6/s).', max: 4, apply: s => { s.lifesteal += .02; } },
+    { id: 'dmg', name: 'Ostre pióro', icon: 'dmg', rarity: 0, desc: '+10% obrażeń wszystkich broni.', max: 8, apply: s => { s.dmg += .1; } },
+    { id: 'rate', name: 'Szybki druk', icon: 'rate', rarity: 0, desc: '+8% szybkostrzelności.', max: 6, apply: s => { s.rate += .08; } },
+    { id: 'hp', name: 'Gruby karton', icon: 'heart', rarity: 0, desc: '+15 maks. zdrowia i leczenie o 15.', max: 8, apply: (s, g) => { s.maxHp += 15; g.heal(15); } },
+    { id: 'speed', name: 'Lekki papier', icon: 'boot', rarity: 0, desc: '+7% szybkości ruchu.', max: 5, apply: s => { s.speed += .07; } },
+    { id: 'magnet', name: 'Chłonny papier', icon: 'magnet', rarity: 0, desc: '+35% zasięgu zbierania kropli.', max: 4, apply: s => { s.magnet *= 1.35; } },
+    { id: 'crit', name: 'Precyzja', icon: 'crit', rarity: 0, desc: '+5% szansy na trafienie krytyczne.', max: 6, apply: s => { s.crit += .05; } },
+    { id: 'regen', name: 'Schnięcie', icon: 'regen', rarity: 0, desc: '+0,4 zdrowia na sekundę.', max: 5, apply: s => { s.regen += .4; } },
+    { id: 'armor', name: 'Laminat', icon: 'armor', rarity: 0, desc: '+1,5 pancerza (mniej obrażeń od każdego trafienia).', max: 5, apply: s => { s.armor += 1.5; } },
+    { id: 'area', name: 'Rozlew', icon: 'area', rarity: 0, desc: '+12% obszaru wybuchów, chmur, wirów i wałków.', max: 5, apply: s => { s.area += .12; } },
+    { id: 'velocity', name: 'Ciśnienie', icon: 'velocity', rarity: 0, desc: '+15% prędkości pocisków i +10% zasięgu.', max: 3, apply: s => { s.projSpeed += .15; s.range += .1; } },
+    { id: 'multi', name: 'Druga głowica', icon: 'multi', rarity: 1, desc: '+1 pocisk dla broni strzelających.', max: 3, apply: s => { s.projectiles += 1; } },
+    { id: 'pierce', name: 'Przebitka', icon: 'pierce', rarity: 1, desc: 'Pociski przebijają +1 wroga.', max: 3, apply: s => { s.pierce += 1; } },
+    { id: 'ricochet', name: 'Rykoszet', icon: 'ricochet', rarity: 1, desc: 'Pociski odbijają się do kolejnego wroga.', max: 2, apply: s => { s.ricochet += 1; } },
+    { id: 'critdmg', name: 'Pełne krycie', icon: 'critdmg', rarity: 1, desc: '+30% obrażeń krytycznych.', max: 4, apply: s => { s.critMult += .3; } },
+    { id: 'lifesteal', name: 'Wsiąkanie', icon: 'drop', rarity: 1, desc: '1,5% zadanych obrażeń wraca jako zdrowie (leczenie z kart maks. 5/s).', max: 3, apply: s => { s.lifesteal += .015; } },
     { id: 'dash', name: 'Poślizg', icon: 'dash', rarity: 1, desc: '-20% czasu odnowienia dasha.', max: 3, apply: s => { s.dashCd *= .8; } },
-    { id: 'luck', name: 'Dobry nakład', icon: 'luck', rarity: 1, desc: 'Lepsze karty i +15% farby z kropli.', max: 4, apply: s => { s.luck += 1; s.income += .15; } },
-    { id: 'double', name: 'Podwójny nadruk', icon: 'double', rarity: 2, desc: '20% szansy, że strzał wyleci podwójnie.', max: 3, apply: s => { s.doubleShot += .2; } },
+    { id: 'luck', name: 'Dobry nakład', icon: 'luck', rarity: 1, desc: 'Lepsze karty i +15% farby z kropli.', max: 3, apply: s => { s.luck += 1; s.income += .15; } },
+    { id: 'double', name: 'Podwójny nadruk', icon: 'double', rarity: 2, desc: '15% szansy, że strzał wyleci podwójnie.', max: 2, apply: s => { s.doubleShot += .15; } },
     { id: 'trail', name: 'Smuga ognia', icon: 'trail', rarity: 2, desc: 'Dash zostawia płonący tusz.', max: 1, apply: s => { s.trail = true; } },
-    { id: 'execute', name: 'Cięcie na spad', icon: 'execute', rarity: 2, desc: 'Trafienie dobija wrogów poniżej 12% zdrowia (bez bossów).', max: 1, apply: s => { s.execute = .12; } },
+    { id: 'execute', name: 'Cięcie na spad', icon: 'execute', rarity: 2, desc: 'Trafienie dobija wrogów poniżej 10% zdrowia (bez bossów).', max: 1, apply: s => { s.execute = .1; } },
     { id: 'splash', name: 'Rozprysk', icon: 'splash', rarity: 2, desc: 'Zabici wrogowie pryskają farbą i ranią sąsiadów.', max: 1, apply: s => { s.splash = true; } },
-    { id: 'bold', name: 'Pogrubienie', icon: 'bold', rarity: 2, desc: '+30% obrażeń i większe pociski.', max: 2, apply: s => { s.dmg += .3; s.size += .25; } },
+    { id: 'bold', name: 'Pogrubienie', icon: 'bold', rarity: 2, desc: '+25% obrażeń i większe pociski.', max: 1, apply: s => { s.dmg += .25; s.size += .25; } },
     { id: 'thorns', name: 'Kolce', icon: 'thorns', rarity: 0, desc: 'Wróg, który Cię dotknie, dostaje 30 obrażeń (rośnie z falą).', max: 3, apply: s => { s.thorns += 30; } },
-    { id: 'killheal', name: 'Karmienie farbą', icon: 'feed', rarity: 0, desc: 'Każde zabójstwo leczy 1 zdrowia.', max: 3, apply: s => { s.killHeal += 1; } },
+    { id: 'killheal', name: 'Karmienie farbą', icon: 'feed', rarity: 0, desc: 'Każde zabójstwo leczy 1 zdrowia (leczenie z kart maks. 5/s).', max: 2, apply: s => { s.killHeal += 1; } },
     { id: 'combo', name: 'Seria', icon: 'combo', rarity: 0, desc: '+1% obrażeń za każde 10 combo (maks. +30%) i dłuższe combo.', max: 1, apply: s => { s.comboDmg = true; } },
     { id: 'shield', name: 'Folia ochronna', icon: 'shield', rarity: 1, desc: 'Folia blokuje jedno trafienie i odnawia się co 14 s (kolejna karta: szybciej).', max: 3, apply: s => { s.shieldCd = s.shieldCd ? s.shieldCd * .7 : 14; } },
     { id: 'bounty', name: 'Nakład premium', icon: 'bounty', rarity: 1, desc: 'Elity i bossowie zostawiają podwójne krople, +10% farby.', max: 1, apply: s => { s.bounty = true; s.income += .1; } },
@@ -198,10 +200,14 @@ export const CARDS = [
     { id: 'critbolt', name: 'Iskra', icon: 'bolt', rarity: 1, desc: 'Trafienia krytyczne razią piorunem 2 pobliskich wrogów.', max: 1, apply: s => { s.critBolt = true; } },
     { id: 'slowaura', name: 'Gęsta farba', icon: 'slow', rarity: 1, desc: 'Wrogowie w promieniu 3,5 wokół Ciebie są wolniejsi o 25%.', max: 1, apply: s => { s.slowAura = true; } },
     { id: 'adrenaline', name: 'Ostatnia kopia', icon: 'adrenaline', rarity: 1, desc: 'Poniżej 40% zdrowia: +30% obrażeń i szybkostrzelności.', max: 1, apply: s => { s.adrenaline = true; } },
-    { id: 'inkpower', name: 'Pigment', icon: 'pigment', rarity: 1, desc: 'Efekty tuszów są o 35% silniejsze i częstsze.', max: 3, apply: s => { s.inkPower += .35; } },
+    { id: 'inkpower', name: 'Pigment', icon: 'pigment', rarity: 1, desc: 'Efekty tuszów są o 30% silniejsze i częstsze.', max: 2, apply: s => { s.inkPower += .3; } },
     { id: 'revive', name: 'Drugi nakład', icon: 'revive', rarity: 2, desc: 'Raz w przebiegu wracasz do gry z połową zdrowia.', max: 1, apply: s => { s.revive = 1; } },
     { id: 'dash2', name: 'Podwójny dash', icon: 'dash2', rarity: 2, desc: 'Dwa dashe pod rząd, zanim trzeba czekać.', max: 1, apply: s => { s.dashCharges = 2; } },
+    { id: 'paint', name: 'Zapas farby', icon: 'ink', rarity: 0, filler: true, desc: 'Farba do sklepu: 12 ml + 4 ml za każdą falę.', apply: (s, g) => { g.money += 12 + g.wave * 4; } },
+    { id: 'patch', name: 'Łatka', icon: 'medkit', rarity: 0, filler: true, desc: 'Leczy 35 zdrowia.', apply: (s, g) => { g.heal(35); } },
 ];
+// Leczenie z kart (Wsiąkanie + Karmienie farbą) razem, na sekundę.
+export const HEAL_CAP = 5;
 
 // --- przeciwnicy -------------------------------------------------------------------
 // from: fala, od której się pojawia; weight: udział w losowaniu.
@@ -219,6 +225,11 @@ export const ENEMIES = {
     kopiarka:   { name: 'Kopiarka',   hp: 130, speed: 1.6, r: .85, dmg: 14, xp: 5, score: 45, from: 9,  weight: 1.4, color: '#50545c', heavy: true },
     widmo:      { name: 'Widmo',      hp: 44,  speed: 4.3, r: .5,  dmg: 15, xp: 3, score: 34, from: 14, weight: 1.8, color: '#8e8e9a' },
     gabka:      { name: 'Gąbka',      hp: 160, speed: 2.0, r: .8,  dmg: 12, xp: 5, score: 50, from: 16, weight: 1.2, color: '#3a6b2f' },
+    dziurkacz:  { name: 'Dziurkacz',  hp: 70,  speed: 2.4, r: .6,  dmg: 12, xp: 3, score: 36, from: 11, weight: 2,   color: '#4b2a6b', ranged: true },
+    toner:      { name: 'Toner',      hp: 55,  speed: 3.4, r: .55, dmg: 11, xp: 3, score: 32, from: 13, weight: 2,   color: '#0e0e11' },
+    korektor:   { name: 'Korektor',   hp: 90,  speed: 2.3, r: .6,  dmg: 10, xp: 4, score: 45, from: 18, weight: 1.3, color: '#d8d5cc' },
+    ryza:       { name: 'Ryza',       hp: 300, speed: 1.5, r: 1.0, dmg: 24, xp: 8, score: 80, from: 22, weight: 1.2, color: '#a39c86', heavy: true },
+    kartka:     { name: 'Kartka',     hp: 18,  speed: 5.6, r: .38, dmg: 9,  xp: 1, score: 6,  from: 99, weight: 0,   color: '#7d7866' },
 };
 
 export const AFFIXES = [
@@ -233,20 +244,24 @@ export const BOSSES = [
     { id: 'rozmaz', name: 'ROZMAZ', title: 'Żywa plama', hp: 2600, r: 1.4, speed: 2.4, dmg: 24, score: 3000, xp: 70, color: '#16161c' },
     { id: 'ksero', name: 'KSERO', title: 'Kopiuje wszystko', hp: 3000, r: 1.6, speed: 1.9, dmg: 26, score: 3800, xp: 85, color: '#50545c' },
     { id: 'krajarka', name: 'KRAJARKA', title: 'Cięcie na wymiar', hp: 3400, r: 1.5, speed: 2.6, dmg: 30, score: 4600, xp: 100, color: '#2a2c33' },
+    { id: 'laminarka', name: 'LAMINARKA', title: 'Gorąca folia', hp: 3900, r: 1.6, speed: 2.0, dmg: 32, score: 5500, xp: 115, color: '#2e3036' },
+    { id: 'rotacja', name: 'ROTACJA', title: 'Nakład bez końca', hp: 4600, r: 1.9, speed: 1.7, dmg: 34, score: 6500, xp: 130, color: '#23262d' },
 ];
 
-// Mnożniki trudności na fali w.
+// Mnożniki trudności na fali w. Od 12. fali HP rośnie dodatkowo o 3% na falę, a obrażenia mają
+// składnik kwadratowy: karty mają limity, więc późne fale mają być coraz trudniejsze, nie łatwiejsze.
 export const scaling = w => ({
-    hp: 1 + .22 * (w - 1) + .014 * (w - 1) ** 2,
-    dmg: 1 + .085 * (w - 1),
-    speed: 1 + Math.min(.4, .018 * (w - 1)),
+    hp: (1 + .22 * (w - 1) + .016 * (w - 1) ** 2) * (1 + Math.max(0, w - 12) * .03),
+    dmg: 1 + .09 * (w - 1) + .002 * (w - 1) ** 2,
+    speed: 1 + Math.min(.5, .02 * (w - 1)),
 });
 export const waveQuota = w => Math.round(26 + w * 9 + w ** 1.5);
 export const waveDuration = w => Math.min(38, 15 + w * 1.1);
 export const aliveCap = (w, low) => Math.min(low ? 160 : 250, 70 + w * 7);
+export const eliteChance = w => w >= 5 ? Math.min(.3, .03 + w * .007) : 0;
 
-// Poziomy gracza.
-export const xpForLevel = l => Math.round(6 + l * 4.5 + l ** 1.55);
+// Poziomy gracza: im dalej, tym wolniej (w późnych falach wrogów jest dużo, więc kropli też).
+export const xpForLevel = l => Math.round(6 + l * 5 + l ** 1.7);
 
 // Ceny w sklepie (farba, ml). Farby z fali przybywa szybciej niż fal, więc ceny rosną z falą mocniej
 // niż na starcie: na początku drożej o kilka ml, od ok. 10. fali wyraźnie drożej.
@@ -259,6 +274,7 @@ export const PRICES = {
     reroll: n => 4 + n * 4,
     stat: w => 22 + w * 7,
 };
+export const MAXHP_BUYS = 6;   // ile razy można kupić „Gruby karton+” w sklepie
 
 // --- ikony pikselowe (9×9): # kolor główny, + akcent, . puste ---------------------
 export const ICONS = {

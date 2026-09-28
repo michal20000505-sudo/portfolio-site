@@ -6,8 +6,9 @@
 
 import {
     ARENA, OBSTACLES, MAX_WEAPONS, INK_SLOTS, INK, WEAPONS, weaponStats, mixOf, CARDS, RARITY,
-    ENEMIES, AFFIXES, BOSSES, scaling, waveQuota, waveDuration, aliveCap, xpForLevel, PRICES, levelText,
-} from './data.js?v=20260928d';
+    ENEMIES, AFFIXES, BOSSES, scaling, waveQuota, waveDuration, aliveCap, eliteChance, xpForLevel, PRICES, levelText,
+    HEAL_CAP, MAXHP_BUYS,
+} from './data.js?v=20260928e';
 
 const rand = (a, b) => a + Math.random() * (b - a);
 const pick = arr => arr[Math.random() * arr.length | 0];
@@ -45,6 +46,7 @@ export class Game {
         this.enemies = []; this.bullets = []; this.ebullets = []; this.pickups = [];
         this.zones = []; this.marks = []; this.drops = []; this.timers = [];
         this.orbiters = []; this.drones = []; this.lasers = []; this.mines = [];
+        this.hazards = [];
     }
 
     // --- nowy przebieg -----------------------------------------------------------------------------
@@ -54,6 +56,7 @@ export class Game {
         this.v.particles.length = 0; this.v.numbers.length = 0;
         this.stats = newStats();
         this.cardsTaken = {};
+        this.maxhpBought = 0;
         this.player = {
             x: 0, z: 3, vx: 0, vz: 0, r: .45, hp: 100, aimX: 0, aimZ: -1,
             iframes: 0, dashT: 0, dashCdT: 0, dashing: false, dashX: 0, dashZ: 0, trailT: 0,
@@ -137,7 +140,8 @@ export class Game {
         const pool = [];
         for (const c of CARDS) {
             if (c.max && (this.cardsTaken[c.id] || 0) >= c.max) continue;
-            pool.push({ kind: 'stat', id: c.id, name: c.name, desc: c.desc, rarity: c.rarity, icon: c.icon, w: weightOf(c.rarity) });
+            // wypełniacze rzadko, dopóki są inne karty; gdy limity się wyczerpią, zostają głównie one
+            pool.push({ kind: 'stat', id: c.id, name: c.name, desc: c.desc, rarity: c.rarity, icon: c.icon, w: c.filler ? .3 : weightOf(c.rarity) });
         }
         this.weapons.forEach((w, i) => {
             if (w.level >= 5) return;
@@ -184,10 +188,10 @@ export class Game {
         for (const id of freeW) pool.push({ kind: 'weapon', id, name: WEAPONS[id].name, desc: WEAPONS[id].desc, icon: WEAPONS[id].icon, price: PRICES.weapon(id, w), w: 1 });
         for (const c of ['C', 'M', 'Y']) pool.push({ kind: 'ink', color: c, name: `Tusz ${c}`, desc: { C: 'Chłód i zamrażanie.', M: 'Podpalenie.', Y: 'Pioruny łańcuchowe.' }[c] + ' Wkładasz do slotu broni.', icon: 'ink', price: PRICES.ink(w), w: 1.1 });
         for (const c of CARDS) {
-            if (c.rarity > 1 || (c.max && (this.cardsTaken[c.id] || 0) >= c.max) || c.id === 'luck') continue;
+            if (c.rarity > 1 || c.filler || (c.max && (this.cardsTaken[c.id] || 0) >= c.max) || c.id === 'luck') continue;
             pool.push({ kind: 'stat', id: c.id, name: c.name, desc: c.desc, icon: c.icon, price: Math.round(PRICES.stat(w) * (1 + c.rarity * .8)), rarity: c.rarity, w: .5 });
         }
-        pool.push({ kind: 'maxhp', name: 'Gruby karton+', desc: '+25 maks. zdrowia.', icon: 'heart', price: PRICES.maxhp(w), w: .6 });
+        if ((this.maxhpBought || 0) < MAXHP_BUYS) pool.push({ kind: 'maxhp', name: 'Gruby karton+', desc: '+25 maks. zdrowia.', icon: 'heart', price: PRICES.maxhp(w), w: .6 });
         for (let n = 0; n < 4 && pool.length; n++) {
             const total = pool.reduce((a, c) => a + c.w, 0);
             let r = Math.random() * total, i = 0;
@@ -203,7 +207,7 @@ export class Game {
         if (!this.canAfford(o.price)) return false;
         if (o.kind === 'weapon') { if (!this.addWeapon(o.id)) return false; this.weapons[this.weapons.length - 1].spent = o.price; }
         else if (o.kind === 'stat') { const def = CARDS.find(c => c.id === o.id); def.apply(this.stats, this); this.cardsTaken[o.id] = (this.cardsTaken[o.id] || 0) + 1; }
-        else if (o.kind === 'maxhp') { this.stats.maxHp += 25; this.heal(25); }
+        else if (o.kind === 'maxhp') { this.stats.maxHp += 25; this.heal(25); this.maxhpBought = (this.maxhpBought || 0) + 1; }
         this.pay(o.price);
         return true;
     }
@@ -242,11 +246,11 @@ export class Game {
             cz = clamp(p.z + Math.sin(a) * d, -ARENA + 2, ARENA - 2);
             if (Math.hypot(cx - p.x, cz - p.z) > 8 && !this.inObstacle(cx, cz, 1.5)) break;
         }
-        const eliteChance = n >= 5 ? .04 + n * .005 : 0;
+        const elite = eliteChance(n);
         for (let i = 0; i < size && this.spawned < this.quota; i++) {
             const x = clamp(cx + rand(-1.6, 1.6), -ARENA + 1, ARENA - 1), z = clamp(cz + rand(-1.6, 1.6), -ARENA + 1, ARENA - 1);
             if (this.inObstacle(x, z, .8)) continue;
-            this.drops.push({ x, z, t: rand(-.25, 0), dur: .7, type, elite: Math.random() < eliteChance });
+            this.drops.push({ x, z, t: rand(-.25, 0), dur: .7, type, elite: Math.random() < elite });
             this.spawned++;
         }
     }
@@ -379,14 +383,18 @@ export class Game {
         if (e.elite === 'armored') dmg *= .6;
         let crit = false;
         if (o.canCrit !== false && Math.random() < this.stats.crit) { crit = true; dmg *= this.stats.critMult; }
+        // biała osłona od Korektora zbiera obrażenia, zanim dojdą do zdrowia
+        if (e.ward > 0) {
+            const a = Math.min(e.ward, dmg);
+            e.ward -= a; dmg -= a;
+            if (e.ward <= 0) { this.v.burst(e.x, .8, e.z, '#ffffff', 6, 4, .1); this.v.ring(e.x, e.z, '#ffffff', e.r, e.r * 2.6, .25); }
+            if (dmg <= 0) { if (o.source !== 'dot') e.flash = .04; return; }
+        }
         if (this.stats.execute && !e.boss && o.source !== 'dot' && (e.hp - dmg) / e.maxHp < this.stats.execute) dmg = Math.max(dmg, e.hp);
         e.hp -= dmg;
         if (o.source !== 'dot') e.flash = .07;
-        // wampiryzm z limitem na sekundę
-        if (this.stats.lifesteal && this.player.stealWindow < 6) {
-            const h = Math.min(dmg * this.stats.lifesteal, 6 - this.player.stealWindow);
-            this.player.stealWindow += h; this.heal(h);
-        }
+        // wampiryzm z limitem na sekundę (wspólnym z leczeniem za zabójstwa)
+        if (this.stats.lifesteal) this.cardHeal(dmg * this.stats.lifesteal);
         if (o.source === 'dot') {
             e.dotShow += dmg;
             if (e.dotShow >= 1 && Math.random() < .35) { this.v.number(e.x, e.z, e.dotShow, false, o.color); e.dotShow = 0; }
@@ -501,7 +509,7 @@ export class Game {
         this.score += pts;
         this.kills++;
         this.combo++; this.comboT = this.stats.comboDmg ? 4.5 : 3.2;
-        if (this.stats.killHeal) this.heal(this.stats.killHeal);
+        if (this.stats.killHeal) this.cardHeal(this.stats.killHeal);
         this.bestCombo = Math.max(this.bestCombo, this.combo);
         if (this.ultReady()) this.ult.charge = Math.min(this.ult.need, this.ult.charge + (e.boss ? 30 : e.elite ? 4 : 1));
         // krople
@@ -530,6 +538,15 @@ export class Game {
                 k.spawnT = 0; k.kx = e.fz * s * 6; k.kz = -e.fx * s * 6;
             }
         }
+        if (e.type === 'ryza') {
+            // ryza rozsypuje się na luźne kartki
+            for (let i = 0; i < 4; i++) {
+                const a = i / 4 * Math.PI * 2 + rand(-.3, .3);
+                const k = this.spawnEnemy('kartka', e.x + Math.cos(a) * .7, e.z + Math.sin(a) * .7, false);
+                k.spawnT = .1; k.kx = Math.cos(a) * 7; k.kz = Math.sin(a) * 7;
+            }
+            this.audio.play('spawn');
+        }
         if (e.type === 'pecherz') this.timers.push({ t: .02, fn: () => this.explode(e.x, e.z, 2.4, e.dmg, '#f2c200', { hurtPlayer: e.dmg * .6, depth: depth + 1 }) });
         if (e.boss) {
             this.bossesKilled++;
@@ -553,6 +570,37 @@ export class Game {
 
     comboMult() { return 1 + Math.min(4, Math.floor(this.combo / 10) * .25); }
 
+    // leczenie z kart (Wsiąkanie, Karmienie farbą): razem najwyżej HEAL_CAP zdrowia na sekundę
+    cardHeal(n) {
+        const p = this.player;
+        if (!p || p.stealWindow >= HEAL_CAP) return;
+        const h = Math.min(n, HEAL_CAP - p.stealWindow);
+        p.stealWindow += h; this.heal(h);
+    }
+
+    // --- zagrożenia na arkuszu: kałuże tonera, gorąca folia (ranią gracza, nie wrogów) ---------------------
+    addHazard(h) {
+        if (this.hazards.length > 60) this.hazards.shift();
+        h.id = this.nextId++; h.t = 0; h.max = h.life;
+        this.hazards.push(h);
+    }
+    updateHazards(dt) {
+        const p = this.player;
+        for (let i = this.hazards.length - 1; i >= 0; i--) {
+            const h = this.hazards[i];
+            h.t += dt; h.life -= dt;
+            if (h.life <= 0) { this.hazards.splice(i, 1); continue; }
+            if (!p || p.dead || p.iframes > 0 || h.t < .2) continue;
+            const dx = p.x - h.x, dz = p.z - h.z;
+            let inside;
+            if (h.kind === 'strip') {
+                const sx = Math.sin(h.ry), cz = Math.cos(h.ry);
+                inside = Math.abs(dx * cz - dz * sx) < h.w / 2 + p.r * .5 && Math.abs(dx * sx + dz * cz) < h.len / 2;
+            } else inside = dx * dx + dz * dz < (h.r + p.r * .5) ** 2;
+            if (inside) this.hurt(h.dmg);
+        }
+    }
+
     hurt(dmg, sx, sz, src) {
         const p = this.player;
         if (!p || p.dead || p.iframes > 0) return;
@@ -564,7 +612,7 @@ export class Game {
             this.audio.play('shield');
             return;
         }
-        const taken = Math.max(dmg * .3, dmg - this.stats.armor);
+        const taken = Math.max(dmg * .4, dmg - this.stats.armor);
         p.hp -= taken;
         p.iframes = .75; p.hurtFlash = .15;
         this.combo = 0; this.waveNoHit = false;
@@ -652,6 +700,7 @@ export class Game {
         this.updateBullets(dt);
         this.updateZones(dt);
         this.updateMines(dt);
+        this.updateHazards(dt);
         this.updateMarks(dt);
         this.updateDrops(dt);
         this.updatePickups(dt);
@@ -687,7 +736,7 @@ export class Game {
             p.dashCdT -= dt;
             if (p.dashCdT <= 0) { p.dashStock++; p.dashCdT = p.dashStock < maxDash ? dashCd : 0; }
         }
-        p.stealWindow = Math.max(0, p.stealWindow - dt * 6);
+        p.stealWindow = Math.max(0, p.stealWindow - dt * HEAL_CAP);
         if (s.regen) this.heal(s.regen * dt);
 
         if (inp.consume('dash') && p.dashStock > 0) {
@@ -1126,6 +1175,50 @@ export class Game {
                     }
                     if (healed) { this.v.ring(e.x, e.z, INK.green, .5, 4.2, .45); this.audio.play('heal'); }
                 }
+            } else if (T === 'dziurkacz') {
+                // trzyma średni dystans, staje i dziurkuje: pierścień pocisków na wszystkie strony
+                if (dist < 6) { mx = -nx * .5; mz = -nz * .5; }
+                e.cd -= dt * (e.freezeT > 0 ? 0 : 1);
+                if (e.windup > 0) {
+                    e.windup -= dt; mul = 0;
+                    if (e.windup <= 0) {
+                        const k = e.elite ? 12 : 8, off = Math.random() * Math.PI;
+                        for (let i = 0; i < k; i++) {
+                            const a = off + i / k * Math.PI * 2;
+                            this.ebullets.push({ id: this.nextId++, x: e.x + Math.cos(a) * .6, z: e.z + Math.sin(a) * .6, vx: Math.cos(a) * 6.5, vz: Math.sin(a) * 6.5, r: .26, dmg: e.dmg, life: 3.5, color: '#8a5cc2' });
+                        }
+                        this.v.ring(e.x, e.z, '#8a5cc2', .3, 1.6, .25);
+                        this.audio.play('stamp');
+                    }
+                } else if (e.cd <= 0 && dist < 11) {
+                    e.cd = rand(2.6, 3.4); e.windup = .55;
+                    this.marks.push({ kind: 'disc', x: e.x, z: e.z, r: 1.1, t: 0, dur: .55, color: '#8a5cc2' });
+                }
+            } else if (T === 'toner') {
+                // biegnie zygzakiem i zostawia kałuże tonera, które parzą gracza
+                const wv = Math.sin(this.time * 2.5 + e.id) * .6;
+                mx = nx - nz * wv; mz = nz + nx * wv;
+                e.cd -= dt;
+                if (e.cd <= 0 && e.freezeT <= 0) {
+                    e.cd = .75;
+                    this.addHazard({ kind: 'puddle', x: e.x, z: e.z, r: .85 * e.scale, life: 4.5, dmg: e.dmg * .7, color: '#16161c' });
+                }
+            } else if (T === 'korektor') {
+                // trzyma się za innymi i maluje im białą osłonę, którą trzeba najpierw zbić
+                if (dist < 7) { mx = -nx; mz = -nz; }
+                e.cd -= dt;
+                if (e.cd <= 0) {
+                    e.cd = 2.8;
+                    let n = 0;
+                    for (const o of this.near(e.x, e.z, 5)) {
+                        if (o === e || o.boss || n >= 6 || Math.hypot(o.x - e.x, o.z - e.z) > 4.8) continue;
+                        o.ward = Math.max(o.ward || 0, o.maxHp * .4); n++;
+                    }
+                    if (n) { this.v.ring(e.x, e.z, '#ffffff', .5, 4.8, .45); this.audio.play('shield'); }
+                }
+            } else if (T === 'kartka') {
+                const wv = Math.sin(this.time * 6 + e.id) * .7;
+                mx = nx - nz * wv; mz = nz + nx * wv;
             }
             if (this.stats.slowAura && dist < 3.5) mul *= .75;
             if (this.straggle && T !== 'walec') { mx = nx; mz = nz; }
@@ -1309,6 +1402,8 @@ export class Game {
         }
         if (e.type === 'ksero') this.updateKsero(e, dt, { nx, nz, dist, slow, enraged, shoot, face, walk });
         if (e.type === 'krajarka') this.updateKrajarka(e, dt, { nx, nz, dist, slow, enraged, shoot, face, walk });
+        if (e.type === 'laminarka') this.updateLaminarka(e, dt, { nx, nz, dist, slow, enraged, shoot, face, walk });
+        if (e.type === 'rotacja') this.updateRotacja(e, dt, { nx, nz, dist, slow, enraged, shoot, face, walk });
         e.kx *= Math.exp(-dt * 8); e.kz *= Math.exp(-dt * 8);
         this.collide(e, Math.min(e.r, 1.3));
         // kontakt
@@ -1432,6 +1527,118 @@ export class Game {
                     if (e.k >= (enraged ? 3 : 2)) { e.st = 'walk'; e.t = 0; }
                 }
             }
+        }
+    }
+
+    // LAMINARKA: pasy gorącej folii przez arkusz (zostają i parzą) i szarże, po których zostaje gorący ślad
+    updateLaminarka(e, dt, { nx, nz, slow, enraged, shoot, face, walk }) {
+        const p = this.player;
+        e.roll = (e.roll || 0) + dt * (e.st === 'charge' ? 18 : 4);
+        if (e.st === 'walk') {
+            walk(e.speed);
+            if (e.t > (enraged ? 1.5 : 2.2)) {
+                e.n++; e.t = 0;
+                if (e.n % 2 === 1) {
+                    // 3–4 równoległe pasy; jeden przez gracza, między nimi przerwy na ucieczkę
+                    e.st = 'foil';
+                    const ry = pick([0, Math.PI / 2, Math.PI / 4, -Math.PI / 4]);
+                    const k = enraged ? 4 : 3, gap = 5.2, sx = Math.sin(ry), cz = Math.cos(ry);
+                    const first = -Math.floor(Math.random() * k);
+                    e.strips = [];
+                    for (let i = 0; i < k; i++) {
+                        const o = (first + i) * gap;
+                        const s = { x: p.x + cz * o, z: p.z - sx * o, ry, w: 2.2, len: 70, delay: i * .12 };
+                        e.strips.push(s);
+                        this.marks.push({ kind: 'rect', x: s.x, z: s.z, ry, w: s.w, len: 70, t: -s.delay, dur: 1 + s.delay, color: '#ff7a1a' });
+                    }
+                } else {
+                    e.st = 'aim';
+                    e.cx = nx; e.cz = nz;
+                    const len = this.rayLength(e.x, e.z, nx, nz, 30);
+                    e.chargeLen = len;
+                    this.marks.push({ kind: 'rect', x: e.x + nx * len / 2, z: e.z + nz * len / 2, ry: Math.atan2(nx, nz), w: 3.4, len, t: 0, dur: .8, color: '#ff7a1a' });
+                }
+            }
+        } else if (e.st === 'foil') {
+            for (const s of e.strips) {
+                if (s.done || e.t < 1 + s.delay) continue;
+                s.done = true;
+                this.addHazard({ kind: 'strip', x: s.x, z: s.z, ry: s.ry, w: s.w, len: s.len, life: enraged ? 3.6 : 3, dmg: e.dmg * .7, color: '#ff7a1a' });
+                const sx = Math.sin(s.ry), cz = Math.cos(s.ry);
+                this.v.beam(s.x - sx * 35, s.z - cz * 35, s.x + sx * 35, s.z + cz * 35, '#ffd9a0', .6, .2, .4);
+                this.audio.play('laserBoss');
+            }
+            if (e.strips.every(s => s.done) && e.t > 1.6) { e.st = 'walk'; e.t = 0; }
+        } else if (e.st === 'aim') {
+            e.fx = e.cx; e.fz = e.cz;
+            if (e.t > .8) { e.st = 'charge'; e.t = 0; e.sx = e.x; e.sz = e.z; this.audio.play('dash'); }
+        } else if (e.st === 'charge') {
+            const sp = 20 * slow;
+            e.x += e.cx * sp * dt; e.z += e.cz * sp * dt;
+            const rx = p.x - e.x, rz = p.z - e.z, along = rx * e.cx + rz * e.cz, lat = Math.abs(rx * -e.cz + rz * e.cx);
+            if (Math.abs(along) < 1.2 && lat < 1.9) this.hurt(e.dmg, e.x, e.z);
+            if (Math.hypot(e.x - e.sx, e.z - e.sz) >= e.chargeLen - 1.5 || this.inObstacle(e.x + e.cx * 1.8, e.z + e.cz * 1.8, 0)) {
+                // gorący ślad po całej drodze szarży
+                const len = Math.hypot(e.x - e.sx, e.z - e.sz);
+                if (len > 1) this.addHazard({ kind: 'strip', x: (e.x + e.sx) / 2, z: (e.z + e.sz) / 2, ry: Math.atan2(e.cx, e.cz), w: 1.6, len, life: 2.6, dmg: e.dmg * .6, color: '#ff7a1a' });
+                const k = enraged ? 18 : 12;
+                for (let i = 0; i < k; i++) shoot(i / k * Math.PI * 2 + e.n * .2, 6.5);
+                this.v.shake(.5); this.audio.play('slam');
+                e.st = 'walk'; e.t = 0;
+            }
+        }
+    }
+
+    // ROTACJA: obrotowe ramiona z pociskami, deszcz farby z ostrzeżeniem, dodruk wrogów
+    updateRotacja(e, dt, { nx, nz, slow, enraged, shoot, face, walk }) {
+        const p = this.player;
+        e.a = (e.a || 0) + dt * (e.st === 'arms' ? (enraged ? 1.5 : 1.1) : .4);
+        if (e.st === 'walk') {
+            walk(e.speed);
+            if (e.t > (enraged ? 1.4 : 2)) {
+                e.n++; e.t = 0; e.k = 0;
+                e.st = ['arms', 'rain', 'summon'][e.n % 3];
+                if (e.st === 'rain') {
+                    const k = enraged ? 14 : 10;
+                    for (let i = 0; i < k; i++) {
+                        const a = Math.random() * Math.PI * 2, d = i === 0 ? 0 : rand(1.5, 8);
+                        const x = clamp(p.x + p.vx * .4 + Math.cos(a) * d, -ARENA + 1.5, ARENA - 1.5), z = clamp(p.z + p.vz * .4 + Math.sin(a) * d, -ARENA + 1.5, ARENA - 1.5);
+                        const delay = 1.1 + i * .07, col = pick([INK.C, INK.M, INK.Y, '#16161c']);
+                        this.marks.push({ kind: 'disc', x, z, r: 1.6, t: 0, dur: delay, color: col });
+                        this.timers.push({ t: delay, fn: () => {
+                            if (e.dead) return;
+                            this.v.ring(x, z, col, .4, 2, .3); this.v.splat(x, z, col, 1.3, .55); this.v.burst(x, .4, z, col, 8, 6, .14);
+                            this.audio.play('explode');
+                            const q = this.player;
+                            if (q && !q.dead && Math.hypot(q.x - x, q.z - z) < 1.6 + q.r * .5) this.hurt(e.dmg * .9, x, z);
+                        } });
+                    }
+                }
+            }
+        } else if (e.st === 'arms') {
+            face();
+            e.k += dt;
+            const every = enraged ? .1 : .13, arms = enraged ? 5 : 4;
+            while (e.k > every) {
+                e.k -= every;
+                for (let i = 0; i < arms; i++) shoot(e.a + i / arms * Math.PI * 2, 6, .3);
+            }
+            if (e.t > 3.6) { e.st = 'walk'; e.t = 0; }
+        } else if (e.st === 'rain') {
+            face();
+            if (e.t > 2.2) { e.st = 'walk'; e.t = 0; }
+        } else if (e.st === 'summon') {
+            if (e.t < .01) {
+                e.flash = .2;
+                const types = enraged ? ['toner', 'dziurkacz', 'korektor', 'zszywacz', 'toner'] : ['toner', 'dziurkacz', 'zszywacz'];
+                types.forEach((type, i) => {
+                    const a = i / types.length * Math.PI * 2 + rand(0, 1);
+                    this.drops.push({ x: clamp(e.x + Math.cos(a) * 4, -ARENA + 2, ARENA - 2), z: clamp(e.z + Math.sin(a) * 4, -ARENA + 2, ARENA - 2), t: -i * .12, dur: .7, type });
+                });
+                this.v.ring(e.x, e.z, '#ffffff', 1, 5.5, .5);
+                this.audio.play('spawn');
+            }
+            if (e.t > 1.1) { e.st = 'walk'; e.t = 0; }
         }
     }
 

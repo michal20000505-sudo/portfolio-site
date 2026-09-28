@@ -9,7 +9,7 @@
 
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
-import { ARENA, ENEMIES, INK, OBSTACLES } from './data.js?v=20260928d';
+import { ARENA, ENEMIES, INK, OBSTACLES } from './data.js?v=20260928e';
 
 const ELEV = THREE.MathUtils.degToRad(60);
 const SIN_E = Math.sin(ELEV), COS_E = Math.cos(ELEV);
@@ -448,6 +448,26 @@ export class View {
         ]), flat('#ffffff'), 40);
         P('widmo', new THREE.IcosahedronGeometry(.5, 1), flat('#ffffff'), 60);
         P('gabka', new THREE.BoxGeometry(1.3, .8, 1.1), flat('#ffffff'), 40);
+        P('dziurkacz', mergeGeometries([
+            new THREE.BoxGeometry(1.1, .5, .9),
+            new THREE.BoxGeometry(1.0, .16, .8).translate(0, .38, -.05),
+            new THREE.CylinderGeometry(.12, .12, .3, 8).translate(-.28, .35, .25),
+            new THREE.CylinderGeometry(.12, .12, .3, 8).translate(.28, .35, .25),
+        ]), flat('#ffffff'), 60);
+        P('toner', mergeGeometries([
+            new THREE.CylinderGeometry(.42, .42, .9, 10).rotateZ(Math.PI / 2),
+            new THREE.BoxGeometry(1.05, .18, .3).translate(0, -.3, .2),
+        ]), flat('#ffffff'), 60);
+        P('korektor', mergeGeometries([
+            new THREE.CylinderGeometry(.34, .42, 1.0, 8),
+            new THREE.CylinderGeometry(.14, .3, .32, 8).translate(0, .66, 0),
+        ]), flat('#ffffff'), 40);
+        P('ryza', mergeGeometries([
+            new THREE.BoxGeometry(1.7, .5, 1.25).translate(0, -.26, 0),
+            new THREE.BoxGeometry(1.6, .5, 1.2).rotateY(.08).translate(0, .26, 0),
+            new THREE.BoxGeometry(1.74, .08, .5).translate(0, 0, 0),
+        ]), flat('#ffffff'), 30);
+        P('kartka', new THREE.BoxGeometry(.72, .05, .92), flat('#ffffff'), 120);
         // oczy wrogów
         P('eyeW', new THREE.BoxGeometry(.2, .2, .08), basic('#ffffff'), 1600, { shadow: false });
         P('eyeP', new THREE.BoxGeometry(.1, .1, .05), basic('#ffffff'), 1600, { shadow: false });
@@ -473,8 +493,8 @@ export class View {
         const flatMat = kind => new THREE.MeshBasicMaterial({ map: markTexture(kind), transparent: true, depthWrite: false, color: '#ffffff' });
         const plane = new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2);
         P('ring', plane, flatMat('ring'), 260, { shadow: false });
-        P('disc', plane, flatMat('disc'), 120, { shadow: false });
-        P('rect', plane, flatMat('rect'), 20, { shadow: false });
+        P('disc', plane, flatMat('disc'), 240, { shadow: false });
+        P('rect', plane, flatMat('rect'), 48, { shadow: false });
         P('soft', plane, flatMat('soft'), 200, { shadow: false });
         for (const k of ['ring', 'disc', 'rect', 'soft']) this.pools[k].mesh.renderOrder = 2;
     }
@@ -680,6 +700,11 @@ export class View {
                 else if (e.type === 'kopiarka') { y = .45 * sc; sy *= 1 + Math.max(0, Math.sin(ph * 2)) * .05; }
                 else if (e.type === 'widmo') { y = .8 * sc + Math.sin(ph * .6) * .15; sy *= 1.2; }
                 else if (e.type === 'gabka') { const b = Math.sin(ph * .8); y = .42 * sc; sy *= 1 + b * .08; sx *= 1 - b * .04; sz *= 1 - b * .04; }
+                else if (e.type === 'dziurkacz') { y = .3 * sc; if (e.windup > 0) { const k = Math.sin(t * 50) * .06; sy *= .8 + k; sx *= 1.1; sz *= 1.1; } }
+                else if (e.type === 'toner') { y = .45 * sc; rx = t * 8 + e.id; }
+                else if (e.type === 'korektor') { y = .5 * sc + Math.abs(Math.sin(ph * .6)) * .12; }
+                else if (e.type === 'ryza') { y = .52 * sc; sy *= 1 + Math.sin(ph * .5) * .03; }
+                else if (e.type === 'kartka') { y = .35 + Math.abs(Math.sin(ph * .8)) * .35; rx = Math.sin(ph * .8) * .5; }
             }
             if (e.type === 'widmo' && e.phaseOut > 0) {
                 // znikanie: migotanie i kurczenie
@@ -688,9 +713,9 @@ export class View {
             }
             if (e.spawnT > 0) { const k = 1 - e.spawnT / .25; sx *= k; sy *= k * 1.4; sz *= k; }
             pool.push(e.x, y, e.z, ry, sx, sy, sz, col, rx);
-            // oczy (walec ich nie ma, jest walcem)
-            if (e.type !== 'walec' && e.type !== 'igla') {
-                const eh = e.type === 'plujka' ? .72 : e.type === 'tarczownik' ? .75 : e.type === 'zszywacz' ? .72 : y + def.r * sc * .25;
+            // oczy (walec ich nie ma, jest walcem; kartka i toner też bez oczu)
+            if (e.type !== 'walec' && e.type !== 'igla' && e.type !== 'kartka' && e.type !== 'toner') {
+                const eh = e.type === 'plujka' ? .72 : e.type === 'tarczownik' ? .75 : e.type === 'zszywacz' ? .72 : e.type === 'dziurkacz' ? .4 : e.type === 'korektor' ? y + .1 : y + def.r * sc * .25;
                 const fwd = e.type === 'tarczownik' ? .62 : def.r * sc * .88;
                 const sideOff = def.r * sc * .36;
                 const ex = Math.sin(ry), ez = Math.cos(ry);
@@ -702,6 +727,22 @@ export class View {
                 }
             }
             if (e.elite) P.ring.push(e.x, .03, e.z, t * 2, def.r * 3.4 * sc, 1, def.r * 3.4 * sc, C(e.eliteColor));
+            // biała osłona od Korektora
+            if (e.ward > 0) {
+                const k = Math.min(1, e.ward / (e.maxHp * .4));
+                P.ring.push(e.x, .06, e.z, -t * 3, def.r * sc * (2.4 + k * .6), 1, def.r * sc * (2.4 + k * .6), WHITE);
+                P.soft.push(e.x, .5, e.z, 0, def.r * sc * 2.6, 1, def.r * sc * 2.6, WHITE);
+            }
+        }
+        // zagrożenia dla gracza: kałuże tonera i pasy gorącej folii
+        for (const h of g.hazards || []) {
+            const k = Math.min(1, h.t * 5) * Math.min(1, h.life * 2.5);
+            if (h.kind === 'strip') {
+                const pulse = 1 + Math.sin(t * 16 + h.id) * .08;
+                P.rect.push(h.x, .045, h.z, h.ry, h.w * k * pulse, 1, h.len, C(h.color));
+            } else {
+                P.disc.push(h.x, .035, h.z, h.id, h.r * 2 * k, 1, h.r * 2 * k, C(h.color));
+            }
         }
 
         // pociski gracza
@@ -852,6 +893,31 @@ export class View {
             g.add(blade);
             g.userData.blade = blade;
             for (const sx of [-.6, .6]) { add(new THREE.BoxGeometry(.5, .36, .1), '#ffffff', sx, .6, 1.22, true); add(new THREE.BoxGeometry(.2, .2, .06), '#ff1f5a', sx, .6, 1.28, true); }
+        } else if (type === 'laminarka') {
+            add(new THREE.BoxGeometry(3.6, 1.0, 2.4), '#2e3036', 0, .5, 0);
+            add(new THREE.BoxGeometry(2.8, .6, 1.6), '#1d1f24', 0, 1.3, -.2);
+            add(new THREE.BoxGeometry(3.2, .1, .3), '#ff7a1a', 0, .78, 1.22, true);
+            g.userData.rollers = [];
+            for (const y of [.3, .62]) {
+                const r = add(new THREE.CylinderGeometry(.17, .17, 3.1, 10).rotateZ(Math.PI / 2), '#ff5a1f', 0, y, 1.3);
+                g.userData.rollers.push(r);
+            }
+            for (const sx of [-.7, .7]) { add(new THREE.BoxGeometry(.5, .34, .1), '#ffffff', sx, 1.35, .62, true); add(new THREE.BoxGeometry(.2, .2, .06), '#ff7a1a', sx, 1.35, .68, true); }
+        } else if (type === 'rotacja') {
+            add(new THREE.BoxGeometry(3.8, .8, 3.0), '#23262d', 0, .4, 0);
+            add(new THREE.CylinderGeometry(1.0, 1.0, 3.4, 16).rotateZ(Math.PI / 2), '#4a4f58', 0, 1.55, 0);
+            const head = new THREE.Group();
+            head.position.y = 2.75;
+            [INK.C, INK.M, INK.Y, '#161616'].forEach((c, i) => {
+                const m = new THREE.Mesh(new THREE.BoxGeometry(2.2, .22, .5), new THREE.MeshBasicMaterial({ color: c }));
+                m.position.set(Math.cos(i * Math.PI / 2) * 1.1, 0, Math.sin(i * Math.PI / 2) * 1.1);
+                m.rotation.y = -i * Math.PI / 2;
+                m.castShadow = true; head.add(m);
+            });
+            add(new THREE.CylinderGeometry(.35, .35, .9, 10), '#6d727a', 0, 2.4, 0);
+            g.add(head);
+            g.userData.head = head;
+            for (const sx of [-.8, .8]) { add(new THREE.BoxGeometry(.55, .36, .1), '#ffffff', sx, .45, 1.52, true); add(new THREE.BoxGeometry(.22, .22, .06), '#ec008c', sx, .45, 1.58, true); }
         } else {
             add(new THREE.IcosahedronGeometry(1.4, 1), '#16161c', 0, 1.5, 0);
             g.userData.eyes = [];
@@ -894,6 +960,8 @@ export class View {
             sc.position.z = 1.24; sc.position.y = 1.2 + Math.sin(t * (e.st === 'scan' ? 12 : 3)) * .4;
         }
         if (e.type === 'krajarka') g.userData.blade.rotation.y = e.spin || 0;
+        if (e.type === 'laminarka') g.userData.rollers.forEach((r, i) => { r.rotation.x = (e.roll || 0) * (i ? -1 : 1); });
+        if (e.type === 'rotacja') { g.userData.head.rotation.y = -(e.a || 0) - g.rotation.y; g.children[1].rotation.x = t * 2; }
     }
 
     // --- nakładka 2D: liczby obrażeń, celownik, wskaźnik bossa ---------------------------------------

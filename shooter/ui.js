@@ -4,7 +4,7 @@
    instrukcja, ranking, koniec gry. Stan strony trzyma klasa body.state-*.
    ========================================================================== */
 
-import { WEAPONS, RARITY, MIXES, mixKey, INK, PRICES, levelText, iconURL, MAX_WEAPONS, INK_SLOTS } from './data.js?v=20260928d';
+import { WEAPONS, RARITY, MIXES, mixKey, INK, PRICES, levelText, iconURL, MAX_WEAPONS, INK_SLOTS } from './data.js?v=20260928e';
 
 const $ = id => document.getElementById(id);
 const icons = new Map();
