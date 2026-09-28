@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motion design: reelsy na Instagram i Facebooka | Michał Jarosiński</title>
+    <meta name="description" content="Motion design Michała Jarosińskiego: pionowe reelsy na Instagram i Facebooka, zrobione w kodzie (HTML i WebGL) z muzyką zgraną co do klatki. Dla klientów i własnych projektów.">
+    <meta name="author" content="Michał Jarosiński">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="language" content="Polish">
+    <meta name="geo.region" content="PL">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://m-jaro.pl/motion.html">
+    <meta property="og:title" content="Motion design | Michał Jarosiński">
+    <meta property="og:description" content="Reelsy zrobione w kodzie, z muzyką zgraną co do klatki. Włącz dźwięk.">
+    <meta property="og:image" content="https://m-jaro.pl/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:site_name" content="Michał Jarosiński Portfolio">
+    <meta property="og:locale" content="pl_PL">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://m-jaro.pl/motion.html">
+    <meta property="twitter:title" content="Motion design | Michał Jarosiński">
+    <meta property="twitter:description" content="Reelsy zrobione w kodzie, z muzyką zgraną co do klatki.">
+    <meta property="twitter:image" content="https://m-jaro.pl/og-image.jpg">
+
+    <meta name="theme-color" content="#050505">
+    <link rel="canonical" href="https://m-jaro.pl/motion.html">
+    <link rel="apple-touch-icon" sizes="500x500" href="strona-icon.png">
+    <link rel="manifest" href="manifest.json">
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": "Motion design | Michał Jarosiński",
+        "url": "https://m-jaro.pl/motion.html",
+        "inLanguage": "pl-PL",
+        "hasPart": [
+            {
+                "@type": "VideoObject",
+                "name": "Portfolio w 30 s",
+                "description": "Reklama tej strony: prawdziwe strony klientów na telefonie 3D, druk plakatów płytami CMYK, kontroler, gra i logo w finale. 128 BPM, 16 taktów, dokładnie 30 sekund.",
+                "thumbnailUrl": "https://m-jaro.pl/motion/portfolio.webp",
+                "contentUrl": "https://m-jaro.pl/motion/portfolio.mp4",
+                "uploadDate": "2026-09-27",
+                "duration": "PT30S",
+                "width": 720,
+                "height": 1280
+            },
+            {
+                "@type": "VideoObject",
+                "name": "SSCAR.PL",
+                "description": "Film o funkcjach strony stacji kontroli pojazdów z Wrocławia: rezerwacja w trzech krokach, geometria kół w 3D, dekoder VIN i baza klimatyzacji. Kolory, fonty i model koła są wzięte prosto ze strony.",
+                "thumbnailUrl": "https://m-jaro.pl/motion/sscar.webp",
+                "contentUrl": "https://m-jaro.pl/motion/sscar.mp4",
+                "uploadDate": "2026-09-27",
+                "duration": "PT38S",
+                "width": 720,
+                "height": 1280
+            },
+            {
+                "@type": "VideoObject",
+                "name": "Body Creator",
+                "description": "Studio treningu personalnego i jego strona na telefonie. Reels pokazuje, że na darmową konsultację zapisujesz się w trzech polach. Czerń i złoto jak na stronie klienta, dźwięki siłowni w rytmie.",
+                "thumbnailUrl": "https://m-jaro.pl/motion/bodycreator.webp",
+                "contentUrl": "https://m-jaro.pl/motion/bodycreator.mp4",
+                "uploadDate": "2026-09-27",
+                "duration": "PT14.5S",
+                "width": 720,
+                "height": 1280
+            },
+            {
+                "@type": "VideoObject",
+                "name": "OVERPRINT",
+                "description": "Reklama mojej darmowej gry. Gameplay to nie nagranie ekranu: film steruje prawdziwym silnikiem gry, więc każda broń, boss i ULT trafia w beat. Zagraj w OVERPRINT.",
+                "thumbnailUrl": "https://m-jaro.pl/motion/overprint.webp",
+                "contentUrl": "https://m-jaro.pl/motion/overprint.mp4",
+                "uploadDate": "2026-09-28",
+                "duration": "PT33.75S",
+                "width": 720,
+                "height": 1280
+            },
+            {
+                "@type": "VideoObject",
+                "name": "OBSERVER 01",
+                "description": "Oko, które lata po tej stronie, samo opowiada o portfolio. Rozpada się i składa na beatach, mruga przysłoną i źrenicą „mówi” w rytm słów w dymkach.",
+                "thumbnailUrl": "https://m-jaro.pl/motion/observer.webp",
+                "contentUrl": "https://m-jaro.pl/motion/observer.mp4",
+                "uploadDate": "2026-09-27",
+                "duration": "PT23S",
+                "width": 720,
+                "height": 1280
+            }
+        ],
+        "breadcrumb": {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "Portfolio",
+                    "item": "https://m-jaro.pl/"
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 2,
+                    "name": "Motion design",
+                    "item": "https://m-jaro.pl/motion.html"
+                }
+            ]
+        }
+    }
+    </script>
+
+    <link rel="icon" type="image/png" sizes="500x500" href="strona-icon.png">
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="fonts/space-grotesk-latin-ext.woff2">
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="fonts/space-grotesk-latin.woff2">
+
+    <style>
+        @font-face {
+            font-family: 'Space Grotesk';
+            font-style: normal;
+            font-weight: 300 700;
+            font-display: swap;
+            src: url(fonts/space-grotesk-latin-ext.woff2) format('woff2');
+            unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+        }
+        @font-face {
+            font-family: 'Space Grotesk';
+            font-style: normal;
+            font-weight: 300 700;
+            font-display: swap;
+            src: url(fonts/space-grotesk-latin.woff2) format('woff2');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+        }
+        :root {
+            --bg: #050505;
+            --fg: #ffffff;
+            --cyan: #00ffff;
+            --magenta: #ff00ff;
+            --yellow: #ffff00;
+            --surface-raised: #1a1a1a;
+            --surface-mid: #222222;
+            --surface-border: #333333;
+            --text-muted: #888888;
+            --text-dim: #666666;
+            --font: 'Space Grotesk', system-ui, sans-serif;
+            --ease-standard: cubic-bezier(0.165, 0.84, 0.44, 1);
+            --ease-snap: cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            *, *::before, *::after { cursor: none !important; }
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg);
+            color: var(--fg);
+            font-family: var(--font);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        /* Cross-document view transitions disabled: snapshotting pages with
+           live canvases froze navigation with a black screen on some GPUs. */
+        @view-transition {
+            navigation: none;
+        }
+
+        /* ── FOCUS VISIBILITY ── */
+        a:focus-visible,
+        button:focus-visible {
+            outline: 2px solid var(--cyan);
+            outline-offset: 4px;
+        }
+
+        /* ── PROGRESS BAR ── */
+        #progress-bar {
+            position: fixed;
+            top: 0; left: 0;
+            height: 3px;
+            width: 100%;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta), var(--yellow));
+            transform: scaleX(0);
+            transform-origin: left;
+            z-index: 10001;
+        }
+
+        /* ── AMBIENT GLOW (pre-blurred gradients, no filter cost) ── */
+        .ambient {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            will-change: transform;
+            animation: floatGlow 15s infinite alternate ease-in-out;
+        }
+        .ambient-1 {
+            width: 800px; height: 800px;
+            top: -15%; left: -15%;
+            background: radial-gradient(circle closest-side, var(--cyan), transparent);
+            opacity: 0.08;
+        }
+        .ambient-2 {
+            width: 800px; height: 800px;
+            bottom: 0%; right: -15%;
+            background: radial-gradient(circle closest-side, var(--magenta), transparent);
+            opacity: 0.10;
+            animation-delay: -5s;
+        }
+        .ambient-3 {
+            width: 550px; height: 550px;
+            top: 35%; left: 35%;
+            background: radial-gradient(circle closest-side, var(--yellow), transparent);
+            opacity: 0.05;
+            animation-delay: -10s;
+        }
+        @keyframes floatGlow {
+            0%   { transform: translate(0, 0) scale(1); }
+            50%  { transform: translate(40px, 25px) scale(1.08); }
+            100% { transform: translate(-25px, -40px) scale(0.92); }
+        }
+
+        /* ── STARFIELD ── */
+        #starfield {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ── CURSOR ──
+           Position rides on transform only (GPU compositor, no layout) and has
+           NO transition, so tracking is 1:1 per frame. Hover grows the circle
+           via width/height, which can transition without touching position. */
+        .cursor {
+            position: fixed;
+            top: 0; left: 0;
+            width: 20px; height: 20px;
+            border: 2px solid var(--fg);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate3d(-100px, -100px, 0) translate(-50%, -50%);
+            transition: width 0.25s ease, height 0.25s ease, background-color 0.2s;
+            mix-blend-mode: difference;
+            display: none;
+            will-change: transform;
+        }
+        .cursor.hovered {
+            width: 52px;
+            height: 52px;
+            background-color: var(--fg);
+            border-color: transparent;
+            opacity: 0.8;
+        }
+        @media (hover: hover) and (pointer: fine) {
+            .cursor { display: block; }
+        }
+
+        /* ── PRELOADER ── */
+        #preloader {
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+        .loader-text {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            animation: pulseCMYK 1s infinite alternate;
+        }
+        @keyframes pulseCMYK {
+            0%   { text-shadow: 2px 2px 0 var(--cyan); }
+            50%  { text-shadow: -2px 2px 0 var(--magenta); }
+            100% { text-shadow: -2px -2px 0 var(--yellow); }
+        }
+
+        /* ── CONTAINER ── */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        /* ── HEADER ── */
+        header {
+            position: fixed;
+            top: 0; width: 100%;
+            padding: 30px 0;
+            z-index: 100;
+            mix-blend-mode: difference;
+            transition: padding 0.3s var(--ease-standard);
+        }
+        header.scrolled {
+            padding: 15px 0;
+            background: rgba(5, 5, 5, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            mix-blend-mode: normal;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        header.menu-open { mix-blend-mode: normal; }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.5rem;
+            letter-spacing: -1px;
+            z-index: 101;
+            position: relative;
+            display: inline-block;
+            transition: transform 0.25s var(--ease-standard), letter-spacing 0.25s var(--ease-standard);
+        }
+        .logo:hover {
+            transform: skewX(-6deg) scale(1.04);
+            letter-spacing: 1px;
+        }
+        .logo span { color: var(--cyan); }
+
+        .nav-links {
+            display: flex;
+            gap: 50px;
+        }
+        .nav-links a {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            transition: transform 0.3s var(--ease-standard), color 0.3s var(--ease-standard);
+            display: inline-block;
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--cyan);
+            transform: translateX(-50%) scale(0);
+            transition: transform 0.3s var(--ease-standard);
+        }
+        .nav-links a:hover { color: var(--cyan); }
+        .nav-links a:hover::after { transform: translateX(-50%) scale(1); }
+        .nav-links a.active { color: var(--cyan); }
+        .nav-links a.active::after { transform: translateX(-50%) scale(1); }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            z-index: 101;
+            background: transparent;
+            border: none;
+            padding: 4px;
+            cursor: pointer;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .bar {
+            width: 28px; height: 2px;
+            background: var(--fg);
+            transition: transform 0.3s, opacity 0.3s;
+            display: block;
+        }
+        .menu-toggle.open .bar { background-color: var(--cyan); }
+        .menu-toggle.open .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+        .menu-toggle.open .bar:nth-child(2) { opacity: 0; transform: scaleX(0); }
+        .menu-toggle.open .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+        /* ── BUTTON ── */
+        .btn {
+            display: inline-block;
+            padding: 14px 36px;
+            font-family: var(--font);
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--cyan);
+            background: transparent;
+            border: 1px solid var(--cyan);
+            border-radius: 12px;
+            cursor: pointer;
+            position: relative;
+            transition: background 0.4s var(--ease-standard),
+                        color 0.4s var(--ease-standard),
+                        transform 0.4s var(--ease-standard),
+                        box-shadow 0.4s var(--ease-standard);
+        }
+        .btn:hover {
+            background: var(--cyan);
+            color: var(--bg);
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        }
+        .btn:focus-visible {
+            outline: 2px solid var(--cyan);
+            outline-offset: 4px;
+        }
+        .btn-hero {
+            font-size: 1rem;
+            padding: 18px 52px;
+        }
+
+        /* ── SCROLL REVEAL ── */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s var(--ease-snap),
+                        transform 0.8s var(--ease-snap);
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ── SECTION LABEL ── */
+        .section-label {
+            font-size: 0.82rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-dim);
+            margin-bottom: 20px;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid var(--surface-border);
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 1024px) {
+            .container { padding: 0 24px; }
+
+            /* mix-blend-mode: difference on the fixed header renders unreliably
+               over composited layers (iframe, canvas) on mobile GPUs and can make
+               the nav invisible; the page is uniformly dark, so blend adds nothing here */
+            header {
+                mix-blend-mode: normal;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .menu-toggle .bar {
+                background: #fff;
+            }
+            .nav-links {
+                position: fixed;
+                inset: 0;
+                height: 100dvh;
+                width: 100%;
+                background:
+                    radial-gradient(ellipse 60% 40% at 85% 15%, rgba(255, 0, 255, 0.07), transparent 70%),
+                    radial-gradient(ellipse 60% 45% at 10% 90%, rgba(0, 255, 255, 0.06), transparent 70%),
+                    #070707;
+                flex-direction: column;
+                justify-content: center;
+                align-items: flex-start;
+                padding-left: 12vw;
+                gap: 4vh;
+                counter-reset: navitem;
+                z-index: 99;
+                visibility: hidden;
+                clip-path: inset(0 0 100% 0);
+                transition: clip-path 0.65s cubic-bezier(0.83, 0, 0.17, 1), visibility 0s 0.65s;
+            }
+
+            .nav-links::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                height: 2px;
+                background: linear-gradient(90deg, var(--cyan), var(--magenta), var(--yellow));
+                opacity: 0;
+                transition: opacity 0.3s 0.2s;
+            }
+
+            .nav-links.open {
+                visibility: visible;
+                clip-path: inset(0 0 0 0);
+                transition: clip-path 0.65s cubic-bezier(0.83, 0, 0.17, 1), visibility 0s;
+            }
+
+            .nav-links.open::before {
+                opacity: 1;
+            }
+
+            .nav-links li {
+                counter-increment: navitem;
+                list-style: none;
+            }
+
+            .nav-links a {
+                position: relative;
+                font-size: clamp(1.8rem, 7vw, 2.6rem);
+                font-weight: 700;
+                letter-spacing: 1px;
+                opacity: 0;
+                transform: translateY(35px);
+                transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1), transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), color 0.3s;
+            }
+
+            .nav-links a::before {
+                content: '0' counter(navitem);
+                position: absolute;
+                left: -2em;
+                top: 0.55em;
+                font-size: 0.35em;
+                font-weight: 500;
+                letter-spacing: 2px;
+                color: var(--cyan);
+                opacity: 0.7;
+            }
+
+            .nav-links.open a {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            .nav-links.open li:nth-child(1) a { transition-delay: 0.30s; }
+            .nav-links.open li:nth-child(2) a { transition-delay: 0.37s; }
+            .nav-links.open li:nth-child(3) a { transition-delay: 0.44s; }
+            .nav-links.open li:nth-child(4) a { transition-delay: 0.51s; }
+            .nav-links.open li:nth-child(5) a { transition-delay: 0.58s; }
+            .nav-links.open li:nth-child(6) a { transition-delay: 0.65s; }
+            .nav-links.open li:nth-child(7) a { transition-delay: 0.72s; }
+
+            body.nav-open {
+                overflow: hidden;
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+                .nav-links,
+                .nav-links.open,
+                .nav-links a,
+                .nav-links.open a {
+                    transition: none;
+                    transition-delay: 0s;
+                }
+            }
+        }
+
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+            #starfield, .ambient {
+                display: none;
+            }
+            .reveal {
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+        /* ══════════════ MOTION: reelsy ══════════════ */
+        #motion {
+            position: relative;
+            z-index: 1;
+            padding: 170px 0 120px;
+        }
+        .motion-head {
+            max-width: 780px;
+            margin-bottom: 110px;
+        }
+        .motion-title {
+            font-size: clamp(3rem, 8vw, 7rem);
+            font-weight: 700;
+            line-height: 0.9;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+        }
+        .motion-title span { color: var(--cyan); }
+        .motion-lead {
+            margin-top: 28px;
+            max-width: 58ch;
+            font-size: 1.2rem;
+            font-weight: 300;
+            line-height: 1.8;
+            color: #b8b8b8;
+        }
+
+        .reels {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: clamp(100px, 12vw, 170px);
+        }
+
+        /* Reels to pionowy kadr z telefonu, więc zamiast siatki kart: jeden reels na rząd,
+           ekran i opis na zmianę po lewej i prawej, jak rozkładówka. */
+        .reel {
+            display: grid;
+            grid-template-columns: minmax(0, 360px) minmax(0, 1fr);
+            gap: clamp(40px, 7vw, 110px);
+            align-items: center;
+        }
+        .reel:nth-child(even) { grid-template-columns: minmax(0, 1fr) minmax(0, 360px); }
+        .reel:nth-child(even) .reel-screen { order: 2; }
+
+        .reel-screen {
+            position: relative;
+            aspect-ratio: 9 / 16;
+            border-radius: 22px;
+            overflow: hidden;
+            background: #000;
+            border: 1px solid var(--surface-border);
+            transition: border-color 0.4s var(--ease-standard), box-shadow 0.4s var(--ease-standard);
+        }
+        .reel.is-playing .reel-screen {
+            border-color: rgba(0, 255, 255, 0.45);
+            box-shadow: 0 0 40px rgba(0, 255, 255, 0.1);
+        }
+        .reel-screen video {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* cały kadr to przycisk play/pauza; ikona widać tylko w pauzie */
+        .reel-toggle {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(180deg, rgba(5, 5, 5, 0) 55%, rgba(5, 5, 5, 0.55));
+            border: 0;
+            color: var(--fg);
+            font: inherit;
+            transition: background-color 0.4s var(--ease-standard);
+        }
+        .reel-toggle-icon {
+            width: 76px;
+            height: 76px;
+            display: grid;
+            place-items: center;
+            border: 1px solid var(--cyan);
+            border-radius: 50%;
+            background: rgba(5, 5, 5, 0.55);
+            color: var(--cyan);
+            transition: opacity 0.35s var(--ease-standard), transform 0.5s var(--ease-snap), background-color 0.35s, color 0.35s;
+        }
+        .reel-toggle-icon svg { width: 24px; height: 24px; margin-left: 4px; }
+        .reel-toggle:hover .reel-toggle-icon {
+            background: var(--cyan);
+            color: var(--bg);
+            transform: scale(1.06);
+        }
+        .reel.is-playing .reel-toggle { background: transparent; }
+        .reel.is-playing .reel-toggle-icon { opacity: 0; transform: scale(0.8); }
+
+        .reel-sound {
+            position: absolute;
+            left: 14px;
+            bottom: 14px;
+            z-index: 1;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px 8px 11px;
+            font-family: var(--font);
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--fg);
+            background: rgba(5, 5, 5, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 50px;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+        .reel-sound svg { width: 16px; height: 16px; flex: none; }
+        .reel-sound .wave { display: none; }
+        .reel-sound[aria-pressed="true"] {
+            background: var(--cyan);
+            border-color: var(--cyan);
+            color: var(--bg);
+        }
+        .reel-sound[aria-pressed="true"] .wave { display: inline; }
+        .reel-sound[aria-pressed="true"] .mute { display: none; }
+        .reel-sound:hover { border-color: var(--cyan); }
+
+        .reel-info {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-width: 640px;
+        }
+        .reel-meta {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+        .reel-num {
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            color: var(--cyan);
+            font-variant-numeric: tabular-nums;
+        }
+        .reel-where {
+            font-size: 0.78rem;
+            font-weight: 500;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+        .reel-flag {
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            border: 1px solid var(--surface-border);
+            padding: 4px 12px;
+            border-radius: 50px;
+        }
+        .reel h2 {
+            font-size: clamp(2.2rem, 4vw, 3.6rem);
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: -0.01em;
+            text-transform: uppercase;
+        }
+        .reel p {
+            font-size: 1.1rem;
+            font-weight: 300;
+            line-height: 1.8;
+            color: #aaa;
+            max-width: 56ch;
+        }
+        .reel p a {
+            color: var(--fg);
+            border-bottom: 1px solid rgba(0, 255, 255, 0.5);
+            transition: color 0.3s, border-color 0.3s;
+        }
+        .reel p a:hover { color: var(--cyan); border-color: var(--cyan); }
+
+        /* ── Oś scen: segmenty mają szerokość jak scena w czasie; wypełnienie jedzie transformem ── */
+        .timeline {
+            margin-top: 14px;
+            display: flex;
+            gap: 3px;
+            height: 6px;
+        }
+        .timeline span {
+            position: relative;
+            flex: var(--len) 1 0;
+            min-width: 0;
+            background: var(--surface-mid);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .timeline span::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--cyan);
+            transform: scaleX(var(--p, 0));
+            transform-origin: left;
+        }
+        .scenes {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 2px 18px;
+        }
+        .scenes button {
+            width: 100%;
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            padding: 9px 0;
+            font-family: var(--font);
+            font-size: 0.95rem;
+            font-weight: 500;
+            text-align: left;
+            color: var(--text-muted);
+            background: none;
+            border: 0;
+            border-bottom: 1px solid var(--surface-border);
+            transition: color 0.3s var(--ease-standard), border-color 0.3s var(--ease-standard);
+        }
+        .scenes time {
+            font-size: 0.78rem;
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            color: var(--text-dim);
+            font-variant-numeric: tabular-nums;
+            transition: color 0.3s;
+        }
+        .scenes button:hover { color: var(--fg); border-color: var(--fg); }
+        .scenes button.active { color: var(--cyan); border-color: var(--cyan); }
+        .scenes button.active time { color: var(--cyan); }
+
+        /* ── Zamówienie ── */
+        .motion-cta {
+            margin-top: clamp(110px, 13vw, 180px);
+            padding-top: 60px;
+            border-top: 1px solid var(--surface-border);
+            display: grid;
+            grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+            gap: 40px 80px;
+            align-items: end;
+        }
+        .motion-cta h2 {
+            font-size: clamp(2rem, 4vw, 4rem);
+            font-weight: 700;
+            line-height: 1.05;
+            text-transform: uppercase;
+        }
+        .motion-cta h2 span { color: var(--cyan); }
+        .motion-cta p {
+            font-size: 1.15rem;
+            font-weight: 300;
+            line-height: 1.8;
+            color: #b8b8b8;
+            max-width: 48ch;
+            margin-bottom: 28px;
+        }
+        .motion-cta-actions {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 18px 28px;
+        }
+        .text-link {
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--surface-border);
+            padding-bottom: 3px;
+            transition: color 0.3s, border-color 0.3s;
+        }
+        .text-link:hover { color: var(--cyan); border-color: var(--cyan); }
+
+        @media (max-width: 900px) {
+            #motion { padding: 130px 0 90px; }
+            .motion-head { margin-bottom: 70px; }
+            .reel,
+            .reel:nth-child(even) { grid-template-columns: 1fr; gap: 30px; }
+            .reel:nth-child(even) .reel-screen { order: 0; }
+            .reel-screen { width: min(100%, 360px); }
+            .motion-cta { grid-template-columns: 1fr; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .reel-toggle-icon, .scenes button { transition: none; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="progress-bar"></div>
+
+    <div class="ambient ambient-1" aria-hidden="true"></div>
+    <div class="ambient ambient-2" aria-hidden="true"></div>
+    <div class="ambient ambient-3" aria-hidden="true"></div>
+
+    <canvas id="starfield" aria-hidden="true"></canvas>
+
+    <div class="cursor" role="presentation" aria-hidden="true"></div>
+
+    <div id="preloader" aria-hidden="true">
+        <span class="loader-text">ŁADOWANIE...</span>
+    </div>
+
+    <header id="site-header">
+        <div class="container">
+            <nav aria-label="Nawigacja główna">
+                <a href="/" class="logo" aria-label="MJ Portfolio — strona główna" data-eye-title="Portfolio" data-eye="Powrót do głównej strony twojego portfolio.">MJ<span>.</span></a>
+
+                <button class="menu-toggle" id="menu-toggle"
+                        aria-label="Otwórz menu" aria-expanded="false" aria-controls="nav-links">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </button>
+
+                <ul class="nav-links" id="nav-links" role="list">
+                    <li><a href="/#about" class="magnet" data-eye-title="O mnie" data-eye="Historia i umiejętności twojego projektanta.">O mnie</a></li>
+                    <li><a href="/#work" class="magnet" data-eye-title="Web" data-eye="Portfolio projektów webdesign i webdev.">Web</a></li>
+                    <li><a href="grafika.html" class="magnet" data-eye-title="Grafika" data-eye="Galeria grafiki i designu.">Grafika</a></li>
+                    <li><a href="gry.html" class="magnet" data-eye-title="Gry" data-eye="SPACEFIGHTER na Steam i darmowy OVERPRINT w przeglądarce.">Gry</a></li>
+                    <li><a href="motion.html" class="magnet active" aria-current="page" data-eye-title="Motion design" data-eye="Jesteś tutaj: reelsy w ruchu.">Motion</a></li>
+                    <li><a href="cennik.html" class="magnet" data-eye-title="Cennik" data-eye="Oferta i ceny usług.">Cennik</a></li>
+                    <li><a href="/#contact" class="magnet" data-eye-title="Kontakt" data-eye="Skontaktuj się z projektantem.">Kontakt</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section id="motion" aria-labelledby="motion-title">
+            <div class="container">
+                <div class="motion-head">
+                    <p class="section-label reveal" data-eye-title="Motion design" data-eye="Tu wszystko się rusza. Każdy reels zrobiłem od zera, razem z muzyką.">Motion design</p>
+                    <h1 class="motion-title reveal" id="motion-title">Ruch, który <span>gra.</span></h1>
+                    <p class="motion-lead reveal">Pionowe reelsy na Instagram i Facebooka. Każdą klatkę buduję w&nbsp;kodzie, w&nbsp;HTML i&nbsp;WebGL, a&nbsp;muzykę piszę pod obraz, więc cięcia wypadają dokładnie na beat.</p>
+                </div>
+
+                <ol class="reels">
+                    <li class="reel reveal" data-dur="30" data-eye-title="Reels portfolio" data-eye="Cała moja robota w 30 sekund: strony, druk, 3D, gra i klienci. Kliknij scenę na osi, żeby do niej skoczyć.">
+                        <div class="reel-screen">
+                            <video src="motion/portfolio.mp4" poster="motion/portfolio.webp" width="720" height="1280" muted loop playsinline preload="none" aria-label="Reels portfolio: wir wielokątów i mechaniczne oko z napisem PROJEKTUJĘ RZECZY, NA KTÓRE CHCE SIĘ PATRZEĆ"></video>
+                            <button class="reel-toggle" type="button" aria-label="Odtwórz: Portfolio w 30 s">
+                                <span class="reel-toggle-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 4.5v15l12-7.5z"/></svg></span>
+                            </button>
+                            <button class="reel-sound" type="button" aria-pressed="false" aria-label="Dźwięk: Portfolio w 30 s" data-eye-title="Włącz dźwięk" data-eye="Muzykę też robię sam, w kodzie. Obraz i dźwięk są zgrane co do klatki."><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor" stroke="none"/><path class="mute" d="M16 9.5l5 5m0-5l-5 5"/><path class="wave" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg><span>Dźwięk</span></button>
+                        </div>
+                        <div class="reel-info">
+                            <div class="reel-meta">
+                                <span class="reel-num">01</span>
+                                <span class="reel-where">Instagram · 30 s</span>
+                            </div>
+                            <h2>Portfolio w 30 s</h2>
+                            <p>Reklama tej strony: prawdziwe strony klientów na telefonie 3D, druk plakatów płytami CMYK, kontroler, gra i logo w finale. 128 BPM, 16 taktów, dokładnie 30 sekund.</p>
+                            <div class="timeline" aria-hidden="true"><span style="--len:3.75"></span><span style="--len:3.75"></span><span style="--len:3.75"></span><span style="--len:3.75"></span><span style="--len:3.75"></span><span style="--len:3.75"></span><span style="--len:3.75"></span><span style="--len:3.75"></span></div>
+                            <ol class="scenes" aria-label="Sceny: Portfolio w 30 s">
+                                <li><button type="button" data-start="0"><time>0:00</time>Hook</button></li>
+                                <li><button type="button" data-start="3.75"><time>0:03</time>Strony www</button></li>
+                                <li><button type="button" data-start="7.5"><time>0:07</time>Branding</button></li>
+                                <li><button type="button" data-start="11.25"><time>0:11</time>Design 3D</button></li>
+                                <li><button type="button" data-start="15"><time>0:15</time>Gra</button></li>
+                                <li><button type="button" data-start="18.75"><time>0:18</time>Systemy</button></li>
+                                <li><button type="button" data-start="22.5"><time>0:22</time>Klienci</button></li>
+                                <li><button type="button" data-start="26.25"><time>0:26</time>Outro</button></li>
+                            </ol>
+                        </div>
+                    </li>
+                    <li class="reel reveal" data-dur="38" data-eye-title="Reels SSCAR" data-eye="Film o stronie stacji kontroli pojazdów. Koło 3D to ten sam model, który kręci się na ich stronie.">
+                        <div class="reel-screen">
+                            <video src="motion/sscar.mp4" poster="motion/sscar.webp" width="720" height="1280" muted loop playsinline preload="none" aria-label="Reels SSCAR: BMW M3 z hali stacji kontroli pojazdów i karta z wynikiem dekodera VIN"></video>
+                            <button class="reel-toggle" type="button" aria-label="Odtwórz: SSCAR.PL">
+                                <span class="reel-toggle-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 4.5v15l12-7.5z"/></svg></span>
+                            </button>
+                            <button class="reel-sound" type="button" aria-pressed="false" aria-label="Dźwięk: SSCAR.PL" data-eye-title="Włącz dźwięk" data-eye="Muzykę też robię sam, w kodzie. Obraz i dźwięk są zgrane co do klatki."><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor" stroke="none"/><path class="mute" d="M16 9.5l5 5m0-5l-5 5"/><path class="wave" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg><span>Dźwięk</span></button>
+                        </div>
+                        <div class="reel-info">
+                            <div class="reel-meta">
+                                <span class="reel-num">02</span>
+                                <span class="reel-where">Facebook · 38 s</span>
+                                <span class="reel-flag">Dla klienta</span>
+                            </div>
+                            <h2>SSCAR.PL</h2>
+                            <p>Film o funkcjach strony stacji kontroli pojazdów z Wrocławia: rezerwacja w trzech krokach, geometria kół w 3D, dekoder VIN i baza klimatyzacji. Kolory, fonty i model koła są wzięte prosto ze <a href="https://sscar.pl" target="_blank" rel="noopener">strony</a>.</p>
+                            <div class="timeline" aria-hidden="true"><span style="--len:3"></span><span style="--len:2"></span><span style="--len:8"></span><span style="--len:10"></span><span style="--len:6"></span><span style="--len:3"></span><span style="--len:6"></span></div>
+                            <ol class="scenes" aria-label="Sceny: SSCAR.PL">
+                                <li><button type="button" data-start="0"><time>0:00</time>Intro</button></li>
+                                <li><button type="button" data-start="3"><time>0:03</time>Spis</button></li>
+                                <li><button type="button" data-start="5"><time>0:05</time>Rezerwacja</button></li>
+                                <li><button type="button" data-start="13"><time>0:13</time>Geometria 3D</button></li>
+                                <li><button type="button" data-start="23"><time>0:23</time>Dekoder VIN</button></li>
+                                <li><button type="button" data-start="29"><time>0:29</time>Klimatyzacja</button></li>
+                                <li><button type="button" data-start="32"><time>0:32</time>Outro</button></li>
+                            </ol>
+                        </div>
+                    </li>
+                    <li class="reel reveal" data-dur="14.5" data-eye-title="Reels Body Creator" data-eye="Krótki i konkretny: strona studia treningowego i zapis na konsultację w trzech polach.">
+                        <div class="reel-screen">
+                            <video src="motion/bodycreator.mp4" poster="motion/bodycreator.webp" width="720" height="1280" muted loop playsinline preload="none" aria-label="Reels Body Creator: napis TWOJE MIEJSCE TRENINGU na zdjęciu studia"></video>
+                            <button class="reel-toggle" type="button" aria-label="Odtwórz: Body Creator">
+                                <span class="reel-toggle-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 4.5v15l12-7.5z"/></svg></span>
+                            </button>
+                            <button class="reel-sound" type="button" aria-pressed="false" aria-label="Dźwięk: Body Creator" data-eye-title="Włącz dźwięk" data-eye="Muzykę też robię sam, w kodzie. Obraz i dźwięk są zgrane co do klatki."><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor" stroke="none"/><path class="mute" d="M16 9.5l5 5m0-5l-5 5"/><path class="wave" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg><span>Dźwięk</span></button>
+                        </div>
+                        <div class="reel-info">
+                            <div class="reel-meta">
+                                <span class="reel-num">03</span>
+                                <span class="reel-where">Instagram · 14,5 s</span>
+                                <span class="reel-flag">Dla klienta</span>
+                            </div>
+                            <h2>Body Creator</h2>
+                            <p>Studio treningu personalnego i jego strona na telefonie. Reels pokazuje, że na darmową konsultację zapisujesz się w trzech polach. Czerń i złoto jak na stronie klienta, dźwięki siłowni w rytmie.</p>
+                            <div class="timeline" aria-hidden="true"><span style="--len:2"></span><span style="--len:6.5"></span><span style="--len:3.5"></span><span style="--len:2.5"></span></div>
+                            <ol class="scenes" aria-label="Sceny: Body Creator">
+                                <li><button type="button" data-start="0"><time>0:00</time>Hook</button></li>
+                                <li><button type="button" data-start="2"><time>0:02</time>Strona</button></li>
+                                <li><button type="button" data-start="8.5"><time>0:08</time>Formularz</button></li>
+                                <li><button type="button" data-start="12"><time>0:12</time>Logo</button></li>
+                            </ol>
+                        </div>
+                    </li>
+                    <li class="reel reveal" data-dur="33.75" data-eye-title="Reels OVERPRINT" data-eye="To nie nagranie ekranu. Film steruje prawdziwym silnikiem gry, dlatego każdy strzał wypada na beat.">
+                        <div class="reel-screen">
+                            <video src="motion/overprint.mp4" poster="motion/overprint.webp" width="720" height="1280" muted loop playsinline preload="none" aria-label="Reels OVERPRINT: arena gry na arkuszu papieru i logo drukowane farbami CMYK"></video>
+                            <button class="reel-toggle" type="button" aria-label="Odtwórz: OVERPRINT">
+                                <span class="reel-toggle-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 4.5v15l12-7.5z"/></svg></span>
+                            </button>
+                            <button class="reel-sound" type="button" aria-pressed="false" aria-label="Dźwięk: OVERPRINT" data-eye-title="Włącz dźwięk" data-eye="Muzykę też robię sam, w kodzie. Obraz i dźwięk są zgrane co do klatki."><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor" stroke="none"/><path class="mute" d="M16 9.5l5 5m0-5l-5 5"/><path class="wave" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg><span>Dźwięk</span></button>
+                        </div>
+                        <div class="reel-info">
+                            <div class="reel-meta">
+                                <span class="reel-num">04</span>
+                                <span class="reel-where">Instagram i Facebook · 33,75 s</span>
+                            </div>
+                            <h2>OVERPRINT</h2>
+                            <p>Reklama mojej darmowej gry. Gameplay to nie nagranie ekranu: film steruje prawdziwym silnikiem gry, więc każda broń, boss i ULT trafia w beat. <a href="shooter.html">Zagraj w OVERPRINT</a>.</p>
+                            <div class="timeline" aria-hidden="true"><span style="--len:1.875"></span><span style="--len:3.75"></span><span style="--len:5.625"></span><span style="--len:3.75"></span><span style="--len:3.75"></span><span style="--len:1.875"></span><span style="--len:3.75"></span><span style="--len:5.625"></span><span style="--len:3.75"></span></div>
+                            <ol class="scenes" aria-label="Sceny: OVERPRINT">
+                                <li><button type="button" data-start="0"><time>0:00</time>Druk logo</button></li>
+                                <li><button type="button" data-start="1.875"><time>0:01</time>Fale</button></li>
+                                <li><button type="button" data-start="5.625"><time>0:05</time>Bronie</button></li>
+                                <li><button type="button" data-start="11.25"><time>0:11</time>Tusze</button></li>
+                                <li><button type="button" data-start="15"><time>0:15</time>Bossowie</button></li>
+                                <li><button type="button" data-start="18.75"><time>0:18</time>Ulepszenia</button></li>
+                                <li><button type="button" data-start="20.625"><time>0:20</time>Ranking</button></li>
+                                <li><button type="button" data-start="24.375"><time>0:24</time>Strona</button></li>
+                                <li><button type="button" data-start="30"><time>0:30</time>Finał</button></li>
+                            </ol>
+                        </div>
+                    </li>
+                    <li class="reel reveal" data-dur="23" data-eye-title="Reels OBSERVER" data-eye="To ja! Rozpadam się i składam na beatach. Na żywo latam po tej stronie, jak widzisz.">
+                        <div class="reel-screen">
+                            <video src="motion/observer.mp4" poster="motion/observer.webp" width="720" height="1280" muted loop playsinline preload="none" aria-label="Reels OBSERVER 01: mechaniczne oko składające się z części"></video>
+                            <button class="reel-toggle" type="button" aria-label="Odtwórz: OBSERVER 01">
+                                <span class="reel-toggle-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 4.5v15l12-7.5z"/></svg></span>
+                            </button>
+                            <button class="reel-sound" type="button" aria-pressed="false" aria-label="Dźwięk: OBSERVER 01" data-eye-title="Włącz dźwięk" data-eye="Muzykę też robię sam, w kodzie. Obraz i dźwięk są zgrane co do klatki."><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor" stroke="none"/><path class="mute" d="M16 9.5l5 5m0-5l-5 5"/><path class="wave" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg><span>Dźwięk</span></button>
+                        </div>
+                        <div class="reel-info">
+                            <div class="reel-meta">
+                                <span class="reel-num">05</span>
+                                <span class="reel-where">Instagram · 23 s</span>
+                            </div>
+                            <h2>OBSERVER 01</h2>
+                            <p>Oko, które lata po tej stronie, samo opowiada o portfolio. Rozpada się i składa na beatach, mruga przysłoną i źrenicą „mówi” w rytm słów w dymkach.</p>
+                            <div class="timeline" aria-hidden="true"><span style="--len:2"></span><span style="--len:5"></span><span style="--len:4"></span><span style="--len:4"></span><span style="--len:4"></span><span style="--len:4"></span></div>
+                            <ol class="scenes" aria-label="Sceny: OBSERVER 01">
+                                <li><button type="button" data-start="0"><time>0:00</time>Składanie</button></li>
+                                <li><button type="button" data-start="2"><time>0:02</time>Powitanie</button></li>
+                                <li><button type="button" data-start="7"><time>0:07</time>Nagłówek</button></li>
+                                <li><button type="button" data-start="11"><time>0:11</time>Prace</button></li>
+                                <li><button type="button" data-start="15"><time>0:15</time>Cennik</button></li>
+                                <li><button type="button" data-start="19"><time>0:19</time>Kontakt</button></li>
+                            </ol>
+                        </div>
+                    </li>
+                </ol>
+
+                <div class="motion-cta reveal" data-eye-title="Reels dla Ciebie" data-eye="Masz produkt albo stronę, które warto pokazać w ruchu? Napisz, zrobię to w stylu Twojej marki.">
+                    <h2>Twoja marka<br><span>w&nbsp;ruchu?</span></h2>
+                    <div>
+                        <p>Zrobię reels w kolorach i fontach Twojej marki, z prawdziwymi ekranami Twojej strony. Animowana reklama 10–15 s kosztuje od 500 zł.</p>
+                        <div class="motion-cta-actions">
+                            <a class="btn magnet" href="/#contact" data-eye-title="Napisz do mnie" data-eye="Opisz, co chcesz pokazać. Odpiszę z pomysłem i wyceną.">Napisz do mnie</a>
+                            <a class="text-link" href="cennik.html#motion" data-eye-title="Cennik motion" data-eye="Ceny animacji, logo w ruchu i renderów 3D w jednym miejscu.">Cennik motion &rarr;</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2025 Michał Jarosiński. Wszelkie prawa zastrzeżone. · <a href="gra-press.html" style="color: var(--text-muted); border-bottom: 1px solid transparent; transition: color 0.3s, border-color 0.3s;" onmouseover="this.style.color='var(--cyan)';this.style.borderBottomColor='var(--cyan)';" onmouseout="this.style.color='var(--text-muted)';this.style.borderBottomColor='transparent';" data-eye-title="Press Kit" data-eye="Zasoby prasowe i materiały promocyjne gry.">Press Kit ↗</a></p>
+    </footer>
+
+    <script>
+        // ── PRELOADER ──
+        const preloader = document.getElementById('preloader');
+        function hidePreloader() {
+            if (preloader.style.opacity === '0') return;
+            preloader.style.opacity = '0';
+            setTimeout(() => { preloader.style.display = 'none'; }, 500);
+        }
+        if (document.readyState !== 'loading') hidePreloader();
+        else document.addEventListener('DOMContentLoaded', hidePreloader);
+        setTimeout(hidePreloader, 1200);
+
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        // ── SCROLL: HEADER + PROGRESS BAR (rAF-throttled, transform only) ──
+        const siteHeader = document.getElementById('site-header');
+        const progressBar = document.getElementById('progress-bar');
+        let scrollTicking = false;
+        function onScroll() {
+            siteHeader.classList.toggle('scrolled', window.scrollY > 50);
+            const el = document.documentElement;
+            const pct = el.scrollTop / (el.scrollHeight - el.clientHeight) || 0;
+            progressBar.style.transform = `scaleX(${pct})`;
+            scrollTicking = false;
+        }
+        window.addEventListener('scroll', () => {
+            if (!scrollTicking) {
+                scrollTicking = true;
+                requestAnimationFrame(onScroll);
+            }
+        }, { passive: true });
+
+        // ── STARFIELD ──
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas.getContext('2d');
+        let W, H, stars = [];
+        const mouse = { x: null, y: null };
+        const COLORS = ['#00ffff', '#ff00ff', '#ffff00', '#ffffff', '#ffffff', '#ffffff'];
+
+        class Star {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * W;
+                this.y = Math.random() * H;
+                this.size = Math.random() * 1.8 + 0.2;
+                this.density = Math.random() * 20 + 1;
+                this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
+                this.vx = (Math.random() - 0.5) * 0.4;
+                this.vy = (Math.random() - 0.5) * 0.4;
+                this.opacity = Math.random();
+                this.twinkle = (Math.random() * 0.015 + 0.004) * (Math.random() < 0.5 ? 1 : -1);
+            }
+            draw() {
+                ctx.globalAlpha = Math.max(0.1, Math.min(1, this.opacity));
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.globalAlpha = 1;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < 0) this.x = W;
+                if (this.x > W) this.x = 0;
+                if (this.y < 0) this.y = H;
+                if (this.y > H) this.y = 0;
+                if (mouse.x !== null) {
+                    const dx = mouse.x - this.x;
+                    const dy = mouse.y - this.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 150) {
+                        const f = (150 - dist) / 150;
+                        this.x -= (dx / dist) * f * this.density * 1.5;
+                        this.y -= (dy / dist) * f * this.density * 1.5;
+                    }
+                }
+                this.opacity += this.twinkle;
+                if (this.opacity > 1 || this.opacity < 0.1) this.twinkle = -this.twinkle;
+            }
+        }
+
+        function initStars() {
+            stars = [];
+            const n = Math.floor((W * H) / 8000);
+            for (let i = 0; i < n; i++) stars.push(new Star());
+        }
+        function tick() {
+            ctx.clearRect(0, 0, W, H);
+            stars.forEach(s => { s.update(); s.draw(); });
+            requestAnimationFrame(tick);
+        }
+        function resizeCanvas() {
+            W = canvas.width = window.innerWidth;
+            H = canvas.height = window.innerHeight;
+            initStars();
+        }
+        if (!reducedMotion) {
+            let starResizeTimer;
+            window.addEventListener('resize', () => {
+                clearTimeout(starResizeTimer);
+                starResizeTimer = setTimeout(resizeCanvas, 150);
+            }, { passive: true });
+            if (!window.matchMedia('(pointer: coarse)').matches) {
+                window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; }, { passive: true });
+            }
+            resizeCanvas();
+            tick();
+        }
+
+        // ── MOBILE MENU ──
+        const menuToggle = document.getElementById('menu-toggle');
+        const navLinks = document.getElementById('nav-links');
+        menuToggle.addEventListener('click', () => {
+            const open = menuToggle.classList.toggle('open');
+            navLinks.classList.toggle('open', open);
+            siteHeader.classList.toggle('menu-open', open);
+            document.body.classList.toggle('nav-open', open);
+            menuToggle.setAttribute('aria-expanded', String(open));
+            menuToggle.setAttribute('aria-label', open ? 'Zamknij menu' : 'Otwórz menu');
+        });
+        navLinks.querySelectorAll('a').forEach(a => {
+            a.addEventListener('click', () => {
+                menuToggle.classList.remove('open');
+                navLinks.classList.remove('open');
+                siteHeader.classList.remove('menu-open');
+                document.body.classList.remove('nav-open');
+                menuToggle.setAttribute('aria-expanded', 'false');
+                menuToggle.setAttribute('aria-label', 'Otwórz menu');
+            });
+        });
+
+        // ── CURSOR ──
+        const cursor = document.querySelector('.cursor');
+        const isFinePointer = window.matchMedia('(pointer: fine)').matches;
+        if (isFinePointer) {
+            document.addEventListener('mousemove', e => {
+                cursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0) translate(-50%, -50%)`;
+            }, { passive: true });
+            document.querySelectorAll('a, button').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+            });
+        }
+
+        // ── MAGNETIC BUTTONS ──
+        if (isFinePointer) {
+            document.querySelectorAll('.magnet').forEach(el => {
+                el.addEventListener('mousemove', e => {
+                    const r = el.getBoundingClientRect();
+                    const x = e.clientX - r.left - r.width / 2;
+                    const y = e.clientY - r.top - r.height / 2;
+                    el.style.transform = `translate(${x * 0.28}px, ${y * 0.28}px)`;
+                });
+                el.addEventListener('mouseleave', () => {
+                    el.style.transform = '';
+                });
+            });
+        }
+
+        // ── SCROLL REVEAL ──
+        const revealObserver = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add('visible');
+                    revealObserver.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+        // ── REELSY: autoodtwarzanie w kadrze, dźwięk na żądanie, oś scen ──
+        const reels = [...document.querySelectorAll('.reel')].map(el => {
+            const video = el.querySelector('video');
+            const sound = el.querySelector('.reel-sound');
+            const toggle = el.querySelector('.reel-toggle');
+            const title = el.querySelector('h2').textContent;
+            const segs = [...el.querySelectorAll('.timeline span')];
+            const btns = [...el.querySelectorAll('.scenes button')];
+            const starts = btns.map(b => parseFloat(b.dataset.start));
+            const ends = starts.slice(1).concat(parseFloat(el.dataset.dur));
+            return { el, video, sound, toggle, title, segs, btns, starts, ends, userPaused: false, raf: 0, active: -1 };
+        });
+
+        function paint(r) {
+            const t = r.video.currentTime;
+            let active = 0;
+            r.segs.forEach((s, i) => {
+                const p = Math.min(1, Math.max(0, (t - r.starts[i]) / (r.ends[i] - r.starts[i])));
+                s.style.setProperty('--p', p.toFixed(4));
+                if (t >= r.starts[i]) active = i;
+            });
+            if (active !== r.active) {
+                r.btns.forEach((b, i) => b.classList.toggle('active', i === active));
+                r.active = active;
+            }
+        }
+        function loop(r) {
+            paint(r);
+            r.raf = requestAnimationFrame(() => loop(r));
+        }
+        const play = r => r.video.play().catch(() => {});
+
+        reels.forEach(r => {
+            r.video.addEventListener('play', () => {
+                r.el.classList.add('is-playing');
+                r.toggle.setAttribute('aria-label', 'Pauza: ' + r.title);
+                cancelAnimationFrame(r.raf);
+                loop(r);
+            });
+            r.video.addEventListener('pause', () => {
+                r.el.classList.remove('is-playing');
+                r.toggle.setAttribute('aria-label', 'Odtwórz: ' + r.title);
+                cancelAnimationFrame(r.raf);
+                paint(r);
+            });
+            r.video.addEventListener('seeked', () => paint(r));
+
+            r.toggle.addEventListener('click', () => {
+                if (r.video.paused) { r.userPaused = false; play(r); }
+                else { r.userPaused = true; r.video.pause(); }
+            });
+
+            // dźwięk gra naraz tylko w jednym reelsie
+            r.sound.addEventListener('click', () => {
+                const on = r.video.muted;
+                reels.forEach(o => {
+                    o.video.muted = true;
+                    o.sound.setAttribute('aria-pressed', 'false');
+                });
+                r.video.muted = !on;
+                r.sound.setAttribute('aria-pressed', String(on));
+                if (on) { r.userPaused = false; play(r); }
+            });
+
+            r.btns.forEach((b, i) => b.addEventListener('click', () => {
+                r.video.currentTime = r.starts[i];
+                r.userPaused = false;
+                paint(r);
+                play(r);
+            }));
+        });
+
+        // w kadrze gra (bez dźwięku, póki go nie włączysz), poza kadrem stoi
+        if (!reducedMotion) {
+            const inView = new IntersectionObserver(entries => {
+                entries.forEach(e => {
+                    const r = reels.find(x => x.video.parentElement === e.target);
+                    if (e.isIntersecting) { if (!r.userPaused) play(r); }
+                    else r.video.pause();
+                });
+            }, { threshold: 0.55 });
+            reels.forEach(r => inView.observe(r.video.parentElement));
+        }
+    </script>
+
+
+    <!-- Mechaniczne oko: OBSERVER 01, proceduralny obserwator (eye-observer-mount.js) -->
+    <style>
+        #mech-eye {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: clamp(90px, 10vw, 150px);
+            aspect-ratio: 1;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+            will-change: transform;
+        }
+
+        #mech-eye.ready {
+            opacity: 1;
+        }
+
+        #mech-eye canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            #mech-eye {
+                width: 78px;
+            }
+        }
+
+        .cursor.eye-link {
+            width: 52px;
+            height: 52px;
+            border-color: var(--cyan);
+            background-color: rgba(0, 255, 255, 0.15);
+        }
+
+    </style>
+    <div id="mech-eye" aria-hidden="true"></div>
+    <script type="importmap">
+        { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
+    </script>
+    <script type="module" src="eye-observer-mount.js?v=20260923f"></script>
+</body>
+</html>
