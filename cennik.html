@@ -323,6 +323,16 @@
             z-index: 10001;
         }
 
+        #starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
         /* --- Ambient Background Glows (pre-blurred gradients, no filter cost) --- */
         .ambient-glow {
             position: fixed;
@@ -1188,6 +1198,7 @@
                 transition-duration: 0.01ms !important;
             }
 
+            #starfield,
             .ambient-glow {
                 display: none;
             }
@@ -1201,6 +1212,8 @@
     <div class="ambient-glow glow-1"></div>
     <div class="ambient-glow glow-2"></div>
     <div class="ambient-glow glow-3"></div>
+
+    <canvas id="starfield"></canvas>
 
     <div class="cursor"></div>
 
@@ -1221,7 +1234,7 @@
 
                 <div class="nav-links">
                     <a href="/#about" class="link-hover magnet" data-eye-title="O mnie" data-eye="Poznaj moją historię i czym się zajmuję.">O mnie</a>
-                    <a href="/#work" class="link-hover magnet" data-eye-title="Web" data-eye="Zobacz moje projekty stron internetowych.">Web</a>
+                    <a href="/#work" class="link-hover magnet" data-eye-title="Przegląd prac" data-eye="Strony, gry, reelsy i grafika w jednym przeglądzie.">Przegląd prac</a>
                     <a href="grafika.html" class="link-hover magnet" data-eye-title="Grafika" data-eye="Przeglądaj moje prace graficzne i branding.">Grafika</a>
                     <a href="gry.html" class="link-hover magnet" data-eye-title="Gry" data-eye="Moje gry: SPACEFIGHTER na Steam i darmowy OVERPRINT, w który zagrasz od razu w przeglądarce.">Gry</a>
                     <a href="motion.html" class="link-hover magnet" data-eye-title="Motion design" data-eye="Reelsy zrobione w kodzie, z muzyką zgraną co do klatki. Włącz dźwięk, warto.">Motion</a>
@@ -1451,6 +1464,54 @@
     </footer>
 
     <script>
+        // --- Starfield (the same sky as index/grafika) ---
+        (() => {
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            const canvas = document.getElementById('starfield');
+            const ctx = canvas.getContext('2d');
+            let width, height, stars = [];
+            const mouse = { x: undefined, y: undefined };
+            const colors = ['#00ffff', '#ff00ff', '#ffff00', '#ffffff', '#ffffff'];
+
+            function resize() {
+                width = window.innerWidth; height = window.innerHeight; canvas.width = width; canvas.height = height; initStars();
+            }
+            class Star {
+                constructor() {
+                    this.x = Math.random() * width; this.y = Math.random() * height;
+                    this.size = Math.random() * 2;
+                    this.density = (Math.random() * 20) + 1;
+                    this.color = colors[Math.floor(Math.random() * colors.length)];
+                    this.vx = (Math.random() - 0.5) * 0.5; this.vy = (Math.random() - 0.5) * 0.5;
+                    this.opacity = Math.random(); this.twinkle = Math.random() * 0.02 + 0.005;
+                }
+                draw() { ctx.fillStyle = this.color; ctx.globalAlpha = this.opacity; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 1; }
+                update() {
+                    this.x += this.vx; this.y += this.vy;
+                    if (this.x < 0) this.x = width; if (this.x > width) this.x = 0; if (this.y < 0) this.y = height; if (this.y > height) this.y = 0;
+                    if (mouse.x) {
+                        let dx = mouse.x - this.x, dy = mouse.y - this.y, dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 150) {
+                            let f = (150 - dist) / 150;
+                            this.x -= (dx / dist) * f * this.density * 2; this.y -= (dy / dist) * f * this.density * 2;
+                        }
+                    }
+                    this.opacity += this.twinkle; if (this.opacity > 1 || this.opacity < 0.2) this.twinkle = -this.twinkle;
+                }
+            }
+            function initStars() { stars = []; for (let i = 0; i < (width * height) / 8000; i++) stars.push(new Star()); }
+            function animateStars() { ctx.clearRect(0, 0, width, height); stars.forEach(s => { s.draw(); s.update() }); requestAnimationFrame(animateStars); }
+            let resizeTimer;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(resize, 150);
+            });
+            if (!window.matchMedia('(pointer: coarse)').matches) {
+                window.addEventListener('mousemove', e => { mouse.x = e.x; mouse.y = e.y });
+            }
+            resize(); animateStars();
+        })();
+
         // --- Preloader (hide as soon as the DOM is usable; hard cap 1.2s) ---
         const preloader = document.getElementById('preloader');
         function hidePreloader() {

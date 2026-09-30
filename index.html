@@ -1172,12 +1172,15 @@
             content: 'Kliknij i zagraj za darmo';
         }
 
-        /* Client sites (03–06): SSCAR, Body Creator, HandyBruk, R-MAX */
+        /* Client sites (03–05): SSCAR, Body Creator, HandyBruk */
         #work .project-item:nth-of-type(3) .project-img-wrapper::before,
         #work .project-item:nth-of-type(4) .project-img-wrapper::before,
-        #work .project-item:nth-of-type(5) .project-img-wrapper::before,
-        #work .project-item:nth-of-type(6) .project-img-wrapper::before {
+        #work .project-item:nth-of-type(5) .project-img-wrapper::before {
             content: 'Kliknij i zobacz stronę przygotowaną dla klienta';
+        }
+
+        #work .project-item--motion .project-img-wrapper::before {
+            content: 'Kliknij i obejrzyj reelsy';
         }
 
         #work .project-item--fault .project-img-wrapper::before,
@@ -1222,6 +1225,32 @@
             background: #e8e4da;
             border-color: rgba(218, 45, 31, 0.55);
         }
+
+        /* Motion design (06): trzy pionowe kadry reelsów obok siebie, jak klatki na taśmie */
+        .project-item--motion .project-img-wrapper {
+            background: #0b0b0d;
+            border-color: rgba(255, 0, 255, 0.28);
+        }
+
+        .motion-strip {
+            display: grid !important;
+            grid-template-columns: repeat(3, 1fr);
+            gap: clamp(8px, 1.4vw, 18px);
+            padding: clamp(26px, 3.6vw, 48px) clamp(14px, 3vw, 44px);
+            direction: ltr;
+        }
+
+        .project-img-wrapper .motion-strip img {
+            aspect-ratio: 9 / 16;
+            object-fit: cover;
+            border-radius: 3px;
+            box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.9);
+        }
+
+        .motion-strip img:nth-child(1) { transform: translateY(5%); }
+        .motion-strip img:nth-child(3) { transform: translateY(-5%); }
+
+        .project-img-wrapper:hover .motion-strip img { transform: translateY(0) scale(1.03); }
 
         .project-item--sentracker .project-img-wrapper {
             background: #160b22;
@@ -1967,10 +1996,10 @@
 
                 <div class="nav-links">
                     <a href="#about" class="link-hover magnet" data-eye-title="O mnie" data-eye="Poznaj Michała, projektanta, którego obserwuję na co dzień.">O mnie</a>
-                    <a href="#work" class="link-hover magnet" data-eye-title="Galeria Web" data-eye="Strony, gry i eksperymenty. To moja ulubiona sekcja do obserwowania.">Web</a>
+                    <a href="#work" class="link-hover magnet" data-eye-title="Przegląd prac" data-eye="Strony, gry, reelsy i eksperymenty. To moja ulubiona sekcja do obserwowania.">Przegląd prac</a>
                     <a href="grafika.html" class="link-hover magnet" data-eye-title="Grafika" data-eye="Tu trzymam logotypy, banery i identyfikacje wizualne. Zapraszam.">Grafika</a>
                     <a href="gry.html" class="link-hover magnet" data-eye-title="Gry" data-eye="Moje gry: SPACEFIGHTER na Steam i darmowy OVERPRINT, w który zagrasz od razu w przeglądarce.">Gry</a>
-                    <a href="motion.html" class="link-hover magnet" data-eye-title="Motion design" data-eye="Reelsy zrobione w kodzie, z muzyką zgraną co do klatki. Włącz dźwięk, warto.">Motion</a>
+                    <a href="motion.html" class="link-hover magnet" data-eye-title="Motion design" data-eye="Reelsy z muzyką zgraną co do klatki. Włącz dźwięk, warto.">Motion</a>
                     <a href="cennik.html" class="link-hover magnet" data-eye-title="Cennik" data-eye="Usługi z ceną. Bez zaskoczeń po wysłaniu maila.">Cennik</a>
                     <a href="#contact" class="link-hover magnet" data-eye-title="Kontakt" data-eye="Tędy najszybciej do Michała. Wpadniesz na moją listę obserwowanych rozmów.">Kontakt</a>
                 </div>
@@ -2084,7 +2113,7 @@
         <section id="work">
             <div class="container">
                 <p class="work-kicker reveal">Portfolio — 2014 / 2025</p>
-                <h2 class="section-title reveal" data-eye-title="Sekcja Prace" data-eye="Portfolio projektów web, gier i grafiki od 2014 roku. Moje najlepsze prace.">Wybrane <span>Prace</span></h2>
+                <h2 class="section-title reveal" data-eye-title="Przegląd prac" data-eye="Strony, gry, reelsy i grafika w jednym miejscu. Wszystko, co Michał robi, od 2014 roku.">Przegląd <span>prac</span></h2>
 
                 <article class="project-item project-item--featured reveal" data-eye-title="SPACEFIGHTER" data-eye="Moja pierwsza gra na Steam. Bullet hell roguelike z bossami — od mechaniki po grafiki.">
                     <div class="project-img-wrapper link-hover">
@@ -2182,24 +2211,24 @@
                     </div>
                 </article>
 
-                <article class="project-item reveal" data-eye-title="R-MAX Auto" data-eye="Nowoczesny serwis samochodowy. Dark design, zaufanie i wysoka konwersja to tu norma.">
+                <article class="project-item project-item--motion reveal" data-eye-title="Motion design" data-eye="Reelsy na Instagram i Facebooka. Animacja, montaż i muzyka zgrane co do klatki.">
                     <div class="project-img-wrapper link-hover">
-                        <a href="https://michal20000505-sudo.github.io/R-MAX-auto/index.html" target="_blank" rel="noopener" data-eye-title="Link do R-MAX" data-eye="Przejdź do serwisu R-MAX Auto. Jakość, którą widać.">
-                            <img src="thumbnails/web/rmax.webp" alt="R-MAX Auto - nowoczesna strona serwisu samochodowego" width="1200" height="750" loading="lazy">
+                        <a href="motion.html" class="motion-strip" data-eye-title="Link do reelsów" data-eye="Pięć reelsów czeka na odtworzenie. Włącz dźwięk, bez niego to połowa roboty.">
+                            <img src="motion/sscar.webp" alt="Kadr z reelsa SSCAR: koło 3D ze strony stacji kontroli pojazdów" width="720" height="1280" loading="lazy">
+                            <img src="motion/portfolio.webp" alt="Kadr z reelsa portfolio: przegląd stron, druku, 3D i gier" width="720" height="1280" loading="lazy">
+                            <img src="motion/overprint.webp" alt="Kadr z reelsa OVERPRINT: gra w farbie drukarskiej" width="720" height="1280" loading="lazy">
                         </a>
                     </div>
                     <div class="project-info">
                         <div class="project-meta">
                             <span class="project-num">06</span>
-                            <span class="project-cat">Web · Serwis Auto</span>
+                            <span class="project-cat">Motion Design · Reels</span>
+                            <span class="project-flag" data-eye-title="Nowa zakładka" data-eye="Świeża sekcja portfolio. Tu wszystko się rusza.">Nowe</span>
                         </div>
-                        <h3><a href="https://michal20000505-sudo.github.io/R-MAX-auto/index.html" target="_blank" rel="noopener">R-MAX
-                                Auto</a></h3>
-                        <p>Nowoczesna strona internetowa dla serwisu samochodowego R-MAX Auto. Atrakcyjny, ciemny design z
-                            wyraźnym wezwaniem do akcji i zoptymalizowanym układem opinii. Projekt nastawiony na wysoką
-                            konwersję i budowanie zaufania klientów.</p>
-                        <div class="tags"><span>Web Design</span><span>Development</span></div>
-                        <a class="project-link" href="https://michal20000505-sudo.github.io/R-MAX-auto/index.html" target="_blank" rel="noopener">Zobacz stronę <span>&rarr;</span></a>
+                        <h3><a href="motion.html">Motion Design</a></h3>
+                        <p>Krótkie reelsy do social mediów dla klientów i własnych projektów. Animacja, typografia, modele 3D i muzyka, która trafia w cięcia co do klatki. Wszystko przygotowane pod Twoją markę.</p>
+                        <div class="tags"><span>Reels</span><span>Animacja</span><span>Sound Design</span></div>
+                        <a class="project-link" href="motion.html">Zobacz reelsy <span>&rarr;</span></a>
                     </div>
                 </article>
 
