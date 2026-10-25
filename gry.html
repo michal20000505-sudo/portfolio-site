@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gry: SPACEFIGHTER i darmowy OVERPRINT | Michał Jarosiński</title>
-    <meta name="description" content="Gry Michała Jarosińskiego: SPACEFIGHTER, bullet hell na Steam, oraz OVERPRINT, darmowy shooter 3D, w który zagrasz od razu w przeglądarce na komputerze i telefonie.">
+    <title>Gry: Dragstrip Online, SPACEFIGHTER i darmowy OVERPRINT | Michał Jarosiński</title>
+    <meta name="description" content="Gry Michała Jarosińskiego: Dragstrip Online, drag racing w pixel arcie na Steam, SPACEFIGHTER, bullet hell na Steam, oraz OVERPRINT, darmowy shooter 3D, w który zagrasz od razu w przeglądarce na komputerze i telefonie.">
     <meta name="author" content="Michał Jarosiński">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <meta name="language" content="Polish">
@@ -15,7 +15,7 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://m-jaro.pl/gry.html">
     <meta property="og:title" content="Gry | Michał Jarosiński">
-    <meta property="og:description" content="SPACEFIGHTER na Steam i darmowy OVERPRINT w przeglądarce. Wybierz, w co grasz.">
+    <meta property="og:description" content="Dragstrip Online i SPACEFIGHTER na Steam oraz darmowy OVERPRINT w przeglądarce. Wybierz, w co grasz.">
     <meta property="og:image" content="https://m-jaro.pl/og-shooter.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -27,7 +27,7 @@
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://m-jaro.pl/gry.html">
     <meta property="twitter:title" content="Gry | Michał Jarosiński">
-    <meta property="twitter:description" content="SPACEFIGHTER na Steam i darmowy OVERPRINT w przeglądarce.">
+    <meta property="twitter:description" content="Dragstrip Online i SPACEFIGHTER na Steam oraz darmowy OVERPRINT w przeglądarce.">
     <meta property="twitter:image" content="https://m-jaro.pl/og-shooter.jpg">
 
     <meta name="theme-color" content="#050505">
@@ -43,6 +43,7 @@
         "url": "https://m-jaro.pl/gry.html",
         "inLanguage": "pl-PL",
         "hasPart": [
+            { "@type": "VideoGame", "name": "Dragstrip Online", "url": "https://dragstriponline.com", "gamePlatform": "PC" },
             { "@type": "VideoGame", "name": "SPACEFIGHTER: The Bullet Hell", "url": "https://m-jaro.pl/gra.html" },
             { "@type": "VideoGame", "name": "OVERPRINT", "url": "https://m-jaro.pl/shooter.html", "gamePlatform": ["Web browser", "Mobile"], "offers": { "@type": "Offer", "price": "0", "priceCurrency": "PLN" } }
         ],
@@ -627,6 +628,16 @@
             transform: translateX(-50%);
         }
 
+        /* Dragstrip Online: najnowsza gra, na całą szerokość siatki, obraz obok opisu. */
+        .game--ds {
+            grid-column: 1 / -1;
+            grid-template-columns: 1.3fr 1fr;
+            grid-template-rows: none;
+        }
+        .game--ds .game-body { align-self: center; }
+        .game--ds .game-art { aspect-ratio: 1232 / 706; }
+        .game--ds .game-art > img { image-rendering: pixelated; }
+
         .game--op .game-art { background: #f1ede4; }
         .game--op .game-art > img:not(.game-logo) { image-rendering: pixelated; }
         .op-plate {
@@ -776,6 +787,7 @@
             #games { padding: 130px 0 90px; }
             .games-head { margin-bottom: 44px; }
             .games-grid { grid-template-columns: 1fr; gap: 22px; }
+            .game--ds { grid-template-columns: none; grid-template-rows: auto 1fr; }
             .game-body { padding: 24px 22px 26px; }
             .game-cta { align-self: stretch; justify-content: center; }
         }
@@ -833,10 +845,26 @@
                 <div class="games-head">
                     <p class="section-label reveal" data-eye-title="Gry" data-eye="Tu wybierasz, w co grasz. Obie gry zrobiłem sam, od kodu po grafikę.">Gry</p>
                     <h1 class="games-title reveal" id="games-title">W co <span>gramy?</span></h1>
-                    <p class="games-lead reveal">Dwie gry, obie zrobione od zera. Jedna czeka na Steam, w drugą zagrasz od razu tutaj, za darmo, na komputerze albo telefonie.</p>
+                    <p class="games-lead reveal">Trzy gry, wszystkie zrobione od zera. Dwie są na Steam, w trzecią zagrasz od razu tutaj, za darmo, na komputerze albo telefonie.</p>
                 </div>
 
                 <div class="games-grid">
+                    <a class="game game--ds reveal" href="https://dragstriponline.com" target="_blank" rel="noopener" data-eye-title="Dragstrip Online" data-eye="Najnowsza gra: drag racing w pixel arcie z prawdziwą fizyką. Kliknij, a zobaczysz trailer i stronę na Steamie.">
+                        <div class="game-art">
+                            <img src="thumbnails/web/dragstrip-online.webp" alt="Dragstrip Online: dwa auta w pixel arcie na starcie toru drag o zachodzie słońca, logo gry" width="1232" height="706" loading="lazy">
+                        </div>
+                        <div class="game-body">
+                            <div class="game-meta">
+                                <span class="game-num">01</span>
+                                <span class="game-where">Steam · PC</span>
+                                <span class="game-flag">Najnowsza</span>
+                            </div>
+                            <h2>Dragstrip Online</h2>
+                            <p>Drag racing w pixel arcie, w którym wygrywa ten, kto rozumie swoje auto. Ponad 1600 aut, swapy silników, tuning na hamowni, a potem choinka, launch i ręczna zmiana biegów. Kariera offline i wyścigi PvP online.</p>
+                            <span class="game-cta">Zobacz grę <span aria-hidden="true">&rarr;</span></span>
+                        </div>
+                    </a>
+
                     <a class="game game--sf reveal" href="gra.html" data-eye-title="SPACEFIGHTER" data-eye="Bullet hell na Steam: statek, załoga, bossowie. Kliknij, a zobaczysz trailer, screenshoty i stronę w sklepie.">
                         <div class="game-art">
                             <img src="thumbnails/web/steam1.webp" alt="SPACEFIGHTER: walka z bossem wśród chmury pocisków" width="1200" height="675" loading="lazy">
@@ -844,7 +872,7 @@
                         </div>
                         <div class="game-body">
                             <div class="game-meta">
-                                <span class="game-num">01</span>
+                                <span class="game-num">02</span>
                                 <span class="game-where">Steam · PC</span>
                             </div>
                             <h2>SPACEFIGHTER</h2>
@@ -860,7 +888,7 @@
                         </div>
                         <div class="game-body">
                             <div class="game-meta">
-                                <span class="game-num">02</span>
+                                <span class="game-num">03</span>
                                 <span class="game-where">Przeglądarka · PC i telefon</span>
                                 <span class="game-flag">Za darmo</span>
                             </div>

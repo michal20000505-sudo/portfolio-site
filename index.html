@@ -1452,7 +1452,8 @@
             border-color: rgba(0, 255, 255, 0.22);
         }
 
-        .project-item--overprint .project-img-wrapper img {
+        .project-item--overprint .project-img-wrapper img,
+        .project-item--dragstrip .project-img-wrapper img {
             image-rendering: pixelated;
         }
 
@@ -2112,8 +2113,27 @@
 
         <section id="work">
             <div class="container">
-                <p class="work-kicker reveal">Portfolio — 2014 / 2025</p>
+                <p class="work-kicker reveal">Portfolio — 2014 / 2026</p>
                 <h2 class="section-title reveal" data-eye-title="Przegląd prac" data-eye="Strony, gry, reelsy i grafika w jednym miejscu. Wszystko, co Michał robi, od 2014 roku.">Przegląd <span>prac</span></h2>
+
+                <article class="project-item project-item--featured project-item--dragstrip reveal" data-eye-title="Dragstrip Online" data-eye="Moja nowa gra na Steam. Pixel-artowy drag racing z prawdziwą fizyką, tuningiem i wyścigami online.">
+                    <div class="project-img-wrapper link-hover">
+                        <a href="https://dragstriponline.com" target="_blank" rel="noopener" data-eye-title="Link do gry" data-eye="Strona gry z trailerem i zrzutami. Stamtąd jeden klik do Steama.">
+                            <img src="thumbnails/web/dragstrip-online.webp" alt="Dragstrip Online: dwa auta w pixel arcie na starcie toru drag o zachodzie słońca, logo gry" width="1232" height="706" loading="lazy">
+                        </a>
+                    </div>
+                    <div class="project-info">
+                        <div class="project-meta">
+                            <span class="project-num">01</span>
+                            <span class="project-cat">Game Dev · Steam</span>
+                            <span class="project-flag" data-eye-title="Najnowsze" data-eye="Strona na Steamie już stoi. Dodaj do listy życzeń, żeby nie przegapić premiery.">Najnowsze</span>
+                        </div>
+                        <h3><a href="https://dragstriponline.com" target="_blank" rel="noopener">Dragstrip Online</a></h3>
+                        <p>Moja druga gra na Steam: drag racing w pixel arcie, w którym wygrywa ten, kto rozumie swoje auto. Ponad 1600 aut, swapy silników i tuning każdej części z wykresami na hamowni, a potem start pod choinką, launch i ręczna zmiana biegów. Pod spodem deterministyczna symulacja fizyki: trakcja, przeniesienie masy, temperatura opon i spool turbo. Kariera offline i wyścigi PvP online.</p>
+                        <div class="tags"><span>Game Dev</span><span>Fizyka</span><span>Multiplayer</span></div>
+                        <a class="project-link" href="https://store.steampowered.com/app/5439700/" target="_blank" rel="noopener" data-eye-title="Steam" data-eye="Strona gry na Steamie. Lista życzeń bardzo pomaga przed premierą.">Zobacz na Steamie <span>&rarr;</span></a>
+                    </div>
+                </article>
 
                 <article class="project-item project-item--featured reveal" data-eye-title="SPACEFIGHTER" data-eye="Moja pierwsza gra na Steam. Bullet hell roguelike z bossami — od mechaniki po grafiki.">
                     <div class="project-img-wrapper link-hover">
@@ -2123,9 +2143,8 @@
                     </div>
                     <div class="project-info">
                         <div class="project-meta">
-                            <span class="project-num">01</span>
+                            <span class="project-num">02</span>
                             <span class="project-cat">Game Dev · Steam</span>
-                            <span class="project-flag">Najnowsze</span>
                         </div>
                         <h3><a href="gra.html">SPACEFIGHTER</a></h3>
                         <p>Moja autorska gra typu bullet hell. Roguelite z systemem ulepszeń statku, walkami z bossami i własną oprawą wizualną. Od mechaniki, przez kod, po grafikę i trailer: całość zaprojektowana i zbudowana od zera.</p>
@@ -2142,7 +2161,7 @@
                     </div>
                     <div class="project-info">
                         <div class="project-meta">
-                            <span class="project-num">02</span>
+                            <span class="project-num">03</span>
                             <span class="project-cat">Game Dev · Przeglądarka</span>
                             <span class="project-flag" data-eye-title="Za darmo" data-eye="Bez rejestracji, bez reklam, bez płacenia. Klikasz i grasz.">Za darmo</span>
                         </div>
@@ -2165,7 +2184,7 @@
                     </div>
                     <div class="project-info">
                         <div class="project-meta">
-                            <span class="project-num">03</span>
+                            <span class="project-num">04</span>
                             <span class="project-cat">Web · Serwis Auto</span>
                         </div>
                         <h3><a href="https://sscar.pl" target="_blank" rel="noopener">SSCAR</a></h3>
@@ -2183,7 +2202,7 @@
                     </div>
                     <div class="project-info">
                         <div class="project-meta">
-                            <span class="project-num">04</span>
+                            <span class="project-num">05</span>
                             <span class="project-cat">Web · Studio Treningowe</span>
                         </div>
                         <h3><a href="https://bodycreator.com.pl" target="_blank" rel="noopener">Body Creator</a></h3>
@@ -2201,13 +2220,31 @@
                     </div>
                     <div class="project-info">
                         <div class="project-meta">
-                            <span class="project-num">05</span>
+                            <span class="project-num">06</span>
                             <span class="project-cat">Web · Usługi</span>
                         </div>
                         <h3><a href="https://www.handybruk.pl" target="_blank" rel="noopener">HandyBruk</a></h3>
                         <p>Strona dla wrocławskiej firmy usługowej łączącej brukarstwo, prace ogrodowe, porządki i przeprowadzki. Oferta zmienia się razem z sezonem, więc strona pokazuje usługi w podziale na porę roku, a całą narrację prowadzi jeden cel: szybki telefon albo zapytanie o wycenę.</p>
                         <div class="tags"><span>Web Design</span><span>Development</span><span>Konwersja</span></div>
                         <a class="project-link" href="https://www.handybruk.pl" target="_blank" rel="noopener">Zobacz stronę <span>&rarr;</span></a>
+                    </div>
+                </article>
+
+                <article class="project-item reveal" data-eye-title="Technoservis" data-eye="Wulkanizacja i mechanika z Wrocławia. Strona, wizytówki, ulotki i baner w jednej identyfikacji.">
+                    <div class="project-img-wrapper link-hover">
+                        <a href="https://technoservis.pl" target="_blank" rel="noopener" data-eye-title="Link do Technoservis" data-eye="Zobacz cennik z suwakiem. Koło rośnie razem z rozmiarem felgi.">
+                            <img src="thumbnails/web/technoservis.webp" alt="Technoservis - strona wulkanizacji i warsztatu z Wrocławia, żółte auto w tle" width="1600" height="900" loading="lazy">
+                        </a>
+                    </div>
+                    <div class="project-info">
+                        <div class="project-meta">
+                            <span class="project-num">07</span>
+                            <span class="project-cat">Web · Branding · Wulkanizacja</span>
+                        </div>
+                        <h3><a href="https://technoservis.pl" target="_blank" rel="noopener">Technoservis</a></h3>
+                        <p>Komplet dla wrocławskiej wulkanizacji: strona w dwóch językach (polski i ukraiński), wizytówki, ulotki i baner na elewację w jednej żółto-czarnej identyfikacji. Na stronie cennik działa jak suwak rozmiaru felgi: koło złożone z warstw rośnie i obraca się, a cena zmienia się na bieżąco. Status „otwarte / zamknięte” liczy się sam z godzin pracy.</p>
+                        <div class="tags"><span>Web Design</span><span>Branding</span><span>Print</span></div>
+                        <a class="project-link" href="https://technoservis.pl" target="_blank" rel="noopener">Zobacz stronę <span>&rarr;</span></a>
                     </div>
                 </article>
 
@@ -2221,7 +2258,7 @@
                     </div>
                     <div class="project-info">
                         <div class="project-meta">
-                            <span class="project-num">06</span>
+                            <span class="project-num">08</span>
                             <span class="project-cat">Motion Design · Reels</span>
                             <span class="project-flag" data-eye-title="Nowa zakładka" data-eye="Świeża sekcja portfolio. Tu wszystko się rusza.">Nowe</span>
                         </div>
@@ -2240,7 +2277,7 @@
                     </div>
                     <div class="project-info">
                         <div class="project-meta">
-                            <span class="project-num">07</span>
+                            <span class="project-num">09</span>
                             <span class="project-cat">Creative Dev · Editorial</span>
                         </div>
                         <h3><a href="przyklad_1/dist/">FAULT / 08</a></h3>
@@ -2258,7 +2295,7 @@
                     </div>
                     <div class="project-info">
                         <div class="project-meta">
-                            <span class="project-num">08</span>
+                            <span class="project-num">10</span>
                             <span class="project-cat">Creative Dev · Product Campaign</span>
                         </div>
                         <h3><a href="przyklad_2/dist/">SENTRACKER TRC-01</a></h3>
@@ -2276,12 +2313,12 @@
                     </div>
                     <div class="project-info">
                         <div class="project-meta">
-                            <span class="project-num">09</span>
+                            <span class="project-num">11</span>
                             <span class="project-cat">Branding · Print</span>
                         </div>
                         <h3><a href="grafika.html">Portfolio Graficzne</a></h3>
                         <p>Pełna kolekcja projektów graficznych: branding, plakaty, DTP oraz materiały reklamowe. Zobacz
-                            wyselekcjonowane prace z lat 2014-2025.</p>
+                            wyselekcjonowane prace z lat 2014-2026.</p>
                         <div class="tags"><span>Branding</span><span>Print</span><span>Art Direction</span></div>
                         <a class="project-link" href="grafika.html">Zobacz galerię <span>&rarr;</span></a>
                     </div>
