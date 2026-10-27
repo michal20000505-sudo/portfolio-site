@@ -5,7 +5,7 @@
    domyślne zgody muszą być ustawione, zanim załaduje się gtag.js.
 
    - Domyślnie wszystko „denied”. Tag ładuje się zawsze – bez zgody Google dostaje
-     tylko bezciasteczkowe pingi (tak działa Consent Mode; blokowanie tagu je psuje).
+     tylko pingi bez cookies (tak działa Consent Mode; blokowanie tagu je psuje).
    - Konwersje: klik w każdy link tel: i mailto: na stronie (nasłuch delegowany,
      obejmuje też linki dodane później). Etykiety z konta – `ads-manager plan m-jaro`
      sprawdza, czy są tu te same, co w Google Ads.
@@ -71,20 +71,54 @@
     }, true);
 
     /* ---------------------------------------------------------------- baner */
+    // Wygląd jak płyta K z cennika: arkusz papieru z paskiem kontrolnym C/M/Y/K.
+    // z-index poniżej własnego kursora strony (.cursor = 9999), inaczej mysz znika
+    // pod banerem, bo systemowy kursor jest ukryty (cursor: none).
     var CSS =
-        '#mj-zgody{position:fixed;left:16px;right:16px;bottom:16px;z-index:2147483000;' +
-        'max-width:560px;margin:0 auto;background:#1a1a1a;color:#d9d9d9;' +
-        'border:1px solid #333;border-radius:12px;padding:18px 20px;' +
-        'font:400 15px/1.55 "Space Grotesk",system-ui,sans-serif;' +
-        'box-shadow:0 12px 40px rgba(0,0,0,.6)}' +
-        '#mj-zgody p{margin:0 0 14px}' +
-        '#mj-zgody a{color:#00ffff}' +
+        '#mj-zgody{position:fixed;left:24px;bottom:24px;z-index:9000;' +
+        'width:min(440px,calc(100vw - 32px));box-sizing:border-box;' +
+        'background:#1a1a1a;color:#d9d9d9;border:1px solid #333;border-radius:16px;' +
+        'padding:22px 24px 24px;overflow:hidden;' +
+        'font:300 1rem/1.6 "Space Grotesk",system-ui,sans-serif;' +
+        'opacity:0;transform:translateY(24px);' +
+        'transition:opacity .5s cubic-bezier(.16,1,.3,1),transform .6s cubic-bezier(.16,1,.3,1)}' +
+        '#mj-zgody.mj-z-widoczny{opacity:1;transform:none}' +
+        '#mj-zgody.mj-z-znika{opacity:0;transform:translateY(16px);transition-duration:.25s}' +
+        // pasek kontrolny drukarni: cztery farby na górnej krawędzi
+        '#mj-zgody::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;' +
+        'background:linear-gradient(90deg,#00ffff 0 25%,#ff00ff 25% 50%,#ffff00 50% 75%,#f8f6f4 75%)}' +
+        '#mj-zgody .mj-z-etykieta{display:flex;align-items:center;gap:8px;margin:0 0 10px;' +
+        'font:500 .75rem/1 "Space Grotesk",system-ui,sans-serif;letter-spacing:.1em;' +
+        'text-transform:uppercase;color:#888}' +
+        '#mj-zgody .mj-z-etykieta svg{flex:none}' +
+        '#mj-zgody h2{margin:0 0 8px;font:500 1.35rem/1.25 "Space Grotesk",system-ui,sans-serif;' +
+        'color:#f8f6f4;letter-spacing:-.01em;text-transform:none}' +
+        '#mj-zgody p{margin:0 0 20px;max-width:46ch}' +
+        '#mj-zgody a{color:#00ffff;text-underline-offset:3px;white-space:nowrap}' +
+        '#mj-zgody a:hover{text-decoration-thickness:2px}' +
         '#mj-zgody .mj-z-przyciski{display:flex;flex-wrap:wrap;gap:10px}' +
-        '#mj-zgody button{font:500 14px/1 "Space Grotesk",system-ui,sans-serif;' +
-        'letter-spacing:.05em;padding:12px 20px;border-radius:12px;cursor:pointer;' +
-        'border:1px solid #00ffff;background:transparent;color:#00ffff}' +
+        '#mj-zgody button{flex:1 1 140px;min-height:46px;margin:0;' +
+        'font:500 .85rem/1 "Space Grotesk",system-ui,sans-serif;letter-spacing:.05em;' +
+        'text-transform:uppercase;padding:14px 18px;border-radius:12px;' +
+        'border:1px solid #00ffff;background:transparent;color:#00ffff;' +
+        'transition:background-color .3s,color .3s,border-color .3s,box-shadow .4s,' +
+        'transform .4s cubic-bezier(.165,.84,.44,1)}' +
+        '#mj-zgody button:hover{transform:translateY(-2px)}' +
         '#mj-zgody button.mj-z-tak{background:#00ffff;color:#050505}' +
-        '#mj-zgody button:focus-visible{outline:2px solid #ff00ff;outline-offset:2px}';
+        '#mj-zgody button.mj-z-tak:hover{box-shadow:0 0 30px rgba(0,255,255,.3)}' +
+        '#mj-zgody button.mj-z-nie{border-color:#333;color:#d9d9d9}' +
+        '#mj-zgody button.mj-z-nie:hover{border-color:#00ffff;color:#00ffff}' +
+        '#mj-zgody button:active{transform:translateY(0)}' +
+        '#mj-zgody button:focus-visible,#mj-zgody a:focus-visible{outline:2px solid #00ffff;outline-offset:4px}' +
+        '@media (max-width:600px){#mj-zgody{left:16px;bottom:16px;padding:20px 18px 18px}}' +
+        '@media (prefers-reduced-motion:reduce){#mj-zgody,#mj-zgody button{transition:opacity .2s}' +
+        '#mj-zgody{transform:none}}';
+
+    // znak pasowania, jak na marginesie arkusza drukarskiego
+    var ZNAK =
+        '<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true" fill="none" ' +
+        'stroke="currentColor" stroke-width="1.2"><circle cx="7" cy="7" r="3.5"/>' +
+        '<path d="M7 0v14M0 7h14"/></svg>';
 
     function pokaz() {
         if (document.getElementById('mj-zgody')) return;
@@ -97,23 +131,47 @@
         var box = document.createElement('div');
         box.id = 'mj-zgody';
         box.setAttribute('role', 'dialog');
-        box.setAttribute('aria-label', 'Zgoda na pliki cookies');
+        box.setAttribute('aria-labelledby', 'mj-zgody-tytul');
+        box.setAttribute('data-eye-title', 'Pliki cookies');
+        box.setAttribute('data-eye', 'Google podpowiada mi, która reklama Cię tu przyprowadziła. Odmówisz? Nie obrażę się.');
         box.innerHTML =
-            '<p>Używam plików cookies Google Ads, żeby wiedzieć, które reklamy przyprowadzają ' +
-            'klientów. Bez zgody strona działa tak samo. ' +
-            '<a href="/cookies.html">Szczegóły</a></p>' +
+            '<div class="mj-z-etykieta">' + ZNAK + 'Próba koloru: cookies</div>' +
+            '<h2 id="mj-zgody-tytul">Kto Cię tu przysłał?</h2>' +
+            '<p>Plik cookie od Google Ads podpowiada mi, która reklama Cię przyprowadziła. ' +
+            'Nic więcej nie zbieram, a bez zgody strona działa dokładnie tak samo. ' +
+            '<a href="/cookies.html">Co dokładnie zbieram</a></p>' +
             '<div class="mj-z-przyciski">' +
-            '<button type="button" class="mj-z-tak">Akceptuję</button>' +
-            '<button type="button" class="mj-z-nie">Tylko niezbędne</button></div>';
+            '<button type="button" class="mj-z-tak" data-eye-title="Pozwalam" ' +
+            'data-eye="Dzięki! Teraz wiem, gdzie warto się reklamować, a gdzie szkoda pieniędzy.">Pozwalam</button>' +
+            '<button type="button" class="mj-z-nie" data-eye-title="Wolę bez cookies" ' +
+            'data-eye="Też dobrze. Zostają tylko pliki niezbędne do działania strony.">Wolę bez cookies</button></div>';
         box.querySelector('.mj-z-tak').onclick = function () { wybierz('tak'); };
         box.querySelector('.mj-z-nie').onclick = function () { wybierz('nie'); };
+
+        // własny kursor strony powiększa się nad linkami; podpięcie dzieje się przy
+        // ładowaniu strony, więc elementy banera trzeba dopiąć tutaj
+        var kursor = document.querySelector('.cursor');
+        if (kursor) {
+            box.querySelectorAll('a, button').forEach(function (el) {
+                el.addEventListener('mouseenter', function () { kursor.classList.add('hovered'); });
+                el.addEventListener('mouseleave', function () { kursor.classList.remove('hovered'); });
+            });
+        }
+
         document.body.appendChild(box);
+        requestAnimationFrame(function () {
+            requestAnimationFrame(function () { box.classList.add('mj-z-widoczny'); });
+        });
     }
     function wybierz(wartosc) {
         zapisz(wartosc);
         ustaw(wartosc);
         var box = document.getElementById('mj-zgody');
-        if (box) box.remove();
+        if (!box) return;
+        var kursor = document.querySelector('.cursor');
+        if (kursor) kursor.classList.remove('hovered');
+        box.classList.add('mj-z-znika');
+        setTimeout(function () { box.remove(); }, 260);
     }
     window.mjZgody = pokaz;
 
