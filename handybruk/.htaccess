@@ -1,0 +1,169 @@
+# ============================================================================
+# HandyBruk — konfiguracja serwera (LiteSpeed / Apache na vh.pl)
+#
+# Ten plik leży w `public/`, więc eksport statyczny kopiuje go do `out/`,
+# a `deploy/upload.ps1` wysyła razem z resztą strony.
+#
+# ⚠ BLOK cPANELA NA GÓRZE JEST PRZENIESIONY Z SERWERA — NIE KASUJ GO.
+# Wysyłka nadpisuje `.htaccess` na koncie vh.pl. Oryginał (pobrany 2026-08-03)
+# zawierał dyrektywy logowania błędów PHP, potrzebne dla `kontakt.php`.
+# Zostały przepisane niżej bez zmian, razem ze znacznikami BEGIN/END,
+# żeby cPanel dalej potrafił nimi zarządzać.
+#
+# Gdyby hosting kiedyś dołożył do swojego pliku coś jeszcze: pobierz wersję
+# z serwera, porównaj z tą i dopisz różnicę tutaj, ZANIM wdrożysz.
+# Szczegóły: docs/architektura.md, sekcja o wdrożeniu.
+# ============================================================================
+
+# BEGIN cPanel-generated php ini directives, do not edit
+# Manual editing of this file may result in unexpected behavior.
+# To make changes to this file, use the cPanel MultiPHP INI Editor (Home >> Software >> MultiPHP INI Editor)
+# For more information, read our documentation (https://go.cpanel.net/EA4ModifyINI)
+<IfModule php8_module>
+   php_value error_log "/home/vh17847/logs/php.error.log"
+   php_flag log_errors On
+</IfModule>
+<IfModule lsapi_module>
+   php_value error_log "/home/vh17847/logs/php.error.log"
+   php_flag log_errors On
+</IfModule>
+# END cPanel-generated php ini directives, do not edit
+
+# ---------------------------------------------------------------------------
+# Podstawy
+# ---------------------------------------------------------------------------
+DirectoryIndex index.html
+ErrorDocument 404 /404.html
+
+# Brak listingu katalogów — `/realizacje/` nie ma pokazywać spisu plików.
+Options -Indexes
+
+<IfModule mod_headers.c>
+	ServerSignature Off
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# Typy MIME
+#
+# Nie wszystkie konfiguracje LiteSpeed znają te rozszerzenia z pudełka,
+# a `.webp` podany jako `application/octet-stream` nie wyświetli się wcale.
+# ---------------------------------------------------------------------------
+<IfModule mod_mime.c>
+	AddType image/webp                  .webp
+	AddType image/svg+xml               .svg
+	AddType video/mp4                   .mp4
+	AddType font/woff2                  .woff2
+	AddType application/manifest+json   .webmanifest
+	AddType application/json            .json
+	AddDefaultCharset UTF-8
+	AddCharset UTF-8 .html .css .js .json .xml .txt .webmanifest
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# Kanoniczny adres: https://www.handybruk.pl
+#
+# Reguły celowo strzelają WYŁĄCZNIE na docelowej domenie (warunek na
+# HTTP_HOST). Dzięki temu podgląd na tymczasowym adresie hostingu — zanim
+# domena zostanie podpięta pod konto — działa normalnie i nie odbija
+# na produkcję.
+# ---------------------------------------------------------------------------
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+
+	# http -> https
+	RewriteCond %{HTTP_HOST} handybruk\.pl$ [NC]
+	RewriteCond %{HTTPS} !=on
+	RewriteCond %{HTTP:X-Forwarded-Proto} !https
+	RewriteRule ^ https://www.handybruk.pl%{REQUEST_URI} [R=301,L]
+
+	# handybruk.pl -> www.handybruk.pl
+	RewriteCond %{HTTP_HOST} ^handybruk\.pl$ [NC]
+	RewriteRule ^ https://www.handybruk.pl%{REQUEST_URI} [R=301,L]
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# Kompresja
+#
+# Bez tego `index.html` idzie po sieci jako 118 kB, a arkusz stylów jako 34 kB.
+# Po kompresji zostaje z tego mniej więcej jedna piąta.
+# LiteSpeed respektuje dyrektywy mod_deflate.
+# ---------------------------------------------------------------------------
+<IfModule mod_deflate.c>
+	AddOutputFilterByType DEFLATE text/html
+	AddOutputFilterByType DEFLATE text/css
+	AddOutputFilterByType DEFLATE text/plain
+	AddOutputFilterByType DEFLATE text/xml
+	AddOutputFilterByType DEFLATE application/javascript
+	AddOutputFilterByType DEFLATE application/x-javascript
+	AddOutputFilterByType DEFLATE application/json
+	AddOutputFilterByType DEFLATE application/xml
+	AddOutputFilterByType DEFLATE application/manifest+json
+	AddOutputFilterByType DEFLATE image/svg+xml
+	AddOutputFilterByType DEFLATE image/x-icon
+</IfModule>
+# webp, mp4 i woff2 są już skompresowane — ponowna kompresja tylko zżera CPU.
+
+# ---------------------------------------------------------------------------
+# Cache przeglądarki
+# ---------------------------------------------------------------------------
+<IfModule mod_headers.c>
+
+	# Zasoby z `/_next/static/` mają skrót treści w nazwie pliku, więc pod
+	# danym adresem nigdy się nie zmienią. Rok i `immutable`.
+	# W tym wdrożeniu KAŻDY .js/.css/.woff2 pochodzi z tego katalogu —
+	# gdyby kiedyś doszedł skrypt bez hasha w nazwie, zawęź tę regułę.
+	<FilesMatch "\.(js|css|woff2)$">
+		Header set Cache-Control "public, max-age=31536000, immutable"
+	</FilesMatch>
+
+	# Zdjęcia i filmy: tydzień, nie rok. Dokumentacja (docs/strona-www.md)
+	# każe podmieniać zdjęcia realizacji Z ZACHOWANIEM NAZWY PLIKU —
+	# przy rocznym cache podmieniona fotografia nie dotarłaby do nikogo,
+	# kto był już na stronie.
+	<FilesMatch "\.(webp|jpg|jpeg|png|gif|svg|ico|mp4)$">
+		Header set Cache-Control "public, max-age=604800"
+	</FilesMatch>
+
+	# HTML: zawsze do odświeżenia. Wdrożenie ma być widoczne od razu.
+	<FilesMatch "\.html$">
+		Header set Cache-Control "public, max-age=0, must-revalidate"
+	</FilesMatch>
+
+	# Mapa strony, robots i manifest: godzina.
+	<FilesMatch "\.(xml|webmanifest)$">
+		Header set Cache-Control "public, max-age=3600"
+	</FilesMatch>
+
+	# -----------------------------------------------------------------------
+	# Wykluczenie z indeksu
+	# -----------------------------------------------------------------------
+	# Next.js zapisuje obok stron payloady RSC (`index.txt`, `__next._full.txt`
+	# i podobne) — to pełna treść strony pod alternatywnym adresem, czyli
+	# gotowy duplikat. `X-Robots-Tag`, a nie `Disallow` w robots.txt:
+	# zablokowany crawl uniemożliwiłby odczytanie tej dyrektywy.
+	<FilesMatch "\.txt$">
+		Header set X-Robots-Tag "noindex"
+	</FilesMatch>
+	<Files "robots.txt">
+		Header unset X-Robots-Tag
+	</Files>
+
+	# Endpoint formularza — zwraca JSON, nie ma czego indeksować.
+	<Files "kontakt.php">
+		Header set X-Robots-Tag "noindex"
+	</Files>
+
+	# -----------------------------------------------------------------------
+	# Nagłówki bezpieczeństwa
+	# -----------------------------------------------------------------------
+	Header always set X-Content-Type-Options "nosniff"
+	Header always set Referrer-Policy "strict-origin-when-cross-origin"
+	Header always set X-Frame-Options "SAMEORIGIN"
+	Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), interest-cohort=()"
+
+	# HSTS — WŁĄCZ DOPIERO, gdy HTTPS działa pewnie na obu wersjach domeny
+	# i certyfikat się odnawia. Wcześniej włączony potrafi odciąć dostęp
+	# do strony na czas ważności nagłówka, bez możliwości cofnięcia.
+	# Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+
+</IfModule>

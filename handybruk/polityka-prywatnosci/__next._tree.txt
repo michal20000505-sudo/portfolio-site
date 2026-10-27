@@ -1,0 +1,3 @@
+:HL["/handybruk/_next/static/css/ace0d2eca11389d3.css","style"]
+:HL["/handybruk/logo-handybruk-poziom.webp","image"]
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"polityka-prywatnosci","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"zctjGEGLjnv3Jy1AJwTE9"}
