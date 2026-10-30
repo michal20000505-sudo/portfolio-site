@@ -15,6 +15,9 @@
    - GA4: ten sam gtag.js, config dopiero po „load” i w wolnej chwili przeglądarki –
      żeby nie dokładać pracy w trakcie ładowania ciężkiej strony. Bez zgody pingi bez
      cookies, jak w Ads. Klik w tel:/mailto: idzie też do GA4 jako generate_lead.
+   - Miękka konwersja: cennik_minuta – minuta na cenniku przy widocznej karcie (raz na
+     wyświetlenie). W GA4 zdarzenie kluczowe, w Google Ads konwersja DODATKOWA (bez
+     wpływu na stawki) – ustawia `ads-manager ga4-setup m-jaro`.
    - Clarity (nagrania sesji, mapy cieplne): ładowana WYŁĄCZNIE po zgodzie „tak”,
      też dopiero po „load” – kto odmówi, nie pobiera jej wcale. Cofnięcie zgody:
      clarity('consent', false) kasuje jej cookies i zatrzymuje nagrywanie.
@@ -28,8 +31,8 @@
         tel: 'AW-18340626804/L0XuCOyi3aodEPSCv6lE',     // MJ – Telefon klik
         mailto: 'AW-18340626804/iGr6CO-i3aodEPSCv6lE'   // MJ – E-mail klik
     };
-    var GA4 = 'G-2F6MM2QZ49';            // strumień m-jaro.pl w GA4
-    var CLARITY = 'z5rblhvwsz';    // projekt m-jaro.pl w Microsoft Clarity
+    var GA4 = 'G-2F6MM2QZ49';       // strumień m-jaro.pl w GA4
+    var CLARITY = 'z5rblhvwsz';     // projekt m-jaro.pl w Microsoft Clarity
     var KLUCZ = 'mj-zgody';
     var clarityWlaczona = false;
 
@@ -109,6 +112,27 @@
         gtag('event', 'conversion', { send_to: KONWERSJE[rodzaj], value: 1.0, currency: 'PLN' });
         gtag('event', 'generate_lead', { send_to: GA4, metoda: rodzaj === 'tel' ? 'telefon' : 'e-mail' });
     }, true);
+
+    // minuta na cenniku; liczy się tylko czas z widoczną kartą, bez timera co sekundę
+    if (/^\/cennik(\.html)?$/.test(location.pathname)) {
+        var zostalo = 60000, od = 0, minuta = null;
+        var wznow = function () {
+            if (minuta || zostalo <= 0 || document.visibilityState !== 'visible') return;
+            od = Date.now();
+            minuta = setTimeout(function () {
+                zostalo = 0;
+                gtag('event', 'cennik_minuta', { send_to: GA4 });
+            }, zostalo);
+        };
+        document.addEventListener('visibilitychange', function () {
+            if (document.visibilityState === 'visible') return wznow();
+            if (!minuta) return;
+            clearTimeout(minuta);
+            minuta = null;
+            zostalo -= Date.now() - od;
+        });
+        wznow();
+    }
 
     /* ---------------------------------------------------------------- baner */
     // Wygląd jak płyta K z cennika: arkusz papieru z paskiem kontrolnym C/M/Y/K.
