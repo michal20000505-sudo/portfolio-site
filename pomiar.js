@@ -1,5 +1,6 @@
 /* ==========================================================================
-   Pomiar Google Ads (m-jaro.pl): Consent Mode v2, tag, konwersje, baner zgód.
+   Pomiar (m-jaro.pl): Google Ads + GA4 (Consent Mode v2), Microsoft Clarity,
+   konwersje, baner zgód.
 
    Wpinać w <head> ZWYKŁYM <script src="pomiar.js"></script> (bez defer/async):
    domyślne zgody muszą być ustawione, zanim załaduje się gtag.js.
@@ -11,6 +12,12 @@
      sprawdza, czy są tu te same, co w Google Ads.
    - url_passthrough: bez zgody gclid idzie w linkach wewnętrznych, więc klik w telefon
      na innej podstronie niż strona docelowa reklamy nadal się przypisze.
+   - GA4: ten sam gtag.js, config dopiero po „load” i w wolnej chwili przeglądarki –
+     żeby nie dokładać pracy w trakcie ładowania ciężkiej strony. Bez zgody pingi bez
+     cookies, jak w Ads. Klik w tel:/mailto: idzie też do GA4 jako generate_lead.
+   - Clarity (nagrania sesji, mapy cieplne): ładowana WYŁĄCZNIE po zgodzie „tak”,
+     też dopiero po „load” – kto odmówi, nie pobiera jej wcale. Cofnięcie zgody:
+     clarity('consent', false) kasuje jej cookies i zatrzymuje nagrywanie.
    - Wybór zapisany w localStorage („mj-zgody”). Zmiana: window.mjZgody() (link w stopce
      polityki cookies).
    ========================================================================== */
@@ -21,7 +28,10 @@
         tel: 'AW-18340626804/L0XuCOyi3aodEPSCv6lE',     // MJ – Telefon klik
         mailto: 'AW-18340626804/iGr6CO-i3aodEPSCv6lE'   // MJ – E-mail klik
     };
+    var GA4 = 'G-2F6MM2QZ49';            // strumień m-jaro.pl w GA4
+    var CLARITY = 'z5rblhvwsz';    // projekt m-jaro.pl w Microsoft Clarity
     var KLUCZ = 'mj-zgody';
+    var clarityWlaczona = false;
 
     window.dataLayer = window.dataLayer || [];
     function gtag() { window.dataLayer.push(arguments); }
@@ -51,6 +61,34 @@
             ad_personalization: stan,
             analytics_storage: stan
         });
+        if (stan === 'granted') {
+            poZaladowaniu(wlaczClarity);
+        } else if (clarityWlaczona) {
+            window.clarity('consent', false);
+        }
+    }
+
+    // po „load”, w wolnej chwili przeglądarki (Safari bez requestIdleCallback: 1,5 s)
+    function poZaladowaniu(fn) {
+        function bezczynnie() {
+            if (window.requestIdleCallback) window.requestIdleCallback(fn, { timeout: 4000 });
+            else setTimeout(fn, 1500);
+        }
+        if (document.readyState === 'complete') bezczynnie();
+        else window.addEventListener('load', bezczynnie);
+    }
+
+    function wlaczClarity() {
+        if (clarityWlaczona) return;
+        clarityWlaczona = true;
+        window.clarity = window.clarity || function () {
+            (window.clarity.q = window.clarity.q || []).push(arguments);
+        };
+        var t = document.createElement('script');
+        t.async = true;
+        t.src = 'https://www.clarity.ms/tag/' + CLARITY;
+        document.head.appendChild(t);
+        window.clarity('consentv2', { ad_Storage: 'granted', analytics_Storage: 'granted' });
     }
 
     var wybor = odczytaj();
@@ -62,12 +100,14 @@
     document.head.appendChild(s);
     gtag('js', new Date());
     gtag('config', AW);
+    poZaladowaniu(function () { gtag('config', GA4); });
 
     document.addEventListener('click', function (e) {
         var a = e.target.closest && e.target.closest('a[href^="tel:"], a[href^="mailto:"]');
         if (!a) return;
         var rodzaj = a.getAttribute('href').indexOf('tel:') === 0 ? 'tel' : 'mailto';
         gtag('event', 'conversion', { send_to: KONWERSJE[rodzaj], value: 1.0, currency: 'PLN' });
+        gtag('event', 'generate_lead', { send_to: GA4, metoda: rodzaj === 'tel' ? 'telefon' : 'e-mail' });
     }, true);
 
     /* ---------------------------------------------------------------- baner */
@@ -137,8 +177,9 @@
         box.innerHTML =
             '<div class="mj-z-etykieta">' + ZNAK + 'Próba koloru: cookies</div>' +
             '<h2 id="mj-zgody-tytul">Kto Cię tu przysłał?</h2>' +
-            '<p>Plik cookie od Google Ads podpowiada mi, która reklama Cię przyprowadziła. ' +
-            'Nic więcej nie zbieram, a bez zgody strona działa dokładnie tak samo. ' +
+            '<p>Pliki cookies Google i Microsoft Clarity podpowiadają mi, która reklama Cię ' +
+            'przyprowadziła i co na stronie jest czytelne, a co nie. Bez zgody strona działa ' +
+            'dokładnie tak samo. ' +
             '<a href="/cookies.html">Co dokładnie zbieram</a></p>' +
             '<div class="mj-z-przyciski">' +
             '<button type="button" class="mj-z-tak" data-eye-title="Pozwalam" ' +
