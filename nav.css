@@ -1,0 +1,155 @@
+/* ==========================================================================
+   Wspólny header: ta sama szerokość na każdej stronie i menu pod hamburgerem
+   na każdym ekranie (pozycji w menu jest za dużo na poziomy pasek).
+
+   Wpinać po <style> strony: <link rel="stylesheet" href="nav.css?v=…">.
+   Obsługuje oba warianty markupu: index/grafika/cennik/druk (.active)
+   oraz gry/motion/gra (#nav-links, <li>, .open).
+   ========================================================================== */
+
+header > .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+.menu-toggle {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    cursor: pointer;
+    z-index: 101;
+    background: transparent;
+    border: none;
+    padding: 4px;
+    margin: 0;
+}
+
+.menu-toggle .bar {
+    width: 30px;
+    height: 2px;
+    background-color: #fff;
+    transition: transform 0.3s, opacity 0.3s, background-color 0.3s;
+}
+
+.menu-toggle.active .bar,
+.menu-toggle.open .bar { background-color: var(--cyan, #00ffff); }
+.menu-toggle.active .bar:nth-child(1),
+.menu-toggle.open .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+.menu-toggle.active .bar:nth-child(2),
+.menu-toggle.open .bar:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.menu-toggle.active .bar:nth-child(3),
+.menu-toggle.open .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+.nav-links {
+    position: fixed;
+    inset: 0;
+    height: 100dvh;
+    width: 100%;
+    margin: 0;
+    background:
+        radial-gradient(ellipse 60% 40% at 85% 15%, rgba(255, 0, 255, 0.07), transparent 70%),
+        radial-gradient(ellipse 60% 45% at 10% 90%, rgba(0, 255, 255, 0.06), transparent 70%),
+        #070707;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0 0 0 max(12vw, calc((100vw - 1400px) / 2 + 120px));
+    gap: 3.2vh;
+    list-style: none;
+    counter-reset: navitem;
+    z-index: 99;
+    visibility: hidden;
+    clip-path: inset(0 0 100% 0);
+    transition: clip-path 0.65s cubic-bezier(0.83, 0, 0.17, 1), visibility 0s 0.65s;
+}
+
+.nav-links::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--cyan, #00ffff), var(--magenta, #ff00ff), var(--yellow, #ffff00));
+    opacity: 0;
+    transition: opacity 0.3s 0.2s;
+}
+
+.nav-links.active,
+.nav-links.open {
+    visibility: visible;
+    clip-path: inset(0 0 0 0);
+    transition: clip-path 0.65s cubic-bezier(0.83, 0, 0.17, 1), visibility 0s;
+}
+
+.nav-links.active::before,
+.nav-links.open::before { opacity: 1; }
+
+.nav-links li { list-style: none; }
+
+.nav-links a {
+    position: relative;
+    display: inline-block;
+    font-size: clamp(1.8rem, 4.6vw, 3rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    counter-increment: navitem;
+    opacity: 0;
+    transform: translateY(35px);
+    transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1), transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), color 0.3s;
+}
+
+.nav-links a::before {
+    content: '0' counter(navitem);
+    position: absolute;
+    left: -2em;
+    top: 0.55em;
+    font-size: 0.35em;
+    font-weight: 500;
+    letter-spacing: 2px;
+    color: var(--cyan, #00ffff);
+    opacity: 0.7;
+}
+
+/* the desktop underline dot does not belong in the overlay */
+.nav-links a::after { display: none; }
+
+.nav-links a:hover,
+.nav-links a.active { color: var(--cyan, #00ffff); }
+
+.nav-links.active a,
+.nav-links.open a {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.nav-links.active > a:nth-child(1), .nav-links.open li:nth-child(1) a { transition-delay: 0.30s; }
+.nav-links.active > a:nth-child(2), .nav-links.open li:nth-child(2) a { transition-delay: 0.36s; }
+.nav-links.active > a:nth-child(3), .nav-links.open li:nth-child(3) a { transition-delay: 0.42s; }
+.nav-links.active > a:nth-child(4), .nav-links.open li:nth-child(4) a { transition-delay: 0.48s; }
+.nav-links.active > a:nth-child(5), .nav-links.open li:nth-child(5) a { transition-delay: 0.54s; }
+.nav-links.active > a:nth-child(6), .nav-links.open li:nth-child(6) a { transition-delay: 0.60s; }
+.nav-links.active > a:nth-child(7), .nav-links.open li:nth-child(7) a { transition-delay: 0.66s; }
+.nav-links.active > a:nth-child(8), .nav-links.open li:nth-child(8) a { transition-delay: 0.72s; }
+
+body.nav-open { overflow: hidden; }
+
+@media (max-width: 1024px) {
+    header > .container { padding: 0 20px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .nav-links,
+    .nav-links.active,
+    .nav-links.open,
+    .nav-links a,
+    .nav-links.active a,
+    .nav-links.open a {
+        transition: none !important;
+        transition-delay: 0s !important;
+    }
+}
