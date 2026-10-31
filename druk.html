@@ -683,6 +683,30 @@
             color: var(--text-dim);
         }
 
+        /* --- Proof: the real embroidery photo next to its story --- */
+        .proof {
+            margin-top: 64px;
+            display: grid;
+            grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+            gap: 56px;
+            align-items: center;
+        }
+        .proof-text h3 {
+            font-size: clamp(1.6rem, 3vw, 2.3rem);
+            font-weight: 700;
+            line-height: 1.15;
+            letter-spacing: -0.01em;
+            max-width: 20ch;
+        }
+        .proof-text p {
+            margin-top: 18px;
+            max-width: 46ch;
+            font-size: 1.1rem;
+            font-weight: 300;
+            line-height: 1.8;
+            color: #cfccc9;
+        }
+
         /* --- CTA --- */
         .cta-section {
             padding: 140px 0 100px;
@@ -906,6 +930,7 @@
             .technique + .technique { border-left: 0; border-top: 1px solid var(--surface-border); }
 
             .prints { column-gap: 0; }
+            .proof { grid-template-columns: minmax(0, 1fr); gap: 32px; margin-top: 48px; }
             .group-title { margin-top: 56px; }
 
             #lightbox { padding: 70px 10px; }
@@ -965,7 +990,8 @@
                     <p class="page-lead">Wizytówki, ulotki, banery i odzież firmowa z logo. Projektuję, zamawiam u sprawdzonych wykonawców i <strong>oddaję gotowe</strong>. Nie jeździsz po drukarniach i nie pilnujesz terminów.</p>
                     <div class="hero-actions">
                         <a href="#kontakt" class="btn-primary magnet link-hover" data-eye-title="Zapytaj o wycenę" data-eye="Napisz, co potrzebujesz i w ilu sztukach. Odpowiem z wyceną.">Zapytaj o wycenę</a>
-                        <a href="#realizacje" class="text-link link-hover" data-eye-title="Realizacje" data-eye="Wizytówki, ulotki, plakaty i banery, które zaprojektowałem do druku.">Zobacz realizacje</a>
+                        <a href="#odziez" class="text-link link-hover" data-eye-title="Odzież z logo" data-eye="Hafty i nadruki na odzieży roboczej, w tym haft po 4 latach noszenia.">Odzież z logo</a>
+                        <a href="#realizacje" class="text-link link-hover" data-eye-title="Realizacje" data-eye="Wizytówki, ulotki, plakaty i banery, które zaprojektowałem do druku.">Wizytówki i banery</a>
                     </div>
                     <div class="control-strip" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
                 </div>
@@ -1037,10 +1063,115 @@
             </div>
         </section>
 
+        <section class="block" id="odziez">
+            <div class="container">
+                <span class="section-label">03 · Odzież firmowa</span>
+                <h2 class="section-heading">Odzież z logo: nadruki, hafty, naszywki</h2>
+                <p class="section-intro">Koszulki, bluzy, polary i odzież robocza z Twoim logo. Dobieram technikę do materiału i nakładu, przygotowuję plik i zamawiam u wykonawcy.</p>
+
+                <div class="garments-panel">
+                    <div class="technique" data-eye-title="Nadruk" data-eye="Nadruk sprawdza się przy dużych grafikach i większych nakładach koszulek.">
+                        <span class="tag">Koszulki, bluzy</span>
+                        <h3>Nadruk</h3>
+                        <p>Duże grafiki i pełne kolory. Dobry wybór na koszulki i bluzy w większym nakładzie.</p>
+                    </div>
+                    <div class="technique" data-eye-title="Haft" data-eye="Haftowane logo na polarach i odzieży roboczej. Trwałe i wygląda solidnie.">
+                        <span class="tag">Polary, odzież robocza</span>
+                        <h3>Haft</h3>
+                        <p>Logo wyszyte nicią. Trwałe, odporne na pranie, wygląda solidnie na odzieży roboczej.</p>
+                    </div>
+                    <div class="technique" data-eye-title="Naszywki" data-eye="Naszywki z logo możesz przyszyć do odzieży, którą już masz.">
+                        <span class="tag">Kurtki, czapki, plecaki</span>
+                        <h3>Naszywki z logo</h3>
+                        <p>Gotowe naszywki do przyszycia na odzież, którą firma już ma.</p>
+                    </div>
+                </div>
+
+                <div class="proof" data-eye-title="Haft po 4 latach" data-eye="Prawdziwe zdjęcie: haft na polarze po czterech latach codziennej pracy. Nici trzymają, kolory nie zeszły.">
+                    <button type="button" class="print-open proof-photo link-hover" data-full="lightbox/haft-polar-4-lata.webp" aria-label="Powiększ: haft na polarze po 4 latach użytku">
+                        <img src="thumbnails/haft-polar-4-lata.webp" alt="Zbliżenie haftowanego logo na szarym polarze po czterech latach codziennego noszenia w pracy" width="800" height="1067" loading="lazy">
+                    </button>
+                    <div class="proof-text">
+                        <span class="section-label">Zdjęcie bez retuszu</span>
+                        <h3>Tak wygląda haft po 4 latach codziennego użytku w pracy</h3>
+                        <p>Polar noszony w pracy na co dzień i prany dziesiątki razy. Nici się nie wyciągnęły, kolory nie wyblakły, litery dalej są ostre. Dlatego na odzież roboczą polecam haft.</p>
+                    </div>
+                </div>
+
+                <h3 class="group-title"><b>Technoservis</b> wizualizacje odzieży z logo</h3>
+                <div class="prints">
+                    <figure class="print" data-eye-title="Bluza z haftem na plecach" data-eye="Duży haft na plecach bluzy. Klient widzi markę, nawet gdy mechanik stoi tyłem.">
+                        <button type="button" class="print-open link-hover" data-full="lightbox/odziez-technoservis-bluza.webp" aria-label="Powiększ: Bluza robocza · haft na plecach">
+                            <img src="thumbnails/odziez-technoservis-bluza.webp" alt="Mechanik przy montażownicy opon w bluzie z haftowanym logo Technoservis na plecach (wizualizacja)" width="800" height="600" loading="lazy">
+                        </button>
+                        <figcaption>
+                            <h4>Bluza robocza · haft na plecach</h4>
+                            <p>Duży znak firmy czytelny z drugiego końca warsztatu.</p>
+                            <span class="format">Wizualizacja · haft</span>
+                        </figcaption>
+                    </figure>
+                    <figure class="print" data-eye-title="Spodnie z logo" data-eye="Małe logo na nogawce spodni roboczych. Subtelne, a firma podpisana od stóp do głów.">
+                        <button type="button" class="print-open link-hover" data-full="lightbox/odziez-technoservis-spodnie.webp" aria-label="Powiększ: Spodnie robocze · haft na nogawce">
+                            <img src="thumbnails/odziez-technoservis-spodnie.webp" alt="Mechanik przy kole samochodu w spodniach roboczych z haftowanym logo Technoservis na nogawce (wizualizacja)" width="800" height="600" loading="lazy">
+                        </button>
+                        <figcaption>
+                            <h4>Spodnie robocze · haft na nogawce</h4>
+                            <p>Małe logo pod kieszenią, odporne na brud i pranie.</p>
+                            <span class="format">Wizualizacja · haft</span>
+                        </figcaption>
+                    </figure>
+                    <figure class="print" data-eye-title="Polar z logo na piersi" data-eye="Klasyka odzieży firmowej: logo na piersi polaru, widoczne przy każdej rozmowie z klientem.">
+                        <button type="button" class="print-open link-hover" data-full="lightbox/odziez-technoservis-polar.webp" aria-label="Powiększ: Polar · haft na piersi">
+                            <img src="thumbnails/odziez-technoservis-polar.webp" alt="Pracownik warsztatu z oponą zimową w polarze z haftowanym logo Technoservis na piersi (wizualizacja)" width="800" height="600" loading="lazy">
+                        </button>
+                        <figcaption>
+                            <h4>Polar · haft na piersi</h4>
+                            <p>Logo widoczne przy każdej rozmowie z klientem.</p>
+                            <span class="format">Wizualizacja · haft</span>
+                        </figcaption>
+                    </figure>
+                </div>
+
+                <h3 class="group-title"><b>HandyBruk</b> wizualizacje odzieży z logo</h3>
+                <div class="prints">
+                    <figure class="print" data-eye-title="HandyBruk · polar" data-eye="Polar z logo na plecach przy czyszczeniu kostki. Ekipa wygląda jak jedna firma.">
+                        <button type="button" class="print-open link-hover" data-full="lightbox/odziez-handybruk-polar.webp" aria-label="Powiększ: Polar · logo na plecach">
+                            <img src="thumbnails/odziez-handybruk-polar.webp" alt="Pracownik czyszczący kostkę brukową w polarze z logo HandyBruk na plecach (wizualizacja)" width="800" height="600" loading="lazy">
+                        </button>
+                        <figcaption>
+                            <h4>Polar · logo na plecach</h4>
+                            <p>Odzież ekipy brukarskiej i porządkowej.</p>
+                            <span class="format">Wizualizacja</span>
+                        </figcaption>
+                    </figure>
+                    <figure class="print" data-eye-title="HandyBruk · t-shirt" data-eye="T-shirt z logo na lato. Lekki, a firma dalej podpisana.">
+                        <button type="button" class="print-open link-hover" data-full="lightbox/odziez-handybruk-tshirt.webp" aria-label="Powiększ: T-shirt · logo na plecach">
+                            <img src="thumbnails/odziez-handybruk-tshirt.webp" alt="Pracownik koszący trawę w t-shircie z logo HandyBruk (wizualizacja)" width="800" height="600" loading="lazy">
+                        </button>
+                        <figcaption>
+                            <h4>T-shirt · logo na plecach</h4>
+                            <p>Letnia wersja odzieży firmowej do prac w ogrodzie.</p>
+                            <span class="format">Wizualizacja</span>
+                        </figcaption>
+                    </figure>
+                    <figure class="print" data-eye-title="HandyBruk · ekipa" data-eye="Dwie osoby w tej samej odzieży z logo. Klient od razu wie, kto przyjechał.">
+                        <button type="button" class="print-open link-hover" data-full="lightbox/odziez-handybruk-ekipa.webp" aria-label="Powiększ: Ekipa w jednej odzieży">
+                            <img src="thumbnails/odziez-handybruk-ekipa.webp" alt="Dwóch pracowników w odzieży z logo HandyBruk przy załadunku komody do busa (wizualizacja)" width="800" height="600" loading="lazy">
+                        </button>
+                        <figcaption>
+                            <h4>Ekipa w jednej odzieży</h4>
+                            <p>Spójny wygląd całego zespołu przy przeprowadzce.</p>
+                            <span class="format">Wizualizacja</span>
+                        </figcaption>
+                    </figure>
+                </div>
+            </div>
+        </section>
+
         <section class="block" id="realizacje">
             <div class="container">
-                <span class="section-label">03 · Realizacje</span>
-                <h2 class="section-heading">Zaprojektowane do druku</h2>
+                <span class="section-label">04 · Druk: realizacje</span>
+                <h2 class="section-heading">Wizytówki, ulotki, banery</h2>
 
                 <h3 class="group-title"><b>Wizytówki</b> 6 projektów</h3>
                 <div class="prints">
@@ -1163,33 +1294,6 @@
                         </figcaption>
                     </figure>
                 </div>
-            </div>
-        </section>
-
-        <section class="block" id="odziez">
-            <div class="container">
-                <span class="section-label">04 · Odzież firmowa</span>
-                <h2 class="section-heading">Odzież z logo: nadruki, hafty, naszywki</h2>
-                <p class="section-intro">Koszulki, bluzy, polary i odzież robocza z Twoim logo. Dobieram technikę do materiału i nakładu, przygotowuję plik i zamawiam u wykonawcy.</p>
-
-                <div class="garments-panel">
-                    <div class="technique" data-eye-title="Nadruk" data-eye="Nadruk sprawdza się przy dużych grafikach i większych nakładach koszulek.">
-                        <span class="tag">Koszulki, bluzy</span>
-                        <h3>Nadruk</h3>
-                        <p>Duże grafiki i pełne kolory. Dobry wybór na koszulki i bluzy w większym nakładzie.</p>
-                    </div>
-                    <div class="technique" data-eye-title="Haft" data-eye="Haftowane logo na polarach i odzieży roboczej. Trwałe i wygląda solidnie.">
-                        <span class="tag">Polary, odzież robocza</span>
-                        <h3>Haft</h3>
-                        <p>Logo wyszyte nicią. Trwałe, odporne na pranie, wygląda solidnie na odzieży roboczej.</p>
-                    </div>
-                    <div class="technique" data-eye-title="Naszywki" data-eye="Naszywki z logo możesz przyszyć do odzieży, którą już masz.">
-                        <span class="tag">Kurtki, czapki, plecaki</span>
-                        <h3>Naszywki z logo</h3>
-                        <p>Gotowe naszywki do przyszycia na odzież, którą firma już ma.</p>
-                    </div>
-                </div>
-                <!-- Zdjęcia haftów i nadruków: dodać tu galerię .prints (te same figury co w Realizacjach). -->
             </div>
         </section>
 
