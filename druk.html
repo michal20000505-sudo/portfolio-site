@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="pomiar.js?v=20261030b"></script>
+    <title>Druk na gotowo: wizytówki, ulotki, banery, odzież z logo | Michał Jarosiński, Wrocław</title>
+    <meta name="description" content="Projekt, druk i produkcja na gotowo: wizytówki, ulotki, plakaty, banery, nadruki i hafty na odzieży firmowej. Projektuję, zamawiam u sprawdzonych wykonawców i oddaję gotowe materiały. Grafik z Wrocławia.">
+    <meta name="author" content="Michał Jarosiński">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <meta name="geo.region" content="PL-DS">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://m-jaro.pl/druk.html">
+    <meta property="og:title" content="Druk na gotowo: wizytówki, ulotki, banery, odzież z logo">
+    <meta property="og:description" content="Projektuję, zamawiam u sprawdzonych wykonawców i oddaję gotowe materiały firmowe. Nic nie załatwiasz sam.">
+    <meta property="og:image" content="https://m-jaro.pl/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="Michał Jarosiński Portfolio">
+    <meta property="og:locale" content="pl_PL">
+    <meta name="theme-color" content="#050505">
+    <link rel="canonical" href="https://m-jaro.pl/druk.html">
+    <link rel="icon" type="image/png" sizes="500x500" href="strona-icon.png">
+    <link rel="apple-touch-icon" sizes="500x500" href="strona-icon.png">
+    <link rel="manifest" href="manifest.json">
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="fonts/space-grotesk-latin-ext.woff2">
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="fonts/space-grotesk-latin.woff2">
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        "name": "Druk i produkcja na gotowo",
+        "serviceType": "Projekt i druk materiałów firmowych",
+        "description": "Projekt, druk i produkcja wizytówek, ulotek, plakatów, banerów oraz nadruków i haftów na odzieży firmowej, zamawianych u sprawdzonych wykonawców.",
+        "url": "https://m-jaro.pl/druk.html",
+        "areaServed": { "@type": "City", "name": "Wrocław" },
+        "provider": {
+            "@type": "Person",
+            "name": "Michał Jarosiński",
+            "url": "https://m-jaro.pl/",
+            "email": "graf.m.jar@gmail.com",
+            "telephone": "+48608078802"
+        },
+        "offers": {
+            "@type": "Offer",
+            "description": "Projekt materiału do druku od 150 zł netto, druk i produkcja według wyceny.",
+            "priceCurrency": "PLN",
+            "price": "150"
+        }
+    }
+    </script>
+
+    <style>
+        @font-face {
+            font-family: 'Space Grotesk';
+            font-style: normal;
+            font-weight: 300 700;
+            font-display: swap;
+            src: url(fonts/space-grotesk-latin-ext.woff2) format('woff2');
+            unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+        }
+        @font-face {
+            font-family: 'Space Grotesk';
+            font-style: normal;
+            font-weight: 300 700;
+            font-display: swap;
+            src: url(fonts/space-grotesk-latin.woff2) format('woff2');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+        }
+        :root {
+            --bg-color: #050505;
+            --text-color: #ffffff;
+            --paper: #f8f6f4;
+            --cyan: #00ffff;
+            --magenta: #ff00ff;
+            --yellow: #ffff00;
+            --surface-raised: #1a1a1a;
+            --surface-mid: #222222;
+            --surface-border: #333333;
+            --text-muted: #888888;
+            --text-dim: #666666;
+            --font-main: 'Space Grotesk', sans-serif;
+            --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+            --mark: rgba(248, 246, 244, 0.45);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        @media (hover: hover) and (pointer: fine) {
+            *, *::before, *::after { cursor: none !important; }
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        a { text-decoration: none; color: inherit; }
+        img { display: block; max-width: 100%; height: auto; }
+
+        @view-transition { navigation: none; }
+
+        a:focus-visible,
+        button:focus-visible {
+            outline: 2px solid var(--cyan);
+            outline-offset: 4px;
+        }
+
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            width: 100%;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta), var(--yellow));
+            transform: scaleX(0);
+            transform-origin: left;
+            z-index: 10001;
+        }
+
+        /* --- Ambient glows (static on touch devices: zero animation cost) --- */
+        .ambient-glow {
+            position: fixed;
+            width: 800px;
+            height: 800px;
+            border-radius: 50%;
+            opacity: 0.13;
+            z-index: -2;
+            pointer-events: none;
+        }
+        .glow-1 { top: -20%; left: -20%; background: radial-gradient(circle closest-side, var(--cyan), transparent); }
+        .glow-2 { bottom: 0; right: -20%; background: radial-gradient(circle closest-side, var(--magenta), transparent); }
+
+        @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+            .ambient-glow {
+                will-change: transform;
+                animation: floatGlow 15s infinite alternate ease-in-out;
+            }
+            .glow-2 { animation-delay: -5s; }
+        }
+
+        @keyframes floatGlow {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(50px, 30px) scale(1.1); }
+            100% { transform: translate(-30px, -50px) scale(0.9); }
+        }
+
+        /* --- Cursor --- */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--text-color);
+            border-radius: 50%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate3d(-100px, -100px, 0) translate(-50%, -50%);
+            transition: width 0.25s ease, height 0.25s ease, background-color 0.2s;
+            mix-blend-mode: difference;
+            display: none;
+            will-change: transform;
+        }
+        .cursor.hovered {
+            width: 52px;
+            height: 52px;
+            background-color: var(--text-color);
+            border-color: transparent;
+            opacity: 0.8;
+        }
+        @media (hover: hover) and (pointer: fine) {
+            .cursor { display: block; }
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        /* --- Header (same as the rest of the site) --- */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 30px 0;
+            z-index: 100;
+            mix-blend-mode: difference;
+            transition: padding 0.3s;
+        }
+        header.scrolled {
+            padding: 15px 0;
+            background: rgba(5, 5, 5, 0.8);
+            backdrop-filter: blur(10px);
+            mix-blend-mode: normal;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        header.menu-open { mix-blend-mode: normal; }
+
+        nav { display: flex; justify-content: space-between; align-items: center; }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.5rem;
+            letter-spacing: -1px;
+            z-index: 101;
+            position: relative;
+            display: inline-block;
+            transition: transform 0.25s var(--ease-out), letter-spacing 0.25s var(--ease-out);
+        }
+        .logo:hover { transform: skewX(-6deg) scale(1.04); letter-spacing: 1px; }
+        .logo span { color: var(--cyan); }
+
+        .nav-links { display: flex; gap: 40px; }
+        .nav-links a {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            transition: transform 0.3s var(--ease-out);
+            display: inline-block;
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--cyan);
+            transform: translateX(-50%) scale(0);
+            transition: transform 0.3s var(--ease-out);
+        }
+        .nav-links a:hover::after,
+        .nav-links a.active::after { transform: translateX(-50%) scale(1); }
+        .nav-links a:hover,
+        .nav-links a.active { color: var(--cyan); }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+            z-index: 101;
+            background: transparent;
+            border: none;
+            padding: 4px;
+        }
+        .bar { width: 30px; height: 2px; background-color: #fff; transition: 0.3s; }
+
+        /* --- Hero: the press sheet --- */
+        #page-hero { padding: 170px 0 40px; }
+
+        .sheet-hero {
+            position: relative;
+            padding: 48px 0 40px 0;
+        }
+
+        /* crop marks in the four corners of the hero sheet */
+        .sheet-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0 -18px;
+            pointer-events: none;
+            background:
+                linear-gradient(var(--mark), var(--mark)) left 0 top 0 / 22px 1px no-repeat,
+                linear-gradient(var(--mark), var(--mark)) left 0 top 0 / 1px 22px no-repeat,
+                linear-gradient(var(--mark), var(--mark)) right 0 top 0 / 22px 1px no-repeat,
+                linear-gradient(var(--mark), var(--mark)) right 0 top 0 / 1px 22px no-repeat,
+                linear-gradient(var(--mark), var(--mark)) left 0 bottom 0 / 22px 1px no-repeat,
+                linear-gradient(var(--mark), var(--mark)) left 0 bottom 0 / 1px 22px no-repeat,
+                linear-gradient(var(--mark), var(--mark)) right 0 bottom 0 / 22px 1px no-repeat,
+                linear-gradient(var(--mark), var(--mark)) right 0 bottom 0 / 1px 22px no-repeat;
+        }
+
+        .reg-mark {
+            position: absolute;
+            top: 50%;
+            right: -9px;
+            width: 18px;
+            height: 18px;
+            margin-top: -9px;
+            border: 1px solid var(--mark);
+            border-radius: 50%;
+            background:
+                linear-gradient(var(--mark), var(--mark)) center / 1px 100% no-repeat,
+                linear-gradient(var(--mark), var(--mark)) center / 100% 1px no-repeat;
+        }
+
+        .sheet-slug {
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin-bottom: 28px;
+        }
+
+        .page-title {
+            font-size: clamp(3.2rem, 10vw, 7.5rem);
+            font-weight: 700;
+            line-height: 0.88;
+            letter-spacing: -0.03em;
+            text-transform: uppercase;
+            position: relative;
+            color: var(--paper);
+        }
+
+        .page-title::before,
+        .page-title::after {
+            content: 'DRUK\A NA GOTOWO';
+            white-space: pre;
+            position: absolute;
+            inset: 0;
+            opacity: 0.8;
+        }
+        .page-title::before {
+            color: var(--cyan);
+            z-index: -1;
+            transform: translate(-3px, -3px);
+            mix-blend-mode: screen;
+            animation: glitch-anim-1 2.5s infinite linear alternate-reverse;
+        }
+        .page-title::after {
+            color: var(--magenta);
+            z-index: -2;
+            transform: translate(3px, 3px);
+            mix-blend-mode: screen;
+            animation: glitch-anim-2 3.5s infinite linear alternate-reverse;
+        }
+        @keyframes glitch-anim-1 {
+            0% { transform: translate(-2px, -2px); clip-path: inset(10% 0 80% 0); }
+            20% { clip-path: inset(60% 0 10% 0); }
+            100% { transform: translate(1px, 1px); clip-path: inset(40% 0 30% 0); }
+        }
+        @keyframes glitch-anim-2 {
+            0% { transform: translate(2px, 2px); clip-path: inset(80% 0 5% 0); }
+            20% { clip-path: inset(10% 0 60% 0); }
+            100% { transform: translate(-1px, -1px); clip-path: inset(20% 0 50% 0); }
+        }
+
+        .page-lead {
+            margin-top: 36px;
+            max-width: 34ch;
+            font-size: clamp(1.25rem, 2.4vw, 1.6rem);
+            font-weight: 300;
+            line-height: 1.5;
+            color: #d9d6d3;
+        }
+        .page-lead strong { font-weight: 500; color: var(--paper); }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 18px 28px;
+            margin-top: 40px;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            padding: 14px 32px;
+            border: 1px solid var(--cyan);
+            border-radius: 12px;
+            color: var(--cyan);
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            transition: background-color 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), color 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        .btn-primary:hover {
+            background: var(--cyan);
+            color: var(--bg-color);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        }
+
+        .text-link {
+            color: var(--text-muted);
+            font-weight: 500;
+            border-bottom: 1px solid var(--surface-border);
+            padding-bottom: 2px;
+            transition: color 0.3s, border-color 0.3s;
+        }
+        .text-link:hover { color: var(--cyan); border-color: var(--cyan); }
+
+        /* --- CMYK control strip --- */
+        .control-strip {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            height: 14px;
+            margin-top: 56px;
+            max-width: 420px;
+            border: 1px solid var(--surface-border);
+        }
+        .control-strip i:nth-child(1) { background: var(--cyan); }
+        .control-strip i:nth-child(2) { background: rgba(0, 255, 255, 0.5); }
+        .control-strip i:nth-child(3) { background: rgba(0, 255, 255, 0.2); }
+        .control-strip i:nth-child(4) { background: var(--magenta); }
+        .control-strip i:nth-child(5) { background: rgba(255, 0, 255, 0.5); }
+        .control-strip i:nth-child(6) { background: rgba(255, 0, 255, 0.2); }
+        .control-strip i:nth-child(7) { background: var(--yellow); }
+        .control-strip i:nth-child(8) { background: rgba(255, 255, 0, 0.5); }
+        .control-strip i:nth-child(9) { background: rgba(255, 255, 0, 0.2); }
+        .control-strip i:nth-child(10) { background: var(--paper); }
+        .control-strip i:nth-child(11) { background: #8d8b89; }
+        .control-strip i:nth-child(12) { background: #2c2b2a; }
+
+        /* --- Sections --- */
+        section { position: relative; scroll-margin-top: 70px; }
+        .block { padding: 110px 0 0; }
+
+        .section-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 18px;
+        }
+
+        .section-heading {
+            font-size: clamp(2rem, 5vw, 3.6rem);
+            font-weight: 700;
+            line-height: 1.02;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+            max-width: 18ch;
+        }
+
+        .section-intro {
+            margin-top: 22px;
+            max-width: 60ch;
+            font-size: 1.15rem;
+            font-weight: 300;
+            line-height: 1.8;
+            color: #cfccc9;
+        }
+
+        /* --- Product spec: rows coloured by printing plate --- */
+        .spec {
+            margin-top: 56px;
+            border-top: 1px solid var(--surface-border);
+        }
+
+        .spec-row {
+            --plate: var(--cyan);
+            --wash: rgba(0, 255, 255, 0.07);
+            display: grid;
+            grid-template-columns: 56px minmax(0, 1fr) auto;
+            gap: 8px 28px;
+            align-items: baseline;
+            padding: 30px 12px;
+            border-bottom: 1px solid var(--surface-border);
+            transition: background-color 0.3s;
+        }
+        .spec-row:hover { background: var(--wash); }
+        .spec-row.plate-m { --plate: var(--magenta); --wash: rgba(255, 0, 255, 0.07); }
+        .spec-row.plate-y { --plate: var(--yellow); --wash: rgba(255, 255, 0, 0.06); }
+        .spec-row.plate-k { --plate: var(--paper); --wash: rgba(248, 246, 244, 0.05); }
+
+        .spec-ink {
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            color: var(--plate);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .spec-ink::before {
+            content: '';
+            width: 12px;
+            height: 12px;
+            background: var(--plate);
+        }
+
+        .spec-name {
+            font-size: 1.5rem;
+            font-weight: 500;
+            line-height: 1.3;
+        }
+        .spec-note {
+            margin-top: 8px;
+            font-size: 1.05rem;
+            font-weight: 300;
+            line-height: 1.7;
+            color: var(--text-muted);
+            max-width: 56ch;
+        }
+        .spec-price {
+            text-align: right;
+            white-space: nowrap;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--plate);
+        }
+        .spec-price small {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+        }
+
+        .spec-foot {
+            margin-top: 22px;
+            font-size: 0.95rem;
+            font-weight: 300;
+            color: var(--text-muted);
+        }
+        .spec-foot a { color: var(--cyan); }
+
+        /* --- Process: three numbered steps on one line --- */
+        .steps {
+            margin-top: 56px;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0;
+            counter-reset: step;
+        }
+        .step {
+            counter-increment: step;
+            padding: 0 32px 0 0;
+        }
+        .step + .step {
+            padding-left: 32px;
+            border-left: 1px solid var(--surface-border);
+        }
+        .step::before {
+            content: '0' counter(step);
+            display: block;
+            font-size: clamp(3rem, 6vw, 4.5rem);
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: -0.04em;
+            color: transparent;
+            -webkit-text-stroke: 1px var(--mark);
+            margin-bottom: 20px;
+        }
+        .step h3 {
+            font-size: 1.35rem;
+            font-weight: 500;
+            line-height: 1.3;
+            margin-bottom: 10px;
+        }
+        .step p {
+            font-size: 1.05rem;
+            font-weight: 300;
+            line-height: 1.75;
+            color: var(--text-muted);
+        }
+
+        /* --- Work gallery: prints on the sheet, framed by crop marks --- */
+        .group-title {
+            margin: 72px 0 28px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .group-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--surface-border);
+        }
+        .group-title b { color: var(--paper); font-weight: 500; }
+
+        .prints {
+            columns: 3 260px;
+            column-gap: 44px;
+        }
+
+        .print {
+            break-inside: avoid;
+            margin: 0 0 48px;
+            padding: 12px;
+        }
+
+        .print-open {
+            position: relative;
+            display: block;
+            width: 100%;
+            padding: 0;
+            border: 0;
+            background: var(--surface-raised);
+            color: inherit;
+            font: inherit;
+        }
+        .print-open img {
+            width: 100%;
+            transition: transform 0.6s var(--ease-out);
+        }
+        .print-open:hover img { transform: translateY(-4px); }
+
+        .print-open::after {
+            content: '';
+            position: absolute;
+            inset: -12px;
+            pointer-events: none;
+            background:
+                linear-gradient(var(--mark), var(--mark)) left 0 top 0 / 9px 1px no-repeat,
+                linear-gradient(var(--mark), var(--mark)) left 0 top 0 / 1px 9px no-repeat,
+                linear-gradient(var(--mark), var(--mark)) right 0 top 0 / 9px 1px no-repeat,
+                linear-gradient(var(--mark), var(--mark)) right 0 top 0 / 1px 9px no-repeat,
+                linear-gradient(var(--mark), var(--mark)) left 0 bottom 0 / 9px 1px no-repeat,
+                linear-gradient(var(--mark), var(--mark)) left 0 bottom 0 / 1px 9px no-repeat,
+                linear-gradient(var(--mark), var(--mark)) right 0 bottom 0 / 9px 1px no-repeat,
+                linear-gradient(var(--mark), var(--mark)) right 0 bottom 0 / 1px 9px no-repeat;
+            transition: inset 0.4s var(--ease-out);
+        }
+        .print-open:hover::after { inset: -6px; }
+
+        .print figcaption { margin-top: 18px; }
+        .print h4 {
+            font-size: 1.1rem;
+            font-weight: 500;
+            line-height: 1.35;
+        }
+        .print p {
+            margin-top: 6px;
+            font-size: 0.98rem;
+            font-weight: 300;
+            line-height: 1.65;
+            color: var(--text-muted);
+        }
+        .print .format {
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+        }
+
+        /* --- Garments (K plate: paper white) --- */
+        .garments-panel {
+            margin-top: 48px;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            border: 1px solid var(--surface-border);
+        }
+        .technique {
+            padding: 32px 28px;
+        }
+        .technique + .technique { border-left: 1px solid var(--surface-border); }
+        .technique h3 {
+            font-size: 1.35rem;
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: var(--paper);
+        }
+        .technique p {
+            font-size: 1.02rem;
+            font-weight: 300;
+            line-height: 1.7;
+            color: var(--text-muted);
+        }
+        .technique .tag {
+            display: block;
+            margin-bottom: 16px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+        }
+
+        /* --- CTA --- */
+        .cta-section {
+            padding: 140px 0 100px;
+        }
+        .cta-heading {
+            font-size: clamp(2.2rem, 6vw, 4.4rem);
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+            max-width: 16ch;
+        }
+        .cta-checklist {
+            margin-top: 26px;
+            max-width: 52ch;
+            font-size: 1.15rem;
+            font-weight: 300;
+            line-height: 1.8;
+            color: #cfccc9;
+        }
+        .cta-contacts {
+            margin-top: 44px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 14px;
+        }
+        .cta-big {
+            font-size: clamp(1.5rem, 4.2vw, 3rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            display: inline-block;
+            transition: transform 0.3s var(--ease-out);
+            overflow-wrap: anywhere;
+        }
+        .cta-small {
+            font-size: clamp(1.25rem, 2.6vw, 1.8rem);
+            font-weight: 500;
+            color: var(--paper);
+            display: inline-block;
+            transition: color 0.3s;
+        }
+        .cta-small:hover { color: var(--cyan); }
+        .price-note {
+            margin-top: 40px;
+            font-size: 0.9rem;
+            font-weight: 300;
+            color: var(--text-muted);
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #8a8a8a;
+            font-size: 0.85rem;
+            border-top: 1px solid #1a1a1a;
+        }
+        footer a { color: #8a8a8a; }
+
+        /* --- Lightbox --- */
+        #lightbox {
+            position: fixed;
+            inset: 0;
+            z-index: 10002;
+            background: rgba(5, 5, 5, 0.96);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 70px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0s 0.3s;
+        }
+        #lightbox.active {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.3s;
+        }
+        #lightbox img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            object-fit: contain;
+        }
+        .lb-btn {
+            position: absolute;
+            background: transparent;
+            border: 1px solid var(--surface-border);
+            border-radius: 12px;
+            color: var(--paper);
+            width: 48px;
+            height: 48px;
+            font: 500 1.4rem/1 var(--font-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: border-color 0.3s, color 0.3s;
+        }
+        .lb-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+        .lb-close { top: 18px; right: 18px; }
+        .lb-prev { left: 12px; top: 50%; margin-top: -24px; }
+        .lb-next { right: 12px; top: 50%; margin-top: -24px; }
+        .lb-counter {
+            position: absolute;
+            top: 30px;
+            left: 24px;
+            font-size: 0.8rem;
+            letter-spacing: 0.12em;
+            color: var(--text-muted);
+        }
+
+        /* --- OBSERVER eye (loaded on desktop only) --- */
+        #mech-eye {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: clamp(90px, 10vw, 150px);
+            aspect-ratio: 1;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 1.2s var(--ease-out);
+            will-change: transform;
+        }
+        #mech-eye.ready { opacity: 1; }
+        #mech-eye canvas { width: 100%; height: 100%; display: block; }
+        .cursor.eye-link {
+            width: 52px;
+            height: 52px;
+            border-color: var(--cyan);
+            background-color: rgba(0, 255, 255, 0.15);
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 1024px) {
+            .container { padding: 0 20px; }
+            #page-hero { padding: 120px 0 20px; }
+            .menu-toggle { display: flex; }
+
+            .nav-links {
+                position: fixed;
+                inset: 0;
+                height: 100dvh;
+                width: 100%;
+                background:
+                    radial-gradient(ellipse 60% 40% at 85% 15%, rgba(255, 0, 255, 0.07), transparent 70%),
+                    radial-gradient(ellipse 60% 45% at 10% 90%, rgba(0, 255, 255, 0.06), transparent 70%),
+                    #070707;
+                flex-direction: column;
+                justify-content: center;
+                align-items: flex-start;
+                padding-left: 12vw;
+                gap: 4vh;
+                counter-reset: navitem;
+                z-index: 99;
+                visibility: hidden;
+                clip-path: inset(0 0 100% 0);
+                transition: clip-path 0.65s cubic-bezier(0.83, 0, 0.17, 1), visibility 0s 0.65s;
+            }
+            .nav-links.active {
+                visibility: visible;
+                clip-path: inset(0 0 0 0);
+                transition: clip-path 0.65s cubic-bezier(0.83, 0, 0.17, 1), visibility 0s;
+            }
+            .nav-links a {
+                font-size: clamp(1.8rem, 7vw, 2.6rem);
+                font-weight: 700;
+                letter-spacing: 1px;
+                counter-increment: navitem;
+                opacity: 0;
+                transform: translateY(35px);
+                transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1), transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), color 0.3s;
+            }
+            .nav-links a::before {
+                content: '0' counter(navitem);
+                position: absolute;
+                left: -2em;
+                top: 0.55em;
+                font-size: 0.35em;
+                font-weight: 500;
+                letter-spacing: 2px;
+                color: var(--cyan);
+                opacity: 0.7;
+            }
+            .nav-links.active a { opacity: 1; transform: translateY(0); }
+            .nav-links.active a:nth-child(1) { transition-delay: 0.30s; }
+            .nav-links.active a:nth-child(2) { transition-delay: 0.37s; }
+            .nav-links.active a:nth-child(3) { transition-delay: 0.44s; }
+            .nav-links.active a:nth-child(4) { transition-delay: 0.51s; }
+            .nav-links.active a:nth-child(5) { transition-delay: 0.58s; }
+            .nav-links.active a:nth-child(6) { transition-delay: 0.65s; }
+            .nav-links.active a:nth-child(7) { transition-delay: 0.72s; }
+            body.nav-open { overflow: hidden; }
+            .menu-toggle.active .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+            .menu-toggle.active .bar:nth-child(2) { opacity: 0; transform: scaleX(0); }
+            .menu-toggle.active .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+            .menu-toggle.active .bar { background-color: var(--cyan); }
+        }
+
+        @media (max-width: 768px) {
+            .sheet-hero { padding: 34px 0 30px; }
+            .sheet-hero::before { inset: 0 -8px; }
+            .reg-mark { display: none; }
+            .block { padding-top: 80px; }
+
+            .spec-row {
+                grid-template-columns: minmax(0, 1fr);
+                padding: 24px 4px;
+            }
+            .spec-price { text-align: left; }
+
+            .steps,
+            .garments-panel { grid-template-columns: minmax(0, 1fr); }
+            .step,
+            .step + .step {
+                padding: 26px 0;
+                border-left: 0;
+                border-top: 1px solid var(--surface-border);
+            }
+            .step::before { margin-bottom: 12px; }
+            .technique + .technique { border-left: 0; border-top: 1px solid var(--surface-border); }
+
+            .prints { column-gap: 0; }
+            .group-title { margin-top: 56px; }
+
+            #lightbox { padding: 70px 10px; }
+            .lb-prev, .lb-next { top: auto; bottom: 14px; margin-top: 0; }
+            .cta-section { padding: 100px 0 70px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                transition-delay: 0s !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="progress-bar"></div>
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+    <div class="cursor"></div>
+
+    <header>
+        <div class="container">
+            <nav>
+                <a href="/" class="logo link-hover" data-eye-title="Logo, powrót" data-eye="Kliknij, aby wrócić na stronę główną.">MJ<span>.</span></a>
+
+                <button class="menu-toggle" id="mobile-menu" aria-label="Otwórz menu nawigacyjne" aria-expanded="false">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </button>
+
+                <div class="nav-links">
+                    <a href="/#about" class="link-hover magnet" data-eye-title="O mnie" data-eye="Poznaj moją historię i czym się zajmuję.">O mnie</a>
+                    <a href="/#work" class="link-hover magnet" data-eye-title="Przegląd prac" data-eye="Strony, gry, reelsy i grafika w jednym przeglądzie.">Przegląd prac</a>
+                    <a href="grafika.html" class="link-hover magnet" data-eye-title="Grafika" data-eye="Przeglądaj moje prace graficzne i branding.">Grafika</a>
+                    <a href="gry.html" class="link-hover magnet" data-eye-title="Gry" data-eye="Moje gry: SPACEFIGHTER na Steam i darmowy OVERPRINT, w który zagrasz od razu w przeglądarce.">Gry</a>
+                    <a href="motion.html" class="link-hover magnet" data-eye-title="Motion design" data-eye="Reelsy zrobione w kodzie, z muzyką zgraną co do klatki. Włącz dźwięk, warto.">Motion</a>
+                    <a href="cennik.html" class="link-hover magnet" data-eye-title="Cennik" data-eye="Ceny wszystkich usług: strony, grafika, motion i reklama.">Cennik</a>
+                    <a href="#kontakt" class="link-hover magnet" data-eye-title="Kontakt" data-eye="Napisz lub zadzwoń w sprawie druku.">Kontakt</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section id="page-hero">
+            <div class="container">
+                <div class="sheet-hero">
+                    <span class="reg-mark" aria-hidden="true"></span>
+                    <p class="sheet-slug" aria-hidden="true">Arkusz 01 · Druk i produkcja · Wrocław</p>
+                    <h1 class="page-title" data-eye-title="Druk na gotowo" data-eye="Projekt, druk i odbiór gotowych materiałów. Ty mówisz, czego potrzebujesz, ja załatwiam resztę.">DRUK<br>NA GOTOWO</h1>
+                    <p class="page-lead">Wizytówki, ulotki, banery i odzież firmowa z logo. Projektuję, zamawiam u sprawdzonych wykonawców i <strong>oddaję gotowe</strong>. Nie jeździsz po drukarniach i nie pilnujesz terminów.</p>
+                    <div class="hero-actions">
+                        <a href="#kontakt" class="btn-primary magnet link-hover" data-eye-title="Zapytaj o wycenę" data-eye="Napisz, co potrzebujesz i w ilu sztukach. Odpowiem z wyceną.">Zapytaj o wycenę</a>
+                        <a href="#realizacje" class="text-link link-hover" data-eye-title="Realizacje" data-eye="Wizytówki, ulotki, plakaty i banery, które zaprojektowałem do druku.">Zobacz realizacje</a>
+                    </div>
+                    <div class="control-strip" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="block" id="co-drukuje">
+            <div class="container">
+                <span class="section-label">01 · Co zrobię</span>
+                <h2 class="section-heading">Materiały firmowe od projektu do odbioru</h2>
+                <p class="section-intro">Jeden kontakt zamiast grafika, drukarni i hafciarni osobno. Przygotowuję pliki tak, żeby wydruk wyszedł dokładnie jak na podglądzie.</p>
+
+                <div class="spec">
+                    <div class="spec-row" data-eye-title="Wizytówki" data-eye="Projekt dwustronny, plik ze spadami i druk w nakładzie, jakiego potrzebujesz.">
+                        <span class="spec-ink" aria-hidden="true">C</span>
+                        <div>
+                            <h3 class="spec-name">Wizytówki</h3>
+                            <p class="spec-note">Jedno- i dwustronne, z kodem QR, w kilku językach. Druk w nakładzie dopasowanym do firmy.</p>
+                        </div>
+                        <div class="spec-price"><small>projekt</small>od 150 zł</div>
+                    </div>
+                    <div class="spec-row plate-m" data-eye-title="Ulotki i vouchery" data-eye="Ulotki, vouchery podarunkowe i plakaty: od projektu do gotowego nakładu.">
+                        <span class="spec-ink" aria-hidden="true">M</span>
+                        <div>
+                            <h3 class="spec-name">Ulotki, vouchery i plakaty</h3>
+                            <p class="spec-note">Ulotki w formacie dopasowanym do treści, vouchery podarunkowe, plakaty na wydarzenia.</p>
+                        </div>
+                        <div class="spec-price"><small>projekt</small>od 150 zł</div>
+                    </div>
+                    <div class="spec-row plate-y" data-eye-title="Banery i szyldy" data-eye="Duże formaty czytelne z ulicy: banery na elewację, roll-upy, tablice.">
+                        <span class="spec-ink" aria-hidden="true">Y</span>
+                        <div>
+                            <h3 class="spec-name">Banery reklamowe i roll-upy</h3>
+                            <p class="spec-note">Duże formaty na elewację, ogrodzenie i targi, czytelne z ulicy.</p>
+                        </div>
+                        <div class="spec-price"><small>projekt</small>od 150 zł</div>
+                    </div>
+                    <div class="spec-row plate-k" data-eye-title="Odzież z logo" data-eye="Koszulki, polary i odzież robocza z Twoim logo: nadruk, haft albo naszywka.">
+                        <span class="spec-ink" aria-hidden="true">K</span>
+                        <div>
+                            <h3 class="spec-name">Odzież firmowa z logo</h3>
+                            <p class="spec-note">Nadruki i hafty na koszulkach, bluzach i odzieży roboczej, naszywki z logo.</p>
+                        </div>
+                        <div class="spec-price"><small>druk i produkcja</small>wycena</div>
+                    </div>
+                </div>
+                <p class="spec-foot">Ceny netto. Druk i produkcja wyceniane według nakładu i materiału. Nie masz logo? <a href="cennik.html" class="link-hover">Logo od 300 zł</a>, a Pakiet START (strona, 500 wizytówek i profil firmy w Google) kosztuje 1300 zł.</p>
+            </div>
+        </section>
+
+        <section class="block" id="jak">
+            <div class="container">
+                <span class="section-label">02 · Jak to wygląda</span>
+                <h2 class="section-heading">Trzy kroki, jeden kontakt</h2>
+                <div class="steps">
+                    <div class="step" data-eye-title="Krok 1" data-eye="Wystarczy kilka zdań: co, ile sztuk i na kiedy.">
+                        <h3>Piszesz, czego potrzebujesz</h3>
+                        <p>Co, ile sztuk i na kiedy. Jeśli masz logo, wyślij je. Jeśli nie, zaprojektujemy je razem.</p>
+                    </div>
+                    <div class="step" data-eye-title="Krok 2" data-eye="Zanim cokolwiek pójdzie do druku, widzisz projekt i go akceptujesz.">
+                        <h3>Projekt i akceptacja</h3>
+                        <p>Dostajesz podgląd, nanosimy poprawki. Przygotowuję plik do druku: spady, CMYK, właściwy format.</p>
+                    </div>
+                    <div class="step" data-eye-title="Krok 3" data-eye="Zamawiam u sprawdzonych wykonawców i pilnuję terminu. Ty odbierasz gotowe.">
+                        <h3>Odbierasz gotowe</h3>
+                        <p>Zamawiam u sprawdzonych wykonawców i pilnuję terminu. Do Ciebie trafiają gotowe materiały.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="block" id="realizacje">
+            <div class="container">
+                <span class="section-label">03 · Realizacje</span>
+                <h2 class="section-heading">Zaprojektowane do druku</h2>
+
+                <h3 class="group-title"><b>Wizytówki</b> 6 projektów</h3>
+                <div class="prints">
+                    <figure class="print" data-eye-title="Technoservis · wizytówki" data-eye="Wizytówka wulkanizacji z Wrocławia. Dwa języki, QR do warsztatu i cena na pierwszym planie.">
+                        <button type="button" class="print-open link-hover" data-full="lightbox/technoservis-wizytowka.webp" aria-label="Powiększ: Technoservis, wizytówki">
+                            <img src="thumbnails/technoservis-wizytowka.webp" alt="Dwustronne wizytówki wrocławskiej wulkanizacji Technoservis" width="800" height="600" fetchpriority="high">
+                        </button>
+                        <figcaption>
+                            <h4>Technoservis · wulkanizacja, Wrocław</h4>
+                            <p>Teksty po polsku i ukraińsku, lista usług, cena wymiany kompletu i kod QR do warsztatu.</p>
+                            <span class="format">Wizytówka dwustronna</span>
+                        </figcaption>
+                    </figure>
+                    <figure class="print" data-eye-title="Sudbal Garage" data-eye="Wizytówka dla serwisu detailingowego. Elegancka czerń z chromowanym logo.">
+                        <button type="button" class="print-open link-hover" data-full="lightbox/Wizytówka-9x5-sudbal.webp" aria-label="Powiększ: Sudbal Garage, wizytówka">
+                            <img src="thumbnails/Wizytówka-9x5-sudbal.webp" alt="Czarna wizytówka serwisu detailingowego Sudbal Garage z chromowanym logo" width="800" height="600" loading="lazy">
+                        </button>
+                        <figcaption>
+                            <h4>Sudbal Garage · detailing</h4>
+                            <p>Elegancka czerń i chromowane wykończenie logo.</p>
+                            <span class="format">Wizytówka 90×50</span>
+                        </figcaption>
+                    </figure>
+                    <figure class="print" data-eye-title="Usługi budowlane" data-eye="Wizytówka dla firmy budowlanej. Siatka projektowa i miarka wkomponowana w projekt.">
+                        <button type="button" class="print-open link-hover" data-full="lightbox/Grzegorz-pirog-wizytowka.webp" aria-label="Powiększ: usługi budowlane, wizytówka">
+                            <img src="thumbnails/Grzegorz-pirog-wizytowka.webp" alt="Wizytówka firmy wykończeniowej z motywem siatki projektowej i miarki" width="800" height="600" loading="lazy">
+                        </button>
+                        <figcaption>
+                            <h4>Usługi wykończeniowe i budowlane</h4>
+                            <p>Techniczny motyw siatki projektowej i funkcjonalna miarka na krawędzi.</p>
+                            <span class="format">Wizytówka</span>
+                        </figcaption>
+                    </figure>
+                    <figure class="print" data-eye-title="Grom Art · wizytówki" data-eye="Wizytówki premium dla producenta statuetek militarnych.">
+                        <button type="button" class="print-open link-hover" data-full="lightbox/render2.webp" aria-label="Powiększ: Grom Art, wizytówki">
+                            <img src="thumbnails/render2.webp" alt="Wizytówki premium marki Grom Art, producenta statuetek" width="800" height="600" loading="lazy">
+                        </button>
+                        <figcaption>
+                            <h4>Grom Art · statuetki</h4>
+                            <p>Wizytówki premium jako część pełnej identyfikacji marki.</p>
+                            <span class="format">Wizytówka</span>
+                        </figcaption>
+                    </figure>
+                    <figure class="print" data-eye-title="Trener personalny" data-eye="Energetyczna zieleń i sportowy krój pisma na wizytówce trenera.">
+                        <button type="button" class="print-open link-hover" data-full="lightbox/Wizytówka-9x5.webp" aria-label="Powiększ: trener personalny, wizytówka">
+                            <img src="thumbnails/Wizytówka-9x5.webp" alt="Zielona wizytówka trenera personalnego" width="800" height="600" loading="lazy">
+                        </button>
+                        <figcaption>
+                            <h4>Trener personalny</h4>
+                            <p>Energetyczna zieleń i mocny, sportowy krój pisma.</p>
+                            <span class="format">Wizytówka 90×50</span>
+                        </figcaption>
+                    </figure>
+                    <figure class="print" data-eye-title="Schmidt · maszyny" data-eye="Wizytówka producenta maszyn. Czytelny układ z ilustracją.">
+                        <button type="button" class="print-open link-hover" data-full="lightbox/wizytówka-max-bucz.webp" aria-label="Powiększ: producent maszyn, wizytówka">
+                            <img src="thumbnails/wizytówka-max-bucz.webp" alt="Wizytówka producenta maszyn z ilustracją" width="800" height="706" loading="lazy">
+                        </button>
+                        <figcaption>
+                            <h4>Schmidt · producent maszyn</h4>
+                            <p>Czytelny układ z wykorzystaniem ilustracji.</p>
+                            <span class="format">Wizytówka</span>
+                        </figcaption>
+                    </figure>
+                </div>
+
+                <h3 class="group-title"><b>Ulotki i vouchery</b> 3 projekty</h3>
+                <div class="prints">
+                    <figure class="print" data-eye-title="Grom Art · ulotka" data-eye="Ulotka B5 z wizualizacją 3D statuetki. Produkt widać, zanim powstanie.">
+                        <button type="button" class="print-open link-hover" data-full="lightbox/Grom-art-b5-front.webp" aria-label="Powiększ: Grom Art, ulotka B5">
+                            <img src="thumbnails/Grom-art-b5-front.webp" alt="Ulotka B5 Grom Art z wizualizacją 3D statuetki" width="800" height="1118" loading="lazy">
+                        </button>
+                        <figcaption>
+                            <h4>Grom Art · ulotka produktowa</h4>
+                            <p>Wizualizacja 3D statuetki na materiale drukowanym.</p>
+                            <span class="format">Ulotka B5</span>
+                        </figcaption>
+                    </figure>
+                    <figure class="print" data-eye-title="Ulotka trenerki" data-eye="Ulotka promocyjna dla trenerki personalnej z dynamiczną typografią.">
+                        <button type="button" class="print-open link-hover" data-full="lightbox/dunajewska-ulotka.webp" aria-label="Powiększ: ulotka trenerki personalnej">
+                            <img src="thumbnails/dunajewska-ulotka.webp" alt="Ulotka promocyjna trenerki personalnej" width="800" height="1135" loading="lazy">
+                        </button>
+                        <figcaption>
+                            <h4>Trenerka personalna · ulotka</h4>
+                            <p>Nowoczesny układ z dynamiczną typografią.</p>
+                            <span class="format">Ulotka</span>
+                        </figcaption>
+                    </figure>
+                    <figure class="print" data-eye-title="Voucher" data-eye="Voucher podarunkowy na trening. Drukowany prezent, który sprzedaje usługę.">
+                        <button type="button" class="print-open link-hover" data-full="lightbox/Dunajewska-voucher.webp" aria-label="Powiększ: voucher podarunkowy">
+                            <img src="thumbnails/Dunajewska-voucher.webp" alt="Voucher podarunkowy na trening personalny" width="800" height="570" loading="lazy">
+                        </button>
+                        <figcaption>
+                            <h4>Voucher podarunkowy</h4>
+                            <p>Voucher na trening personalny, do wręczenia jako prezent.</p>
+                            <span class="format">Voucher</span>
+                        </figcaption>
+                    </figure>
+                </div>
+
+                <h3 class="group-title"><b>Banery i plakaty</b> 2 projekty</h3>
+                <div class="prints">
+                    <figure class="print" data-eye-title="Technoservis · baner" data-eye="Baner dwa metry na metr na ścianie warsztatu. Widać go z ulicy.">
+                        <button type="button" class="print-open link-hover" data-full="lightbox/technoservis-baner.webp" aria-label="Powiększ: Technoservis, baner">
+                            <img src="thumbnails/technoservis-baner.webp" alt="Baner wulkanizacji Technoservis na elewacji warsztatu" width="800" height="960" loading="lazy">
+                        </button>
+                        <figcaption>
+                            <h4>Technoservis · baner na elewację</h4>
+                            <p>Znak firmy, usługi w dwóch językach i adres czytelny z ulicy.</p>
+                            <span class="format">Baner 1000×2000 mm</span>
+                        </figcaption>
+                    </figure>
+                    <figure class="print" data-eye-title="Lipali · plakat" data-eye="Plakat trasy koncertowej. Minimalistyczna typografia i fotografia zespołu.">
+                        <button type="button" class="print-open link-hover" data-full="lightbox/Lipali-koncert-roboczy-PLAKAT-3.webp" aria-label="Powiększ: plakat koncertowy Lipali">
+                            <img src="thumbnails/Lipali-koncert-roboczy-PLAKAT-3.webp" alt="Plakat trasy koncertowej zespołu Lipali" width="800" height="400" loading="lazy">
+                        </button>
+                        <figcaption>
+                            <h4>Lipali · trasa koncertowa</h4>
+                            <p>Minimalistyczna typografia połączona z fotografią zespołu.</p>
+                            <span class="format">Plakat</span>
+                        </figcaption>
+                    </figure>
+                </div>
+            </div>
+        </section>
+
+        <section class="block" id="odziez">
+            <div class="container">
+                <span class="section-label">04 · Odzież firmowa</span>
+                <h2 class="section-heading">Odzież z logo: nadruki, hafty, naszywki</h2>
+                <p class="section-intro">Koszulki, bluzy, polary i odzież robocza z Twoim logo. Dobieram technikę do materiału i nakładu, przygotowuję plik i zamawiam u wykonawcy.</p>
+
+                <div class="garments-panel">
+                    <div class="technique" data-eye-title="Nadruk" data-eye="Nadruk sprawdza się przy dużych grafikach i większych nakładach koszulek.">
+                        <span class="tag">Koszulki, bluzy</span>
+                        <h3>Nadruk</h3>
+                        <p>Duże grafiki i pełne kolory. Dobry wybór na koszulki i bluzy w większym nakładzie.</p>
+                    </div>
+                    <div class="technique" data-eye-title="Haft" data-eye="Haftowane logo na polarach i odzieży roboczej. Trwałe i wygląda solidnie.">
+                        <span class="tag">Polary, odzież robocza</span>
+                        <h3>Haft</h3>
+                        <p>Logo wyszyte nicią. Trwałe, odporne na pranie, wygląda solidnie na odzieży roboczej.</p>
+                    </div>
+                    <div class="technique" data-eye-title="Naszywki" data-eye="Naszywki z logo możesz przyszyć do odzieży, którą już masz.">
+                        <span class="tag">Kurtki, czapki, plecaki</span>
+                        <h3>Naszywki z logo</h3>
+                        <p>Gotowe naszywki do przyszycia na odzież, którą firma już ma.</p>
+                    </div>
+                </div>
+                <!-- Zdjęcia haftów i nadruków: dodać tu galerię .prints (te same figury co w Realizacjach). -->
+            </div>
+        </section>
+
+        <section class="cta-section" id="kontakt">
+            <div class="container">
+                <span class="section-label">05 · Wycena</span>
+                <h2 class="cta-heading">Napisz, co mam wydrukować</h2>
+                <p class="cta-checklist">Podaj, co potrzebujesz, ile sztuk i na kiedy. Dołącz logo, jeśli je masz. Odpowiem z wyceną projektu i druku.</p>
+                <div class="cta-contacts">
+                    <a href="mailto:graf.m.jar@gmail.com?subject=Druk%20-%20zapytanie" class="cta-big link-hover magnet" data-eye-title="Napisz do mnie" data-eye="Opisz, czego potrzebujesz, a dostaniesz wycenę. Ja w tym czasie popilnuję skrzynki."><span style="color: var(--cyan)">graf.m.jar</span><span style="color: var(--magenta)">@</span><span style="color: var(--yellow)">gmail.com</span></a>
+                    <a href="tel:+48608078802" class="cta-small link-hover magnet" data-eye-title="Zadzwoń do mnie" data-eye="Rozmowa telefoniczna to najszybszy sposób na wstępną wycenę.">+48 608 078 802</a>
+                </div>
+                <p class="price-note">Wszystkie ceny netto. Możliwa faktura (FV) lub umowa o dzieło.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Michał Jarosiński. Wszelkie prawa zastrzeżone. · <a href="/cookies.html">Polityka cookies</a></p>
+    </footer>
+
+    <div id="lightbox" role="dialog" aria-modal="true" aria-label="Podgląd pracy" hidden>
+        <span class="lb-counter" aria-hidden="true"></span>
+        <button type="button" class="lb-btn lb-close" aria-label="Zamknij podgląd">&times;</button>
+        <button type="button" class="lb-btn lb-prev" aria-label="Poprzednia praca">&larr;</button>
+        <img alt="">
+        <button type="button" class="lb-btn lb-next" aria-label="Następna praca">&rarr;</button>
+    </div>
+
+    <script>
+        // --- Header & progress bar (rAF-throttled, transform only) ---
+        const header = document.querySelector('header');
+        const progressBar = document.getElementById('progress-bar');
+        let scrollTicking = false;
+        window.addEventListener('scroll', () => {
+            if (scrollTicking) return;
+            scrollTicking = true;
+            requestAnimationFrame(() => {
+                header.classList.toggle('scrolled', window.scrollY > 50);
+                const el = document.documentElement;
+                progressBar.style.transform = `scaleX(${el.scrollTop / (el.scrollHeight - el.clientHeight) || 0})`;
+                scrollTicking = false;
+            });
+        }, { passive: true });
+
+        // --- Menu ---
+        const menuToggle = document.getElementById('mobile-menu');
+        const navLinks = document.querySelector('.nav-links');
+        function setMenu(open) {
+            menuToggle.classList.toggle('active', open);
+            navLinks.classList.toggle('active', open);
+            header.classList.toggle('menu-open', open);
+            document.body.classList.toggle('nav-open', open);
+            menuToggle.setAttribute('aria-expanded', open);
+            menuToggle.setAttribute('aria-label', open ? 'Zamknij menu nawigacyjne' : 'Otwórz menu nawigacyjne');
+        }
+        menuToggle.addEventListener('click', () => setMenu(!navLinks.classList.contains('active')));
+        navLinks.querySelectorAll('a').forEach(link => link.addEventListener('click', () => setMenu(false)));
+
+        // --- Lightbox (prints only) ---
+        const lightbox = document.getElementById('lightbox');
+        const lbImg = lightbox.querySelector('img');
+        const lbCounter = lightbox.querySelector('.lb-counter');
+        const prints = [...document.querySelectorAll('.print-open')];
+        let lbIndex = 0, lbReturn = null;
+
+        function showPrint(i) {
+            lbIndex = (i + prints.length) % prints.length;
+            const thumb = prints[lbIndex].querySelector('img');
+            lbImg.src = prints[lbIndex].dataset.full;
+            lbImg.alt = thumb.alt;
+            lbCounter.textContent = `${lbIndex + 1} / ${prints.length}`;
+        }
+        function openLightbox(i) {
+            lbReturn = document.activeElement;
+            showPrint(i);
+            lightbox.hidden = false;
+            requestAnimationFrame(() => lightbox.classList.add('active'));
+            document.body.style.overflow = 'hidden';
+            lightbox.querySelector('.lb-close').focus();
+        }
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+            setTimeout(() => { lightbox.hidden = true; }, 300);
+            if (lbReturn) lbReturn.focus();
+        }
+        prints.forEach((btn, i) => btn.addEventListener('click', () => openLightbox(i)));
+        lightbox.querySelector('.lb-close').addEventListener('click', closeLightbox);
+        lightbox.querySelector('.lb-prev').addEventListener('click', () => showPrint(lbIndex - 1));
+        lightbox.querySelector('.lb-next').addEventListener('click', () => showPrint(lbIndex + 1));
+        lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+        document.addEventListener('keydown', e => {
+            if (lightbox.hidden) return;
+            if (e.key === 'Escape') closeLightbox();
+            else if (e.key === 'ArrowLeft') showPrint(lbIndex - 1);
+            else if (e.key === 'ArrowRight') showPrint(lbIndex + 1);
+        });
+
+        // --- Cursor, magnets and the OBSERVER eye: desktop only ---
+        const desktop = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+        if (desktop) {
+            const cursor = document.querySelector('.cursor');
+            document.addEventListener('mousemove', e => {
+                cursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0) translate(-50%, -50%)`;
+            }, { passive: true });
+            document.querySelectorAll('.link-hover, a').forEach(l => {
+                l.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+                l.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+            });
+            document.querySelectorAll('.magnet').forEach(magnet => {
+                magnet.addEventListener('mousemove', e => {
+                    const r = magnet.getBoundingClientRect();
+                    magnet.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * 0.3}px, ${(e.clientY - r.top - r.height / 2) * 0.3}px)`;
+                });
+                magnet.addEventListener('mouseleave', () => { magnet.style.transform = ''; });
+            });
+        }
+
+        const normalTitle = document.title;
+        document.addEventListener('visibilitychange', () => {
+            document.title = document.hidden ? '👋 Wróć po wycenę druku!' : normalTitle;
+        });
+    </script>
+
+    <!-- Mechaniczne oko (OBSERVER 01): na telefonach pomijamy three.js, żeby strona z reklamy ładowała się szybko -->
+    <div id="mech-eye" aria-hidden="true"></div>
+    <script type="importmap">
+        { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
+    </script>
+    <script type="module">
+        if (window.matchMedia('(hover: hover) and (pointer: fine) and (min-width: 900px)').matches) {
+            const start = () => import('./eye-observer-mount.js?v=20260923f');
+            if (document.readyState === 'complete') start();
+            else window.addEventListener('load', start, { once: true });
+        }
+    </script>
+</body>
+
+</html>
