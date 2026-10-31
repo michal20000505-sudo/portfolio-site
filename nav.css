@@ -7,6 +7,10 @@
    oraz gry/motion/gra (#nav-links, <li>, .open).
    ========================================================================== */
 
+/* Własny kursor zawsze na wierzchu: systemowy jest wyłączony (cursor: none),
+   więc bez tego znikał nad powiększeniem zdjęć (#lightbox ma z-index 10001–10002). */
+.cursor { z-index: 10010; }
+
 header > .container {
     max-width: 1400px;
     margin: 0 auto;
