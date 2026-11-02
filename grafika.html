@@ -1268,12 +1268,103 @@
                 opacity: 1;
             }
         }
+
+        /* --- Oferta w hero i kontakt (strona docelowa reklamy Logo) --- */
+        #hero { height: auto; min-height: 60vh; padding: 130px 20px 60px; }
+        .hero-offer {
+            margin-top: 28px;
+            max-width: 36ch;
+            font-size: clamp(1.15rem, 2.2vw, 1.45rem);
+            font-weight: 300;
+            line-height: 1.5;
+            color: #d9d6d3;
+            opacity: 0;
+            animation: fadeUp 1s 1.15s forwards var(--ease-out);
+        }
+        .hero-offer strong { font-weight: 500; color: #f8f6f4; }
+        .hero-cta {
+            display: inline-block;
+            margin-top: 28px;
+            padding: 14px 32px;
+            border: 1px solid var(--cyan);
+            border-radius: 12px;
+            color: var(--cyan);
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeUp 1s 1.3s forwards var(--ease-out);
+            transition: background-color 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), color 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        .hero-cta:hover {
+            background: var(--cyan);
+            color: var(--bg-color);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .hero-offer, .hero-cta { opacity: 1; animation: none; }
+        }
+        @media (max-width: 1024px) {
+            .hero-offer, .hero-cta { opacity: 1; animation: none; }
+        }
+        #kontakt { padding: 120px 0 100px; scroll-margin-top: 70px; }
+        #kontakt .kontakt-label {
+            display: block;
+            margin-bottom: 18px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #888;
+        }
+        #kontakt h2 {
+            max-width: 16ch;
+            font-size: clamp(2.2rem, 6vw, 4.4rem);
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+        }
+        #kontakt .kontakt-opis {
+            margin-top: 26px;
+            max-width: 52ch;
+            font-size: 1.15rem;
+            font-weight: 300;
+            line-height: 1.8;
+            color: #cfccc9;
+        }
+        #kontakt .kontakt-linki {
+            margin-top: 44px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 14px;
+        }
+        #kontakt .kontakt-mail {
+            font-size: clamp(1.5rem, 4.2vw, 3rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            overflow-wrap: anywhere;
+        }
+        #kontakt .kontakt-tel {
+            font-size: clamp(1.25rem, 2.6vw, 1.8rem);
+            font-weight: 500;
+            color: #f8f6f4;
+            transition: color 0.3s;
+        }
+        #kontakt .kontakt-tel:hover { color: var(--cyan); }
+        #kontakt .kontakt-nota {
+            margin-top: 40px;
+            font-size: 0.9rem;
+            font-weight: 300;
+            color: #888;
+        }
     </style>
-    <link rel="stylesheet" href="nav.css?v=20261031b">
-    <script src="nav.js?v=20261031" defer></script>
+    <link rel="stylesheet" href="nav.css?v=20261102">
+    <script src="nav.js?v=20261102" defer></script>
 </head>
 
-<body>
+<body data-kontakt-temat="Grafika - zapytanie">
 
     <div id="progress-bar"></div>
     <div class="ambient-glow glow-1"></div>
@@ -1315,7 +1406,7 @@
                     <a href="gry.html" class="link-hover" data-eye-title="Gry" data-eye="Moje gry: SPACEFIGHTER na Steam i darmowy OVERPRINT, w który zagrasz od razu w przeglądarce.">Gry</a>
                     <a href="motion.html" class="link-hover" data-eye-title="Motion design" data-eye="Reelsy zrobione w kodzie, z muzyką zgraną co do klatki. Włącz dźwięk, warto.">Motion</a>
                     <a href="cennik.html" class="link-hover" data-eye-title="Cennik usług" data-eye="Sprawdź ile kosztuje współpraca ze mną. Przejrzyste ceny i pakiety.">Cennik</a>
-                    <a href="/#contact" class="link-hover" data-eye-title="Napisz do mnie" data-eye="Skontaktuj się ze mną w sprawie współpracy. Czekam na Twoją wiadomość!">Kontakt</a>
+                    <a href="#kontakt" class="link-hover" data-eye-title="Napisz do mnie" data-eye="Skontaktuj się ze mną w sprawie współpracy. Czekam na Twoją wiadomość!">Kontakt</a>
                 </div>
             </nav>
         </div>
@@ -1326,6 +1417,8 @@
         <div class="container hero-content">
             <h1 class="hero-title" title="VISUAL WORKS" data-eye-title="Prace Graficzne" data-eye="Portfolio moich projektów graficznych. Branding, plakaty i materiały drukowane od 2014 roku.">VISUAL<br>WORKS</h1>
             <p class="hero-subtitle" data-eye-title="Specjalizacja" data-eye="Moja specjalizacja: branding, projektowanie druku i art direction dla marek.">Branding / Print / Art Direction</p>
+            <p class="hero-offer" data-eye-title="Logo od 300 zł" data-eye="Projekt logo i materiały firmowe. Ceny netto, wycena po krótkiej rozmowie.">Projekt logo i identyfikacji wizualnej, <strong>logo od 300 zł netto</strong>. Grafik z Wrocławia, projektuję od 2014 roku.</p>
+            <a href="#kontakt" class="hero-cta magnet link-hover" data-eye-title="Zapytaj o wycenę" data-eye="Przeniosę Cię do kontaktu: mail i telefon, bez formularzy.">Zapytaj o wycenę</a>
         </div>
     </section>
 
@@ -1499,6 +1592,18 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </section>
+    <section id="kontakt">
+        <div class="container">
+            <span class="kontakt-label">Wycena</span>
+            <h2>Napisz, czego potrzebujesz</h2>
+            <p class="kontakt-opis">Logo, wizytówka, plakat? Napisz kilka zdań o firmie i na kiedy tego potrzebujesz. Odpiszę z wyceną albo z pytaniem.</p>
+            <div class="kontakt-linki">
+                <a href="mailto:graf.m.jar@gmail.com?subject=Grafika%20-%20zapytanie" class="kontakt-mail link-hover magnet" data-eye-title="Napisz do mnie" data-eye="Opisz, czego potrzebujesz, a dostaniesz wycenę.">graf.m.jar@gmail.com</a>
+                <a href="tel:+48608078802" class="kontakt-tel link-hover" data-eye-title="Zadzwoń do mnie" data-eye="Rozmowa telefoniczna to najszybszy sposób na wstępną wycenę.">+48 608 078 802</a>
+            </div>
+            <p class="kontakt-nota">Wszystkie ceny netto. Możliwa faktura (FV) lub umowa o dzieło. <a href="cennik.html#grafika" class="link-hover" style="color: var(--cyan)" data-eye-title="Cennik grafiki" data-eye="Ceny logo, identyfikacji i projektów do druku.">Cennik grafiki</a></p>
         </div>
     </section>
     </main>

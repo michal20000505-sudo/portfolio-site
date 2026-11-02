@@ -157,3 +157,62 @@ body.nav-open { overflow: hidden; }
         transition-delay: 0s !important;
     }
 }
+
+/* ==========================================================================
+   Stały pasek kontaktu na telefonie (strony z <body data-kontakt-temat="…">).
+   Pod menu (99), banerem zgód (9000) i powiększeniem zdjęć (10001). Znika, gdy
+   na ekranie jest sekcja kontaktu, żeby nie dublować tych samych linków.
+   Kliki liczy pomiar.js (nasłuch na a[href^="tel:"] i a[href^="mailto:"]).
+   ========================================================================== */
+#pasek-kontaktu { display: none; }
+
+@media (max-width: 768px) {
+    body.ma-pasek-kontaktu { padding-bottom: calc(72px + env(safe-area-inset-bottom)); }
+
+    #pasek-kontaktu {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 90;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+        background: #050505;
+        transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1), visibility 0s;
+    }
+    /* pasek kontrolny drukarni, jak na banerze zgód */
+    #pasek-kontaktu::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        height: 2px;
+        background: linear-gradient(90deg, #00ffff 0 25%, #ff00ff 25% 50%, #ffff00 50% 75%, #f8f6f4 75%);
+    }
+    #pasek-kontaktu.ukryty {
+        transform: translateY(100%);
+        visibility: hidden;
+        transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1), visibility 0s 0.35s;
+    }
+    #pasek-kontaktu a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 48px;
+        border: 1px solid #00ffff;
+        border-radius: 12px;
+        font: 500 0.85rem/1 'Space Grotesk', system-ui, sans-serif;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: #00ffff;
+    }
+    #pasek-kontaktu a:first-child { background: #00ffff; color: #050505; }
+    #pasek-kontaktu a:active { transform: translateY(1px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #pasek-kontaktu, #pasek-kontaktu.ukryty { transition: none; }
+}
