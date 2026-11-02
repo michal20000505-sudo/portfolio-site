@@ -202,6 +202,8 @@ Transparent, typographic, minimal.
 
 The hero display title uses layered CSS glitch: two pseudo-elements (::before, ::after) carry Electric Cyan and Signal Magenta tint offsets respectively, animated via clip-path with 2.5–3.5s loops running at different rates. The base element reads cleanly at rest. The glitch fires intermittently.
 
+**The Rubber Letters Rule.** Every h1 and h2 bounces and sheds dust on hover, as on the home page hero. Pages load the shared `litery.js`; `index.html` keeps its own copy (`.letter`).
+
 **The Glitch-Once Rule.** The glitch effect is reserved for the hero title. Applying it to section headings, hover states, or interactive elements dilutes the signal to noise.
 
 ### OBSERVER Commentary (Signature Component)
