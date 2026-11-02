@@ -139,6 +139,7 @@ header > .container {
 .nav-links.active > a:nth-child(6), .nav-links.open li:nth-child(6) a { transition-delay: 0.60s; }
 .nav-links.active > a:nth-child(7), .nav-links.open li:nth-child(7) a { transition-delay: 0.66s; }
 .nav-links.active > a:nth-child(8), .nav-links.open li:nth-child(8) a { transition-delay: 0.72s; }
+.nav-links.active > a:nth-child(9), .nav-links.open li:nth-child(9) a { transition-delay: 0.78s; }
 
 body.nav-open { overflow: hidden; }
 

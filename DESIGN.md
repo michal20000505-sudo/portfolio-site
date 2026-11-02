@@ -153,6 +153,8 @@ This system is shadow-free at rest. Depth is achieved through exactly three mech
 
 **The No-Shadow Rule.** box-shadow as a depth mechanism is prohibited. If elevation must be signaled, use tonal layering or a state transform. The exception: a reactive glow (e.g. box-shadow: 0 0 30px rgba(0,255,255,0.3) on hover) is a feedback signal, not an elevation signal — its purpose is response, not static depth.
 
+**The Starfield Rule.** Every page has the star background. Pages without their own `#starfield` load the shared `starfield.js`. Games and internal test pages are the only exceptions.
+
 **The Ambient Glow Rule.** The three ambient circles are background atmosphere only. Do not bring glow into the foreground as card halos, text glows, or spotlight effects. The contrast between the glowing background and the flat foreground elements is the composition.
 
 ## 5. Components

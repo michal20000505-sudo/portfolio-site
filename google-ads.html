@@ -663,17 +663,22 @@
             font-weight: 700;
             letter-spacing: -0.02em;
             display: inline-block;
-            transition: transform 0.3s var(--ease-out);
+            transition: all 0.4s var(--ease-out);
             overflow-wrap: anywhere;
+        }
+        .cta-big:hover {
+            transform: scale(1.05) rotate(-2deg);
+            text-shadow: 3px 3px 0 rgba(0, 255, 255, 0.55), -3px -3px 0 rgba(255, 0, 255, 0.55);
         }
         .cta-small {
             font-size: clamp(1.25rem, 2.6vw, 1.8rem);
             font-weight: 500;
-            color: var(--paper);
+            letter-spacing: 2px;
+            color: #ccc;
             display: inline-block;
-            transition: color 0.3s;
+            transition: all 0.4s;
         }
-        .cta-small:hover { color: var(--cyan); }
+        .cta-small:hover { color: var(--magenta); letter-spacing: 4px; }
         .price-note {
             margin-top: 40px;
             font-size: 0.9rem;
@@ -815,8 +820,9 @@
             }
         }
     </style>
-    <link rel="stylesheet" href="nav.css?v=20261102">
+    <link rel="stylesheet" href="nav.css?v=20261102b">
     <script src="nav.js?v=20261102" defer></script>
+    <script src="starfield.js?v=20261102" defer></script>
 </head>
 
 <body data-kontakt-temat="Google Ads - zapytanie">
@@ -844,6 +850,7 @@
                     <a href="druk.html" class="link-hover" data-eye-title="Druk" data-eye="Wizytówki, banery i odzież z logo. Projektuję, zamawiam i oddaję gotowe.">Druk</a>
                     <a href="gry.html" class="link-hover" data-eye-title="Gry" data-eye="Moje gry: SPACEFIGHTER na Steam i darmowy OVERPRINT, w który zagrasz od razu w przeglądarce.">Gry</a>
                     <a href="motion.html" class="link-hover" data-eye-title="Motion design" data-eye="Reelsy zrobione w kodzie, z muzyką zgraną co do klatki. Włącz dźwięk, warto.">Motion</a>
+                    <a href="#" class="active link-hover" aria-current="page" data-eye-title="Google Ads" data-eye="Prowadzę kampanie w wyszukiwarce Google, od 600 zł miesięcznie netto.">Google Ads</a>
                     <a href="cennik.html" class="link-hover" data-eye-title="Cennik" data-eye="Ceny wszystkich usług: strony, grafika, motion i reklama.">Cennik</a>
                     <a href="#kontakt" class="link-hover" data-eye-title="Kontakt" data-eye="Napisz lub zadzwoń w sprawie kampanii.">Kontakt</a>
                 </div>
@@ -975,7 +982,7 @@
                 <h2 class="cta-heading">Napisz, co chcesz reklamować</h2>
                 <p class="cta-checklist">Podaj branżę, miasto i budżet, jaki masz w głowie. Odpowiem, czy reklama w Google ma u Ciebie sens i ile może kosztować.</p>
                 <div class="cta-contacts">
-                    <a href="mailto:graf.m.jar@gmail.com?subject=Google%20Ads%20-%20zapytanie" class="cta-big link-hover magnet" data-eye-title="Napisz do mnie" data-eye="Kilka zdań wystarczy. Ja w tym czasie popilnuję skrzynki.">graf.m.jar@gmail.com</a>
+                    <a href="mailto:graf.m.jar@gmail.com?subject=Google%20Ads%20-%20zapytanie" class="cta-big link-hover magnet" data-eye-title="Napisz do mnie" data-eye="Kilka zdań wystarczy. Ja w tym czasie popilnuję skrzynki."><span style="color: var(--cyan)">graf.m.jar</span><span style="color: var(--magenta)">@</span><span style="color: var(--yellow)">gmail.com</span></a>
                     <a href="tel:+48608078802" class="cta-small link-hover magnet" data-eye-title="Zadzwoń do mnie" data-eye="Rozmowa telefoniczna to najszybszy sposób na wstępną wycenę.">+48 608 078 802</a>
                 </div>
                 <p class="price-note">Wszystkie ceny netto. Możliwa faktura (FV) lub umowa o dzieło.</p>
