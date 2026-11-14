@@ -131,8 +131,15 @@ export function buildObserver() {
         m.rotation.x = Math.PI / 2; return m;
     };
     const box = (x, y, z, material, parent, px = 0, py = 0, pz = 0) => mesh(geo(`box-${x}-${y}-${z}`, () => new THREE.BoxGeometry(x, y, z)), material, parent, px, py, pz);
+    // Siatki instancjonowane dostają własną kopię materiału. Wspólny materiał dla Mesh
+    // i InstancedMesh zmusza three.js do przełączania programu shadera w każdej klatce.
+    const instancedMaterials = new Map();
+    const instanced = material => {
+        if (!instancedMaterials.has(material)) instancedMaterials.set(material, material.clone());
+        return instancedMaterials.get(material);
+    };
     const instances = (geometry, material, transforms, parent) => {
-        const m = new THREE.InstancedMesh(geometry, material, transforms.length);
+        const m = new THREE.InstancedMesh(geometry, instanced(material), transforms.length);
         const dummy = new THREE.Object3D();
         transforms.forEach((t, i) => {
             dummy.position.set(...t.p); dummy.rotation.set(...(t.r || [0, 0, 0])); dummy.scale.setScalar(t.s || 1);
@@ -169,7 +176,7 @@ export function buildObserver() {
         mesh(new THREE.TubeGeometry(curve, 56, radius, 7, false), material, parent);
         // Ribbed sheath and metal couplers follow the actual curve.
         const torus = geo(`cable-rib-${radius}`, () => new THREE.TorusGeometry(radius * 1.03, .005, 4, 8));
-        const ribs = new THREE.InstancedMesh(torus, materials.graphite, 64), dummy = new THREE.Object3D();
+        const ribs = new THREE.InstancedMesh(torus, instanced(materials.graphite), 64), dummy = new THREE.Object3D();
         for (let i = 0; i < 64; i++) {
             const t = i / 63; dummy.position.copy(curve.getPoint(t)); dummy.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), curve.getTangent(t));
             dummy.updateMatrix(); ribs.setMatrixAt(i, dummy.matrix);
@@ -466,6 +473,7 @@ export function buildObserver() {
         materials.iris.emissiveIntensity = pulse * 1.15;
         materials.cyan.emissiveIntensity = pulse * 2;
         materials.amber.emissiveIntensity = sleeping ? .3 : 1.8;
+        instancedMaterials.forEach((copy, source) => { copy.emissiveIntensity = source.emissiveIntensity; });
         for (const { node, angle } of armor) {
             node.position.set(Math.cos(angle) * spread * .36, Math.sin(angle) * spread * .36, spread * .18);
         }

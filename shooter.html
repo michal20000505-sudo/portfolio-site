@@ -897,14 +897,15 @@
     <noscript><p style="position:fixed;inset:0;display:grid;place-items:center;padding:24px;text-align:center">OVERPRINT potrzebuje JavaScriptu i WebGL.</p></noscript>
 
     <div id="mech-eye" aria-hidden="true"></div>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <script type="importmap">
         { "imports": {
-            "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+            "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js",
             "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
         } }
     </script>
     <script type="module" src="shooter/main.js?v=20260928e"></script>
-    <script type="module" src="eye-observer-mount.js?v=20260928e"></script>
+    <script type="module" src="eye-observer-mount.js?v=20261114"></script>
 </body>
 
 </html>

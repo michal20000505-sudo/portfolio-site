@@ -2687,8 +2687,9 @@
         })();
     </script>
 
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <script type="importmap">
-        { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
+        { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js" } }
     </script>
     <script type="module">
         const VIEWERS = [
@@ -2738,6 +2739,7 @@
             renderer.shadowMap.type = THREE.PCFSoftShadowMap;
             renderer.toneMapping = THREE.ACESFilmicToneMapping;
             renderer.toneMappingExposure = 1.15;
+            renderer.debug.checkShaderErrors = false;
 
             const canvas = renderer.domElement;
             wrap.appendChild(canvas);
@@ -2853,6 +2855,9 @@
                 renderer.render(scene, camera);
             };
 
+            // Shadery kompilują się w tle, żeby start viewera nie przycinał przewijania.
+            try { await renderer.compileAsync(scene, camera); } catch (e) { /* render niżej skompiluje synchronicznie */ }
+
             // animuj tylko, gdy viewer jest na ekranie
             const io = new IntersectionObserver(([entry]) => {
                 if (entry.isIntersecting && !raf) {
@@ -2883,7 +2888,7 @@
          Geometria i materiały: eye-observer-model.js, renderer: eye-observer.js,
          montaż w rogu strony: eye-observer-mount.js. Reużywa importmap 'three'.
          ======================================== -->
-    <script type="module" src="eye-observer-mount.js?v=20260923f"></script>
+    <script type="module" src="eye-observer-mount.js?v=20261114"></script>
 </body>
 
 </html>

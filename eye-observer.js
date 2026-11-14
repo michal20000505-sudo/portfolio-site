@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { buildObserver } from './eye-observer-model.js';
+import { buildObserver } from './eye-observer-model.js?v=20261114';
 
 export const STATE_LABELS = {
     idle: 'Czuwanie', tracking: 'Śledzenie', curious: 'Rozglądanie', focused: 'Skupienie',
@@ -51,6 +51,8 @@ export class ObserverEye {
         this.renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'high-performance', preserveDrawingBuffer: false });
         this.renderer.setPixelRatio(Math.min(devicePixelRatio || 1, matchMedia('(pointer: coarse)').matches ? 1.35 : 1.75));
         this.renderer.toneMapping = THREE.ACESFilmicToneMapping; this.renderer.toneMappingExposure = 1.08;
+        // Bez synchronicznego odczytu logów shaderów: kompilacja nie blokuje wątku strony.
+        this.renderer.debug.checkShaderErrors = false;
         this.renderer.domElement.setAttribute('aria-hidden', 'true');
         host.appendChild(this.renderer.domElement);
         this.scene = new THREE.Scene(); this.environment = studioEnvironment(this.renderer); this.scene.environment = this.environment.texture;
@@ -161,7 +163,9 @@ export class ObserverEye {
         this.resize();
     }
     lookAt(x, y) {
-        const rect = this.host.getBoundingClientRect(), radius = this.options.lookRadius;
+        // hostRect: opcjonalna funkcja od strony, która sama zna położenie oka (lot).
+        // Oszczędza getBoundingClientRect, czyli wymuszone przeliczenie układu w każdej klatce.
+        const rect = this.hostRect?.() || this.host.getBoundingClientRect(), radius = this.options.lookRadius;
         const halfX = Math.max(1, radius || rect.width / 2);
         const halfY = Math.max(1, radius ? radius * .72 : rect.height / 2);
         this.pointer.x = clamp((x - rect.left - rect.width / 2) / halfX, -1, 1);
@@ -178,7 +182,9 @@ export class ObserverEye {
         this.lastActivity = this.time;
         this.signal = { state, end: state === 'sleeping' ? Infinity : this.time + duration, start: this.time };
         if (state === 'startled' || state === 'waking') this.blink();
-        this.setState(state); this.render(0);
+        // Gdy pętla działa, stan narysuje najbliższa klatka; osobny render przy każdym
+        // zdarzeniu przewijania podwajałby pracę GPU.
+        this.setState(state); if (!this.frame) this.render(0);
     }
     blink() { this.blinkStart = this.time; this.nextBlink = this.time + 4.3; }
     setState(mode) {

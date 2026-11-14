@@ -268,7 +268,7 @@ function pickTouchTarget() {
 
 if (wrap) {
     try {
-        const { ObserverEye } = await import('./eye-observer.js?v=20260923');
+        const { ObserverEye } = await import('./eye-observer.js?v=20261114');
 
         const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
         const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
@@ -307,7 +307,12 @@ if (wrap) {
             wrap.addEventListener('dblclick', () => { hideBubble(); location.href = 'oko.html'; });
         }
 
-        const size = () => wrap.clientWidth || 120;
+        // Rozmiar oka czytany raz i odświeżany przy zmianie: odczyt clientWidth w każdej
+        // klatce wymuszał przeliczenie układu całej strony.
+        let sizeCache = 0;
+        const size = () => sizeCache || (sizeCache = wrap.clientWidth || 120);
+        if ('ResizeObserver' in window) new ResizeObserver(() => { sizeCache = 0; }).observe(wrap);
+        else addEventListener('resize', () => { sizeCache = 0; }, { passive: true });
         let pointer = null;
         if (finePointer) addEventListener('pointermove', e => { pointer = { x: e.clientX, y: e.clientY }; }, { passive: true });
 
@@ -372,6 +377,10 @@ if (wrap) {
 
         // --- desktop: najechanie ---------------------------------------------
         let hoverEl = null, hoverTimer = null;
+        // settling: trwa przewijanie/zmiana rozmiaru. Komentarz zaplanowany w tym czasie
+        // i tak kasuje następne zdarzenie przewijania, a lookAgain planuje go po uspokojeniu,
+        // więc kosztowne planowanie miejsca (setki elementsFromPoint) czeka do końca ruchu.
+        let settling = false;
         function setHover(el) {
             if (el === hoverEl) return;
             hoverEl = el;
@@ -379,7 +388,7 @@ if (wrap) {
             // Krótka zwłoka: przelot kursorem przez stronę nie odpala komentarzy,
             // a wyjście poza element nie gasi dymka od razu.
             hoverTimer = el
-                ? setTimeout(() => commentOn(el), comment ? 90 : 140)
+                ? setTimeout(() => { if (!settling) commentOn(el); }, comment ? 90 : 140)
                 : setTimeout(() => { if (!hoverEl && comment && !comment.polite) endComment(); }, 500);
         }
         function elementUnder(x, y) {
@@ -420,9 +429,12 @@ if (wrap) {
             // Pierwsze przewinięcie kończy powitanie.
             if (comment?.polite) endComment();
             suspendComment();
-            state.occTimer = 0;
+            // Przy przewijaniu ocena zasłaniania (elementsFromPoint) najwyżej co 150 ms,
+            // a nie w każdej klatce.
+            state.occTimer = Math.min(state.occTimer, .15);
             clearTimeout(settleTimer);
-            settleTimer = setTimeout(lookAgain, 200);
+            settling = true;
+            settleTimer = setTimeout(() => { settling = false; lookAgain(); }, 200);
         };
         addEventListener('scroll', () => { scrolled = true; onLayoutChange(); }, { passive: true });
         addEventListener('resize', onLayoutChange, { passive: true });
@@ -474,6 +486,14 @@ if (wrap) {
                 state.wanderTimer = 9 + Math.random() * 10;
             }
             wander();
+
+            // W locie pozycję oka wyznacza stan (ten sam, z którego powstaje transform),
+            // więc renderer nie musi mierzyć elementu w każdej klatce.
+            eye.hostRect = () => {
+                if (introRunning || suspended || !frame) return null;
+                const s = size();
+                return { left: state.x - s / 2, top: state.y - s / 2, width: s, height: s };
+            };
 
             let frame = 0, previous = 0;
             function tick(now) {
@@ -658,6 +678,7 @@ if (wrap) {
                     // najpierw wracamy do normalnego rozmiaru/pozycji, a dopiero potem startuje lot.
                     wrap.style.width = ''; wrap.style.height = ''; wrap.style.aspectRatio = '';
                     wrap.style.pointerEvents = '';
+                    sizeCache = 0;
                     eye.setFraming(null); eye.resize();
                     const half = size() / 2;
                     wrap.style.transform = `translate3d(${(state.x - half).toFixed(1)}px, ${(state.y - half).toFixed(1)}px, 0)`;

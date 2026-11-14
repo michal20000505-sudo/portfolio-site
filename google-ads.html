@@ -1053,12 +1053,13 @@
 
     <!-- Mechaniczne oko (OBSERVER 01): na telefonach pomijamy three.js, żeby strona z reklamy ładowała się szybko -->
     <div id="mech-eye" aria-hidden="true"></div>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <script type="importmap">
-        { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
+        { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js" } }
     </script>
     <script type="module">
         if (window.matchMedia('(hover: hover) and (pointer: fine) and (min-width: 900px)').matches) {
-            const start = () => import('./eye-observer-mount.js?v=20260923f');
+            const start = () => import('./eye-observer-mount.js?v=20261114');
             if (document.readyState === 'complete') start();
             else window.addEventListener('load', start, { once: true });
         }
