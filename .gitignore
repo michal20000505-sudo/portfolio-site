@@ -53,3 +53,6 @@ tools/reel-bodycreator/assets/site/*.png
 
 # ranking OVERPRINT: dane i sekret tworzone na serwerze
 api/data/
+
+# Screenshots dropped in for agent context
+/image*.png
